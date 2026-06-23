@@ -341,7 +341,6 @@ export type Database = {
       }
       delivery_companies: {
         Row: {
-          api_key: string | null
           api_url: string | null
           created_at: string
           id: string
@@ -351,7 +350,6 @@ export type Database = {
           name: string
         }
         Insert: {
-          api_key?: string | null
           api_url?: string | null
           created_at?: string
           id?: string
@@ -361,7 +359,6 @@ export type Database = {
           name: string
         }
         Update: {
-          api_key?: string | null
           api_url?: string | null
           created_at?: string
           id?: string
@@ -371,6 +368,35 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      delivery_company_credentials: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          delivery_company_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          delivery_company_id: string
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          delivery_company_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_company_credentials_delivery_company_id_fkey"
+            columns: ["delivery_company_id"]
+            isOneToOne: true
+            referencedRelation: "delivery_companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       facebook_pixels: {
         Row: {
@@ -1664,6 +1690,15 @@ export type Database = {
           wilaya_name: string
         }[]
       }
+      get_return_status: {
+        Args: { p_phone: string; p_return_number: string }
+        Returns: {
+          created_at: string
+          history: Json
+          return_number: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1686,6 +1721,17 @@ export type Database = {
           p_wilaya: string
         }
         Returns: string
+      }
+      validate_coupon: {
+        Args: { p_code: string }
+        Returns: {
+          code: string
+          discount_type: string
+          discount_value: number
+          expiry_date: string
+          id: string
+          is_active: boolean
+        }[]
       }
     }
     Enums: {
