@@ -455,8 +455,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Main */}
-      <div className={`flex-1 ${isRtl ? 'lg:mr-64' : 'lg:ml-64'}`}>
-        <header className="sticky top-0 z-40 bg-card border-b h-14 flex items-center px-3 sm:px-4 gap-1.5 sm:gap-2 overflow-x-auto">
+      <div className={`flex-1 min-w-0 ${isRtl ? 'lg:mr-72' : 'lg:ml-72'}`}>
+        <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-xl border-b border-border/60 h-14 flex items-center px-3 sm:px-4 gap-1.5 sm:gap-2 overflow-x-auto">
           <Button variant="ghost" size="icon" className="lg:hidden shrink-0" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-5 h-5" />
           </Button>
