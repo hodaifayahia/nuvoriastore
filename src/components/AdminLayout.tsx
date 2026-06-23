@@ -611,11 +611,46 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             </PopoverContent>
           </Popover>
         </header>
-        <main className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0">{children}</main>
+        <main className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0 pb-24 lg:pb-6">{children}</main>
       </div>
 
       {/* Overlay */}
-      {sidebarOpen && <div className="fixed inset-0 bg-foreground/30 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      {sidebarOpen && <div className="fixed inset-0 bg-foreground/50 backdrop-blur-sm z-40 lg:hidden animate-in fade-in" onClick={() => setSidebarOpen(false)} />}
+
+      {/* Mobile bottom navigation bar */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-card/95 backdrop-blur-xl border-t border-border/60 shadow-[0_-8px_24px_-12px_hsl(217_100%_55%/0.25)] pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-5 h-16">
+          {BOTTOM_NAV_ITEMS.map(item => {
+            const active = location.pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={`relative flex flex-col items-center justify-center gap-0.5 font-cairo text-[10px] transition-colors ${
+                  active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <span className={`absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-b-full bg-primary transition-opacity ${active ? 'opacity-100' : 'opacity-0'}`} />
+                <span className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all ${
+                  active ? 'bg-primary/15 scale-105' : ''
+                }`}>
+                  <item.icon className="w-5 h-5" />
+                </span>
+                <span className="truncate max-w-[64px]">{t(item.key)}</span>
+              </Link>
+            );
+          })}
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="relative flex flex-col items-center justify-center gap-0.5 font-cairo text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span className="flex items-center justify-center w-9 h-9 rounded-xl">
+              <Menu className="w-5 h-5" />
+            </span>
+            <span>{t('sidebar.more') !== 'sidebar.more' ? t('sidebar.more') : 'More'}</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }
