@@ -1,8 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, type LucideIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, type LucideIcon } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,12 +16,33 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Watch,
   Footprints,
   Smartphone,
+  Headphones,
+  Keyboard,
+  Mouse,
+  Laptop,
+  Cable,
+  BatteryCharging,
+  Gamepad2,
   Home: HomeIcon,
 };
 
 function getCategoryIcon(iconName: string): LucideIcon {
   return ICON_MAP[iconName] || Grid3X3;
 }
+
+// Fallback categories shown when no categories exist in the database yet
+const DEFAULT_CATEGORIES = [
+  { name: 'Phones',     icon: 'Smartphone' },
+  { name: 'Cases',      icon: 'Smartphone' },
+  { name: 'Chargers',   icon: 'BatteryCharging' },
+  { name: 'Cables',     icon: 'Cable' },
+  { name: 'Headphones', icon: 'Headphones' },
+  { name: 'Keyboards',  icon: 'Keyboard' },
+  { name: 'Mice',       icon: 'Mouse' },
+  { name: 'Laptops',    icon: 'Laptop' },
+  { name: 'Gaming',     icon: 'Gamepad2' },
+  { name: 'Watches',    icon: 'Watch' },
+];
 
 const NAV_LINKS = [
   { to: '/', label: 'الرئيسية', icon: Home },
@@ -40,7 +61,11 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { data: categories } = useCategories();
+  const { data: categoriesData } = useCategories();
+  const categories = useMemo(
+    () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
+    [categoriesData],
+  );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: storeName } = useQuery({
