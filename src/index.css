@@ -296,3 +296,104 @@
     transform: translateY(0) !important;
   }
 }
+
+/* ============================================
+   Deep Horizon — scoped admin dashboard theme
+   Applies only inside `.admin-deep-horizon`.
+   Storefront / customer pages are untouched.
+   ============================================ */
+.admin-deep-horizon {
+  /* Surfaces */
+  --background: 222 51% 8%;             /* #0A0F1E surface-deep */
+  --foreground: 200 6% 89%;             /* #e0e3e5 on-surface */
+
+  --card: 226 35% 13%;                  /* #161B2E surface-elevated */
+  --card-foreground: 200 6% 89%;
+
+  --popover: 222 18% 12%;               /* #1d2022 surface-container */
+  --popover-foreground: 200 6% 89%;
+
+  --primary: 217 100% 55%;              /* #1A6BFF electric blue */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 226 28% 17%;             /* slightly lifted navy */
+  --secondary-foreground: 228 27% 81%;  /* #c2c6db */
+
+  --muted: 222 18% 14%;
+  --muted-foreground: 228 13% 67%;      /* #8c90a1 outline */
+
+  --accent: 217 100% 55%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 4 100% 65%;            /* #ffb4ab error */
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 217 24% 23%;                /* #2D3748 surface-border */
+  --input: 222 51% 8%;                  /* inset look — same as background */
+  --ring: 217 100% 55%;
+
+  --radius: 0.5rem;
+
+  /* Sidebar */
+  --sidebar-background: 226 35% 11%;
+  --sidebar-foreground: 200 6% 89%;
+  --sidebar-primary: 217 100% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 18% 14%;
+  --sidebar-accent-foreground: 200 6% 89%;
+  --sidebar-border: 217 24% 23%;
+  --sidebar-ring: 217 100% 55%;
+
+  --success: 152 60% 45%;
+  --warning: 38 92% 55%;
+  --info: 217 100% 55%;
+
+  /* Typography */
+  font-family: 'Hanken Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+}
+
+/* Override the Cairo body default for the admin shell so headings feel Hanken */
+.admin-deep-horizon .font-cairo {
+  font-family: 'Hanken Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  letter-spacing: -0.005em;
+}
+
+/* Monospaced data / status labels (chips, IDs, prices) */
+.admin-deep-horizon .font-roboto,
+.admin-deep-horizon .price-text {
+  font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Card depth: subtle blue "sky glow" instead of dark drop shadow */
+.admin-deep-horizon .bg-card {
+  box-shadow:
+    0 1px 0 0 hsl(217 100% 55% / 0.04) inset,
+    0 8px 24px -12px hsl(217 100% 55% / 0.15);
+}
+
+/* Inputs get an inset, glow-on-focus treatment */
+.admin-deep-horizon input,
+.admin-deep-horizon textarea,
+.admin-deep-horizon select {
+  background-color: hsl(var(--input));
+}
+.admin-deep-horizon input:focus-visible,
+.admin-deep-horizon textarea:focus-visible,
+.admin-deep-horizon select:focus-visible {
+  box-shadow: 0 0 0 2px hsl(217 100% 55% / 0.35);
+}
+
+/* Interactive lift for buttons & cards */
+.admin-deep-horizon .hover-lift:hover,
+.admin-deep-horizon button:not(:disabled):hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Active sidebar pill gets a sharp 2px leading accent bar */
+.admin-deep-horizon aside a.bg-primary,
+.admin-deep-horizon aside a[class*="bg-primary"] {
+  position: relative;
+}
