@@ -61,7 +61,11 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { data: categories } = useCategories();
+  const { data: categoriesData } = useCategories();
+  const categories = useMemo(
+    () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
+    [categoriesData],
+  );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: storeName } = useQuery({
