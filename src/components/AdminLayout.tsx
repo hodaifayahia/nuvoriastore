@@ -298,7 +298,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const currentLang = LANG_OPTIONS.find(l => l.value === language)!;
 
   return (
-    <div className="min-h-screen flex bg-muted" dir={dir}>
+    <div className="admin-deep-horizon min-h-screen flex bg-background" dir={dir}>
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 z-50 w-64 bg-card transform transition-transform flex flex-col
         ${isRtl ? 'right-0 border-l' : 'left-0 border-r'}
