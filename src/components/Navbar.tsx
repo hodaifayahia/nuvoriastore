@@ -235,6 +235,45 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Categories bar - desktop */}
+      {categories && categories.length > 0 && (
+        <div className="hidden md:block bg-card/80 backdrop-blur-xl border-b">
+          <div className="container">
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+              <Link
+                to="/products"
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-cairo font-semibold whitespace-nowrap shrink-0 transition-colors ${
+                  location.pathname === '/products' && !location.search
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Grid3X3 className="w-3.5 h-3.5" />
+                الكل
+              </Link>
+              {categories.map(cat => {
+                const Icon = getCategoryIcon(cat.icon);
+                const isActive = location.search.includes(`category=${encodeURIComponent(cat.name)}`);
+                return (
+                  <Link
+                    key={cat.name}
+                    to={`/products?category=${encodeURIComponent(cat.name)}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-cairo font-semibold whitespace-nowrap shrink-0 transition-colors ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {cat.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-b bg-card/95 backdrop-blur-xl animate-fade-in">
