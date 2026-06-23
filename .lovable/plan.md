@@ -1,39 +1,23 @@
+The actual issue is that the published bundle is still initializing the backend client with an empty `import.meta.env.VITE_SUPABASE_URL`. This is a classic Vite build-time environment problem: Vite replaces `import.meta.env.*` during build, and because `.env` is currently ignored by Git, the published build may not receive those values.
 
+Do I know what the issue is? Yes. The app code reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from Vite env variables, but the deploy/build environment is not consistently receiving them. The same old asset name (`index-0a_Tq462.js`) also indicates the live site may still be serving the old broken bundle until republished.
 
-# Fix: Send Orders to Delivery Company via API (Not CSV Download)
+Plan:
+1. Add a committed `.env` file containing only the public Lovable Cloud URL and publishable key values needed by Vite at build time.
+2. Update `.gitignore` so `.env` is not ignored for this classic Vite project.
+3. Keep the existing Vite fallback as a secondary safety net, but clean up formatting if needed.
+4. Verify with a production build that the generated bundle contains the backend URL and no longer can pass an empty URL to `createClient`.
+5. After implementation, republish/update the live site so the old `index-0a_Tq462.js` bundle is replaced.
 
-## Problem
-Currently, clicking "Push to Delivery" always downloads a CSV file. The user wants it to **send orders directly to the delivery company's API**. CSV should only be a fallback when no API is configured.
+Technical notes:
+- These are public client-side values, not private service keys.
+- I will not edit the auto-generated backend client file.
+- I will not touch unrelated frontend or database code.
 
-## Changes
+<presentation-actions>
+  <presentation-open-history>View History</presentation-open-history>
+</presentation-actions>
 
-### 1. `src/pages/admin/AdminOrdersPage.tsx` -- Fix `handleExportToDelivery`
-
-Update the handler logic (lines 98-130):
-- If the delivery company has an API configured and the API call succeeds, show a success toast -- NO CSV download
-- If the API call fails, show an error toast with the failure message
-- Only download CSV as fallback when the company has NO API key/URL configured
-- Change the button icon from `Download` to `Truck` (send icon) to reflect the action
-- Update button text to indicate "send" not "export"
-
-### 2. `supabase/functions/delivery-export/index.ts` -- Improve API response
-
-The edge function already handles API calls correctly. Minor improvement:
-- When API is configured, include the API response body in `apiResult` for better error reporting
-- Still return CSV in the response for fallback use, but the frontend will decide whether to download it
-
-### 3. Dialog UX improvements in `AdminOrdersPage.tsx`
-
-- Show which companies have API configured (green dot already exists)
-- Add a note in the dialog: "Orders will be sent directly to the company" when API is configured, or "CSV will be downloaded" when not
-- Show a success summary after push (e.g., "15 orders sent to Yalidine successfully")
-
-## Technical Summary
-
-| File | Change |
-|------|--------|
-| `src/pages/admin/AdminOrdersPage.tsx` | Prioritize API push over CSV download in `handleExportToDelivery`; update icons and labels |
-| `supabase/functions/delivery-export/index.ts` | Include API response body for better error messages |
-
-No database changes needed.
-
+<presentation-actions>
+<presentation-link url="https://docs.lovable.dev/tips-tricks/troubleshooting">Troubleshooting docs</presentation-link>
+</presentation-actions>
