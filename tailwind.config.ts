@@ -16,9 +16,11 @@ export default {
       fontFamily: {
         inter: ["Inter", "system-ui", "sans-serif"],
         space: ["Space Grotesk", "sans-serif"],
+        display: ["Space Grotesk", "Cairo", "sans-serif"],
+        body: ["DM Sans", "Cairo", "sans-serif"],
         arabic: ["Tajawal", "Cairo", "sans-serif"],
         cairo: ["Cairo", "Tajawal", "sans-serif"],
-        sans: ["Tajawal", "Cairo", "Inter", "system-ui", "sans-serif"],
+        sans: ["DM Sans", "Tajawal", "Cairo", "Inter", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
