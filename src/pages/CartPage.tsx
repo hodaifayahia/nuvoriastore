@@ -3,9 +3,11 @@ import { Trash2, Minus, Plus, ShoppingCart, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
+import { useTranslation } from '@/i18n';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, subtotal } = useCart();
+  const { t } = useTranslation();
 
   const totalShipping = items.reduce((sum, item) => {
     const rate = item.shippingPrice ?? 0;
@@ -16,10 +18,10 @@ export default function CartPage() {
     return (
       <div className="container py-16 text-center">
         <ShoppingCart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-        <h1 className="font-cairo font-bold text-2xl mb-2">سلة التسوق فارغة</h1>
-        <p className="font-cairo text-muted-foreground mb-6">لم تقم بإضافة أي منتجات بعد</p>
+        <h1 className="font-cairo font-bold text-2xl mb-2">{t('cart.emptyTitle')}</h1>
+        <p className="font-cairo text-muted-foreground mb-6">{t('cart.emptySubtitle')}</p>
         <Link to="/products">
-          <Button className="font-cairo font-semibold">تصفح المنتجات</Button>
+          <Button className="font-cairo font-semibold">{t('cart.browseProducts')}</Button>
         </Link>
       </div>
     );
@@ -27,7 +29,7 @@ export default function CartPage() {
 
   return (
     <div className="container py-8">
-      <h1 className="font-cairo font-bold text-3xl mb-6">سلة التسوق</h1>
+      <h1 className="font-cairo font-bold text-3xl mb-6">{t('cart.title')}</h1>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {items.map(item => {
@@ -58,7 +60,7 @@ export default function CartPage() {
                   {itemShipping > 0 && (
                     <p className="font-cairo text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                       <Truck className="w-3 h-3" />
-                      التوصيل: {formatPrice(itemShipping)} × {item.quantity} = {formatPrice(itemShipping * item.quantity)}
+                      {t('cart.shippingLabel')}: {formatPrice(itemShipping)} × {item.quantity} = {formatPrice(itemShipping * item.quantity)}
                     </p>
                   )}
                   <div className="flex items-center justify-between mt-2">
@@ -79,27 +81,27 @@ export default function CartPage() {
         </div>
 
         <div className="bg-card border rounded-lg p-6 h-fit sticky top-20">
-          <h2 className="font-cairo font-bold text-xl mb-4">ملخص الطلب</h2>
+          <h2 className="font-cairo font-bold text-xl mb-4">{t('cart.summary')}</h2>
           <div className="space-y-2 mb-4 font-cairo text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">المجموع الفرعي</span>
+              <span className="text-muted-foreground">{t('cart.subtotal')}</span>
               <span className="font-roboto font-bold">{formatPrice(subtotal)}</span>
             </div>
             {totalShipping > 0 && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> التوصيل</span>
+                <span className="text-muted-foreground flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> {t('cart.delivery')}</span>
                 <span className="font-roboto font-bold">{formatPrice(totalShipping)}</span>
               </div>
             )}
             <hr className="border-border my-2" />
             <div className="flex justify-between font-bold text-base">
-              <span>الإجمالي المقدّر</span>
+              <span>{t('cart.estTotal')}</span>
               <span className="font-roboto text-primary">{formatPrice(subtotal + totalShipping)}</span>
             </div>
           </div>
-          <p className="font-cairo text-xs text-muted-foreground mb-4">* سعر التوصيل النهائي يحدد حسب الولاية عند إتمام الطلب</p>
+          <p className="font-cairo text-xs text-muted-foreground mb-4">{t('cart.shippingNote')}</p>
           <Link to="/checkout">
-            <Button className="w-full font-cairo font-semibold">إتمام الطلب</Button>
+            <Button className="w-full font-cairo font-semibold">{t('cart.checkout')}</Button>
           </Link>
         </div>
       </div>
