@@ -229,7 +229,7 @@ export default function IndexPage() {
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
-                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-fuchsia-500 to-violet-600 hover:from-fuchsia-400 hover:to-violet-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(217,70,239,0.5)]">
+                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
                     Shop now <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
