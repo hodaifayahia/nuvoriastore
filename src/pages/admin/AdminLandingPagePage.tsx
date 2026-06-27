@@ -450,7 +450,7 @@ export default function AdminLandingPagePage() {
       });
 
       // Telegram notify
-      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
+      // Telegram notification is handled server-side by a database trigger.
 
       setOrderSuccess(true);
       toast.success(t('landing.orderSuccess'));

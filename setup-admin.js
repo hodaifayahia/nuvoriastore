@@ -2,8 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@solutionshub.com';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@2026!';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 if (!SUPABASE_URL) {
   console.error('❌ Missing VITE_SUPABASE_URL env var');
@@ -12,6 +12,16 @@ if (!SUPABASE_URL) {
 
 if (!SUPABASE_SERVICE_KEY) {
   console.error('❌ Missing SUPABASE_SERVICE_ROLE_KEY env var');
+  process.exit(1);
+}
+
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('❌ Missing ADMIN_EMAIL and/or ADMIN_PASSWORD env vars. No defaults are provided for security reasons.');
+  process.exit(1);
+}
+
+if (ADMIN_PASSWORD.length < 12) {
+  console.error('❌ ADMIN_PASSWORD must be at least 12 characters.');
   process.exit(1);
 }
 
