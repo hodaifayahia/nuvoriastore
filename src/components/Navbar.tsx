@@ -102,7 +102,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50">
       {/* Main Nav */}
-      <div className="bg-card/90 backdrop-blur-xl border-b">
+      <div className="bg-card/90 backdrop-blur-xl relative">
         <div className="container flex items-center justify-between h-[60px]">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
