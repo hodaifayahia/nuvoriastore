@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, type LucideIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, type LucideIcon } from 'lucide-react';
+import { useTranslation, type Language } from '@/i18n';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useState, useRef, useCallback, useMemo } from 'react';
@@ -56,26 +57,20 @@ export default function Navbar() {
   const { totalItems: wishlistCount } = useWishlist();
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { data: logoUrl } = useStoreLogo();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { language, setLanguage } = useTranslation();
   const { data: categoriesData } = useCategories();
   const categories = useMemo(
     () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
     [categoriesData],
   );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const { data: storeName } = useQuery({
-    queryKey: ['store-name'],
-    queryFn: async () => {
-      const { data } = await supabase.from('settings').select('value').eq('key', 'store_name').maybeSingle();
-      return data?.value || 'DZ Store';
-    },
-    staleTime: 10 * 60 * 1000,
-  });
+  const langTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: isAdmin } = useQuery({
     queryKey: ['navbar-is-admin', user?.id],
@@ -88,7 +83,23 @@ export default function Navbar() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const displayName = storeName || 'جزيرة الطبيعة';
+  // Brand name is fixed across all languages
+  const displayName = 'akram-mobile';
+
+  const LANGS: { code: Language; label: string; short: string }[] = [
+    { code: 'ar', label: 'العربية', short: 'AR' },
+    { code: 'fr', label: 'Français', short: 'FR' },
+    { code: 'en', label: 'English', short: 'EN' },
+  ];
+  const currentLang = LANGS.find(l => l.code === language) ?? LANGS[0];
+
+  const handleLangEnter = useCallback(() => {
+    if (langTimeoutRef.current) clearTimeout(langTimeoutRef.current);
+    setLangOpen(true);
+  }, []);
+  const handleLangLeave = useCallback(() => {
+    langTimeoutRef.current = setTimeout(() => setLangOpen(false), 150);
+  }, []);
 
   const handleCatEnter = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -202,6 +213,39 @@ export default function Navbar() {
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
+
+            {/* Language switcher */}
+            <div
+              className="relative"
+              onMouseEnter={handleLangEnter}
+              onMouseLeave={handleLangLeave}
+            >
+              <button
+                onClick={() => setLangOpen(o => !o)}
+                className="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:bg-muted transition-colors text-xs font-cairo font-semibold text-muted-foreground"
+                aria-label="Language"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{currentLang.short}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {langOpen && (
+                <div className="absolute top-full right-0 mt-1 w-36 bg-card border rounded-xl shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {LANGS.map(l => (
+                    <button
+                      key={l.code}
+                      onClick={() => { setLanguage(l.code); setLangOpen(false); }}
+                      className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm font-cairo transition-colors ${
+                        language === l.code ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      }`}
+                    >
+                      <span>{l.label}</span>
+                      <span className="text-[10px] opacity-70">{l.short}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {!loading && (
               <Link
