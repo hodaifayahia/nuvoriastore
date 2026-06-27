@@ -157,14 +157,15 @@ export default function IndexPage() {
 
   // Wavy SVG divider — fill should match the NEXT section's background
   const Wave = ({ fill, flip = false }: { fill: string; flip?: boolean }) => (
-    <div className="relative -mb-px leading-[0]" aria-hidden="true">
+    <div className="relative leading-[0] block" aria-hidden="true" style={{ marginBottom: -2, marginTop: flip ? -2 : 0 }}>
       <svg
-        viewBox="0 0 1440 100"
+        viewBox="0 0 1440 102"
         preserveAspectRatio="none"
         className={`block w-full h-[60px] sm:h-[90px] ${flip ? 'rotate-180' : ''}`}
+        style={{ display: 'block' }}
       >
         <path
-          d="M0,50 C180,100 360,0 540,40 C720,80 900,10 1080,40 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z"
+          d="M0,50 C180,100 360,0 540,40 C720,80 900,10 1080,40 C1260,70 1380,30 1440,50 L1440,102 L0,102 Z"
           fill={fill}
         />
       </svg>
