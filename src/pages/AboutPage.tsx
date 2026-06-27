@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star } from 'lucide-react';
+import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles } from 'lucide-react';
+
 
 const missions = [
   { icon: Heart, title: 'جودة عالية', desc: 'نختار لك أفضل المنتجات بعناية فائقة لضمان رضاك التام' },
