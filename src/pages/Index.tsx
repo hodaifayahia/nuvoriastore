@@ -180,7 +180,7 @@ export default function IndexPage() {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebSite',
-          name: 'Souq Dzair Express',
+          name: 'Akram Mobile',
           url: 'https://souq-dzair-express.lovable.app/',
           potentialAction: {
             '@type': 'SearchAction',
@@ -213,9 +213,9 @@ export default function IndexPage() {
           {/* Subtle grid */}
           <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:48px_48px]" />
 
-          <div className="relative grid lg:grid-cols-2 gap-8 p-8 sm:p-12 lg:p-16 min-h-[560px] lg:min-h-[620px] items-center">
-            {/* Left: copy */}
-            <div className="text-white">
+          <div className="relative flex items-center justify-center p-8 sm:p-12 lg:p-16 min-h-[520px] lg:min-h-[580px]">
+            {/* Centered copy */}
+            <div className="text-white text-center max-w-3xl mx-auto">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-6">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
@@ -228,13 +228,12 @@ export default function IndexPage() {
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
                   وانطلق.
                 </span>
-
               </h1>
-              <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
+              <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg mx-auto leading-relaxed">
                 حواسيب، هواتف، سماعات وملحقات — منتقاة، أصلية، وتُسلَّم بسرعة عبر الجزائر.
               </p>
 
-              <form onSubmit={handleSearch} className="mt-7 flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
+              <form onSubmit={handleSearch} className="mt-7 mx-auto flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
                 <Search className="w-4 h-4 text-white/60 ms-3 shrink-0" />
                 <Input
                   value={searchQuery}
@@ -247,7 +246,7 @@ export default function IndexPage() {
                 </Button>
               </form>
 
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
                     تسوّق الآن <ArrowRight className="w-4 h-4" />
@@ -260,47 +259,14 @@ export default function IndexPage() {
                 </Link>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/70">
+              <div className="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-white/70">
                 <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> أصلي 100%</span>
                 <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 ولاية</span>
                 <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> إرجاع خلال 7 أيام</span>
               </div>
             </div>
-
-            {/* Right: floating stat cards layered over the hero image */}
-            <div className="hidden lg:flex relative h-full items-center justify-center">
-              <div className="absolute top-6 right-2 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-44 animate-fade-in shadow-2xl">
-                <div className="flex items-center gap-2 text-white">
-                  <Sparkles className="w-4 h-4 text-fuchsia-300" />
-                  <span className="text-xs font-medium">وصل حديثاً</span>
-                </div>
-                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 متوفر</p>
-              </div>
-
-              <div className="absolute bottom-12 right-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-48 shadow-2xl">
-                <div className="flex items-center gap-2 text-white">
-                  <Zap className="w-4 h-4 text-yellow-300" />
-                  <span className="text-xs font-medium">توصيل سريع</span>
-                </div>
-                <p className="mt-1 text-2xl font-display font-bold text-white">24 ساعة</p>
-                <p className="text-[11px] text-white/60">في الجزائر العاصمة</p>
-              </div>
-
-              <div className="absolute bottom-2 left-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
-                <div className="flex -space-x-2">
-                  {[1,2,3,4].map(i => (
-                    <div key={i} className="w-7 h-7 rounded-full border-2 border-[#140a2e] bg-gradient-to-br from-fuchsia-400 to-violet-500" />
-                  ))}
-                </div>
-                <div className="text-white">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-300 text-yellow-300" />)}
-                  </div>
-                  <p className="text-[11px] text-white/70">+2,300 عميل سعيد</p>
-                </div>
-              </div>
-            </div>
           </div>
+
         </div>
 
         {/* Bento promo strip */}

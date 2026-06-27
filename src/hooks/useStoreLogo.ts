@@ -11,7 +11,7 @@ export function useStoreLogo() {
         .eq('key', 'store_logo')
         .maybeSingle();
       // Return store logo if set, otherwise use local fallback
-      return data?.value || '/solutions-hub-logo.svg';
+      return data?.value || '/akram-mobile-logo.jpg';
     },
     staleTime: 10 * 60 * 1000,
   });
