@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    /* === Midnight Indigo storefront — tech accessories === */
-    --background: 240 47% 7%;            /* #0a0a1a deep void */
-    --foreground: 230 30% 94%;
+    /* === Obsidian Amber storefront — premium tech accessories === */
+    --background: 0 0% 4%;               /* near-black */
+    --foreground: 40 40% 94%;
 
-    --card: 240 38% 14%;                 /* #141432 surface card */
-    --card-foreground: 230 30% 94%;
+    --card: 30 18% 8%;                   /* warm black surface */
+    --card-foreground: 40 40% 94%;
 
-    --popover: 240 38% 14%;
-    --popover-foreground: 230 30% 94%;
+    --popover: 30 18% 9%;
+    --popover-foreground: 40 40% 94%;
 
-    --primary: 244 76% 60%;              /* #4f46e5 electric indigo */
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 75% 58%;               /* amber/gold */
+    --primary-foreground: 30 25% 8%;
 
-    --secondary: 240 49% 24%;            /* #1e1e5a deep indigo */
-    --secondary-foreground: 230 30% 94%;
+    --secondary: 35 30% 14%;
+    --secondary-foreground: 40 40% 94%;
 
-    --muted: 240 30% 18%;
-    --muted-foreground: 230 16% 70%;
+    --muted: 30 15% 12%;
+    --muted-foreground: 35 18% 65%;
 
-    --accent: 280 70% 65%;               /* violet pop */
-    --accent-foreground: 0 0% 100%;
+    --accent: 42 85% 65%;
+    --accent-foreground: 30 25% 8%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 30% 20%;
-    --input: 240 30% 16%;
-    --ring: 244 76% 60%;
+    --border: 36 25% 18%;
+    --input: 30 15% 12%;
+    --ring: 38 75% 58%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    --sidebar-background: 240 47% 7%;
-    --sidebar-foreground: 230 30% 94%;
-    --sidebar-primary: 244 76% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 38% 14%;
-    --sidebar-accent-foreground: 230 30% 94%;
-    --sidebar-border: 240 30% 20%;
-    --sidebar-ring: 244 76% 60%;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 40 40% 94%;
+    --sidebar-primary: 38 75% 58%;
+    --sidebar-primary-foreground: 30 25% 8%;
+    --sidebar-accent: 30 18% 10%;
+    --sidebar-accent-foreground: 40 40% 94%;
+    --sidebar-border: 36 25% 18%;
+    --sidebar-ring: 38 75% 58%;
 
-    --success: 160 84% 45%;
-    --warning: 40 96% 58%;
-    --info: 244 76% 60%;
+    --success: 150 60% 45%;
+    --warning: 38 95% 58%;
+    --info: 38 75% 58%;
   }
 
   .dark {
