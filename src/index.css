@@ -256,7 +256,30 @@
     border-color: hsl(var(--primary));
     background-color: hsl(var(--primary) / 0.05);
   }
-}
+
+  /* === Sipar gold glow ring (cards, hero tiles) === */
+  .gold-glow {
+    box-shadow:
+      0 0 0 1px hsl(38 75% 55% / 0.35),
+      0 0 30px -4px hsl(38 75% 55% / 0.35),
+      inset 0 0 24px -8px hsl(38 75% 55% / 0.25);
+  }
+  .gold-glow-hover {
+    transition: box-shadow .35s ease, transform .35s ease;
+  }
+  .gold-glow-hover:hover {
+    box-shadow:
+      0 0 0 1px hsl(38 75% 55% / 0.55),
+      0 0 50px -4px hsl(38 75% 55% / 0.45),
+      inset 0 0 30px -6px hsl(38 75% 55% / 0.3);
+    transform: translateY(-2px);
+  }
+  .gold-text-gradient {
+    background: linear-gradient(135deg, #f4d27a 0%, #d99a3a 50%, #b9802b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
