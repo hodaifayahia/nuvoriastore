@@ -270,8 +270,8 @@ export default function ProductsPage() {
                   onClick={() => setSelectedCategories([])}
                   className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                     selectedCategories.length === 0
-                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25'
-                      : 'bg-muted hover:bg-muted/80 text-foreground border border-border/50'
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                   }`}
                 >
                   {t('productsPage.allCategories')}
@@ -282,8 +282,8 @@ export default function ProductsPage() {
                     onClick={() => selectSingleCategory(cat)}
                     className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                       selectedCategories.includes(cat)
-                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25'
-                        : 'bg-muted hover:bg-muted/80 text-foreground border border-border/50'
+                        ? 'bg-primary text-primary-foreground shadow-md'
+                        : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                     }`}
                   >
                     {cat}
