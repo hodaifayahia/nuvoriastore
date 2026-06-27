@@ -580,19 +580,19 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Loved by customers</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">What people say</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">آراء عملائنا</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">ماذا يقول الناس</h2>
             </div>
             <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
               <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-              <span className="ms-2">4.9 / 5 · 2,300+ reviews</span>
+              <span className="ms-2">4.9 / 5 · +2,300 تقييم</span>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { name: 'Yacine B.', city: 'Algiers', text: 'Got my MacBook charger next day. Original product, sealed box. Will buy again.', rating: 5 },
-              { name: 'Lina K.',   city: 'Oran',    text: 'The Keychron keyboard is amazing. Great prices and fast delivery to Oran.', rating: 5 },
-              { name: 'Omar S.',   city: 'Constantine', text: 'Smooth checkout, real support over the phone, and packaging was perfect.', rating: 5 },
+              { name: 'ياسين ب.', city: 'الجزائر', text: 'استلمت شاحن MacBook في اليوم التالي. منتج أصلي وعلبة مغلقة. سأشتري مجدداً.', rating: 5 },
+              { name: 'لينا ك.',   city: 'وهران',  text: 'لوحة المفاتيح Keychron رائعة. أسعار ممتازة وتوصيل سريع إلى وهران.', rating: 5 },
+              { name: 'عمر س.',   city: 'قسنطينة', text: 'الدفع سلس، دعم حقيقي عبر الهاتف، والتغليف كان مثالياً.', rating: 5 },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border border-border/60 bg-card p-6 relative">
                 <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/15" />
