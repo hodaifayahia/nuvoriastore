@@ -7,6 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from '@/lib/format';
+import { useTranslation } from '@/i18n';
 
 interface QuickViewProps {
   product: {
@@ -30,6 +31,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState(product.main_image_index ?? 0);
   const images = product.images || [];
   const outOfStock = (product.stock ?? 0) <= 0;
@@ -49,18 +51,18 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
       stock: product.stock ?? 0,
       shippingPrice: Number(product.shipping_price) || 0,
     });
-    toast({ title: 'تمت الإضافة ✅', description: `"${product.name}" في السلة` });
+    toast({ title: t('qv.addedToCart'), description: t('qv.addedToCartDesc').replace('{name}', product.name) });
   };
 
   const handleShare = async () => {
     const url = `${window.location.origin}/product/${product.id}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: product.name, text: `تفقد ${product.name}`, url });
+        await navigator.share({ title: product.name, text: t('qv.checkOut').replace('{name}', product.name), url });
       } catch {}
     } else {
       await navigator.clipboard.writeText(url);
-      toast({ title: 'تم نسخ الرابط 📋' });
+      toast({ title: t('qv.linkCopied') });
     }
   };
 
