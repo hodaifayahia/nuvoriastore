@@ -71,6 +71,7 @@ const NAV_GROUPS = [
       { href: '/admin/inventory', key: 'sidebar.inventory', icon: Layers },
       { href: '/admin/variations', key: 'sidebar.variations', icon: Palette },
       { href: '/admin/categories', key: 'sidebar.categories', icon: Layers },
+      { href: '/admin/brands', key: 'sidebar.brands', icon: Award },
     ],
   },
   {
