@@ -410,9 +410,9 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-primary" /> Trending now
+                  <Star className="w-3.5 h-3.5 fill-primary" /> الأكثر رواجاً
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">Most-loved this week</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">الأكثر تفضيلاً هذا الأسبوع</h2>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
