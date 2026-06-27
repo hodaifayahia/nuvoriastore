@@ -20,6 +20,7 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import heroImage from '@/assets/hero-tech-collection.jpg';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
