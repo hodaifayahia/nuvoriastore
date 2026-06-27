@@ -253,6 +253,192 @@ export default function IndexPage() {
         </div>
       </section>
 
+      {/* ───────── تسوق حسب الفئة (CATEGORIES) ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display font-bold text-xl sm:text-2xl lg:text-3xl gold-text-gradient">
+              تسوق حسب الفئة
+            </h2>
+            <Link to="/categories" className="text-xs sm:text-sm text-primary/80 hover:text-primary inline-flex items-center gap-1">
+              عرض الكل <ArrowLeft className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
+            {[
+              { icon: Smartphone, label: 'هواتف',     to: 'phone' },
+              { icon: Laptop,     label: 'حواسيب',    to: 'laptop' },
+              { icon: Headphones, label: 'سماعات',    to: 'headphone' },
+              { icon: Watch,      label: 'ساعات',     to: 'watch' },
+              { icon: Cpu,        label: 'إكسسوارات', to: 'accessory' },
+              { icon: Gift,       label: 'هدايا',     to: 'gift' },
+            ].map(c => (
+              <Link
+                key={c.label}
+                to={`/products?category=${c.to}`}
+                className="group relative rounded-2xl gold-glow gold-glow-hover bg-gradient-to-br from-[#1a1410] to-[#0e0b08] p-4 aspect-square flex flex-col items-center justify-center gap-2"
+              >
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <c.icon className="w-5 h-5 sm:w-7 sm:h-7 text-primary" />
+                </div>
+                <span className="text-[11px] sm:text-sm font-medium text-center">{c.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── BEST SELLERS / TRENDING ───────── */}
+      {(allProducts?.length || 0) > 4 && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-14">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-display font-bold text-xl sm:text-2xl lg:text-3xl gold-text-gradient inline-flex items-center gap-2">
+                <Star className="w-5 h-5 fill-primary text-primary" /> الأكثر مبيعاً
+              </h2>
+              <Link to="/products" className="text-xs sm:text-sm text-primary/80 hover:text-primary inline-flex items-center gap-1">
+                عرض الكل <ArrowLeft className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+              {[...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4).map(p => (
+                <ProductCard
+                  key={p.id}
+                  id={p.id}
+                  name={p.name}
+                  price={Number(p.price)}
+                  oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                  image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
+                  images={p.images || []}
+                  mainImageIndex={p.main_image_index ?? 0}
+                  category={p.category || []}
+                  stock={p.stock ?? 0}
+                  shippingPrice={Number(p.shipping_price) || 0}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ───────── BIG CTA / PROMO BANNER ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative rounded-[28px] gold-glow overflow-hidden bg-gradient-to-l from-[#1a1410] via-[#13100d] to-[#0e0b08] p-6 sm:p-10 lg:p-14">
+            <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+            <div className="relative grid grid-cols-12 items-center gap-6">
+              <div className="col-span-12 sm:col-span-7 text-right">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-primary/15 text-primary border border-primary/40 mb-4">
+                  <Sparkles className="w-3.5 h-3.5" /> عرض حصري
+                </span>
+                <h3 className="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl gold-text-gradient leading-tight">
+                  خصم 25% على الباقات
+                </h3>
+                <p className="mt-3 text-sm sm:text-base text-foreground/70 max-w-md">
+                  اجمع شاحن + كابل + غطاء واحصل على خصم فوري على المجموعة كاملة.
+                </p>
+                <Button onClick={() => navigate('/products')} className="mt-5 sm:mt-6 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 h-10 font-semibold gap-1.5">
+                  تسوق الباقات <ArrowLeft className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+              <div className="col-span-12 sm:col-span-5 flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/30 blur-3xl rounded-full" />
+                  <Tag className="relative w-28 h-28 sm:w-44 sm:h-44 text-primary" strokeWidth={1.3} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── لماذا نحن (TRUST / FEATURES) ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-center font-display font-bold text-xl sm:text-2xl lg:text-3xl gold-text-gradient mb-8">
+            لماذا تختارنا
+          </h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {[
+              { icon: Truck,      title: 'شحن سريع',     desc: 'لكل ولايات الوطن' },
+              { icon: BadgeCheck, title: 'منتجات أصلية', desc: '100% ضمان الجودة' },
+              { icon: RotateCcw,  title: 'إرجاع مجاني',  desc: 'خلال 7 أيام' },
+              { icon: Headset,    title: 'دعم 24/7',     desc: 'فريق متاح دائماً' },
+            ].map(f => (
+              <div key={f.title} className="rounded-2xl gold-glow bg-gradient-to-br from-[#1a1410] to-[#0e0b08] p-5 text-center">
+                <div className="w-12 h-12 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center mx-auto mb-3">
+                  <f.icon className="w-6 h-6 text-primary" />
+                </div>
+                <p className="font-display font-bold text-sm sm:text-base mb-1">{f.title}</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── TESTIMONIALS ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-center font-display font-bold text-xl sm:text-2xl lg:text-3xl gold-text-gradient mb-8">
+            آراء عملائنا
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { name: 'أحمد ب.',    text: 'جودة ممتازة وتوصيل سريع جداً، شكراً لكم.' },
+              { name: 'سارة م.',    text: 'منتجات أصلية والأسعار في المتناول. أنصح بها.' },
+              { name: 'يوسف ك.',    text: 'تجربة شراء رائعة ودعم فعّال. سأعود مرة أخرى.' },
+            ].map(t => (
+              <div key={t.name} className="rounded-2xl gold-glow bg-gradient-to-br from-[#1a1410] to-[#0e0b08] p-5">
+                <div className="flex items-center gap-0.5 mb-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-primary text-primary" />
+                  ))}
+                </div>
+                <p className="text-sm text-foreground/80 leading-relaxed mb-4">"{t.text}"</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary font-bold text-xs">
+                    {t.name.charAt(0)}
+                  </div>
+                  <p className="text-xs font-semibold">{t.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── NEWSLETTER ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-5xl mx-auto rounded-[28px] gold-glow bg-gradient-to-r from-[#1a1410] via-[#13100d] to-[#1a1410] p-6 sm:p-10 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-7 h-7 text-primary" />
+          </div>
+          <h3 className="font-display font-bold text-xl sm:text-2xl lg:text-3xl gold-text-gradient mb-2">
+            اشترك في نشرتنا
+          </h3>
+          <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+            احصل على آخر العروض والمنتجات الجديدة مباشرة في بريدك.
+          </p>
+          <form
+            onSubmit={(e) => { e.preventDefault(); }}
+            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto p-1.5 rounded-2xl bg-background/60 border border-border/60"
+          >
+            <input
+              type="email"
+              required
+              placeholder="بريدك الإلكتروني"
+              className="flex-1 bg-transparent border-0 outline-none px-4 h-10 text-sm placeholder:text-muted-foreground"
+            />
+            <Button type="submit" className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-5 text-sm font-semibold">
+              اشترك
+            </Button>
+          </form>
+        </div>
+      </section>
+
+
       {/* ───────── ALL PRODUCTS ───────── */}
       {(allShown.length > 4) && (
         <section className="px-4 sm:px-6 lg:px-8 pb-20">
