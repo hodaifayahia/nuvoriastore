@@ -414,6 +414,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── ALL PRODUCTS ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
@@ -462,6 +468,8 @@ export default function IndexPage() {
           )}
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── DEALS OF THE DAY ────── */}
       {dealsProducts.length > 0 && (
@@ -510,6 +518,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── BRANDS ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
@@ -528,6 +542,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TESTIMONIALS ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
@@ -570,6 +586,12 @@ export default function IndexPage() {
       </section>
 
       {/* ────── NEWSLETTER ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-card to-accent/15 p-8 sm:p-12 relative overflow-hidden text-center">
           <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-primary/20 blur-3xl" />
@@ -591,6 +613,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TRUST STRIP ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
