@@ -6,49 +6,50 @@
 
 @layer base {
   :root {
-    /* === Midnight Indigo storefront — tech accessories === */
-    --background: 240 47% 7%;            /* #0a0a1a deep void */
-    --foreground: 230 30% 94%;
+    /* === Sky Light storefront — consistent light-blue palette === */
+    --background: 210 60% 98%;            /* near-white sky tint */
+    --foreground: 215 45% 14%;            /* deep navy text */
 
-    --card: 240 38% 14%;                 /* #141432 surface card */
-    --card-foreground: 230 30% 94%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 45% 14%;
 
-    --popover: 240 38% 14%;
-    --popover-foreground: 230 30% 94%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 45% 14%;
 
-    --primary: 244 76% 60%;              /* #4f46e5 electric indigo */
+    --primary: 210 90% 56%;               /* bright sky blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 49% 24%;            /* #1e1e5a deep indigo */
-    --secondary-foreground: 230 30% 94%;
+    --secondary: 205 80% 92%;             /* pale sky */
+    --secondary-foreground: 215 60% 22%;
 
-    --muted: 240 30% 18%;
-    --muted-foreground: 230 16% 70%;
+    --muted: 210 40% 95%;
+    --muted-foreground: 215 20% 45%;
 
-    --accent: 280 70% 65%;               /* violet pop */
-    --accent-foreground: 0 0% 100%;
+    --accent: 195 90% 60%;                /* cyan light accent */
+    --accent-foreground: 215 60% 14%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 78% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 30% 20%;
-    --input: 240 30% 16%;
-    --ring: 244 76% 60%;
+    --border: 210 35% 88%;
+    --input: 210 35% 92%;
+    --ring: 210 90% 56%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 240 47% 7%;
-    --sidebar-foreground: 230 30% 94%;
-    --sidebar-primary: 244 76% 60%;
+    --sidebar-background: 210 60% 98%;
+    --sidebar-foreground: 215 45% 14%;
+    --sidebar-primary: 210 90% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 38% 14%;
-    --sidebar-accent-foreground: 230 30% 94%;
-    --sidebar-border: 240 30% 20%;
-    --sidebar-ring: 244 76% 60%;
+    --sidebar-accent: 205 80% 94%;
+    --sidebar-accent-foreground: 215 60% 22%;
+    --sidebar-border: 210 35% 88%;
+    --sidebar-ring: 210 90% 56%;
 
-    --success: 160 84% 45%;
-    --warning: 40 96% 58%;
-    --info: 244 76% 60%;
+    --success: 160 70% 42%;
+    --warning: 38 95% 55%;
+    --info: 210 90% 56%;
+
   }
 
   .dark {
