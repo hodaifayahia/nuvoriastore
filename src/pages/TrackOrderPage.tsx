@@ -43,6 +43,11 @@ export default function TrackOrderPage() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
+      <SEO
+        title="تتبع طلبك — سوق دزاير إكسبرس"
+        description="تتبع حالة طلبك في الوقت الفعلي على متجر سوق دزاير إكسبرس. أدخل رقم الطلب لمعرفة حالة الشحن."
+        path="/track"
+      />
       {/* ─── Hero ─── */}
       <section className="relative bg-primary border-b border-primary/20">
         <div className="container relative z-10 py-12 md:py-16">
