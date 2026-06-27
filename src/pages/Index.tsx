@@ -559,9 +559,9 @@ export default function IndexPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { name: 'ياسين ب.', city: 'الجزائر', text: 'استلمت شاحن MacBook في اليوم التالي. منتج أصلي وعلبة مغلقة. سأشتري مجدداً.', rating: 5 },
-              { name: 'لينا ك.',   city: 'وهران',  text: 'لوحة المفاتيح Keychron رائعة. أسعار ممتازة وتوصيل سريع إلى وهران.', rating: 5 },
-              { name: 'عمر س.',   city: 'قسنطينة', text: 'الدفع سلس، دعم حقيقي عبر الهاتف، والتغليف كان مثالياً.', rating: 5 },
+              { name: t('idx.testimonials.t1.name'), city: t('idx.testimonials.t1.city'), text: t('idx.testimonials.t1.text'), rating: 5 },
+              { name: t('idx.testimonials.t2.name'), city: t('idx.testimonials.t2.city'), text: t('idx.testimonials.t2.text'), rating: 5 },
+              { name: t('idx.testimonials.t3.name'), city: t('idx.testimonials.t3.city'), text: t('idx.testimonials.t3.text'), rating: 5 },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border border-border/60 bg-card p-6 relative">
                 <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/15" />
