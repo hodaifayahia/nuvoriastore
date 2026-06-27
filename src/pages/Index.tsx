@@ -421,7 +421,7 @@ export default function IndexPage() {
       {/* ────── ALL PRODUCTS ────── */}
       <div
         style={{ background: DARK_BG }}
-        className="text-white [&_h2]:!text-white [&_h3]:!text-white [&_.text-foreground]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-transparent [&_.border-border\/50]:!border-white/10 [&_.border-border\/60]:!border-white/10 [&_.bg-muted]:!bg-white/[0.03] [&_.bg-muted\/50]:!bg-white/10"
+        className="text-white [&_h2]:!text-white"
       >
         <Wave fill={LIGHT_BG} flip />
 
@@ -447,8 +447,9 @@ export default function IndexPage() {
                   <div
                     key={p.id}
                     style={{ animationDelay: `${i * 0.05}s` }}
-                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards] rounded-3xl bg-white/[0.03] border border-white/10 hover:border-sky-300/40 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 overflow-hidden backdrop-blur-sm"
+                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards]"
                   >
+
                     <ProductCard
                       id={p.id}
                       name={p.name}
