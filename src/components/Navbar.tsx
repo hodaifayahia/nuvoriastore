@@ -45,11 +45,11 @@ const DEFAULT_CATEGORIES = [
   { name: 'Watches',    icon: 'Watch' },
 ];
 
-const NAV_LINKS = [
-  { to: '/', label: 'الرئيسية', icon: Home },
-  { to: '/products', label: 'المنتجات', icon: Package },
-  { to: '/track', label: 'تتبع الطلب', icon: MapPin },
-  { to: '/about', label: 'من نحن', icon: Info },
+const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
+  { to: '/', key: 'nav.home', icon: Home },
+  { to: '/products', key: 'nav.products', icon: Package },
+  { to: '/track', key: 'nav.track', icon: MapPin },
+  { to: '/about', key: 'nav.about', icon: Info },
 ];
 
 export default function Navbar() {
