@@ -196,8 +196,8 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
             <Eye className="w-4 h-4" />
           </button>
 
-          {/* Hover add-to-cart overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          {/* Hover add-to-cart overlay (desktop only) */}
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30">
               <ShoppingCart className="w-3.5 h-3.5" />
               {t('pc.addToCart')}
