@@ -657,10 +657,10 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { icon: Truck,      label: 'شحن سريع',        desc: 'إلى جميع الولايات الـ 58' },
-            { icon: Shield,     label: 'إرجاع خلال 7 أيام', desc: 'بدون أسئلة' },
-            { icon: BadgeCheck, label: 'منتجات أصلية',     desc: 'أصلية 100%' },
-            { icon: Headphones, label: 'دعم حقيقي',        desc: 'تواصل مع فريقنا' },
+            { icon: Truck,      label: t('idx.trust.delivery'),  desc: t('idx.trust.deliveryDesc') },
+            { icon: Shield,     label: t('idx.trust.returns'),   desc: t('idx.trust.returnsDesc') },
+            { icon: BadgeCheck, label: t('idx.trust.original'),  desc: t('idx.trust.originalDesc') },
+            { icon: Headphones, label: t('idx.trust.support'),   desc: t('idx.trust.supportDesc') },
           ].map(item => (
             <div key={item.label} className="flex items-start gap-3">
               <div className="w-11 h-11 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0">
