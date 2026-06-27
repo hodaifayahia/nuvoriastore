@@ -310,15 +310,15 @@ export default function IndexPage() {
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Zap className="w-5 h-5 text-primary" />
             <div>
-              <p className="font-display font-bold text-3xl">24h</p>
-              <p className="text-xs text-muted-foreground mt-1">Express delivery in Algiers</p>
+              <p className="font-display font-bold text-3xl">24 س</p>
+              <p className="text-xs text-muted-foreground mt-1">توصيل سريع في الجزائر العاصمة</p>
             </div>
           </div>
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Cpu className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">{allProducts?.length ?? '500+'}</p>
-              <p className="text-xs text-muted-foreground mt-1">Accessories in stock</p>
+              <p className="text-xs text-muted-foreground mt-1">إكسسوار متوفر</p>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
@@ -326,11 +326,11 @@ export default function IndexPage() {
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="font-display font-semibold">Bundle & save up to 25%</p>
-              <p className="text-xs text-muted-foreground">Charger + cable + case combos</p>
+              <p className="font-display font-semibold">عروض الباقات — وفّر حتى 25%</p>
+              <p className="text-xs text-muted-foreground">باقات الشاحن + الكابل + الحافظة</p>
             </div>
             <Link to="/products" className="shrink-0">
-              <Button variant="outline" size="sm" className="rounded-full">Explore</Button>
+              <Button variant="outline" size="sm" className="rounded-full">اكتشف</Button>
             </Link>
           </div>
         </div>
