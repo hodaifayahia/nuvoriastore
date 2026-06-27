@@ -35,7 +35,6 @@ export default function ProductsPage() {
   const categoryScrollRef = useRef<HTMLDivElement>(null);
 
   const { data: categoriesData } = useCategories();
-  const categoryNames = categoriesData?.map(c => c.name) || [];
   const sortOptions = [
     { value: 'newest', label: t('productsPage.sort.newest') },
     { value: 'cheapest', label: t('productsPage.sort.cheapest') },
