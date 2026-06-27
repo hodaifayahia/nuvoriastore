@@ -267,10 +267,10 @@ export default function Navbar() {
               <Link
                 to="/admin"
                 className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                title="لوحة التحكم"
+                title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                لوحة التحكم
+                {t('nav.adminPanel')}
               </Link>
             )}
 
