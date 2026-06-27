@@ -1330,6 +1330,9 @@ export const ar: Record<string, string> = {
   'productsPage.filters.title': 'الفلاتر',
 
   'productsPage.hero.badge': 'اكتشف منتجاتنا المميزة',
+  'productsPage.seoTitle': 'كل المنتجات — إكسسوارات الهواتف والحواسيب',
+  'productsPage.seoDesc': 'تصفّح مجموعتنا الكاملة من إكسسوارات الهواتف والحواسيب: سماعات، شواحن، حقائب، لوحات مفاتيح وأكثر.',
+  'productsPage.seoDescCategory': 'تسوّق {cat} بأفضل الأسعار مع توصيل سريع إلى 58 ولاية في الجزائر.',
   'productsPage.hero.subtitle': 'تصفح مجموعتنا الواسعة من المنتجات الرقمية والاشتراكات المميزة',
   'productsPage.hero.title': 'المتجر',
   'productsPage.productCountLabel': 'منتج',
