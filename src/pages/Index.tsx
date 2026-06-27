@@ -174,7 +174,7 @@ export default function IndexPage() {
 
       {/* ────── HERO ────── */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-6 pb-10">
-        <div className="relative max-w-7xl mx-auto rounded-[2rem] border border-border/60 overflow-hidden bg-gradient-to-br from-[#0b0820] via-[#140a2e] to-[#1a0c3a] shadow-[0_30px_80px_-20px_rgba(120,80,255,0.35)]">
+        <div className="relative max-w-7xl mx-auto rounded-[2rem] border border-border/60 overflow-hidden bg-gradient-to-br from-[#0B3B6F] via-[#0E5BA8] to-[#1E88E5] shadow-[0_30px_80px_-20px_rgba(30,136,229,0.35)]">
           {/* Background image */}
           <img
             src={heroImage}
