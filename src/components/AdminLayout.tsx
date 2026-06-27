@@ -51,7 +51,6 @@ const NAV_KEYS = [
   { href: '/admin/abandoned', key: 'sidebar.abandoned', icon: PackageX },
   { href: '/admin/wilayas', key: 'sidebar.wilayas', icon: MapPin },
   { href: '/admin/coupons', key: 'sidebar.coupons', icon: Tag },
-  { href: '/admin/landing', key: 'sidebar.landing', icon: Rocket },
   { href: '/admin/suppliers', key: 'sidebar.suppliers', icon: Truck },
   { href: '/admin/clients', key: 'sidebar.clients', icon: Users },
   { href: '/admin/delivery', key: 'delivery.title', icon: Truck },
@@ -99,12 +98,6 @@ const NAV_GROUPS = [
       { href: '/admin/wilayas', key: 'sidebar.wilayas', icon: MapPin },
       { href: '/admin/coupons', key: 'sidebar.coupons', icon: Tag },
       { href: '/admin/delivery', key: 'delivery.title', icon: Truck },
-    ],
-  },
-  {
-    groupKey: 'sidebar.marketing',
-    items: [
-      { href: '/admin/landing', key: 'sidebar.landing', icon: Rocket },
     ],
   },
 ];
