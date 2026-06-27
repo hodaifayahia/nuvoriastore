@@ -134,7 +134,7 @@ export default function IndexPage() {
         <div className="relative max-w-7xl mx-auto grid grid-cols-12 grid-rows-[auto_auto] gap-3 sm:gap-4">
 
           {/* Headline tile */}
-          <div className="col-span-12 lg:col-span-7 row-span-1 rounded-3xl border border-border/60 bg-gradient-to-br from-card via-card to-secondary/40 p-8 sm:p-12 relative overflow-hidden">
+          <div className="col-span-12 lg:col-span-7 row-span-1 rounded-3xl bg-gradient-to-br from-card via-card to-secondary/40 gold-glow p-8 sm:p-12 relative overflow-hidden">
             <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(hsl(var(--foreground))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground))_1px,transparent_1px)] [background-size:32px_32px]" />
             <div className="relative">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-primary/15 text-primary border border-primary/30 mb-6">
@@ -146,7 +146,7 @@ export default function IndexPage() {
               </span>
               <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
                 Accessories <br />
-                <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r gold-text-gradient">
                   for your devices.
                 </span>
               </h1>
@@ -176,7 +176,7 @@ export default function IndexPage() {
           </div>
 
           {/* Hero product tile */}
-          <div className="col-span-12 lg:col-span-5 row-span-1 rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-secondary/40 to-card p-6 sm:p-8 relative overflow-hidden min-h-[280px] flex flex-col justify-between">
+          <div className="col-span-12 lg:col-span-5 row-span-1 rounded-3xl bg-gradient-to-br from-primary/15 via-secondary/40 to-card gold-glow gold-glow-hover p-6 sm:p-8 relative overflow-hidden min-h-[280px] flex flex-col justify-between">
             <div className="pointer-events-none absolute -top-10 -right-10 w-56 h-56 rounded-full bg-primary/30 blur-3xl" />
             {heroProduct ? (
               <>
@@ -217,21 +217,21 @@ export default function IndexPage() {
           </div>
 
           {/* Stats / promo strip */}
-          <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
+          <div className="col-span-6 lg:col-span-3 rounded-3xl bg-card p-5 flex flex-col justify-between gold-glow gold-glow-hover">
             <Zap className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">24h</p>
               <p className="text-xs text-muted-foreground mt-1">Express delivery in Algiers</p>
             </div>
           </div>
-          <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
+          <div className="col-span-6 lg:col-span-3 rounded-3xl bg-card p-5 flex flex-col justify-between gold-glow gold-glow-hover">
             <Cpu className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">{allProducts?.length ?? '500+'}</p>
               <p className="text-xs text-muted-foreground mt-1">Accessories in stock</p>
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
+          <div className="col-span-12 lg:col-span-6 rounded-3xl bg-gradient-to-r from-secondary/60 to-card gold-glow p-5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
@@ -287,7 +287,7 @@ export default function IndexPage() {
                 <Link
                   key={cat.name + i}
                   to={`/products?category=${encodeURIComponent(cat.name)}`}
-                  className={`group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br ${cat.accent} bg-card p-5 h-32 sm:h-36 flex flex-col justify-between hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]`}
+                  className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${cat.accent} bg-card gold-glow gold-glow-hover p-5 h-32 sm:h-36 flex flex-col justify-between hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]`}
                 >
                   <div className="w-10 h-10 rounded-xl bg-background/60 backdrop-blur flex items-center justify-center border border-border/40">
                     <Icon className="w-5 h-5 text-primary" />

@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    /* === Midnight Indigo storefront — tech accessories === */
-    --background: 240 47% 7%;            /* #0a0a1a deep void */
-    --foreground: 230 30% 94%;
+    /* === Sipar Store — amber/gold on near-black === */
+    --background: 30 12% 5%;             /* #0e0c0a near-black */
+    --foreground: 40 30% 92%;
 
-    --card: 240 38% 14%;                 /* #141432 surface card */
-    --card-foreground: 230 30% 94%;
+    --card: 28 14% 8%;                   /* #161310 elevated surface */
+    --card-foreground: 40 30% 92%;
 
-    --popover: 240 38% 14%;
-    --popover-foreground: 230 30% 94%;
+    --popover: 28 14% 8%;
+    --popover-foreground: 40 30% 92%;
 
-    --primary: 244 76% 60%;              /* #4f46e5 electric indigo */
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 75% 55%;               /* #d99a3a warm amber/gold */
+    --primary-foreground: 30 25% 6%;
 
-    --secondary: 240 49% 24%;            /* #1e1e5a deep indigo */
-    --secondary-foreground: 230 30% 94%;
+    --secondary: 28 18% 12%;
+    --secondary-foreground: 40 30% 92%;
 
-    --muted: 240 30% 18%;
-    --muted-foreground: 230 16% 70%;
+    --muted: 28 10% 14%;
+    --muted-foreground: 38 18% 65%;
 
-    --accent: 280 70% 65%;               /* violet pop */
-    --accent-foreground: 0 0% 100%;
+    --accent: 42 90% 62%;                /* brighter gold accent */
+    --accent-foreground: 30 25% 6%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 30% 20%;
-    --input: 240 30% 16%;
-    --ring: 244 76% 60%;
+    --border: 38 30% 22%;                /* subtle gold-tinted border */
+    --input: 28 14% 10%;
+    --ring: 38 75% 55%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --sidebar-background: 240 47% 7%;
-    --sidebar-foreground: 230 30% 94%;
-    --sidebar-primary: 244 76% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 38% 14%;
-    --sidebar-accent-foreground: 230 30% 94%;
-    --sidebar-border: 240 30% 20%;
-    --sidebar-ring: 244 76% 60%;
+    --sidebar-background: 30 12% 5%;
+    --sidebar-foreground: 40 30% 92%;
+    --sidebar-primary: 38 75% 55%;
+    --sidebar-primary-foreground: 30 25% 6%;
+    --sidebar-accent: 28 14% 10%;
+    --sidebar-accent-foreground: 40 30% 92%;
+    --sidebar-border: 38 30% 20%;
+    --sidebar-ring: 38 75% 55%;
 
-    --success: 160 84% 45%;
+    --success: 150 60% 45%;
     --warning: 40 96% 58%;
-    --info: 244 76% 60%;
+    --info: 38 75% 55%;
   }
 
   .dark {
@@ -256,7 +256,33 @@
     border-color: hsl(var(--primary));
     background-color: hsl(var(--primary) / 0.05);
   }
+
+  /* === Sipar gold glow ring (cards, hero tiles) === */
+  .gold-glow {
+    box-shadow:
+      0 0 0 1px hsl(38 75% 55% / 0.35),
+      0 0 30px -4px hsl(38 75% 55% / 0.35),
+      inset 0 0 24px -8px hsl(38 75% 55% / 0.25);
+  }
+  .gold-glow-hover {
+    transition: box-shadow .35s ease, transform .35s ease;
+  }
+  .gold-glow-hover:hover {
+    box-shadow:
+      0 0 0 1px hsl(38 75% 55% / 0.55),
+      0 0 50px -4px hsl(38 75% 55% / 0.45),
+      inset 0 0 30px -6px hsl(38 75% 55% / 0.3);
+    transform: translateY(-2px);
+  }
+  .gold-text-gradient {
+    background: linear-gradient(135deg, #f4d27a 0%, #d99a3a 50%, #b9802b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
+
+
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
