@@ -1,14 +1,14 @@
 ---
 name: Storefront brand
-description: Tech accessories store — Midnight Indigo dark theme, Space Grotesk + DM Sans, bento layouts
+description: Tech accessories store — Obsidian Amber dark theme, near-black background with warm gold/amber accents
 type: design
 ---
 Storefront sells mobile and computer accessories (phone cases, chargers, headphones, keyboards, mice, laptops, cables, gaming).
 
-Palette (Midnight Indigo, dark theme): background #0a0a1a, surface #141432, deep indigo #1e1e5a, electric indigo accent #4f46e5. Violet pop for accents.
+Palette (Obsidian Amber, dark theme): background near-black `0 0% 4%`, card warm-black `30 18% 8%`, primary amber/gold `38 75% 58%`, accent bright gold `42 85% 65%`. Heavy use of amber glows and gradient buttons from primary to accent.
 
-Typography: Space Grotesk (headings/display), DM Sans (body). Loaded via @fontsource. Use `font-display` utility for headings.
+Typography: Cairo (Arabic + Latin) is the default storefront font; legacy Space Grotesk / DM Sans still imported and available for admin.
 
-Layout: bento-grid hero with headline tile + featured product tile + stat tiles. Category cards as rounded gradient tiles with icon pills. Rounded radius 0.75rem (rounded-2xl/3xl).
+Layout: Arabic RTL, rounded-3xl cards with subtle primary/20 borders, amber blur glows behind hero/featured sections, gradient gold CTA pills, countdown pill timers for flash sales.
 
-Old amber/honey "Nature Island" branding is retired on the storefront. Admin dashboard still uses its own scoped Deep Horizon theme inside `.admin-deep-horizon`.
+Old Midnight Indigo and Nature Island brandings are retired on the storefront. Admin dashboard still uses its own scoped Deep Horizon theme inside `.admin-deep-horizon`.
