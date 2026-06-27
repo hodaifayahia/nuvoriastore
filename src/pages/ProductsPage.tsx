@@ -213,11 +213,11 @@ export default function ProductsPage() {
   );
 
   const seoTitle = selectedCategories[0]
-    ? `${selectedCategories[0]} — متجر سوق دزاير إكسبرس`
-    : 'كل المنتجات — إكسسوارات الهواتف والحواسيب';
+    ? `${selectedCategories[0]} — akram-mobile`
+    : t('productsPage.seoTitle');
   const seoDesc = selectedCategories[0]
-    ? `تسوّق ${selectedCategories[0]} بأفضل الأسعار مع توصيل سريع إلى 58 ولاية في الجزائر.`
-    : 'تصفّح مجموعتنا الكاملة من إكسسوارات الهواتف والحواسيب: سماعات، شواحن، حقائب، لوحات مفاتيح وأكثر.';
+    ? t('productsPage.seoDescCategory').replace('{cat}', selectedCategories[0])
+    : t('productsPage.seoDesc');
 
   return (
     <div className="min-h-screen bg-background pb-24">
