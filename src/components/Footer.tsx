@@ -106,7 +106,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="lg:col-span-3">
-            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">روابط سريعة</h3>
+            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">{t('footer.quickLinks')}</h3>
             <nav className="flex flex-col gap-2.5">
               {quickLinks.map(link => (
                 <Link
@@ -115,7 +115,7 @@ export default function Footer() {
                   className="flex items-center gap-1.5 text-background/60 hover:text-primary font-cairo text-sm transition-colors group"
                 >
                   <ChevronLeft className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               ))}
             </nav>
@@ -123,7 +123,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="lg:col-span-4">
-            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">تواصل معنا</h3>
+            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">{t('footer.contactUs')}</h3>
             <div className="space-y-3">
               {phone && (
                 <a href={`tel:${phone}`} className="flex items-center gap-2.5 text-background/60 hover:text-primary font-cairo text-sm transition-colors group">
