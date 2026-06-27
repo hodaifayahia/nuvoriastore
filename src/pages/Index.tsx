@@ -18,6 +18,9 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import heroLaptopAsset from '@/assets/hero-laptop.jpg.asset.json';
+import sifarDevicesAsset from '@/assets/sifar-devices.jpg.asset.json';
+import ecosystemTechAsset from '@/assets/ecosystem-tech.jpg.asset.json';
 
 const ECOSYSTEM_FEATURES = [
   { icon: RefreshCw, label: 'Seamless Sync' },
@@ -121,7 +124,7 @@ export default function IndexPage() {
                         {slide.url ? (
                           <img src={slide.url} alt={slide.alt || ''} className="relative max-h-40 sm:max-h-56 lg:max-h-72 object-contain drop-shadow-[0_20px_40px_hsl(38_75%_55%/0.4)]" />
                         ) : (
-                          <Laptop className="relative w-28 h-28 sm:w-40 sm:h-40 text-primary/70" />
+                          <img src={heroLaptopAsset.url} alt="Laptop with gold glow" className="relative w-full h-40 sm:h-56 lg:h-72 object-cover rounded-2xl" />
                         )}
                       </div>
 
@@ -225,7 +228,11 @@ export default function IndexPage() {
               {/* Center device */}
               <div className="relative flex items-center justify-center">
                 <div className="absolute w-44 h-44 sm:w-64 sm:h-64 rounded-full bg-primary/20 blur-3xl" />
-                <Laptop className="relative w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 text-primary" strokeWidth={1.2} />
+                <img
+                  src={ecosystemTechAsset.url}
+                  alt="Tech ecosystem with gold circuit lines"
+                  className="relative w-full max-w-[280px] sm:max-w-md aspect-square object-cover rounded-2xl gold-glow"
+                />
               </div>
 
               {/* Right features */}
@@ -233,6 +240,36 @@ export default function IndexPage() {
                 {ECOSYSTEM_FEATURES.slice(3, 6).map(f => (
                   <FeatureChip key={f.label} icon={f.icon} label={f.label} side="left" />
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── BRAND SHOWCASE ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative rounded-[28px] overflow-hidden gold-glow">
+            <img
+              src={sifarDevicesAsset.url}
+              alt="Sifar Store laptop and phone"
+              className="w-full h-[260px] sm:h-[360px] lg:h-[460px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="px-6 sm:px-10 lg:px-16 text-right mr-auto max-w-md">
+                <h2 className="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl gold-text-gradient leading-tight">
+                  Sifar Store
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-white/90">
+                  أجهزة وإكسسوارات بجودة عالية وتصميم فاخر
+                </p>
+                <Button
+                  onClick={() => navigate('/products')}
+                  className="mt-5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 h-10 text-sm font-semibold gap-1.5"
+                >
+                  اكتشف المجموعة <ArrowLeft className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           </div>
