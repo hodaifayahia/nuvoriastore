@@ -689,11 +689,10 @@ export default function IndexPage() {
                 </div>
               </div>
             </div>
-
-            </div>
           </div>
         </div>
       </section>
+
         <Wave fill={LIGHT_BG} />
       </div>
 
