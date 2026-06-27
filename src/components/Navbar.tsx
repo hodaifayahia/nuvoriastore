@@ -209,7 +209,7 @@ export default function Navbar() {
             <button
               onClick={() => setSearchOpen(true)}
               className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
-              aria-label="بحث"
+              aria-label={t('nav.search')}
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
