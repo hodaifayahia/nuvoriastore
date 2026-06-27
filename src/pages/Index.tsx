@@ -609,7 +609,7 @@ export default function IndexPage() {
           <div className="pointer-events-none absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-sky-400/25 blur-[120px]" />
           <div className="pointer-events-none absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-[120px]" />
 
-          <div className="relative grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+          <div className="relative">
             {/* Copy */}
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
@@ -658,37 +658,6 @@ export default function IndexPage() {
               </div>
             </div>
 
-            {/* Avatar / portrait — compact */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-48 sm:w-56">
-                {/* Glow ring */}
-                <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
-                <div className="relative aspect-square rounded-full overflow-hidden border-4 border-white/20 shadow-2xl bg-white/5">
-                  <img
-                    src={trustedTechImage}
-                    alt="Friendly tech expert holding a laptop"
-                    width={400}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
-
-                {/* Floating badge */}
-                <div className="absolute -bottom-3 -left-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 flex items-center gap-1.5 shadow-xl">
-                  <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
-                  <span className="text-[10px] font-semibold text-white">100% Authentic</span>
-                </div>
-
-                <div className="absolute -top-2 -right-2 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 shadow-xl">
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-2.5 h-2.5 fill-yellow-300 text-yellow-300" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
