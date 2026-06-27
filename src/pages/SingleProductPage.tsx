@@ -571,7 +571,7 @@ export default function SingleProductPage() {
         orderItemPayload.variant_id = matchedVariant.id;
       }
       await supabase.from('order_items').insert(orderItemPayload);
-      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
+      // Telegram notification is handled server-side by a database trigger.
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err) {
       toast({ title: 'خطأ', description: 'حدث خطأ أثناء إرسال الطلب', variant: 'destructive' });
