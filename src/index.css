@@ -6,49 +6,50 @@
 
 @layer base {
   :root {
-    /* === Sky Light storefront — consistent light-blue palette === */
-    --background: 210 60% 98%;            /* near-white sky tint */
-    --foreground: 215 45% 14%;            /* deep navy text */
+    /* === Akram Mobile storefront — Deep Horizon-aligned palette === */
+    --background: 222 40% 97%;            /* near-white with navy tint */
+    --foreground: 222 51% 10%;            /* deep navy text */
 
     --card: 0 0% 100%;
-    --card-foreground: 215 45% 14%;
+    --card-foreground: 222 51% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 45% 14%;
+    --popover-foreground: 222 51% 10%;
 
-    --primary: 210 90% 56%;               /* bright sky blue */
+    --primary: 217 100% 55%;              /* #1A6BFF electric blue (dashboard) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 205 80% 92%;             /* pale sky */
-    --secondary-foreground: 215 60% 22%;
+    --secondary: 217 60% 94%;             /* pale electric blue */
+    --secondary-foreground: 222 51% 14%;
 
-    --muted: 210 40% 95%;
-    --muted-foreground: 215 20% 45%;
+    --muted: 222 30% 95%;
+    --muted-foreground: 222 15% 42%;
 
-    --accent: 195 90% 60%;                /* cyan light accent */
-    --accent-foreground: 215 60% 14%;
+    --accent: 217 100% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 78% 58%;
+    --destructive: 4 78% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 35% 88%;
-    --input: 210 35% 92%;
-    --ring: 210 90% 56%;
+    --border: 222 25% 88%;
+    --input: 222 25% 92%;
+    --ring: 217 100% 55%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 210 60% 98%;
-    --sidebar-foreground: 215 45% 14%;
-    --sidebar-primary: 210 90% 56%;
+    --sidebar-background: 222 40% 97%;
+    --sidebar-foreground: 222 51% 10%;
+    --sidebar-primary: 217 100% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 205 80% 94%;
-    --sidebar-accent-foreground: 215 60% 22%;
-    --sidebar-border: 210 35% 88%;
-    --sidebar-ring: 210 90% 56%;
+    --sidebar-accent: 217 60% 94%;
+    --sidebar-accent-foreground: 222 51% 14%;
+    --sidebar-border: 222 25% 88%;
+    --sidebar-ring: 217 100% 55%;
 
-    --success: 160 70% 42%;
+    --success: 152 60% 42%;
     --warning: 38 95% 55%;
-    --info: 210 90% 56%;
+    --info: 217 100% 55%;
+
 
   }
 
