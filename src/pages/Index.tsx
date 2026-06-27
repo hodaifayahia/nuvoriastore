@@ -478,13 +478,13 @@ export default function IndexPage() {
             <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> عروض اليوم
+                  <Flame className="w-3.5 h-3.5" /> {t('idx.deals.kicker')}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">تخفيضات لفترة محدودة</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.deals.title')}</h2>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-xs text-muted-foreground">ينتهي خلال</span>
+                <span className="text-xs text-muted-foreground">{t('idx.deals.endsIn')}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
                     <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
