@@ -205,9 +205,10 @@ export default function IndexPage() {
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
                 Gear up. <br />
-                <span className="bg-gradient-to-r from-fuchsia-300 via-violet-300 to-sky-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
                   Power on.
                 </span>
+
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
                 Laptops, phones, audio and peripherals — curated, original, and delivered fast across Algeria.
