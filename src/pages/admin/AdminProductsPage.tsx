@@ -1285,7 +1285,17 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-end pb-1">
+            <div>
+              <Label className="font-cairo">العلامة التجارية</Label>
+              <Select value={brand || '__none__'} onValueChange={v => setBrand(v === '__none__' ? '' : v)}>
+                <SelectTrigger className="font-cairo mt-1.5 h-11"><SelectValue placeholder="بدون علامة" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__" className="font-cairo text-muted-foreground">بدون علامة</SelectItem>
+                  {brandNames.map(b => <SelectItem key={b} value={b} className="font-cairo">{b}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end pb-1 sm:col-span-2">
               <div className="flex items-center gap-2">
                 <Switch checked={isActive} onCheckedChange={setIsActive} />
                 <Label className="font-cairo">{isActive ? 'نشط — يظهر في المتجر' : 'معطّل — مخفي'}</Label>
