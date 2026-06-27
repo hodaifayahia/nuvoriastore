@@ -57,26 +57,20 @@ export default function Navbar() {
   const { totalItems: wishlistCount } = useWishlist();
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { data: logoUrl } = useStoreLogo();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { language, setLanguage } = useTranslation();
   const { data: categoriesData } = useCategories();
   const categories = useMemo(
     () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
     [categoriesData],
   );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const { data: storeName } = useQuery({
-    queryKey: ['store-name'],
-    queryFn: async () => {
-      const { data } = await supabase.from('settings').select('value').eq('key', 'store_name').maybeSingle();
-      return data?.value || 'DZ Store';
-    },
-    staleTime: 10 * 60 * 1000,
-  });
+  const langTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: isAdmin } = useQuery({
     queryKey: ['navbar-is-admin', user?.id],
@@ -89,7 +83,23 @@ export default function Navbar() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const displayName = storeName || 'جزيرة الطبيعة';
+  // Brand name is fixed across all languages
+  const displayName = 'akram-mobile';
+
+  const LANGS: { code: Language; label: string; short: string }[] = [
+    { code: 'ar', label: 'العربية', short: 'AR' },
+    { code: 'fr', label: 'Français', short: 'FR' },
+    { code: 'en', label: 'English', short: 'EN' },
+  ];
+  const currentLang = LANGS.find(l => l.code === language) ?? LANGS[0];
+
+  const handleLangEnter = useCallback(() => {
+    if (langTimeoutRef.current) clearTimeout(langTimeoutRef.current);
+    setLangOpen(true);
+  }, []);
+  const handleLangLeave = useCallback(() => {
+    langTimeoutRef.current = setTimeout(() => setLangOpen(false), 150);
+  }, []);
 
   const handleCatEnter = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
