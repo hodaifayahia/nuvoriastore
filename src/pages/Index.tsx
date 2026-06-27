@@ -633,45 +633,45 @@ export default function IndexPage() {
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
-                Trusted since day one
+                موثوق منذ اليوم الأول
               </span>
               <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
-                Your trusted{' '}
+                شريكك التقني{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  technology
+                  الموثوق
                 </span>{' '}
-                partner in Algeria
+                في الجزائر
               </h2>
 
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
-                Original products, fair prices and friendly support — delivered to all 58 wilayas.
-                Thousands of Algerians already trust us for their laptops, phones and accessories.
+                منتجات أصلية، أسعار منصفة ودعم ودود — توصيل إلى جميع الولايات الـ 58.
+                آلاف الجزائريين يثقون بنا لشراء حواسيبهم وهواتفهم وملحقاتها.
               </p>
 
               <div className="mt-7 grid grid-cols-3 gap-4 max-w-md">
                 <div>
-                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">2.3k+</p>
-                  <p className="text-xs text-white/60 mt-1">Happy customers</p>
+                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">+2.3k</p>
+                  <p className="text-xs text-white/60 mt-1">عميل سعيد</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">58</p>
-                  <p className="text-xs text-white/60 mt-1">Wilayas covered</p>
+                  <p className="text-xs text-white/60 mt-1">ولاية مغطّاة</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">4.9★</p>
-                  <p className="text-xs text-white/60 mt-1">Average rating</p>
+                  <p className="text-xs text-white/60 mt-1">متوسط التقييم</p>
                 </div>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    Browse the store <ArrowRight className="w-4 h-4" />
+                    تصفّح المتجر <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/about">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    About us
+                    من نحن
                   </Button>
                 </Link>
               </div>
