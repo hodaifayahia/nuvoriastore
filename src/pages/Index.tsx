@@ -421,7 +421,7 @@ export default function IndexPage() {
       {/* ────── ALL PRODUCTS ────── */}
       <div
         style={{ background: DARK_BG }}
-        className="text-white [&_h2]:!text-white [&_h3]:!text-white [&_.text-foreground]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-transparent [&_.border-border\/50]:!border-white/10 [&_.border-border\/60]:!border-white/10 [&_.bg-muted]:!bg-white/[0.03] [&_.bg-muted\/50]:!bg-white/10"
+        className="text-white [&_h2]:!text-white"
       >
         <Wave fill={LIGHT_BG} flip />
 
