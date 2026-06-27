@@ -148,8 +148,9 @@ export default function IndexPage() {
   }, [categoriesData]);
 
   // Section background tones — alternating light & dark
-  const LIGHT_BG = '#F8F9FA';
-  const DARK_BG = '#1A1A2E';
+  const LIGHT_BG = '#EAF4FF';
+  const DARK_BG = '#0B3B6F';
+
 
   // Wavy SVG divider — fill should match the NEXT section's background
   const Wave = ({ fill, flip = false }: { fill: string; flip?: boolean }) => (
