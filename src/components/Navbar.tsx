@@ -162,7 +162,7 @@ export default function Navbar() {
                   }`}
                 >
                   <Grid3X3 className="w-4 h-4" />
-                  التصنيفات
+                  {t('nav.categories')}
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -175,7 +175,7 @@ export default function Navbar() {
                       className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-cairo font-semibold transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
                     >
                       <Grid3X3 className="w-4 h-4" />
-                      الكل
+                      {t('nav.all')}
                     </Link>
                     <div className="grid grid-cols-2 gap-0.5">
                       {categories.map(cat => {
