@@ -253,11 +253,11 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               )}
             </div>
             <div className="flex items-center gap-1.5 w-full">
-              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-xs rounded-xl h-10 w-10 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
-                <ShoppingCart className="w-4 h-4 text-foreground" />
+              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
+                <ShoppingCart className="w-3.5 h-3.5 text-foreground" />
               </Button>
-              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-10 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Zap className="w-3.5 h-3.5" />
+              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-[11px] gap-1 rounded-lg h-8 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Zap className="w-3 h-3" />
                 {t('pc.orderNow')}
               </Button>
             </div>
