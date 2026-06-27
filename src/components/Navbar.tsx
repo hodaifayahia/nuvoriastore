@@ -118,8 +118,8 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
             {logoUrl ? (
-              <span className="h-12 w-12 rounded-full bg-card border border-border/70 p-1 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
-                <img src={logoUrl} alt={displayName} className="h-full w-full object-contain rounded-full" />
+              <span className="h-12 w-12 rounded-full bg-card border border-border/70 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
+                <img src={logoUrl} alt={displayName} className="h-full w-full object-cover" />
               </span>
             ) : (
               <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
