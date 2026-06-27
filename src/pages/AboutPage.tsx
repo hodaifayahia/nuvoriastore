@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles } from 'lucide-react';
