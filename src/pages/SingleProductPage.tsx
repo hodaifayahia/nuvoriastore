@@ -33,9 +33,8 @@ function StarRating({ value, onChange, readonly = false }: { value: number; onCh
   );
 }
 
-function CountdownTimerInner({ endsAt, title, t }: { endsAt: string; title?: string; t: (k: string) => string }) {
-
 function CountdownTimer({ endsAt, title }: { endsAt: string; title?: string }) {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [expired, setExpired] = useState(false);
 
@@ -71,10 +70,10 @@ function CountdownTimer({ endsAt, title }: { endsAt: string; title?: string }) {
           </div>
           <div className="flex gap-2">
             {[
-              { value: timeLeft.days, label: 'يوم' },
-              { value: timeLeft.hours, label: 'ساعة' },
-              { value: timeLeft.minutes, label: 'دقيقة' },
-              { value: timeLeft.seconds, label: 'ثانية' },
+              { value: timeLeft.days, label: t('product.days') },
+              { value: timeLeft.hours, label: t('product.hours') },
+              { value: timeLeft.minutes, label: t('product.minutes') },
+              { value: timeLeft.seconds, label: t('product.seconds') },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center">
                 <div className="w-12 h-12 rounded-xl bg-foreground/10 backdrop-blur-sm flex items-center justify-center border border-foreground/10">
