@@ -1,0 +1,1 @@
+INSERT INTO public.settings(key,value) VALUES ('store_logo','/akram-mobile-logo.jpg'),('store_favicon','/akram-mobile-logo.jpg'),('store_name','أكرم موبايل') ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value;
