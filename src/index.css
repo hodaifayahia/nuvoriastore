@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,34 +6,34 @@
 
 @layer base {
   :root {
-    /* === Midnight Indigo storefront — tech accessories === */
-    --background: 240 47% 7%;            /* #0a0a1a deep void */
-    --foreground: 230 30% 94%;
+    /* === Sifar Digital — dark slate + warm gold === */
+    --background: 210 11% 13%;           /* #1d2228 deep slate */
+    --foreground: 40 30% 94%;
 
-    --card: 240 38% 14%;                 /* #141432 surface card */
-    --card-foreground: 230 30% 94%;
+    --card: 210 14% 17%;                 /* #252a31 elevated card */
+    --card-foreground: 40 30% 94%;
 
-    --popover: 240 38% 14%;
-    --popover-foreground: 230 30% 94%;
+    --popover: 210 14% 17%;
+    --popover-foreground: 40 30% 94%;
 
-    --primary: 244 76% 60%;              /* #4f46e5 electric indigo */
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 55% 62%;               /* #d4b072 warm gold */
+    --primary-foreground: 210 20% 10%;
 
-    --secondary: 240 49% 24%;            /* #1e1e5a deep indigo */
-    --secondary-foreground: 230 30% 94%;
+    --secondary: 210 12% 22%;
+    --secondary-foreground: 40 30% 94%;
 
-    --muted: 240 30% 18%;
-    --muted-foreground: 230 16% 70%;
+    --muted: 210 12% 20%;
+    --muted-foreground: 210 8% 65%;
 
-    --accent: 280 70% 65%;               /* violet pop */
-    --accent-foreground: 0 0% 100%;
+    --accent: 38 55% 62%;
+    --accent-foreground: 210 20% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 30% 20%;
-    --input: 240 30% 16%;
-    --ring: 244 76% 60%;
+    --border: 210 12% 25%;
+    --input: 210 12% 18%;
+    --ring: 38 55% 62%;
 
     --radius: 0.75rem;
 
@@ -102,12 +102,12 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'DM Sans', 'Cairo', system-ui, sans-serif;
+    font-family: 'Open Sans', 'Cairo', system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Space Grotesk', 'Cairo', system-ui, sans-serif;
-    letter-spacing: -0.02em;
+    font-family: 'Montserrat', 'Cairo', system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 }
 
