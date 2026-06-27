@@ -596,36 +596,109 @@ export default function IndexPage() {
         </div>
       </section>
 
-      {/* ────── NEWSLETTER ────── */}
+      {/* ────── TRUSTED TECHNOLOGY IN ALGERIA ────── */}
       <div
         style={{ background: DARK_BG }}
-        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+        className="text-white"
       >
         <Wave fill={LIGHT_BG} flip />
 
-      <section className="px-3 sm:px-6 lg:px-8 pb-16">
-        <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-card to-accent/15 p-8 sm:p-12 relative overflow-hidden text-center">
-          <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-primary/20 blur-3xl" />
-          <div className="relative max-w-xl mx-auto">
-            <div className="inline-flex w-14 h-14 rounded-2xl bg-primary/15 border border-primary/30 items-center justify-center mb-5">
-              <Mail className="w-6 h-6 text-primary" />
+      <section className="px-3 sm:px-6 lg:px-8 pb-16 pt-4">
+        <div className="max-w-7xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/15 via-white/[0.03] to-blue-500/15 p-6 sm:p-10 lg:p-14 relative overflow-hidden">
+          <div className="pointer-events-none absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-sky-400/25 blur-[120px]" />
+          <div className="pointer-events-none absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-[120px]" />
+
+          <div className="relative grid lg:grid-cols-2 gap-10 items-center">
+            {/* Copy */}
+            <div>
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
+                <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
+                Trusted since day one
+              </span>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+                Your trusted{' '}
+                <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
+                  technology
+                </span>{' '}
+                partner in Algeria
+              </h2>
+              <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
+                Original products, fair prices and friendly support — delivered to all 58 wilayas.
+                Thousands of Algerians already trust us for their laptops, phones and accessories.
+              </p>
+
+              <div className="mt-7 grid grid-cols-3 gap-4 max-w-md">
+                <div>
+                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">2.3k+</p>
+                  <p className="text-xs text-white/60 mt-1">Happy customers</p>
+                </div>
+                <div>
+                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">58</p>
+                  <p className="text-xs text-white/60 mt-1">Wilayas covered</p>
+                </div>
+                <div>
+                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">4.9★</p>
+                  <p className="text-xs text-white/60 mt-1">Average rating</p>
+                </div>
+              </div>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link to="/products">
+                  <Button size="lg" className="rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
+                    Browse the store <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link to="/about">
+                  <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
+                    About us
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl">Get 10% off your first order</h2>
-            <p className="mt-3 text-muted-foreground">
-              Subscribe for new arrivals, exclusive deals and tech tips. No spam, unsubscribe anytime.
-            </p>
-            <form
-              onSubmit={(e) => { e.preventDefault(); alert('Thanks! Check your inbox for your coupon.'); }}
-              className="mt-6 flex flex-col sm:flex-row items-stretch gap-2 p-1.5 rounded-2xl bg-background/70 border border-border/60 backdrop-blur"
-            >
-              <Input type="email" required placeholder="you@example.com" className="flex-1 border-0 bg-transparent h-11 focus-visible:ring-0" />
-              <Button type="submit" className="h-11 px-6 rounded-xl">Subscribe</Button>
-            </form>
+
+            {/* Avatar / portrait */}
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative">
+                {/* Glow ring */}
+                <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
+                <div className="relative rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-white/5 backdrop-blur-sm">
+                  <img
+                    src={trustedTechImage}
+                    alt="Friendly tech expert holding a laptop"
+                    width={1024}
+                    height={1024}
+                    loading="lazy"
+                    className="w-full max-w-md h-auto object-cover"
+                  />
+                </div>
+
+                {/* Floating badge */}
+                <div className="absolute -bottom-5 -left-5 sm:-left-10 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center">
+                    <BadgeCheck className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-display font-semibold text-sm text-white">100% Authentic</p>
+                    <p className="text-[11px] text-white/70">Sealed & warrantied</p>
+                  </div>
+                </div>
+
+                <div className="absolute -top-4 -right-4 sm:-right-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 shadow-2xl">
+                  <div className="flex items-center gap-1.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-white/80 mt-1">Loved by 2,300+</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
         <Wave fill={LIGHT_BG} />
       </div>
+
 
       {/* ────── TRUST STRIP ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
