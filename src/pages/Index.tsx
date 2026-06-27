@@ -616,13 +616,14 @@ export default function IndexPage() {
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
                 Trusted since day one
               </span>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+              <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
                 Your trusted{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
                   technology
                 </span>{' '}
                 partner in Algeria
               </h2>
+
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
                 Original products, fair prices and friendly support — delivered to all 58 wilayas.
                 Thousands of Algerians already trust us for their laptops, phones and accessories.
