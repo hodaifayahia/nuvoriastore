@@ -368,11 +368,11 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Shop by category</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">Everything for your devices</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">تسوّق حسب الفئة</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">كل ما تحتاجه لأجهزتك</h2>
             </div>
             <Link to="/categories" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              View all <ChevronRight className="w-4 h-4" />
+              عرض الكل <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
