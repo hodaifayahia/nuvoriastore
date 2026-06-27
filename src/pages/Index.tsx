@@ -80,8 +80,34 @@ export default function IndexPage() {
     () => [...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4),
     [allProducts],
   );
+  const dealsProducts = useMemo(
+    () => (allProducts || [])
+      .filter(p => p.old_price && Number(p.old_price) > Number(p.price))
+      .sort((a, b) => (Number(b.old_price) - Number(b.price)) / Number(b.old_price) - (Number(a.old_price) - Number(a.price)) / Number(a.old_price))
+      .slice(0, 4),
+    [allProducts],
+  );
   const heroProduct = trendingProducts[0];
   const hasMore = (allProducts?.length || 0) > newestProducts.length;
+
+  // Countdown to end of day for Deals
+  const [countdown, setCountdown] = useState({ h: 0, m: 0, s: 0 });
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const end = new Date(now);
+      end.setHours(23, 59, 59, 999);
+      const diff = Math.max(0, end.getTime() - now.getTime());
+      setCountdown({
+        h: Math.floor(diff / 3_600_000),
+        m: Math.floor((diff % 3_600_000) / 60_000),
+        s: Math.floor((diff % 60_000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 5000 })]);
 
