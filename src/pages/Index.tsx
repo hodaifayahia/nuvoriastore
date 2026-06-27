@@ -658,42 +658,38 @@ export default function IndexPage() {
               </div>
             </div>
 
-            {/* Avatar / portrait */}
+            {/* Avatar / portrait — compact */}
             <div className="relative flex justify-center lg:justify-end">
-              <div className="relative">
+              <div className="relative w-48 sm:w-56">
                 {/* Glow ring */}
-                <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
-                <div className="relative rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-white/5 backdrop-blur-sm">
+                <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
+                <div className="relative aspect-square rounded-full overflow-hidden border-4 border-white/20 shadow-2xl bg-white/5">
                   <img
                     src={trustedTechImage}
                     alt="Friendly tech expert holding a laptop"
-                    width={1024}
-                    height={1024}
+                    width={400}
+                    height={400}
                     loading="lazy"
-                    className="w-full max-w-md h-auto object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
 
                 {/* Floating badge */}
-                <div className="absolute -bottom-5 -left-5 sm:-left-10 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center">
-                    <BadgeCheck className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-display font-semibold text-sm text-white">100% Authentic</p>
-                    <p className="text-[11px] text-white/70">Sealed & warrantied</p>
-                  </div>
+                <div className="absolute -bottom-3 -left-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 flex items-center gap-1.5 shadow-xl">
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
+                  <span className="text-[10px] font-semibold text-white">100% Authentic</span>
                 </div>
 
-                <div className="absolute -top-4 -right-4 sm:-right-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 shadow-2xl">
-                  <div className="flex items-center gap-1.5">
+                <div className="absolute -top-2 -right-2 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 shadow-xl">
+                  <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
+                      <Star key={i} className="w-2.5 h-2.5 fill-yellow-300 text-yellow-300" />
                     ))}
                   </div>
-                  <p className="text-[11px] text-white/80 mt-1">Loved by 2,300+</p>
                 </div>
               </div>
+            </div>
+
             </div>
           </div>
         </div>
