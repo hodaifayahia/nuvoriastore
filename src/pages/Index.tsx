@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import ProductCard from '@/components/ProductCard';
 import { ProductGridSkeleton } from '@/components/LoadingSkeleton';
 import { useCategories } from '@/hooks/useCategories';
+import { useTranslation } from '@/i18n';
 import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
@@ -43,6 +44,7 @@ const DEFAULT_CATEGORIES = [
 
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleProductsCount, setVisibleProductsCount] = useState(12);
@@ -175,8 +177,8 @@ export default function IndexPage() {
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden" style={{ background: LIGHT_BG }}>
       <SEO
-        title="سوق دزاير إكسبرس — إكسسوارات الهواتف والحواسيب في الجزائر"
-        description="تسوق أحدث إكسسوارات الهواتف والحواسيب: سماعات، شواحن، لوحات مفاتيح، حقائب، شاشات وأكثر. توصيل سريع إلى 58 ولاية."
+        title={t('idx.seo.title')}
+        description={t('idx.seo.description')}
         path="/"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -222,16 +224,16 @@ export default function IndexPage() {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                 </span>
-                شحن مجاني للطلبات فوق 5,000 دج
+                {t('idx.hero.badge')}
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
-                جهّز عتادك. <br />
+                {t('idx.hero.title1')} <br />
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  وانطلق.
+                  {t('idx.hero.title2')}
                 </span>
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg mx-auto leading-relaxed">
-                حواسيب، هواتف، سماعات وملحقات — منتقاة، أصلية، وتُسلَّم بسرعة عبر الجزائر.
+                {t('idx.hero.subtitle')}
               </p>
 
               <form onSubmit={handleSearch} className="mt-7 mx-auto flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
@@ -239,31 +241,31 @@ export default function IndexPage() {
                 <Input
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="ابحث عن MacBook أو AirPods أو Logitech…"
+                  placeholder={t('idx.hero.searchPlaceholder')}
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
                 <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
-                  بحث
+                  {t('idx.hero.searchBtn')}
                 </Button>
               </form>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    تسوّق الآن <ArrowRight className="w-4 h-4" />
+                    {t('idx.hero.shopNow')} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/products?category=Laptops">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    تصفّح الحواسيب
+                    {t('idx.hero.browseLaptops')}
                   </Button>
                 </Link>
               </div>
 
               <div className="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-white/70">
-                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> أصلي 100%</span>
-                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 ولاية</span>
-                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> إرجاع خلال 7 أيام</span>
+                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> {t('idx.hero.original')}</span>
+                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> {t('idx.hero.wilayas')}</span>
+                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> {t('idx.hero.returns')}</span>
               </div>
             </div>
           </div>
@@ -277,15 +279,15 @@ export default function IndexPage() {
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Zap className="w-5 h-5 text-primary" />
             <div>
-              <p className="font-display font-bold text-3xl">24 س</p>
-              <p className="text-xs text-muted-foreground mt-1">توصيل سريع في الجزائر العاصمة</p>
+              <p className="font-display font-bold text-3xl">{t('idx.bento.fastDeliveryHours')}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.fastDeliveryDesc')}</p>
             </div>
           </div>
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Cpu className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">{allProducts?.length ?? '500+'}</p>
-              <p className="text-xs text-muted-foreground mt-1">إكسسوار متوفر</p>
+              <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.accessoriesAvailable')}</p>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
@@ -293,11 +295,11 @@ export default function IndexPage() {
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="font-display font-semibold">عروض الباقات — وفّر حتى 25%</p>
-              <p className="text-xs text-muted-foreground">باقات الشاحن + الكابل + الحافظة</p>
+              <p className="font-display font-semibold">{t('idx.bento.bundlesTitle')}</p>
+              <p className="text-xs text-muted-foreground">{t('idx.bento.bundlesDesc')}</p>
             </div>
             <Link to="/products" className="shrink-0">
-              <Button variant="outline" size="sm" className="rounded-full">اكتشف</Button>
+              <Button variant="outline" size="sm" className="rounded-full">{t('idx.bento.discover')}</Button>
             </Link>
           </div>
         </div>
@@ -335,11 +337,11 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">تسوّق حسب الفئة</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">كل ما تحتاجه لأجهزتك</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.categories.kicker')}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.categories.title')}</h2>
             </div>
             <Link to="/categories" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              عرض الكل <ChevronRight className="w-4 h-4" />
+              {t('idx.categories.viewAll')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -358,7 +360,7 @@ export default function IndexPage() {
                   <div>
                     <p className="font-display font-semibold text-sm sm:text-base group-hover:text-primary transition-colors">{cat.name}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 inline-flex items-center gap-1">
-                      تسوّق <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                      {t('idx.categories.shop')} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
                 </Link>
@@ -377,9 +379,9 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-primary" /> الأكثر رواجاً
+                  <Star className="w-3.5 h-3.5 fill-primary" /> {t('idx.trending.kicker')}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">الأكثر تفضيلاً هذا الأسبوع</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.trending.title')}</h2>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -414,12 +416,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">وصل حديثاً</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">جديد في المتجر</h2>
-              <p className="text-sm text-white/60 mt-2 max-w-md">أحدث المنتجات التقنية المختارة بعناية لك.</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">{t('idx.newest.kicker')}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.newest.title')}</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">{t('idx.newest.desc')}</p>
             </div>
             <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
-              كل المنتجات <ChevronRight className="w-4 h-4" />
+              {t('idx.newest.allProducts')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -456,7 +458,7 @@ export default function IndexPage() {
                     to="/products"
                     className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium hover:from-sky-300 hover:to-blue-500 transition-all shadow-[0_10px_30px_-5px_rgba(56,189,248,0.5)]"
                   >
-                    عرض كل المنتجات <ChevronRight className="w-4 h-4" />
+                    {t('idx.newest.viewAll')} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               )}
@@ -476,13 +478,13 @@ export default function IndexPage() {
             <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> عروض اليوم
+                  <Flame className="w-3.5 h-3.5" /> {t('idx.deals.kicker')}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">تخفيضات لفترة محدودة</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.deals.title')}</h2>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-xs text-muted-foreground">ينتهي خلال</span>
+                <span className="text-xs text-muted-foreground">{t('idx.deals.endsIn')}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
                     <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
@@ -524,8 +526,8 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">علامات موثوقة</p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl">تسوّق أفضل العلامات العالمية</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.brands.kicker')}</p>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.brands.title')}</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
             {['Apple','Dell','HP','Lenovo','ASUS','Logitech','Razer','Anker','Sony','JBL','Samsung','Bose'].slice(0, 8).map(brand => (
@@ -547,19 +549,19 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">آراء عملائنا</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">ماذا يقول الناس</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.testimonials.kicker')}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.testimonials.title')}</h2>
             </div>
             <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
               <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-              <span className="ms-2">4.9 / 5 · +2,300 تقييم</span>
+              <span className="ms-2">{t('idx.testimonials.ratingSuffix')}</span>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { name: 'ياسين ب.', city: 'الجزائر', text: 'استلمت شاحن MacBook في اليوم التالي. منتج أصلي وعلبة مغلقة. سأشتري مجدداً.', rating: 5 },
-              { name: 'لينا ك.',   city: 'وهران',  text: 'لوحة المفاتيح Keychron رائعة. أسعار ممتازة وتوصيل سريع إلى وهران.', rating: 5 },
-              { name: 'عمر س.',   city: 'قسنطينة', text: 'الدفع سلس، دعم حقيقي عبر الهاتف، والتغليف كان مثالياً.', rating: 5 },
+              { name: t('idx.testimonials.t1.name'), city: t('idx.testimonials.t1.city'), text: t('idx.testimonials.t1.text'), rating: 5 },
+              { name: t('idx.testimonials.t2.name'), city: t('idx.testimonials.t2.city'), text: t('idx.testimonials.t2.text'), rating: 5 },
+              { name: t('idx.testimonials.t3.name'), city: t('idx.testimonials.t3.city'), text: t('idx.testimonials.t3.text'), rating: 5 },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border border-border/60 bg-card p-6 relative">
                 <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/15" />
@@ -600,45 +602,44 @@ export default function IndexPage() {
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
-                موثوق منذ اليوم الأول
+                {t('idx.trusted.badge')}
               </span>
               <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
-                شريكك التقني{' '}
+                {t('idx.trusted.title1')}{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  الموثوق
+                  {t('idx.trusted.title2')}
                 </span>{' '}
-                في الجزائر
+                {t('idx.trusted.title3')}
               </h2>
 
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
-                منتجات أصلية، أسعار منصفة ودعم ودود — توصيل إلى جميع الولايات الـ 58.
-                آلاف الجزائريين يثقون بنا لشراء حواسيبهم وهواتفهم وملحقاتها.
+                {t('idx.trusted.desc')}
               </p>
 
               <div className="mt-7 grid grid-cols-3 gap-4 max-w-md">
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">+2.3k</p>
-                  <p className="text-xs text-white/60 mt-1">عميل سعيد</p>
+                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.customers')}</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">58</p>
-                  <p className="text-xs text-white/60 mt-1">ولاية مغطّاة</p>
+                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.wilayas')}</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">4.9★</p>
-                  <p className="text-xs text-white/60 mt-1">متوسط التقييم</p>
+                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.rating')}</p>
                 </div>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    تصفّح المتجر <ArrowRight className="w-4 h-4" />
+                    {t('idx.trusted.browse')} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/about">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    من نحن
+                    {t('idx.trusted.about')}
                   </Button>
                 </Link>
               </div>
@@ -656,10 +657,10 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { icon: Truck,      label: 'شحن سريع',        desc: 'إلى جميع الولايات الـ 58' },
-            { icon: Shield,     label: 'إرجاع خلال 7 أيام', desc: 'بدون أسئلة' },
-            { icon: BadgeCheck, label: 'منتجات أصلية',     desc: 'أصلية 100%' },
-            { icon: Headphones, label: 'دعم حقيقي',        desc: 'تواصل مع فريقنا' },
+            { icon: Truck,      label: t('idx.trust.delivery'),  desc: t('idx.trust.deliveryDesc') },
+            { icon: Shield,     label: t('idx.trust.returns'),   desc: t('idx.trust.returnsDesc') },
+            { icon: BadgeCheck, label: t('idx.trust.original'),  desc: t('idx.trust.originalDesc') },
+            { icon: Headphones, label: t('idx.trust.support'),   desc: t('idx.trust.supportDesc') },
           ].map(item => (
             <div key={item.label} className="flex items-start gap-3">
               <div className="w-11 h-11 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0">
