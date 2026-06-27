@@ -222,7 +222,7 @@ export default function IndexPage() {
                   placeholder="Search MacBook, AirPods, Logitech…"
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
-                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#140a2e] hover:bg-white/90">
+                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
                   Search
                 </Button>
               </form>
