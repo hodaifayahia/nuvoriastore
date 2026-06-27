@@ -604,24 +604,26 @@ export default function IndexPage() {
         <Wave fill={LIGHT_BG} flip />
 
       <section className="px-3 sm:px-6 lg:px-8 pb-16 pt-4">
-        <div className="max-w-7xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/15 via-white/[0.03] to-blue-500/15 p-6 sm:p-10 lg:p-14 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/15 via-white/[0.03] to-blue-500/15 p-5 sm:p-7 lg:p-9 relative overflow-hidden">
+
           <div className="pointer-events-none absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-sky-400/25 blur-[120px]" />
           <div className="pointer-events-none absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-[120px]" />
 
-          <div className="relative grid lg:grid-cols-2 gap-10 items-center">
+          <div className="relative grid lg:grid-cols-[1fr_auto] gap-8 items-center">
             {/* Copy */}
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
                 Trusted since day one
               </span>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+              <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
                 Your trusted{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
                   technology
                 </span>{' '}
                 partner in Algeria
               </h2>
+
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
                 Original products, fair prices and friendly support — delivered to all 58 wilayas.
                 Thousands of Algerians already trust us for their laptops, phones and accessories.
@@ -656,46 +658,41 @@ export default function IndexPage() {
               </div>
             </div>
 
-            {/* Avatar / portrait */}
+            {/* Avatar / portrait — compact */}
             <div className="relative flex justify-center lg:justify-end">
-              <div className="relative">
+              <div className="relative w-48 sm:w-56">
                 {/* Glow ring */}
-                <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
-                <div className="relative rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-white/5 backdrop-blur-sm">
+                <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-sky-400/40 via-blue-500/30 to-cyan-400/30 blur-2xl" />
+                <div className="relative aspect-square rounded-full overflow-hidden border-4 border-white/20 shadow-2xl bg-white/5">
                   <img
                     src={trustedTechImage}
                     alt="Friendly tech expert holding a laptop"
-                    width={1024}
-                    height={1024}
+                    width={400}
+                    height={400}
                     loading="lazy"
-                    className="w-full max-w-md h-auto object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
 
                 {/* Floating badge */}
-                <div className="absolute -bottom-5 -left-5 sm:-left-10 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center">
-                    <BadgeCheck className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-display font-semibold text-sm text-white">100% Authentic</p>
-                    <p className="text-[11px] text-white/70">Sealed & warrantied</p>
-                  </div>
+                <div className="absolute -bottom-3 -left-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 flex items-center gap-1.5 shadow-xl">
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
+                  <span className="text-[10px] font-semibold text-white">100% Authentic</span>
                 </div>
 
-                <div className="absolute -top-4 -right-4 sm:-right-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 shadow-2xl">
-                  <div className="flex items-center gap-1.5">
+                <div className="absolute -top-2 -right-2 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 px-2.5 py-1.5 shadow-xl">
+                  <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
+                      <Star key={i} className="w-2.5 h-2.5 fill-yellow-300 text-yellow-300" />
                     ))}
                   </div>
-                  <p className="text-[11px] text-white/80 mt-1">Loved by 2,300+</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
         <Wave fill={LIGHT_BG} />
       </div>
 
