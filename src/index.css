@@ -280,6 +280,9 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+}
+
+
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
