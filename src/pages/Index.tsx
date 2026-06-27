@@ -124,7 +124,7 @@ export default function IndexPage() {
                         {slide.url ? (
                           <img src={slide.url} alt={slide.alt || ''} className="relative max-h-40 sm:max-h-56 lg:max-h-72 object-contain drop-shadow-[0_20px_40px_hsl(38_75%_55%/0.4)]" />
                         ) : (
-                          <Laptop className="relative w-28 h-28 sm:w-40 sm:h-40 text-primary/70" />
+                          <img src={heroLaptopAsset.url} alt="Laptop with gold glow" className="relative w-full h-40 sm:h-56 lg:h-72 object-cover rounded-2xl" />
                         )}
                       </div>
 
