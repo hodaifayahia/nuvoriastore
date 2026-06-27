@@ -1607,3 +1607,16 @@ export const fr: Record<string, string> = {
   'about.story.heading': 'Notre parcours avec vous',
   'about.features.label': 'Nos atouts',
 };
+Object.assign(fr, {
+  'sidebar.brands': 'Marques',
+  'brands.title': 'Marques',
+  'brands.subtitle': 'Ajoutez et gérez les marques de votre boutique',
+  'brands.addNew': 'Ajouter une marque',
+  'brands.brandName': 'Nom de la marque',
+  'brands.brandLogo': 'Logo de la marque',
+  'brands.uploadLogo': 'Téléverser le logo',
+  'brands.list': 'Marques actuelles',
+  'brands.empty': 'Aucune marque pour le moment',
+  'products.brand': 'Marque',
+  'products.noBrand': 'Aucune marque',
+});

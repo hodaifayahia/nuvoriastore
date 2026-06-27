@@ -1607,3 +1607,16 @@ export const en: Record<string, string> = {
   'about.story.heading': 'Our journey with you',
   'about.features.label': 'Our advantages',
 };
+Object.assign(en, {
+  'sidebar.brands': 'Brands',
+  'brands.title': 'Brands',
+  'brands.subtitle': 'Add and manage the brands featured in your store',
+  'brands.addNew': 'Add new brand',
+  'brands.brandName': 'Brand name',
+  'brands.brandLogo': 'Brand logo',
+  'brands.uploadLogo': 'Upload logo',
+  'brands.list': 'Current brands',
+  'brands.empty': 'No brands yet',
+  'products.brand': 'Brand',
+  'products.noBrand': 'No brand',
+});

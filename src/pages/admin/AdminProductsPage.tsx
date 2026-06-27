@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Star, X, Upload, ImageIcon, Loader2, Package, Search, Copy, Download, FileUp, ChevronLeft, ChevronRight, DollarSign, Tag, CheckSquare, ExternalLink, PackageX, AlertTriangle, EyeOff, Layers } from 'lucide-react';
 import { formatPrice } from '@/lib/format';
 import { useCategories } from '@/hooks/useCategories';
+import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
@@ -24,7 +25,9 @@ export default function AdminProductsPage() {
   const qc = useQueryClient();
   const { toast } = useToast();
   const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
   const categoryNames = categoriesData?.map(c => c.name) || [];
+  const brandNames = brandsData?.map(b => b.name) || [];
   const importRef = useRef<HTMLInputElement>(null);
 
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -283,7 +286,7 @@ export default function AdminProductsPage() {
   };
 
   if (showForm) {
-    return <ProductForm product={editingProduct} categoryNames={categoryNames} onClose={handleFormClose} />;
+    return <ProductForm product={editingProduct} categoryNames={categoryNames} brandNames={brandNames} onClose={handleFormClose} />;
   }
 
   return (
@@ -681,7 +684,7 @@ interface VariantRow {
 
 /* ─── Product Form (full page) ─── */
 
-function ProductForm({ product, categoryNames, onClose }: { product: any; categoryNames: string[]; onClose: () => void }) {
+function ProductForm({ product, categoryNames, brandNames, onClose }: { product: any; categoryNames: string[]; brandNames: string[]; onClose: () => void }) {
   const qc = useQueryClient();
   const { toast } = useToast();
 
@@ -690,6 +693,7 @@ function ProductForm({ product, categoryNames, onClose }: { product: any; catego
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [sku, setSku] = useState(product?.sku || '');
   const [category, setCategory] = useState(product ? (Array.isArray(product.category) ? product.category[0] : product.category) : categoryNames[0] || '');
+  const [brand, setBrand] = useState<string>(product?.brand || '');
   const [stock, setStock] = useState(product ? String(product.stock) : '0');
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
   const [images, setImages] = useState<string[]>(product?.images || []);
@@ -998,6 +1002,7 @@ function ProductForm({ product, categoryNames, onClose }: { product: any; catego
         description: description.trim(),
         price: Number(price),
         category: [category],
+        brand: brand || null,
         stock: hasVariants ? variantRows.reduce((sum, v) => sum + Number(v.quantity || 0), 0) : (productType === 'digital' ? 99999 : Number(stock)),
         is_active: isActive,
         images,
@@ -1280,7 +1285,17 @@ function ProductForm({ product, categoryNames, onClose }: { product: any; catego
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-end pb-1">
+            <div>
+              <Label className="font-cairo">العلامة التجارية</Label>
+              <Select value={brand || '__none__'} onValueChange={v => setBrand(v === '__none__' ? '' : v)}>
+                <SelectTrigger className="font-cairo mt-1.5 h-11"><SelectValue placeholder="بدون علامة" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__" className="font-cairo text-muted-foreground">بدون علامة</SelectItem>
+                  {brandNames.map(b => <SelectItem key={b} value={b} className="font-cairo">{b}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end pb-1 sm:col-span-2">
               <div className="flex items-center gap-2">
                 <Switch checked={isActive} onCheckedChange={setIsActive} />
                 <Label className="font-cairo">{isActive ? 'نشط — يظهر في المتجر' : 'معطّل — مخفي'}</Label>

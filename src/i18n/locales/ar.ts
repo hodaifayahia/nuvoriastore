@@ -1616,3 +1616,17 @@ export const ar: Record<string, string> = {
   'about.story.heading': 'رحلتنا معك',
   'about.features.label': 'مميزاتنا',
 };
+// (appended)
+Object.assign(ar, {
+  'sidebar.brands': 'العلامات التجارية',
+  'brands.title': 'العلامات التجارية',
+  'brands.subtitle': 'أضف وأدر العلامات التجارية المعروضة في متجرك',
+  'brands.addNew': 'إضافة علامة جديدة',
+  'brands.brandName': 'اسم العلامة',
+  'brands.brandLogo': 'شعار العلامة',
+  'brands.uploadLogo': 'رفع الشعار',
+  'brands.list': 'العلامات الحالية',
+  'brands.empty': 'لا توجد علامات بعد',
+  'products.brand': 'العلامة التجارية',
+  'products.noBrand': 'بدون علامة',
+});
