@@ -184,8 +184,9 @@ export default function IndexPage() {
             height={1024}
           />
           {/* Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0b0820]/95 via-[#140a2e]/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0820] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B3B6F]/95 via-[#0E5BA8]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B3B6F] via-transparent to-transparent" />
+
           <div className="pointer-events-none absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-primary/30 blur-[120px]" />
           <div className="pointer-events-none absolute top-20 right-1/3 w-[360px] h-[360px] rounded-full bg-accent/25 blur-[120px]" />
 
