@@ -304,18 +304,6 @@ export default function Navbar() {
             </Button>
           </div>
         </div>
-        {/* Wavy divider at bottom of navbar */}
-        <svg
-          className="absolute left-0 right-0 -bottom-px w-full h-[18px] text-card/90 pointer-events-none"
-          viewBox="0 0 1440 60"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path
-            fill="currentColor"
-            d="M0,0 L1440,0 L1440,30 C1200,60 960,10 720,30 C480,50 240,10 0,30 Z"
-          />
-        </svg>
       </div>
 
 
