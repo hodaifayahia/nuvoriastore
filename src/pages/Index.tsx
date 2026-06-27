@@ -549,12 +549,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">آراء عملائنا</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">ماذا يقول الناس</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.testimonials.kicker')}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.testimonials.title')}</h2>
             </div>
             <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
               <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-              <span className="ms-2">4.9 / 5 · +2,300 تقييم</span>
+              <span className="ms-2">{t('idx.testimonials.ratingSuffix')}</span>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
