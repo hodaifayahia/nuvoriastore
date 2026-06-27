@@ -32,14 +32,14 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Phone Cases',   icon: Smartphone,        accent: 'from-sky-400/30 to-blue-500/10', tag: 'phone' },
-  { name: 'Chargers',      icon: BatteryCharging,   accent: 'from-cyan-400/30 to-sky-500/10', tag: 'charger' },
-  { name: 'Headphones',    icon: Headphones,        accent: 'from-blue-400/30 to-sky-500/10', tag: 'headphone' },
-  { name: 'Keyboards',     icon: Keyboard,          accent: 'from-sky-500/30 to-cyan-400/10', tag: 'keyboard' },
-  { name: 'Mice',          icon: Mouse,             accent: 'from-cyan-500/25 to-blue-500/10', tag: 'mouse' },
-  { name: 'Laptops',       icon: Laptop,            accent: 'from-blue-500/30 to-sky-400/10', tag: 'laptop' },
-  { name: 'Cables',        icon: Cable,             accent: 'from-sky-400/25 to-cyan-400/10', tag: 'cable' },
-  { name: 'Gaming',        icon: Gamepad2,          accent: 'from-blue-600/30 to-sky-400/10', tag: 'gaming' },
+  { name: 'Phone Cases',   icon: Smartphone,      accent: 'from-sky-400/30 to-blue-500/10',  image: 'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Chargers',      icon: BatteryCharging, accent: 'from-cyan-400/30 to-sky-500/10',  image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Headphones',    icon: Headphones,      accent: 'from-blue-400/30 to-sky-500/10',  image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Keyboards',     icon: Keyboard,        accent: 'from-sky-500/30 to-cyan-400/10',  image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Mice',          icon: Mouse,           accent: 'from-cyan-500/25 to-blue-500/10', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Laptops',       icon: Laptop,          accent: 'from-blue-500/30 to-sky-400/10',  image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Cables',        icon: Cable,           accent: 'from-sky-400/25 to-cyan-400/10',  image: 'https://images.unsplash.com/photo-1601524909162-ae8725290836?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Gaming',        icon: Gamepad2,        accent: 'from-blue-600/30 to-sky-400/10',  image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80&auto=format&fit=crop' },
 ];
 
 
@@ -350,18 +350,25 @@ export default function IndexPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {categoryCards.map((cat, i) => {
               const Icon = cat.icon as LucideIcon;
+              const img = (cat as any).image as string | undefined;
               return (
                 <Link
                   key={cat.name + i}
                   to={`/products?category=${encodeURIComponent(cat.name)}`}
-                  className={`group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br ${cat.accent} bg-card p-5 h-32 sm:h-36 flex flex-col justify-between hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]`}
+                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card h-36 sm:h-44 flex flex-col justify-end hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-background/60 backdrop-blur flex items-center justify-center border border-border/40">
+                  {img ? (
+                    <img src={img} alt={cat.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${cat.accent}`} />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
+                  <div className="absolute top-3 right-3 w-10 h-10 rounded-xl bg-background/90 backdrop-blur flex items-center justify-center border border-border/40 shadow-sm">
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-display font-semibold text-sm sm:text-base group-hover:text-primary transition-colors">{cat.name}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 inline-flex items-center gap-1">
+                  <div className="relative p-4">
+                    <p className="font-display font-bold text-base sm:text-lg text-background drop-shadow-sm">{cat.name}</p>
+                    <p className="text-[11px] text-background/80 mt-0.5 inline-flex items-center gap-1">
                       {t('idx.categories.shop')} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
@@ -475,24 +482,28 @@ export default function IndexPage() {
       {/* ────── DEALS OF THE DAY ────── */}
       {dealsProducts.length > 0 && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-destructive/10 via-card to-primary/5 p-6 sm:p-8 relative overflow-hidden">
-            <div className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-destructive/20 blur-3xl" />
-            <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-destructive/15 bg-gradient-to-br from-destructive/8 via-card to-card p-5 sm:p-8 relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-destructive/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
+            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> {t('idx.deals.kicker')}
+                <p className="text-[11px] uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
+                  <span className="inline-flex w-6 h-6 items-center justify-center rounded-full bg-destructive/10">
+                    <Flame className="w-3.5 h-3.5" />
+                  </span>
+                  {t('idx.deals.kicker')}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.deals.title')}</h2>
+                <h2 className="font-display font-bold text-2xl sm:text-4xl leading-tight">{t('idx.deals.title')}</h2>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-start sm:self-auto rounded-2xl border border-border/60 bg-background/70 backdrop-blur px-3 py-2 shadow-sm">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-xs text-muted-foreground">{t('idx.deals.endsIn')}</span>
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">{t('idx.deals.endsIn')}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
-                    <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
+                    <span className="font-display font-bold text-sm sm:text-base bg-destructive/10 text-destructive rounded-lg px-2 py-1 tabular-nums min-w-[2.25rem] text-center">
                       {String(countdown[k]).padStart(2, '0')}
                     </span>
-                    {i < 2 && <span className="text-muted-foreground">:</span>}
+                    {i < 2 && <span className="text-muted-foreground/60">:</span>}
                   </div>
                 ))}
               </div>

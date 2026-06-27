@@ -196,8 +196,8 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
             <Eye className="w-4 h-4" />
           </button>
 
-          {/* Hover add-to-cart overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          {/* Hover add-to-cart overlay (desktop only) */}
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30">
               <ShoppingCart className="w-3.5 h-3.5" />
               {t('pc.addToCart')}
@@ -253,10 +253,10 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               )}
             </div>
             <div className="flex items-center gap-1.5 w-full">
-              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} className="font-cairo text-xs gap-1 rounded-xl h-9 px-3 shrink-0 border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-300">
-                <ShoppingCart className="w-3.5 h-3.5 text-black" />
+              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-xs rounded-xl h-10 w-10 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
+                <ShoppingCart className="w-4 h-4 text-foreground" />
               </Button>
-              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-9 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-gradient-to-l from-primary to-primary/90">
+              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-10 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Zap className="w-3.5 h-3.5" />
                 {t('pc.orderNow')}
               </Button>
