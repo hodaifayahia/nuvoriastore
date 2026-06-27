@@ -142,7 +142,7 @@ export default function Navbar() {
                   }`}
                 >
                   <link.icon className="w-4 h-4" />
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               );
             })}
