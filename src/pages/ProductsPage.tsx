@@ -212,8 +212,17 @@ export default function ProductsPage() {
     </div>
   );
 
+  const seoTitle = selectedCategories[0]
+    ? `${selectedCategories[0]} — متجر سوق دزاير إكسبرس`
+    : 'كل المنتجات — إكسسوارات الهواتف والحواسيب';
+  const seoDesc = selectedCategories[0]
+    ? `تسوّق ${selectedCategories[0]} بأفضل الأسعار مع توصيل سريع إلى 58 ولاية في الجزائر.`
+    : 'تصفّح مجموعتنا الكاملة من إكسسوارات الهواتف والحواسيب: سماعات، شواحن، حقائب، لوحات مفاتيح وأكثر.';
+
   return (
     <div className="min-h-screen bg-background pb-24">
+      <SEO title={seoTitle} description={seoDesc} path="/products" />
+
 
       {/* ─── Hero Header ─── */}
       <section className="relative bg-primary border-b border-primary/20">
