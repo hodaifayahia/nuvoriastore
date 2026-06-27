@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
-import { Phone, Mail, MapPin, ChevronLeft, Facebook, Instagram, Heart, ShoppingCart, Truck, Shield, Headphones } from 'lucide-react';
+import { Phone, Mail, MapPin, ChevronLeft, Facebook, Instagram, Heart, Truck, Shield, Headphones } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 export default function Footer() {
   const { data: logoUrl } = useStoreLogo();
+  const { t } = useTranslation();
 
   const { data: settings } = useQuery({
     queryKey: ['footer-settings'],
@@ -19,26 +21,26 @@ export default function Footer() {
     },
   });
 
-  const storeName = settings?.store_name || 'جزيرة الطبيعة';
-  const description = settings?.footer_description || 'أجود أنواع التمور والعسل الطبيعي والهدايا الفاخرة. منتجات طبيعية 100% بجودة استثنائية.';
+  const storeName = 'akram-mobile';
+  const description = settings?.footer_description || '';
   const phone = settings?.footer_phone;
   const email = settings?.footer_email;
-  const address = settings?.footer_address || 'الجزائر';
+  const address = settings?.footer_address || 'Algeria';
   const facebookUrl = settings?.facebook_url;
   const instagramUrl = settings?.instagram_url;
 
   const quickLinks = [
-    { to: '/products', label: 'المنتجات' },
-    { to: '/track', label: 'تتبع الطلب' },
-    { to: '/cart', label: 'السلة' },
-    { to: '/wishlist', label: 'المفضلة' },
-    { to: '/about', label: 'من نحن' },
+    { to: '/products', key: 'nav.products' },
+    { to: '/track', key: 'nav.track' },
+    { to: '/cart', key: 'nav.cart' },
+    { to: '/wishlist', key: 'nav.wishlist' },
+    { to: '/about', key: 'nav.about' },
   ];
 
   const trustBadges = [
-    { icon: Truck, label: 'توصيل لكل الولايات' },
-    { icon: Shield, label: 'دفع آمن عند الاستلام' },
-    { icon: Headphones, label: 'خدمة عملاء متميزة' },
+    { icon: Truck, key: 'footer.trust.delivery' },
+    { icon: Shield, key: 'footer.trust.payment' },
+    { icon: Headphones, key: 'footer.trust.support' },
   ];
 
   return (
