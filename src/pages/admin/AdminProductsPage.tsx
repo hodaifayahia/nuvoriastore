@@ -684,7 +684,7 @@ interface VariantRow {
 
 /* ─── Product Form (full page) ─── */
 
-function ProductForm({ product, categoryNames, onClose }: { product: any; categoryNames: string[]; onClose: () => void }) {
+function ProductForm({ product, categoryNames, brandNames, onClose }: { product: any; categoryNames: string[]; brandNames: string[]; onClose: () => void }) {
   const qc = useQueryClient();
   const { toast } = useToast();
 
@@ -693,6 +693,7 @@ function ProductForm({ product, categoryNames, onClose }: { product: any; catego
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [sku, setSku] = useState(product?.sku || '');
   const [category, setCategory] = useState(product ? (Array.isArray(product.category) ? product.category[0] : product.category) : categoryNames[0] || '');
+  const [brand, setBrand] = useState<string>(product?.brand || '');
   const [stock, setStock] = useState(product ? String(product.stock) : '0');
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
   const [images, setImages] = useState<string[]>(product?.images || []);
