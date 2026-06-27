@@ -421,18 +421,19 @@ export default function IndexPage() {
       {/* ────── ALL PRODUCTS ────── */}
       <div
         style={{ background: DARK_BG }}
-        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+        className="text-white [&_h2]:!text-white [&_h3]:!text-white [&_.text-foreground]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-transparent [&_.border-border\/50]:!border-white/10 [&_.border-border\/60]:!border-white/10 [&_.bg-muted]:!bg-white/[0.03] [&_.bg-muted\/50]:!bg-white/10"
       >
         <Wave fill={LIGHT_BG} flip />
 
-      <section className="px-3 sm:px-6 lg:px-8 pb-20">
+      <section className="px-3 sm:px-6 lg:px-8 pb-20 pt-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-6">
+          <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Fresh arrivals</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">Fresh arrivals</p>
               <h2 className="font-display font-bold text-3xl sm:text-4xl">New in store</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">Just landed — the latest tech picks, hand-curated for you.</p>
             </div>
-            <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
               All products <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -443,7 +444,11 @@ export default function IndexPage() {
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
                 {(allProducts?.slice(0, 8) || []).map((p, i) => (
-                  <div key={p.id} style={{ animationDelay: `${i * 0.05}s` }} className="animate-fade-in opacity-0 [animation-fill-mode:forwards]">
+                  <div
+                    key={p.id}
+                    style={{ animationDelay: `${i * 0.05}s` }}
+                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards] rounded-3xl bg-white/[0.03] border border-white/10 hover:border-sky-300/40 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 overflow-hidden backdrop-blur-sm"
+                  >
                     <ProductCard
                       id={p.id}
                       name={p.name}
@@ -460,10 +465,10 @@ export default function IndexPage() {
                 ))}
               </div>
               {(allProducts?.length || 0) > 8 && (
-                <div className="mt-8 flex justify-center">
+                <div className="mt-10 flex justify-center">
                   <Link
                     to="/products"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium hover:from-sky-300 hover:to-blue-500 transition-all shadow-[0_10px_30px_-5px_rgba(56,189,248,0.5)]"
                   >
                     View all products <ChevronRight className="w-4 h-4" />
                   </Link>
@@ -475,6 +480,7 @@ export default function IndexPage() {
       </section>
         <Wave fill={LIGHT_BG} />
       </div>
+
 
       {/* ────── DEALS OF THE DAY ────── */}
       {dealsProducts.length > 0 && (
