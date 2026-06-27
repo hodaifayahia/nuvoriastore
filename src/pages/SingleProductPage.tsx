@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import RecentlyViewedSection from '@/components/RecentlyViewedSection';
+import { useTranslation } from '@/i18n';
 
 function StarRating({ value, onChange, readonly = false }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
   return (
@@ -31,6 +32,8 @@ function StarRating({ value, onChange, readonly = false }: { value: number; onCh
     </div>
   );
 }
+
+function CountdownTimerInner({ endsAt, title, t }: { endsAt: string; title?: string; t: (k: string) => string }) {
 
 function CountdownTimer({ endsAt, title }: { endsAt: string; title?: string }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
