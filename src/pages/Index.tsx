@@ -246,6 +246,36 @@ export default function IndexPage() {
         </div>
       </section>
 
+      {/* ───────── BRAND SHOWCASE ───────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative rounded-[28px] overflow-hidden gold-glow">
+            <img
+              src={sifarDevicesAsset.url}
+              alt="Sifar Store laptop and phone"
+              className="w-full h-[260px] sm:h-[360px] lg:h-[460px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="px-6 sm:px-10 lg:px-16 text-right mr-auto max-w-md">
+                <h2 className="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl gold-text-gradient leading-tight">
+                  Sifar Store
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-white/90">
+                  أجهزة وإكسسوارات بجودة عالية وتصميم فاخر
+                </p>
+                <Button
+                  onClick={() => navigate('/products')}
+                  className="mt-5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 h-10 text-sm font-semibold gap-1.5"
+                >
+                  اكتشف المجموعة <ArrowLeft className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ───────── عروض خاصة (SPECIAL OFFERS) ───────── */}
       <section className="px-4 sm:px-6 lg:px-8 pb-14">
         <div className="max-w-7xl mx-auto">
