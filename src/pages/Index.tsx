@@ -375,6 +375,9 @@ export default function IndexPage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-6">
               <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2 flex items-center gap-2">
+                  <Star className="w-3.5 h-3.5 fill-primary" /> الأكثر رواجاً
+                </p>
                 <h2 className="font-display font-bold text-3xl sm:text-4xl">الأكثر تفضيلاً هذا الأسبوع</h2>
               </div>
             </div>
