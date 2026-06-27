@@ -335,6 +335,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── CATEGORIES BENTO ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-14">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
@@ -371,6 +377,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TRENDING ────── */}
       {trendingProducts.length > 0 && (
