@@ -118,9 +118,11 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
             {logoUrl ? (
-              <img src={logoUrl} alt={displayName} className="h-11 w-auto max-w-[140px] object-contain transition-transform group-hover:scale-105" />
+              <span className="h-12 w-12 rounded-full bg-card border border-border/70 p-1 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
+                <img src={logoUrl} alt={displayName} className="h-full w-full object-contain rounded-full" />
+              </span>
             ) : (
-              <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
+              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
                 <span className="text-primary-foreground font-cairo font-bold text-sm">🌴</span>
               </div>
             )}
