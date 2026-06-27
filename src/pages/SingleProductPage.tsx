@@ -326,9 +326,9 @@ export default function SingleProductPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['reviews', id] });
       setReviewName(''); setReviewRating(5); setReviewComment('');
-      toast({ title: 'شكراً لتقييمك! ⭐' });
+      toast({ title: t('sp.thanksForReview') });
     },
-    onError: () => { toast({ title: 'حدث خطأ، حاول مرة أخرى', variant: 'destructive' }); },
+    onError: () => { toast({ title: t('sp.errorTryAgain'), variant: 'destructive' }); },
   });
 
   useEffect(() => {
@@ -364,8 +364,8 @@ export default function SingleProductPage() {
   if (!product) {
     return (
       <div className="container py-16 text-center space-y-4">
-        <p className="font-cairo text-xl text-muted-foreground">المنتج غير موجود</p>
-        <Link to="/products" className="inline-flex items-center gap-2 font-cairo text-primary hover:underline"><ArrowRight className="w-4 h-4" />العودة إلى المنتجات</Link>
+        <p className="font-cairo text-xl text-muted-foreground">{t('sp.notFound')}</p>
+        <Link to="/products" className="inline-flex items-center gap-2 font-cairo text-primary hover:underline"><ArrowRight className="w-4 h-4" />{t('sp.backToProducts')}</Link>
       </div>
     );
   }
@@ -411,7 +411,7 @@ export default function SingleProductPage() {
 
   const handleAdd = () => {
     if ((hasNewVariants || hasLegacyVariations) && !allOptionsSelected()) {
-      toast({ title: 'يرجى اختيار جميع الخيارات أولاً', variant: 'destructive' });
+      toast({ title: t('sp.selectAllOptions'), variant: 'destructive' });
       return;
     }
     if (hasNewVariants && matchedVariant) {
@@ -437,7 +437,7 @@ export default function SingleProductPage() {
       content_name: product.name, content_ids: [product.id],
       content_type: 'product', value: effectivePrice * qty, currency: 'DZD',
     });
-    toast({ title: 'تمت الإضافة إلى السلة ✅', description: `تمت إضافة "${product.name}" (×${qty}) إلى السلة` });
+    toast({ title: t('sp.addedToCart'), description: t('sp.addedToCartDesc').replace('{name}', product.name).replace('{qty}', String(qty)) });
   };
 
   const goToPrevImage = () => setSelectedImage(i => (i === 0 ? images.length - 1 : i - 1));
@@ -476,11 +476,11 @@ export default function SingleProductPage() {
         .eq('is_active', true)
         .single();
       if (!data) {
-        toast({ title: 'خطأ', description: 'كود الخصم غير صالح', variant: 'destructive' });
+        toast({ title: t('sp.error'), description: t('sp.invalidCoupon'), variant: 'destructive' });
         return;
       }
       if (data.expiry_date && new Date(data.expiry_date) < new Date()) {
-        toast({ title: 'خطأ', description: 'كود الخصم منتهي الصلاحية', variant: 'destructive' });
+        toast({ title: t('sp.error'), description: t('sp.expiredCoupon'), variant: 'destructive' });
         return;
       }
       // Check product eligibility
@@ -491,7 +491,7 @@ export default function SingleProductPage() {
       if (couponProds && couponProds.length > 0) {
         const eligible = couponProds.some(cp => cp.product_id === product.id);
         if (!eligible) {
-          toast({ title: 'خطأ', description: 'كود الخصم لا ينطبق على هذا المنتج', variant: 'destructive' });
+          toast({ title: t('sp.error'), description: t('sp.couponNotApplicable'), variant: 'destructive' });
           return;
         }
       }
@@ -501,9 +501,9 @@ export default function SingleProductPage() {
       const discountVal = Math.min(rawDiscount, itemSubtotal);
       setCouponDiscount(discountVal);
       setCouponApplied(true);
-      toast({ title: 'تم تطبيق الخصم', description: `خصم ${formatPrice(discountVal)}` });
+      toast({ title: t('sp.couponApplied'), description: t('sp.discountApplied').replace('{amount}', formatPrice(discountVal)) });
     } catch {
-      toast({ title: 'خطأ', description: 'حدث خطأ أثناء التحقق من الكود', variant: 'destructive' });
+      toast({ title: t('sp.error'), description: t('sp.couponCheckError'), variant: 'destructive' });
     } finally {
       setCouponLoading(false);
     }
@@ -518,7 +518,7 @@ export default function SingleProductPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: 'تم النسخ' });
+    toast({ title: t('sp.copied') });
   };
 
   // Offer timer
@@ -528,17 +528,17 @@ export default function SingleProductPage() {
 
   const handleDirectOrder = async () => {
     if ((hasNewVariants || hasLegacyVariations) && !allOptionsSelected()) {
-      toast({ title: 'يرجى اختيار جميع الخيارات أولاً', variant: 'destructive' });
+      toast({ title: t('sp.selectAllOptions'), variant: 'destructive' });
       return;
     }
     const newErrors: Record<string, string> = {};
-    if (!orderName.trim()) newErrors.orderName = 'يرجى إدخال الاسم الكامل';
-    if (!orderPhone.trim()) newErrors.orderPhone = 'يرجى إدخال رقم الهاتف';
-    else if (!/^0[567]\d{8}$/.test(orderPhone)) newErrors.orderPhone = 'رقم الهاتف غير صالح (مثال: 05XXXXXXXX)';
-    if (!orderWilayaId) newErrors.orderWilayaId = 'يرجى اختيار الولاية';
-    if (!orderDeliveryType) newErrors.orderDeliveryType = 'يرجى اختيار نوع التوصيل';
-    if (!paymentMethod) newErrors.paymentMethod = 'يرجى اختيار طريقة الدفع';
-    if (['baridimob', 'flexy', 'binance', 'vodafone', 'redotpay'].includes(paymentMethod) && !receiptFile) newErrors.receiptFile = 'يرجى إرفاق إيصال الدفع';
+    if (!orderName.trim()) newErrors.orderName = t('sp.enterFullName');
+    if (!orderPhone.trim()) newErrors.orderPhone = t('sp.enterPhone');
+    else if (!/^0[567]\d{8}$/.test(orderPhone)) newErrors.orderPhone = t('sp.invalidPhone');
+    if (!orderWilayaId) newErrors.orderWilayaId = t('sp.selectWilaya');
+    if (!orderDeliveryType) newErrors.orderDeliveryType = t('sp.selectDeliveryType');
+    if (!paymentMethod) newErrors.paymentMethod = t('sp.selectPaymentMethod');
+    if (['baridimob', 'flexy', 'binance', 'vodafone', 'redotpay'].includes(paymentMethod) && !receiptFile) newErrors.receiptFile = t('sp.attachReceiptError');
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
@@ -578,7 +578,7 @@ export default function SingleProductPage() {
       // Telegram notification is handled server-side by a database trigger.
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err) {
-      toast({ title: 'خطأ', description: 'حدث خطأ أثناء إرسال الطلب', variant: 'destructive' });
+      toast({ title: t('sp.error'), description: t('sp.orderError'), variant: 'destructive' });
     } finally {
       setSubmittingOrder(false);
     }
@@ -591,7 +591,7 @@ export default function SingleProductPage() {
   return (
     <div className="container py-6 md:py-10">
       <SEO
-        title={`${product.name} — سوق دزاير إكسبرس`}
+        title={`${product.name} — akram-mobile`}
         description={(product.description || product.name).toString().slice(0, 160)}
         path={`/product/${product.id}`}
         type="product"
@@ -615,9 +615,9 @@ export default function SingleProductPage() {
         }}
       />
       <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 font-cairo">
-        <Link to="/" className="hover:text-primary transition-colors">الرئيسية</Link>
+        <Link to="/" className="hover:text-primary transition-colors">{t('sp.home')}</Link>
         <ChevronRight className="w-3 h-3 rotate-180 text-muted-foreground/40" />
-        <Link to="/products" className="hover:text-primary transition-colors">المنتجات</Link>
+        <Link to="/products" className="hover:text-primary transition-colors">{t('sp.products')}</Link>
         <ChevronRight className="w-3 h-3 rotate-180 text-muted-foreground/40" />
         <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
       </nav>
@@ -679,7 +679,7 @@ export default function SingleProductPage() {
               <div className="flex items-center gap-2">
                 <StarRating value={Math.round(avgRating)} readonly />
                 <span className="font-roboto font-bold text-sm">{avgRating.toFixed(1)}</span>
-                <span className="font-cairo text-sm text-muted-foreground">({reviews.length} تقييم)</span>
+                <span className="font-cairo text-sm text-muted-foreground">{t('sp.reviewCount').replace('{n}', String(reviews.length))}</span>
               </div>
             )}
 
@@ -700,10 +700,10 @@ export default function SingleProductPage() {
             {/* Trust Signals */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3">
               {[
-                { icon: Truck, label: 'توصيل سريع', color: 'text-primary', bg: 'bg-primary/10' },
-                { icon: Shield, label: 'دفع آمن', color: 'text-emerald-600', bg: 'bg-emerald-500/10' },
-                { icon: Zap, label: 'شحن سريع', color: 'text-amber-500', bg: 'bg-amber-500/10' },
-                { icon: RotateCcw, label: 'ضمان الاسترجاع', color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                { icon: Truck, label: t('product.freeDelivery'), color: 'text-primary', bg: 'bg-primary/10' },
+                { icon: Shield, label: t('product.securePayment'), color: 'text-emerald-600', bg: 'bg-emerald-500/10' },
+                { icon: Zap, label: t('product.fastShipping'), color: 'text-amber-500', bg: 'bg-amber-500/10' },
+                { icon: RotateCcw, label: t('product.returnGuarantee'), color: 'text-blue-500', bg: 'bg-blue-500/10' },
               ].map((item, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/30 border border-border/30 hover:border-border/60 transition-colors group">
                   <div className={`w-8 h-8 rounded-xl ${item.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -717,7 +717,7 @@ export default function SingleProductPage() {
             {product.is_free_shipping && (
               <div className="flex items-center gap-1.5 text-primary bg-primary/5 rounded-lg px-3 py-2">
                 <Truck className="w-4 h-4" />
-                <span className="font-cairo text-sm font-medium">توصيل مجاني</span>
+                <span className="font-cairo text-sm font-medium">{t('product.freeDelivery')}</span>
               </div>
             )}
 
@@ -725,7 +725,7 @@ export default function SingleProductPage() {
             {!outOfStock && effectiveStock > 0 && effectiveStock <= 5 && (
               <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 animate-pulse">
                 <Clock className="w-4 h-4 text-red-500" />
-                <span className="font-cairo text-sm font-bold text-red-500">بقي {effectiveStock} فقط!</span>
+                <span className="font-cairo text-sm font-bold text-red-500">{t('product.onlyLeft').replace('{n}', String(effectiveStock))}</span>
               </div>
             )}
 
@@ -733,7 +733,7 @@ export default function SingleProductPage() {
             {bundleOffers && bundleOffers.length > 0 && (
               <div className="space-y-2 pt-2">
                 <Label className="font-cairo text-sm font-semibold flex items-center gap-1.5">
-                  <Tag className="w-4 h-4 text-primary" /> عروض خاصة
+                  <Tag className="w-4 h-4 text-primary" /> {t('sp.specialOffers')}
                 </Label>
                 <div className="space-y-1.5">
                   {bundleOffers.map((offer: any) => {
@@ -746,12 +746,12 @@ export default function SingleProductPage() {
                       >
                         <div className="flex items-center gap-2">
                           <span className="font-cairo font-medium text-sm">{offer.description}</span>
-                          <span className="font-cairo text-xs text-muted-foreground">({offer.quantity} قطع)</span>
+                          <span className="font-cairo text-xs text-muted-foreground">{t('sp.pieces').replace('{n}', String(offer.quantity))}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-roboto font-bold text-primary">{formatPrice(Number(offer.price))}</span>
                           {savings > 0 && (
-                            <Badge variant="secondary" className="font-cairo text-xs">وفّر {formatPrice(savings)}</Badge>
+                            <Badge variant="secondary" className="font-cairo text-xs">{t('sp.save').replace('{amount}', formatPrice(savings))}</Badge>
                           )}
                         </div>
                       </button>
@@ -762,9 +762,9 @@ export default function SingleProductPage() {
             )}
 
             {outOfStock ? (
-              <Badge variant="destructive" className="font-cairo">غير متوفر حالياً</Badge>
+              <Badge variant="destructive" className="font-cairo">{t('sp.outOfStockNow')}</Badge>
             ) : effectiveStock > 5 ? (
-              <p className="font-cairo text-sm text-primary">متوفر في المخزون ({effectiveStock} قطعة)</p>
+              <p className="font-cairo text-sm text-primary">{t('sp.inStock').replace('{n}', String(effectiveStock))}</p>
             ) : null}
 
             {/* NEW Variant Selector */}
@@ -786,7 +786,7 @@ export default function SingleProductPage() {
                             const available = isOptionValueAvailable(group.name, val.label);
                             return (
                               <SelectItem key={val.id} value={val.label} className="font-cairo" disabled={!available}>
-                                {val.label} {!available && '(غير متوفر)'}
+                                {val.label} {!available && t('sp.notAvailable')}
                               </SelectItem>
                             );
                           })}
@@ -897,16 +897,16 @@ export default function SingleProductPage() {
                 onClick={async () => {
                   const url = `${window.location.origin}/product/${product.id}`;
                   if (navigator.share) {
-                    try { await navigator.share({ title: product.name, text: `تفقد ${product.name}`, url }); } catch {}
+                    try { await navigator.share({ title: product.name, text: t('sp.checkOut').replace('{name}', product.name), url }); } catch {}
                   } else {
                     await navigator.clipboard.writeText(url);
-                    toast({ title: 'تم نسخ الرابط 📋' });
+                    toast({ title: t('sp.linkCopied') });
                   }
                 }}
                 className="font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground hover:text-primary"
               >
                 <Share2 className="w-3.5 h-3.5" />
-                مشاركة المنتج
+                {t('sp.shareProduct')}
               </Button>
             </div>
           </div>
@@ -922,12 +922,12 @@ export default function SingleProductPage() {
                 </div>
                 <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 flex-1 rounded-2xl h-11 border-primary/30 hover:bg-primary/5 hover:border-primary/50 transition-all">
                   <ShoppingCart className="w-4 h-4" />
-                  إضافة إلى السلة
+                  {t('sp.addToCart')}
                 </Button>
               </div>
               {/* Total price display */}
               <div className="flex justify-between items-center font-cairo text-sm bg-gradient-to-l from-primary/5 to-primary/10 border border-primary/10 rounded-2xl px-5 py-3.5">
-                <span className="text-muted-foreground font-medium">الإجمالي ({qty} قطعة)</span>
+                <span className="text-muted-foreground font-medium">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
                 <span className="font-roboto font-extrabold text-primary text-xl">{formatPrice(effectivePrice * qty)}</span>
               </div>
             </div>
@@ -941,8 +941,8 @@ export default function SingleProductPage() {
                   <Truck className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h2 className="font-cairo font-bold text-xl text-foreground">اطلب الآن مباشرة</h2>
-                  <p className="font-cairo text-xs text-muted-foreground">أكمل بياناتك وسنوصلك طلبك بأسرع وقت</p>
+                  <h2 className="font-cairo font-bold text-xl text-foreground">{t('sp.orderDirectly')}</h2>
+                  <p className="font-cairo text-xs text-muted-foreground">{t('sp.fillInfoFast')}</p>
                 </div>
               </div>
 
@@ -951,16 +951,16 @@ export default function SingleProductPage() {
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">1</div>
                   <User className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">المعلومات الشخصية</span>
+                  <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
                 </div>
                 <div>
-                  <Label className="font-cairo text-sm">الاسم الكامل *</Label>
+                  <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
                   <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
-                    placeholder="أدخل اسمك الكامل" className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
+                    placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
                   {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
                 </div>
                 <div>
-                  <Label className="font-cairo text-sm">رقم الهاتف *</Label>
+                  <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
                   <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
                     placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
                   {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
@@ -974,12 +974,12 @@ export default function SingleProductPage() {
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">2</div>
                   <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">التوصيل</span>
+                  <span className="font-cairo font-semibold text-sm">{t('sp.delivery')}</span>
                 </div>
                 <div>
-                  <Label className="font-cairo text-sm">الولاية *</Label>
+                  <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
                   <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
-                    <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder="اختر الولاية" /></SelectTrigger>
+                    <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
                     <SelectContent>
                       {wilayas?.map(w => (
                         <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
@@ -991,9 +991,9 @@ export default function SingleProductPage() {
 
                 {orderWilayaId && baladiyat && baladiyat.length > 0 && (
                   <div>
-                    <Label className="font-cairo text-sm">البلدية</Label>
+                    <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
                     <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
-                      <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder="اختر البلدية" /></SelectTrigger>
+                      <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
                       <SelectContent>
                         {baladiyat.map(b => (
                           <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
@@ -1005,18 +1005,18 @@ export default function SingleProductPage() {
 
                 {orderWilayaId && selectedWilaya && (
                   <div>
-                    <Label className="font-cairo text-sm">نوع التوصيل *</Label>
+                    <Label className="font-cairo text-sm">{t('sp.deliveryType')}</Label>
                     <div className="grid grid-cols-2 gap-3 mt-2">
                       <button type="button" onClick={() => { setOrderDeliveryType('office'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
                         className={`flex flex-col items-center gap-1.5 p-3 border-2 rounded-xl transition-all text-sm ${orderDeliveryType === 'office' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
                         <Building2 className={`w-5 h-5 ${orderDeliveryType === 'office' ? 'text-primary' : 'text-muted-foreground'}`} />
-                        <span className="font-cairo font-semibold">المكتب</span>
+                        <span className="font-cairo font-semibold">{t('sp.office')}</span>
                         <span className="font-roboto font-bold text-primary">{formatPrice(Number(selectedWilaya.shipping_price))}</span>
                       </button>
                       <button type="button" onClick={() => { setOrderDeliveryType('home'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
                         className={`flex flex-col items-center gap-1.5 p-3 border-2 rounded-xl transition-all text-sm ${orderDeliveryType === 'home' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
                         <Home className={`w-5 h-5 ${orderDeliveryType === 'home' ? 'text-primary' : 'text-muted-foreground'}`} />
-                        <span className="font-cairo font-semibold">المنزل</span>
+                        <span className="font-cairo font-semibold">{t('sp.homeDelivery')}</span>
                         <span className="font-roboto font-bold text-primary">{formatPrice(Number(selectedWilaya.shipping_price_home))}</span>
                       </button>
                     </div>
@@ -1025,8 +1025,8 @@ export default function SingleProductPage() {
                 )}
 
                 <div>
-                  <Label className="font-cairo text-sm">العنوان التفصيلي</Label>
-                  <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder="اختياري" className="font-cairo mt-1" />
+                  <Label className="font-cairo text-sm">{t('sp.address')}</Label>
+                  <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder={t("sp.optional")} className="font-cairo mt-1" />
                 </div>
               </div>
 
@@ -1037,15 +1037,15 @@ export default function SingleProductPage() {
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">3</div>
                   <CreditCard className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">طريقة الدفع</span>
+                  <span className="font-cairo font-semibold text-sm">{t('sp.payment')}</span>
                 </div>
                 <div className="space-y-2">
                   {cashOnDeliveryEnabled && (
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'cash_on_delivery' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="cash_on_delivery" checked={paymentMethod === 'cash_on_delivery'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">الدفع عند الاستلام</span>
-                        <p className="text-xs text-muted-foreground font-cairo mt-1">ادفع النقود عند استلام الطرد من المندوب</p>
+                        <span className="font-cairo font-semibold">{t('sp.cod')}</span>
+                        <p className="text-xs text-muted-foreground font-cairo mt-1">{t('sp.codDesc')}</p>
                       </div>
                     </label>
                   )}
@@ -1054,21 +1054,21 @@ export default function SingleProductPage() {
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'baridimob' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="baridimob" checked={paymentMethod === 'baridimob'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">بريدي موب</span>
+                        <span className="font-cairo font-semibold">{t('sp.baridimob')}</span>
                         {paymentMethod === 'baridimob' && settings && (
                           <div className="mt-2 space-y-1.5 text-xs">
                             <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">الحساب:</span>
+                              <span className="font-cairo">{t('sp.account')}</span>
                               <span className="font-roboto font-bold">{settings.ccp_number}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.ccp_number)}><Copy className="w-3 h-3" /></Button>
                             </div>
-                            <p className="font-cairo">الاسم: {settings.ccp_name}</p>
+                            <p className="font-cairo">{t('sp.nameLabel').replace('{name}', settings.ccp_name || '')}</p>
                             <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">أرفق الإيصال *</Label>
+                              <Label className="font-cairo text-[11px]">{t('sp.attachReceipt')}</Label>
                               <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
                               {receiptPreview && (
                                 <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt="إيصال" className="w-24 h-24 object-cover rounded-lg border" />
+                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
                                   <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                                 </div>
                               )}
@@ -1090,20 +1090,20 @@ export default function SingleProductPage() {
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'flexy' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="flexy" checked={paymentMethod === 'flexy'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">فليكسي</span>
+                        <span className="font-cairo font-semibold">{t('sp.flexy')}</span>
                         {paymentMethod === 'flexy' && settings && (
                           <div className="mt-2 space-y-1.5 text-xs">
-                            <p className="font-cairo">أرسل تعبئة <span className="font-roboto font-bold">{formatPrice(Number(settings.flexy_deposit_amount || 500))}</span> إلى:</p>
+                            <p className="font-cairo">{t('sp.flexyInstruction').split('{amount}')[0]}<span className="font-roboto font-bold">{formatPrice(Number(settings.flexy_deposit_amount || 500))}</span>{t('sp.flexyInstruction').split('{amount}')[1]}</p>
                             <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
                               <span className="font-roboto font-bold">{settings.flexy_number}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.flexy_number)}><Copy className="w-3 h-3" /></Button>
                             </div>
                             <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">أرفق لقطة الشاشة *</Label>
+                              <Label className="font-cairo text-[11px]">{t('sp.attachScreenshot')}</Label>
                               <Input type="file" accept="image/*" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
                               {receiptPreview && (
                                 <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt="لقطة شاشة" className="w-24 h-24 object-cover rounded-lg border" />
+                                  <img src={receiptPreview} alt={t("sp.screenshot")} className="w-24 h-24 object-cover rounded-lg border" />
                                   <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                                 </div>
                               )}
@@ -1125,20 +1125,20 @@ export default function SingleProductPage() {
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'binance' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="binance" checked={paymentMethod === 'binance'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">بايننس</span>
+                        <span className="font-cairo font-semibold">{t('sp.binance')}</span>
                         {paymentMethod === 'binance' && settings && (
                           <div className="mt-2 space-y-1.5 text-xs">
                             <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">المحفظة:</span>
+                              <span className="font-cairo">{t('sp.wallet')}</span>
                               <span className="font-roboto font-bold">{settings.binance_wallet}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.binance_wallet)}><Copy className="w-3 h-3" /></Button>
                             </div>
                             <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">أرفق إيصال الدفع *</Label>
+                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
                               <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
                               {receiptPreview && (
                                 <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt="إيصال" className="w-24 h-24 object-cover rounded-lg border" />
+                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
                                   <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                                 </div>
                               )}
@@ -1160,20 +1160,20 @@ export default function SingleProductPage() {
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'vodafone' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="vodafone" checked={paymentMethod === 'vodafone'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">فودافون كاش</span>
+                        <span className="font-cairo font-semibold">{t('sp.vodafone')}</span>
                         {paymentMethod === 'vodafone' && settings && (
                           <div className="mt-2 space-y-1.5 text-xs">
                             <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">رقم المحفظة:</span>
+                              <span className="font-cairo">{t('sp.walletNumber')}</span>
                               <span className="font-roboto font-bold">{settings.vodafone_number}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.vodafone_number)}><Copy className="w-3 h-3" /></Button>
                             </div>
                             <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">أرفق إيصال الدفع *</Label>
+                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
                               <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
                               {receiptPreview && (
                                 <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt="إيصال" className="w-24 h-24 object-cover rounded-lg border" />
+                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
                                   <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                                 </div>
                               )}
@@ -1195,20 +1195,20 @@ export default function SingleProductPage() {
                     <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'redotpay' ? 'border-primary bg-accent' : ''}`}>
                       <input type="radio" name="inline-payment" value="redotpay" checked={paymentMethod === 'redotpay'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
                       <div className="flex-1">
-                        <span className="font-cairo font-semibold">ريد أوتو باي</span>
+                        <span className="font-cairo font-semibold">{t('sp.redotpay')}</span>
                         {paymentMethod === 'redotpay' && settings && (
                           <div className="mt-2 space-y-1.5 text-xs">
                             <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">الحساب:</span>
+                              <span className="font-cairo">{t('sp.account')}</span>
                               <span className="font-roboto font-bold">{settings.redotpay_account}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.redotpay_account)}><Copy className="w-3 h-3" /></Button>
                             </div>
                             <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">أرفق إيصال الدفع *</Label>
+                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
                               <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
                               {receiptPreview && (
                                 <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt="إيصال" className="w-24 h-24 object-cover rounded-lg border" />
+                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
                                   <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                                 </div>
                               )}
@@ -1233,24 +1233,24 @@ export default function SingleProductPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-3 mb-1">
                   <Tag className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">كود الخصم</span>
+                  <span className="font-cairo font-semibold text-sm">{t('sp.couponCodeLabel')}</span>
                 </div>
                 {couponApplied ? (
                   <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-xl p-3">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="font-cairo text-sm text-green-700">تم تطبيق الخصم: {formatPrice(couponDiscount)}</span>
+                    <span className="font-cairo text-sm text-green-700">{t("sp.couponAppliedAmt").replace("{amount}", formatPrice(couponDiscount))}</span>
                   </div>
                 ) : (
                   <div className="flex gap-2">
                     <Input
                       value={couponCode}
                       onChange={e => setCouponCode(e.target.value)}
-                      placeholder="أدخل كود الخصم"
+                      placeholder={t("sp.couponPlaceholder")}
                       className="font-cairo flex-1"
                       dir="ltr"
                     />
                     <Button variant="outline" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()} className="font-cairo">
-                      {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'تطبيق'}
+                      {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('sp.apply')}
                     </Button>
                   </div>
                 )}
@@ -1260,22 +1260,22 @@ export default function SingleProductPage() {
               {orderWilayaId && orderDeliveryType && (
                 <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-1.5 text-sm font-cairo">
                   <div className="flex justify-between">
-                    <span>المنتج (×{qty})</span>
+                    <span>{t('sp.productLine').replace('{n}', String(qty))}</span>
                     <span className="font-roboto font-bold">{formatPrice(itemSubtotal)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>التوصيل ({orderDeliveryType === 'home' ? 'منزل' : 'مكتب'})</span>
+                    <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : t('sp.office'))}</span>
                     <span className="font-roboto font-bold">{formatPrice(shippingCost)}</span>
                   </div>
                   {couponDiscount > 0 && (
                     <div className="flex justify-between text-green-600">
-                      <span>الخصم</span>
+                      <span>{t('sp.discountLine')}</span>
                       <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
                     </div>
                   )}
                   <hr className="my-1 border-primary/20" />
                   <div className="flex justify-between font-bold text-base">
-                    <span>الإجمالي</span>
+                    <span>{t('sp.total')}</span>
                     <span className="font-roboto text-primary">{formatPrice(orderTotal)}</span>
                   </div>
                 </div>
@@ -1284,7 +1284,7 @@ export default function SingleProductPage() {
               <Button onClick={handleDirectOrder} disabled={submittingOrder}
                 className="w-full font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25 animate-pulse hover:animate-none">
                 {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                {submittingOrder ? 'جاري الإرسال...' : 'تأكيد الطلب'}
+                {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
               </Button>
             </div>
           )}
@@ -1296,7 +1296,7 @@ export default function SingleProductPage() {
         <section className="mt-20">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-primary to-primary/30" />
-            <h2 className="font-cairo font-extrabold text-2xl text-foreground">تفاصيل المنتج</h2>
+            <h2 className="font-cairo font-extrabold text-2xl text-foreground">{t('sp.productDetails')}</h2>
           </div>
           <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base">{product.description}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1315,26 +1315,26 @@ export default function SingleProductPage() {
           <div className="w-1 h-8 rounded-full bg-gradient-to-b from-amber-400 to-amber-400/30" />
           <h2 className="font-cairo font-extrabold text-2xl text-foreground flex items-center gap-2">
             <Star className="w-6 h-6 text-amber-400 fill-amber-400" />
-            التقييمات ({reviews?.length || 0})
+            {t('sp.reviews').replace('{n}', String(reviews?.length || 0))}
           </h2>
         </div>
         <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 mb-8 shadow-sm">
-          <h3 className="font-cairo font-bold text-lg mb-5">أضف تقييمك</h3>
+          <h3 className="font-cairo font-bold text-lg mb-5">{t('sp.addReview')}</h3>
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
-                <Input value={reviewName} onChange={e => setReviewName(e.target.value)} placeholder="اسمك" className="font-cairo" />
+                <Input value={reviewName} onChange={e => setReviewName(e.target.value)} placeholder={t("sp.yourName")} className="font-cairo" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-cairo text-sm text-muted-foreground">تقييمك:</span>
+                <span className="font-cairo text-sm text-muted-foreground">{t('sp.yourRating')}</span>
                 <StarRating value={reviewRating} onChange={setReviewRating} />
               </div>
             </div>
-            <Textarea value={reviewComment} onChange={e => setReviewComment(e.target.value)} placeholder="اكتب تعليقك هنا... (اختياري)" className="font-cairo" rows={3} />
-            <Button onClick={() => { if (!reviewName.trim()) { toast({ title: 'يرجى إدخال اسمك', variant: 'destructive' }); return; } submitReview.mutate(); }}
+            <Textarea value={reviewComment} onChange={e => setReviewComment(e.target.value)} placeholder={t("sp.commentPlaceholder")} className="font-cairo" rows={3} />
+            <Button onClick={() => { if (!reviewName.trim()) { toast({ title: t('sp.enterYourName'), variant: 'destructive' }); return; } submitReview.mutate(); }}
               disabled={submitReview.isPending} className="font-cairo font-semibold gap-2 rounded-2xl h-11 px-6 bg-gradient-to-l from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white border-0 shadow-md shadow-amber-500/20">
               {submitReview.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              إرسال التقييم
+              {t('sp.submitReview')}
             </Button>
           </div>
         </div>
@@ -1360,7 +1360,7 @@ export default function SingleProductPage() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="font-cairo text-muted-foreground">لا توجد تقييمات بعد — كن أول من يقيّم هذا المنتج!</p>
+            <p className="font-cairo text-muted-foreground">{t('sp.noReviewsYet')}</p>
           </div>
         )}
       </section>
@@ -1384,7 +1384,7 @@ export default function SingleProductPage() {
             <Button onClick={scrollToOrderForm}
               className="font-cairo font-bold gap-2 rounded-2xl px-7 h-12 bg-gradient-to-l from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25 shrink-0 hover:shadow-xl hover:shadow-primary/30 transition-all">
               <ShoppingCart className="w-4 h-4" />
-              اطلب الآن
+              {t('product.orderNow')}
             </Button>
           </div>
         </div>
