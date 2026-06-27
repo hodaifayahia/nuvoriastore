@@ -107,7 +107,7 @@ export default function ConfirmerLayout({ children }: { children: ReactNode }) {
       const { data } = await supabase.rpc('has_role', { _user_id: userId, _role: 'confirmer' });
       if (!data) {
         toast.error(t('sidebar.noAccess'));
-        navigate('/admin/login');
+        navigate('/akrem-control/login');
         return;
       }
       setIsConfirmer(true);
@@ -117,7 +117,7 @@ export default function ConfirmerLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/admin/login');
+        navigate('/akrem-control/login');
       } else {
         checkConfirmer(session.user.id).finally(() => setLoading(false));
       }
@@ -126,7 +126,7 @@ export default function ConfirmerLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/admin/login');
+        navigate('/akrem-control/login');
       } else {
         checkConfirmer(session.user.id).finally(() => setLoading(false));
       }
@@ -136,7 +136,7 @@ export default function ConfirmerLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    navigate('/akrem-control/login');
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Skeleton className="w-32 h-8" /></div>;

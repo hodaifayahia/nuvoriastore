@@ -259,7 +259,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/admin/login');
+        navigate('/akrem-control/login');
       } else {
         checkAdmin(session.user.id).finally(() => setLoading(false));
       }
@@ -268,7 +268,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/admin/login');
+        navigate('/akrem-control/login');
       } else {
         checkAdmin(session.user.id).finally(() => setLoading(false));
       }
@@ -278,7 +278,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    navigate('/akrem-control/login');
   };
 
   const clearNotifications = () => setNotifications([]);

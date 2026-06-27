@@ -120,7 +120,7 @@ const App = () => (
             <Route path="/lp/:id" element={<LandingPage />} />
 
             {/* Admin */}
-            <Route path="/admin/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />
+            <Route path="/akrem-control/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />
             <Route path="/admin" element={<LanguageProvider><AdminLayout><AdminDashboardPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/products" element={<LanguageProvider><AdminLayout><AdminProductsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/orders" element={<LanguageProvider><AdminLayout><AdminOrdersPage /></AdminLayout></LanguageProvider>} />
