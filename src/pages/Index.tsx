@@ -391,7 +391,7 @@ export default function IndexPage() {
                   <div>
                     <p className="font-display font-semibold text-sm sm:text-base group-hover:text-primary transition-colors">{cat.name}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 inline-flex items-center gap-1">
-                      Shop <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                      تسوّق <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
                 </Link>
