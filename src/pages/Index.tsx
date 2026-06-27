@@ -25,6 +25,14 @@ import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
 import heroImage from '@/assets/hero-tech-collection.jpg';
 import trustedTechImage from '@/assets/trusted-tech-algeria.jpg';
+import catPhoneCases from '@/assets/cat-phone-cases.jpg';
+import catChargers from '@/assets/cat-chargers.jpg';
+import catHeadphones from '@/assets/cat-headphones.jpg';
+import catKeyboards from '@/assets/cat-keyboards.jpg';
+import catMice from '@/assets/cat-mice.jpg';
+import catLaptops from '@/assets/cat-laptops.jpg';
+import catCables from '@/assets/cat-cables.jpg';
+import catGaming from '@/assets/cat-gaming.jpg';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
@@ -32,14 +40,14 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Phone Cases',   icon: Smartphone,      accent: 'from-sky-400/30 to-blue-500/10',  image: 'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Chargers',      icon: BatteryCharging, accent: 'from-cyan-400/30 to-sky-500/10',  image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Headphones',    icon: Headphones,      accent: 'from-blue-400/30 to-sky-500/10',  image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Keyboards',     icon: Keyboard,        accent: 'from-sky-500/30 to-cyan-400/10',  image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Mice',          icon: Mouse,           accent: 'from-cyan-500/25 to-blue-500/10', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Laptops',       icon: Laptop,          accent: 'from-blue-500/30 to-sky-400/10',  image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Cables',        icon: Cable,           accent: 'from-sky-400/25 to-cyan-400/10',  image: 'https://images.unsplash.com/photo-1601524909162-ae8725290836?w=600&q=80&auto=format&fit=crop' },
-  { name: 'Gaming',        icon: Gamepad2,        accent: 'from-blue-600/30 to-sky-400/10',  image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80&auto=format&fit=crop' },
+  { name: 'Phone Cases',   icon: Smartphone,      accent: 'from-sky-400/30 to-blue-500/10',  image: catPhoneCases },
+  { name: 'Chargers',      icon: BatteryCharging, accent: 'from-cyan-400/30 to-sky-500/10',  image: catChargers },
+  { name: 'Headphones',    icon: Headphones,      accent: 'from-blue-400/30 to-sky-500/10',  image: catHeadphones },
+  { name: 'Keyboards',     icon: Keyboard,        accent: 'from-sky-500/30 to-cyan-400/10',  image: catKeyboards },
+  { name: 'Mice',          icon: Mouse,           accent: 'from-cyan-500/25 to-blue-500/10', image: catMice },
+  { name: 'Laptops',       icon: Laptop,          accent: 'from-blue-500/30 to-sky-400/10',  image: catLaptops },
+  { name: 'Cables',        icon: Cable,           accent: 'from-sky-400/25 to-cyan-400/10',  image: catCables },
+  { name: 'Gaming',        icon: Gamepad2,        accent: 'from-blue-600/30 to-sky-400/10',  image: catGaming },
 ];
 
 
@@ -355,20 +363,21 @@ export default function IndexPage() {
                 <Link
                   key={cat.name + i}
                   to={`/products?category=${encodeURIComponent(cat.name)}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card h-36 sm:h-44 flex flex-col justify-end hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]"
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-card h-52 sm:h-60 flex flex-col items-center justify-center text-center hover:border-primary/60 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.5)]"
                 >
                   {img ? (
-                    <img src={img} alt={cat.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                    <img src={img} alt={cat.name} loading="lazy" width={768} height={768} className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-110 transition-all duration-700 ease-out" />
                   ) : (
                     <div className={`absolute inset-0 bg-gradient-to-br ${cat.accent}`} />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
-                  <div className="absolute top-3 right-3 w-10 h-10 rounded-xl bg-background/90 backdrop-blur flex items-center justify-center border border-border/40 shadow-sm">
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="relative p-4">
-                    <p className="font-display font-bold text-base sm:text-lg text-background drop-shadow-sm">{cat.name}</p>
-                    <p className="text-[11px] text-background/80 mt-0.5 inline-flex items-center gap-1">
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/50 to-foreground/20" />
+
+                  <div className="relative flex flex-col items-center justify-center gap-3 px-3">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background/95 backdrop-blur flex items-center justify-center border border-white/20 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-primary" strokeWidth={1.75} />
+                    </div>
+                    <p className="font-display font-bold text-base sm:text-lg text-background drop-shadow-md">{cat.name}</p>
+                    <p className="text-[11px] text-background/90 inline-flex items-center gap-1">
                       {t('idx.categories.shop')} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
