@@ -130,6 +130,7 @@ const App = () => (
             <Route path="/admin/wilayas" element={<LanguageProvider><AdminLayout><AdminWilayasPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/coupons" element={<LanguageProvider><AdminLayout><AdminCouponsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/categories" element={<LanguageProvider><AdminLayout><AdminCategoriesPage /></AdminLayout></LanguageProvider>} />
+            <Route path="/admin/brands" element={<LanguageProvider><AdminLayout><AdminBrandsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/variations" element={<LanguageProvider><AdminLayout><AdminVariationsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/leads" element={<LanguageProvider><AdminLayout><AdminLeadsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/abandoned" element={<LanguageProvider><AdminLayout><AdminAbandonedPage /></AdminLayout></LanguageProvider>} />
