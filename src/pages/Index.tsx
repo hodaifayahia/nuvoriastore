@@ -447,12 +447,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">Fresh arrivals</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">New in store</h2>
-              <p className="text-sm text-white/60 mt-2 max-w-md">Just landed — the latest tech picks, hand-curated for you.</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">وصل حديثاً</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">جديد في المتجر</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">أحدث المنتجات التقنية المختارة بعناية لك.</p>
             </div>
             <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
-              All products <ChevronRight className="w-4 h-4" />
+              كل المنتجات <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
