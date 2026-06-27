@@ -25,7 +25,9 @@ export default function AdminProductsPage() {
   const qc = useQueryClient();
   const { toast } = useToast();
   const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
   const categoryNames = categoriesData?.map(c => c.name) || [];
+  const brandNames = brandsData?.map(b => b.name) || [];
   const importRef = useRef<HTMLInputElement>(null);
 
   const [editingProduct, setEditingProduct] = useState<any>(null);
