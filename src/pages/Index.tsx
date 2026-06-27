@@ -28,15 +28,16 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Phone Cases',   icon: Smartphone,        accent: 'from-indigo-500/30 to-violet-500/10', tag: 'phone' },
-  { name: 'Chargers',      icon: BatteryCharging,   accent: 'from-fuchsia-500/30 to-indigo-500/10', tag: 'charger' },
-  { name: 'Headphones',    icon: Headphones,        accent: 'from-blue-500/30 to-indigo-500/10', tag: 'headphone' },
-  { name: 'Keyboards',     icon: Keyboard,          accent: 'from-violet-500/30 to-fuchsia-500/10', tag: 'keyboard' },
-  { name: 'Mice',          icon: Mouse,             accent: 'from-cyan-500/25 to-indigo-500/10', tag: 'mouse' },
-  { name: 'Laptops',       icon: Laptop,            accent: 'from-indigo-500/30 to-purple-500/10', tag: 'laptop' },
-  { name: 'Cables',        icon: Cable,             accent: 'from-sky-500/25 to-violet-500/10', tag: 'cable' },
-  { name: 'Gaming',        icon: Gamepad2,          accent: 'from-purple-500/30 to-fuchsia-500/10', tag: 'gaming' },
+  { name: 'Phone Cases',   icon: Smartphone,        accent: 'from-sky-400/30 to-blue-500/10', tag: 'phone' },
+  { name: 'Chargers',      icon: BatteryCharging,   accent: 'from-cyan-400/30 to-sky-500/10', tag: 'charger' },
+  { name: 'Headphones',    icon: Headphones,        accent: 'from-blue-400/30 to-sky-500/10', tag: 'headphone' },
+  { name: 'Keyboards',     icon: Keyboard,          accent: 'from-sky-500/30 to-cyan-400/10', tag: 'keyboard' },
+  { name: 'Mice',          icon: Mouse,             accent: 'from-cyan-500/25 to-blue-500/10', tag: 'mouse' },
+  { name: 'Laptops',       icon: Laptop,            accent: 'from-blue-500/30 to-sky-400/10', tag: 'laptop' },
+  { name: 'Cables',        icon: Cable,             accent: 'from-sky-400/25 to-cyan-400/10', tag: 'cable' },
+  { name: 'Gaming',        icon: Gamepad2,          accent: 'from-blue-600/30 to-sky-400/10', tag: 'gaming' },
 ];
+
 
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
@@ -148,8 +149,9 @@ export default function IndexPage() {
   }, [categoriesData]);
 
   // Section background tones — alternating light & dark
-  const LIGHT_BG = '#F8F9FA';
-  const DARK_BG = '#1A1A2E';
+  const LIGHT_BG = '#EAF4FF';
+  const DARK_BG = '#0B3B6F';
+
 
   // Wavy SVG divider — fill should match the NEXT section's background
   const Wave = ({ fill, flip = false }: { fill: string; flip?: boolean }) => (
@@ -173,7 +175,7 @@ export default function IndexPage() {
 
       {/* ────── HERO ────── */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-6 pb-10">
-        <div className="relative max-w-7xl mx-auto rounded-[2rem] border border-border/60 overflow-hidden bg-gradient-to-br from-[#0b0820] via-[#140a2e] to-[#1a0c3a] shadow-[0_30px_80px_-20px_rgba(120,80,255,0.35)]">
+        <div className="relative max-w-7xl mx-auto rounded-[2rem] border border-border/60 overflow-hidden bg-gradient-to-br from-[#0B3B6F] via-[#0E5BA8] to-[#1E88E5] shadow-[0_30px_80px_-20px_rgba(30,136,229,0.35)]">
           {/* Background image */}
           <img
             src={heroImage}
@@ -183,8 +185,9 @@ export default function IndexPage() {
             height={1024}
           />
           {/* Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0b0820]/95 via-[#140a2e]/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0820] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B3B6F]/95 via-[#0E5BA8]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B3B6F] via-transparent to-transparent" />
+
           <div className="pointer-events-none absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-primary/30 blur-[120px]" />
           <div className="pointer-events-none absolute top-20 right-1/3 w-[360px] h-[360px] rounded-full bg-accent/25 blur-[120px]" />
 
@@ -203,9 +206,10 @@ export default function IndexPage() {
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
                 Gear up. <br />
-                <span className="bg-gradient-to-r from-fuchsia-300 via-violet-300 to-sky-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
                   Power on.
                 </span>
+
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
                 Laptops, phones, audio and peripherals — curated, original, and delivered fast across Algeria.
@@ -219,14 +223,14 @@ export default function IndexPage() {
                   placeholder="Search MacBook, AirPods, Logitech…"
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
-                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#140a2e] hover:bg-white/90">
+                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
                   Search
                 </Button>
               </form>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
-                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-fuchsia-500 to-violet-600 hover:from-fuchsia-400 hover:to-violet-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(217,70,239,0.5)]">
+                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
                     Shop now <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
