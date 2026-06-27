@@ -28,30 +28,33 @@ export default function AboutPage() {
   const address = settings?.footer_address || 'الجزائر';
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative bg-gradient-to-bl from-primary/10 via-background to-secondary/10 py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 right-10 w-72 h-72 bg-primary rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-96 h-96 bg-secondary rounded-full blur-3xl" />
-        </div>
-        <div className="container relative text-center">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 animate-fade-in">
-            <Store className="w-10 h-10 text-primary" />
+      <section className="relative bg-primary border-b border-primary/20">
+        <div className="container relative z-10 py-16 md:py-20 text-center">
+          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 mb-6 animate-fade-in">
+            <Sparkles className="w-4 h-4" />
+            {storeName}
           </div>
-          <h1 className="font-cairo font-bold text-4xl md:text-5xl text-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex items-center justify-center mx-auto mb-6 animate-fade-in">
+            <Store className="w-10 h-10 text-primary-foreground" />
+          </div>
+          <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             من نحن
           </h1>
-          <p className="font-cairo text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="font-cairo text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {description}
           </p>
         </div>
       </section>
 
       {/* Story */}
-      <section className="container py-16 md:py-24">
-        <div className="max-w-3xl mx-auto text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <h2 className="font-cairo font-bold text-3xl text-foreground mb-6">قصتنا</h2>
+      <section className="container py-16 md:py-20">
+        <div className="max-w-3xl mx-auto text-center animate-fade-in">
+          <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
+            قصتنا
+          </div>
+          <h2 className="font-cairo font-bold text-3xl md:text-4xl text-foreground mb-6">رحلتنا معك</h2>
           <p className="font-cairo text-muted-foreground leading-loose text-lg">
             بدأت رحلة <span className="text-primary font-bold">{storeName}</span> من شغفنا بتقديم أفضل المنتجات للعائلة الجزائرية.
             نسعى دائماً لتوفير منتجات عالية الجودة بأسعار مناسبة مع خدمة توصيل سريعة وموثوقة إلى جميع ولايات الوطن.
@@ -61,18 +64,23 @@ export default function AboutPage() {
       </section>
 
       {/* Mission Cards */}
-      <section className="bg-muted/30 py-16 md:py-24">
+      <section className="bg-secondary py-16 md:py-24 border-y border-border">
         <div className="container">
-          <h2 className="font-cairo font-bold text-3xl text-foreground text-center mb-12 animate-fade-in">لماذا تختارنا؟</h2>
+          <div className="text-center mb-12">
+            <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
+              مميزاتنا
+            </div>
+            <h2 className="font-cairo font-bold text-3xl md:text-4xl text-secondary-foreground">لماذا تختارنا؟</h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {missions.map((m, i) => (
               <div
                 key={m.title}
-                className="bg-card border rounded-2xl p-6 text-center hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-in"
+                className="bg-card border border-border rounded-2xl p-6 text-center hover:shadow-lg hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${0.1 * (i + 1)}s` }}
               >
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <m.icon className="w-7 h-7 text-primary" />
+                <div className="w-14 h-14 rounded-xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4">
+                  <m.icon className="w-7 h-7" />
                 </div>
                 <h3 className="font-cairo font-bold text-lg text-foreground mb-2">{m.title}</h3>
                 <p className="font-cairo text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
@@ -81,6 +89,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
 
       {/* Contact */}
       <section className="container py-16 md:py-24">
