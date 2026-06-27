@@ -228,7 +228,11 @@ export default function IndexPage() {
               {/* Center device */}
               <div className="relative flex items-center justify-center">
                 <div className="absolute w-44 h-44 sm:w-64 sm:h-64 rounded-full bg-primary/20 blur-3xl" />
-                <Laptop className="relative w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 text-primary" strokeWidth={1.2} />
+                <img
+                  src={ecosystemTechAsset.url}
+                  alt="Tech ecosystem with gold circuit lines"
+                  className="relative w-full max-w-[280px] sm:max-w-md aspect-square object-cover rounded-2xl gold-glow"
+                />
               </div>
 
               {/* Right features */}
