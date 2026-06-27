@@ -1236,4 +1236,29 @@ export const en: Record<string, string> = {
   'trackOrder.toast.notFoundTitle': 'Not found',
   'trackOrder.total': 'Total',
   'trackOrder.wilaya': 'Wilaya',
+
+  // ═══ Nav ═══
+  'nav.home': 'Home',
+  'nav.products': 'Products',
+  'nav.track': 'Track Order',
+  'nav.about': 'About',
+  'nav.categories': 'Categories',
+  'nav.all': 'All',
+  'nav.search': 'Search',
+  'nav.wishlist': 'Wishlist',
+  'nav.cart': 'Cart',
+  'nav.account': 'My Account',
+  'nav.signIn': 'Sign In',
+  'nav.adminPanel': 'Admin Panel',
+  'nav.language': 'Language',
+
+  // ═══ Footer ═══
+  'footer.quickLinks': 'Quick Links',
+  'footer.contactUs': 'Contact Us',
+  'footer.madeWith': 'Made with',
+  'footer.inAlgeria': 'in Algeria',
+  'footer.rightsReserved': 'All rights reserved.',
+  'footer.trust.delivery': 'Delivery to all wilayas',
+  'footer.trust.payment': 'Secure cash on delivery',
+  'footer.trust.support': 'Premium customer support',
 };

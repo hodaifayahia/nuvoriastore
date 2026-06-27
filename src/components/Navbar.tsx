@@ -45,11 +45,11 @@ const DEFAULT_CATEGORIES = [
   { name: 'Watches',    icon: 'Watch' },
 ];
 
-const NAV_LINKS = [
-  { to: '/', label: 'الرئيسية', icon: Home },
-  { to: '/products', label: 'المنتجات', icon: Package },
-  { to: '/track', label: 'تتبع الطلب', icon: MapPin },
-  { to: '/about', label: 'من نحن', icon: Info },
+const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
+  { to: '/', key: 'nav.home', icon: Home },
+  { to: '/products', key: 'nav.products', icon: Package },
+  { to: '/track', key: 'nav.track', icon: MapPin },
+  { to: '/about', key: 'nav.about', icon: Info },
 ];
 
 export default function Navbar() {
@@ -63,7 +63,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { language, setLanguage } = useTranslation();
+  const { language, setLanguage, t } = useTranslation();
   const { data: categoriesData } = useCategories();
   const categories = useMemo(
     () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
@@ -142,7 +142,7 @@ export default function Navbar() {
                   }`}
                 >
                   <link.icon className="w-4 h-4" />
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               );
             })}
@@ -162,7 +162,7 @@ export default function Navbar() {
                   }`}
                 >
                   <Grid3X3 className="w-4 h-4" />
-                  التصنيفات
+                  {t('nav.categories')}
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -175,7 +175,7 @@ export default function Navbar() {
                       className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-cairo font-semibold transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
                     >
                       <Grid3X3 className="w-4 h-4" />
-                      الكل
+                      {t('nav.all')}
                     </Link>
                     <div className="grid grid-cols-2 gap-0.5">
                       {categories.map(cat => {
@@ -209,7 +209,7 @@ export default function Navbar() {
             <button
               onClick={() => setSearchOpen(true)}
               className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
-              aria-label="بحث"
+              aria-label={t('nav.search')}
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
@@ -267,17 +267,17 @@ export default function Navbar() {
               <Link
                 to="/admin"
                 className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                title="لوحة التحكم"
+                title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                لوحة التحكم
+                {t('nav.adminPanel')}
               </Link>
             )}
 
             <Link
               to="/wishlist"
               className="relative p-2.5 rounded-xl hover:bg-muted transition-colors"
-              aria-label="المفضلة"
+              aria-label={t('nav.wishlist')}
             >
               <Heart className={`w-5 h-5 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : 'text-muted-foreground'}`} />
               {wishlistCount > 0 && (
@@ -331,7 +331,7 @@ export default function Navbar() {
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-cairo font-semibold whitespace-nowrap shrink-0 bg-primary/10 text-primary"
                 >
                   <Grid3X3 className="w-3.5 h-3.5" />
-                  الكل
+                  {t('nav.all')}
                 </Link>
                 {categories.map(cat => {
                   const Icon = getCategoryIcon(cat.icon);
@@ -365,7 +365,7 @@ export default function Navbar() {
                     }`}
                   >
                     <link.icon className="w-4 h-4" />
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 );
               })}
@@ -375,7 +375,7 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
               >
                 <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : ''}`} />
-                المفضلة {wishlistCount > 0 && `(${wishlistCount})`}
+                {t('nav.wishlist')} {wishlistCount > 0 && `(${wishlistCount})`}
               </Link>
               <Link
                 to={user ? '/dashboard' : '/auth'}
@@ -383,7 +383,7 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
               >
                 <User className="w-4 h-4" />
-                {user ? 'حسابي' : 'تسجيل الدخول'}
+                {user ? t('nav.account') : t('nav.signIn')}
               </Link>
               {user && isAdmin && (
                 <Link
@@ -392,7 +392,7 @@ export default function Navbar() {
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-semibold text-sm bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                 >
                   <LayoutDashboard className="w-4 h-4" />
-                  لوحة التحكم
+                  {t('nav.adminPanel')}
                 </Link>
               )}
             </nav>

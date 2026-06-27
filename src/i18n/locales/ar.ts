@@ -1246,4 +1246,28 @@ export const ar: Record<string, string> = {
   'trackOrder.total': 'الإجمالي',
   'trackOrder.wilaya': 'الولاية',
 
+  // ═══ Nav ═══
+  'nav.home': 'الرئيسية',
+  'nav.products': 'المنتجات',
+  'nav.track': 'تتبع الطلب',
+  'nav.about': 'من نحن',
+  'nav.categories': 'التصنيفات',
+  'nav.all': 'الكل',
+  'nav.search': 'بحث',
+  'nav.wishlist': 'المفضلة',
+  'nav.cart': 'السلة',
+  'nav.account': 'حسابي',
+  'nav.signIn': 'تسجيل الدخول',
+  'nav.adminPanel': 'لوحة التحكم',
+  'nav.language': 'اللغة',
+
+  // ═══ Footer ═══
+  'footer.quickLinks': 'روابط سريعة',
+  'footer.contactUs': 'تواصل معنا',
+  'footer.madeWith': 'صنع بـ',
+  'footer.inAlgeria': 'في الجزائر',
+  'footer.rightsReserved': 'جميع الحقوق محفوظة.',
+  'footer.trust.delivery': 'توصيل لكل الولايات',
+  'footer.trust.payment': 'دفع آمن عند الاستلام',
+  'footer.trust.support': 'خدمة عملاء متميزة',
 };

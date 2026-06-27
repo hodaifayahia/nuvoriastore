@@ -1236,4 +1236,29 @@ export const fr: Record<string, string> = {
   'trackOrder.toast.notFoundTitle': 'Introuvable',
   'trackOrder.total': 'Total',
   'trackOrder.wilaya': 'Wilaya',
+
+  // ═══ Nav ═══
+  'nav.home': 'Accueil',
+  'nav.products': 'Produits',
+  'nav.track': 'Suivi de commande',
+  'nav.about': 'À propos',
+  'nav.categories': 'Catégories',
+  'nav.all': 'Tout',
+  'nav.search': 'Rechercher',
+  'nav.wishlist': 'Favoris',
+  'nav.cart': 'Panier',
+  'nav.account': 'Mon compte',
+  'nav.signIn': 'Se connecter',
+  'nav.adminPanel': 'Panneau admin',
+  'nav.language': 'Langue',
+
+  // ═══ Footer ═══
+  'footer.quickLinks': 'Liens rapides',
+  'footer.contactUs': 'Contactez-nous',
+  'footer.madeWith': 'Fait avec',
+  'footer.inAlgeria': 'en Algérie',
+  'footer.rightsReserved': 'Tous droits réservés.',
+  'footer.trust.delivery': 'Livraison dans toutes les wilayas',
+  'footer.trust.payment': 'Paiement sécurisé à la livraison',
+  'footer.trust.support': 'Service client premium',
 };

@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
-import { Phone, Mail, MapPin, ChevronLeft, Facebook, Instagram, Heart, ShoppingCart, Truck, Shield, Headphones } from 'lucide-react';
+import { Phone, Mail, MapPin, ChevronLeft, Facebook, Instagram, Heart, Truck, Shield, Headphones } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 export default function Footer() {
   const { data: logoUrl } = useStoreLogo();
+  const { t } = useTranslation();
 
   const { data: settings } = useQuery({
     queryKey: ['footer-settings'],
@@ -19,26 +21,26 @@ export default function Footer() {
     },
   });
 
-  const storeName = settings?.store_name || 'جزيرة الطبيعة';
-  const description = settings?.footer_description || 'أجود أنواع التمور والعسل الطبيعي والهدايا الفاخرة. منتجات طبيعية 100% بجودة استثنائية.';
+  const storeName = 'akram-mobile';
+  const description = settings?.footer_description || '';
   const phone = settings?.footer_phone;
   const email = settings?.footer_email;
-  const address = settings?.footer_address || 'الجزائر';
+  const address = settings?.footer_address || 'Algeria';
   const facebookUrl = settings?.facebook_url;
   const instagramUrl = settings?.instagram_url;
 
   const quickLinks = [
-    { to: '/products', label: 'المنتجات' },
-    { to: '/track', label: 'تتبع الطلب' },
-    { to: '/cart', label: 'السلة' },
-    { to: '/wishlist', label: 'المفضلة' },
-    { to: '/about', label: 'من نحن' },
+    { to: '/products', key: 'nav.products' },
+    { to: '/track', key: 'nav.track' },
+    { to: '/cart', key: 'nav.cart' },
+    { to: '/wishlist', key: 'nav.wishlist' },
+    { to: '/about', key: 'nav.about' },
   ];
 
   const trustBadges = [
-    { icon: Truck, label: 'توصيل لكل الولايات' },
-    { icon: Shield, label: 'دفع آمن عند الاستلام' },
-    { icon: Headphones, label: 'خدمة عملاء متميزة' },
+    { icon: Truck, key: 'footer.trust.delivery' },
+    { icon: Shield, key: 'footer.trust.payment' },
+    { icon: Headphones, key: 'footer.trust.support' },
   ];
 
   return (
@@ -52,7 +54,7 @@ export default function Footer() {
                 <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
                   <badge.icon className="w-5 h-5 text-primary" />
                 </div>
-                <span className="font-cairo font-semibold text-sm text-background/80">{badge.label}</span>
+                <span className="font-cairo font-semibold text-sm text-background/80">{t(badge.key)}</span>
               </div>
             ))}
           </div>
@@ -104,7 +106,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="lg:col-span-3">
-            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">روابط سريعة</h3>
+            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">{t('footer.quickLinks')}</h3>
             <nav className="flex flex-col gap-2.5">
               {quickLinks.map(link => (
                 <Link
@@ -113,7 +115,7 @@ export default function Footer() {
                   className="flex items-center gap-1.5 text-background/60 hover:text-primary font-cairo text-sm transition-colors group"
                 >
                   <ChevronLeft className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               ))}
             </nav>
@@ -121,7 +123,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="lg:col-span-4">
-            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">تواصل معنا</h3>
+            <h3 className="font-cairo font-bold text-sm uppercase tracking-wider text-background/40 mb-4">{t('footer.contactUs')}</h3>
             <div className="space-y-3">
               {phone && (
                 <a href={`tel:${phone}`} className="flex items-center gap-2.5 text-background/60 hover:text-primary font-cairo text-sm transition-colors group">
@@ -152,10 +154,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-background/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-background/40 font-cairo text-xs">
-            {settings?.copyright_text || `© ${new Date().getFullYear()} ${storeName}. جميع الحقوق محفوظة.`}
+            {settings?.copyright_text || `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved')}`}
           </p>
           <p className="text-background/30 font-cairo text-[11px] flex items-center gap-1">
-            صنع بـ <Heart className="w-3 h-3 text-destructive fill-destructive" /> في الجزائر
+            {t('footer.madeWith')} <Heart className="w-3 h-3 text-destructive fill-destructive" /> {t('footer.inAlgeria')}
           </p>
         </div>
       </div>
