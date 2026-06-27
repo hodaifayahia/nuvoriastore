@@ -1678,6 +1678,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_active_facebook_pixels: {
+        Args: never
+        Returns: {
+          pixel_id: string
+        }[]
+      }
       get_order_tracking: {
         Args: { p_order_number: string }
         Returns: {
