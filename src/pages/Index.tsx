@@ -405,6 +405,135 @@ export default function IndexPage() {
         </div>
       </section>
 
+      {/* ────── DEALS OF THE DAY ────── */}
+      {dealsProducts.length > 0 && (
+        <section className="px-3 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-destructive/10 via-card to-primary/5 p-6 sm:p-8 relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-destructive/20 blur-3xl" />
+            <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
+                  <Flame className="w-3.5 h-3.5" /> Deals of the day
+                </p>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">Limited-time savings</h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-destructive" />
+                <span className="text-xs text-muted-foreground">Ends in</span>
+                {(['h', 'm', 's'] as const).map((k, i) => (
+                  <div key={k} className="flex items-center gap-1">
+                    <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
+                      {String(countdown[k]).padStart(2, '0')}
+                    </span>
+                    {i < 2 && <span className="text-muted-foreground">:</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+              {dealsProducts.map(p => (
+                <ProductCard
+                  key={p.id}
+                  id={p.id}
+                  name={p.name}
+                  price={Number(p.price)}
+                  oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                  image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
+                  images={p.images || []}
+                  mainImageIndex={p.main_image_index ?? 0}
+                  category={p.category || []}
+                  stock={p.stock ?? 0}
+                  shippingPrice={Number(p.shipping_price) || 0}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ────── BRANDS ────── */}
+      <section className="px-3 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Trusted brands</p>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">Shop the world's best</h2>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+            {['Apple','Dell','HP','Lenovo','ASUS','Logitech','Razer','Anker','Sony','JBL','Samsung','Bose'].slice(0, 8).map(brand => (
+              <div
+                key={brand}
+                className="aspect-[3/2] rounded-2xl border border-border/60 bg-card flex items-center justify-center font-display font-bold text-lg text-muted-foreground hover:text-primary hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+              >
+                {brand}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ────── TESTIMONIALS ────── */}
+      <section className="px-3 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Loved by customers</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">What people say</h2>
+            </div>
+            <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
+              <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
+              <span className="ms-2">4.9 / 5 · 2,300+ reviews</span>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
+            {[
+              { name: 'Yacine B.', city: 'Algiers', text: 'Got my MacBook charger next day. Original product, sealed box. Will buy again.', rating: 5 },
+              { name: 'Lina K.',   city: 'Oran',    text: 'The Keychron keyboard is amazing. Great prices and fast delivery to Oran.', rating: 5 },
+              { name: 'Omar S.',   city: 'Constantine', text: 'Smooth checkout, real support over the phone, and packaging was perfect.', rating: 5 },
+            ].map(t => (
+              <div key={t.name} className="rounded-2xl border border-border/60 bg-card p-6 relative">
+                <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/15" />
+                <div className="flex mb-3">
+                  {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-foreground/80 leading-relaxed mb-4">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-display font-bold text-sm">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-display font-semibold text-sm">{t.name}</p>
+                    <p className="text-xs text-muted-foreground">{t.city}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ────── NEWSLETTER ────── */}
+      <section className="px-3 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-card to-accent/15 p-8 sm:p-12 relative overflow-hidden text-center">
+          <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-primary/20 blur-3xl" />
+          <div className="relative max-w-xl mx-auto">
+            <div className="inline-flex w-14 h-14 rounded-2xl bg-primary/15 border border-primary/30 items-center justify-center mb-5">
+              <Mail className="w-6 h-6 text-primary" />
+            </div>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">Get 10% off your first order</h2>
+            <p className="mt-3 text-muted-foreground">
+              Subscribe for new arrivals, exclusive deals and tech tips. No spam, unsubscribe anytime.
+            </p>
+            <form
+              onSubmit={(e) => { e.preventDefault(); alert('Thanks! Check your inbox for your coupon.'); }}
+              className="mt-6 flex flex-col sm:flex-row items-stretch gap-2 p-1.5 rounded-2xl bg-background/70 border border-border/60 backdrop-blur"
+            >
+              <Input type="email" required placeholder="you@example.com" className="flex-1 border-0 bg-transparent h-11 focus-visible:ring-0" />
+              <Button type="submit" className="h-11 px-6 rounded-xl">Subscribe</Button>
+            </form>
+          </div>
+        </div>
+      </section>
+
       {/* ────── TRUST STRIP ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
