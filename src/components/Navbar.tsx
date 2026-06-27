@@ -126,7 +126,7 @@ export default function Navbar() {
                 <span className="text-primary-foreground font-cairo font-bold text-sm">🌴</span>
               </div>
             )}
-            <span className="font-cairo font-bold text-lg text-foreground hidden sm:inline">{displayName}</span>
+            <span className="font-cairo font-bold text-lg text-foreground hidden lg:inline">{displayName}</span>
           </Link>
 
           {/* Desktop nav */}
