@@ -154,10 +154,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-background/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-background/40 font-cairo text-xs">
-            {settings?.copyright_text || `© ${new Date().getFullYear()} ${storeName}. جميع الحقوق محفوظة.`}
+            {settings?.copyright_text || `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved')}`}
           </p>
           <p className="text-background/30 font-cairo text-[11px] flex items-center gap-1">
-            صنع بـ <Heart className="w-3 h-3 text-destructive fill-destructive" /> في الجزائر
+            {t('footer.madeWith')} <Heart className="w-3 h-3 text-destructive fill-destructive" /> {t('footer.inAlgeria')}
           </p>
         </div>
       </div>
