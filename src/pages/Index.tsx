@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
