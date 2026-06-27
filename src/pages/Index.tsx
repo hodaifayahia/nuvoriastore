@@ -147,8 +147,29 @@ export default function IndexPage() {
     return fromDb.length > 0 ? fromDb : DEFAULT_CATEGORIES.map(c => ({ ...c, image: undefined }));
   }, [categoriesData]);
 
+  // Section background tones — alternating light & dark
+  const LIGHT_BG = '#F8F9FA';
+  const DARK_BG = '#1A1A2E';
+
+  // Wavy SVG divider — fill should match the NEXT section's background
+  const Wave = ({ fill, flip = false }: { fill: string; flip?: boolean }) => (
+    <div className="relative -mb-px leading-[0]" aria-hidden="true">
+      <svg
+        viewBox="0 0 1440 100"
+        preserveAspectRatio="none"
+        className={`block w-full h-[60px] sm:h-[90px] ${flip ? 'rotate-180' : ''}`}
+      >
+        <path
+          d="M0,50 C180,100 360,0 540,40 C720,80 900,10 1080,40 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z"
+          fill={fill}
+        />
+      </svg>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen text-foreground overflow-x-hidden" style={{ background: LIGHT_BG }}>
+
 
       {/* ────── HERO ────── */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-6 pb-10">
