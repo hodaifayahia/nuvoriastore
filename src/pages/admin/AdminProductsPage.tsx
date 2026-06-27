@@ -1002,6 +1002,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         description: description.trim(),
         price: Number(price),
         category: [category],
+        brand: brand || null,
         stock: hasVariants ? variantRows.reduce((sum, v) => sum + Number(v.quantity || 0), 0) : (productType === 'digital' ? 99999 : Number(stock)),
         is_active: isActive,
         images,
