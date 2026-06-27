@@ -7,7 +7,8 @@ import Autoplay from 'embla-carousel-autoplay';
 import {
   Laptop, Headphones, Watch, Cpu, Zap, Gift,
   RefreshCw, Layers, Shield, Wifi, Repeat, Users,
-  ArrowLeft,
+  ArrowLeft, Smartphone, Truck, BadgeCheck, RotateCcw,
+  Headset, Star, Mail, Tag, Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/ProductCard';
