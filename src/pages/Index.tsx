@@ -18,6 +18,9 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import heroLaptopAsset from '@/assets/hero-laptop.jpg.asset.json';
+import sifarDevicesAsset from '@/assets/sifar-devices.jpg.asset.json';
+import ecosystemTechAsset from '@/assets/ecosystem-tech.jpg.asset.json';
 
 const ECOSYSTEM_FEATURES = [
   { icon: RefreshCw, label: 'Seamless Sync' },
