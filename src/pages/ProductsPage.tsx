@@ -54,6 +54,15 @@ export default function ProductsPage() {
     },
   });
 
+  const categoryNames = useMemo(() => {
+    const dbCats = categoriesData?.map(c => c.name) || [];
+    if (dbCats.length > 0) return dbCats;
+    // Fallback: derive from products
+    const set = new Set<string>();
+    products?.forEach(p => (p.category || []).forEach((c: string) => c && set.add(c)));
+    return Array.from(set);
+  }, [categoriesData, products]);
+
   // Compute max price for slider
   const maxPrice = useMemo(() => {
     if (!products) return 100000;
