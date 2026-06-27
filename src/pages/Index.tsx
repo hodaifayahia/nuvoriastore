@@ -531,14 +531,22 @@ export default function IndexPage() {
             <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.brands.kicker')}</p>
             <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.brands.title')}</h2>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
-            {['Apple','Dell','HP','Lenovo','ASUS','Logitech','Razer','Anker','Sony','JBL','Samsung','Bose'].slice(0, 8).map(brand => (
-              <div
-                key={brand}
-                className="aspect-[3/2] rounded-2xl border border-border/60 bg-card flex items-center justify-center font-display font-bold text-lg text-muted-foreground hover:text-primary hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+            {(brandsData && brandsData.length > 0
+              ? brandsData
+              : [{name:'Apple'},{name:'Samsung'},{name:'Dell'},{name:'HP'},{name:'Lenovo'},{name:'ASUS'},{name:'Logitech'},{name:'Sony'},{name:'JBL'},{name:'Anker'},{name:'Razer'},{name:'Bose'}]
+            ).slice(0, 12).map(brand => (
+              <Link
+                key={brand.name}
+                to={`/products?brand=${encodeURIComponent(brand.name)}`}
+                className="aspect-[3/2] rounded-2xl border border-border/60 bg-card flex items-center justify-center p-3 hover:border-primary/40 hover:-translate-y-0.5 transition-all overflow-hidden"
               >
-                {brand}
-              </div>
+                {('image' in brand && brand.image) ? (
+                  <img src={brand.image as string} alt={brand.name} className="max-h-full max-w-full object-contain" loading="lazy" />
+                ) : (
+                  <span className="font-display font-bold text-base sm:text-lg text-muted-foreground hover:text-primary transition-colors">{brand.name}</span>
+                )}
+              </Link>
             ))}
           </div>
         </div>
