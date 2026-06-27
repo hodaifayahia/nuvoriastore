@@ -609,7 +609,7 @@ export default function IndexPage() {
           <div className="pointer-events-none absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-sky-400/25 blur-[120px]" />
           <div className="pointer-events-none absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-[120px]" />
 
-          <div className="relative grid lg:grid-cols-2 gap-10 items-center">
+          <div className="relative grid lg:grid-cols-[1fr_auto] gap-8 items-center">
             {/* Copy */}
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
