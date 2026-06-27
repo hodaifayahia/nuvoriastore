@@ -177,8 +177,8 @@ export default function IndexPage() {
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden" style={{ background: LIGHT_BG }}>
       <SEO
-        title="سوق دزاير إكسبرس — إكسسوارات الهواتف والحواسيب في الجزائر"
-        description="تسوق أحدث إكسسوارات الهواتف والحواسيب: سماعات، شواحن، لوحات مفاتيح، حقائب، شاشات وأكثر. توصيل سريع إلى 58 ولاية."
+        title={t('idx.seo.title')}
+        description={t('idx.seo.description')}
         path="/"
         jsonLd={{
           '@context': 'https://schema.org',
