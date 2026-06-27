@@ -286,7 +286,7 @@ export default function AdminProductsPage() {
   };
 
   if (showForm) {
-    return <ProductForm product={editingProduct} categoryNames={categoryNames} onClose={handleFormClose} />;
+    return <ProductForm product={editingProduct} categoryNames={categoryNames} brandNames={brandNames} onClose={handleFormClose} />;
   }
 
   return (
