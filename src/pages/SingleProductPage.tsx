@@ -780,7 +780,7 @@ export default function SingleProductPage() {
                     </Label>
                     {group.display_type === 'dropdown' ? (
                       <Select value={selectedNewOptions[group.name] || ''} onValueChange={v => setSelectedNewOptions(prev => ({ ...prev, [group.name]: v }))}>
-                        <SelectTrigger className="font-cairo"><SelectValue placeholder={`اختر ${group.name}`} /></SelectTrigger>
+                        <SelectTrigger className="font-cairo"><SelectValue placeholder={t('sp.chooseGroup').replace('{name}', group.name)} /></SelectTrigger>
                         <SelectContent>
                           {group.values.map((val: any) => {
                             const available = isOptionValueAvailable(group.name, val.label);
