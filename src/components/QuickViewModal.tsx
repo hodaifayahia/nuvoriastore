@@ -7,6 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from '@/lib/format';
+import { useTranslation } from '@/i18n';
 
 interface QuickViewProps {
   product: {
@@ -30,6 +31,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState(product.main_image_index ?? 0);
   const images = product.images || [];
   const outOfStock = (product.stock ?? 0) <= 0;
@@ -49,18 +51,18 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
       stock: product.stock ?? 0,
       shippingPrice: Number(product.shipping_price) || 0,
     });
-    toast({ title: 'تمت الإضافة ✅', description: `"${product.name}" في السلة` });
+    toast({ title: t('qv.addedToCart'), description: t('qv.addedToCartDesc').replace('{name}', product.name) });
   };
 
   const handleShare = async () => {
     const url = `${window.location.origin}/product/${product.id}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: product.name, text: `تفقد ${product.name}`, url });
+        await navigator.share({ title: product.name, text: t('qv.checkOut').replace('{name}', product.name), url });
       } catch {}
     } else {
       await navigator.clipboard.writeText(url);
-      toast({ title: 'تم نسخ الرابط 📋' });
+      toast({ title: t('qv.linkCopied') });
     }
   };
 
@@ -120,7 +122,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
             {/* Discount badge */}
             {discount > 0 && (
               <Badge className="absolute top-4 right-4 bg-gradient-to-l from-red-500 to-red-600 text-white border-0 rounded-full px-3 py-1 shadow-md font-cairo text-sm">
-                خصم {discount}%
+                {t('qv.discount').replace('{n}', String(discount))}
               </Badge>
             )}
           </div>
@@ -151,7 +153,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                     ))}
                   </div>
                   <span className="font-roboto text-sm font-bold">{reviewStats.avg.toFixed(1)}</span>
-                  <span className="font-cairo text-xs text-muted-foreground">({reviewStats.count} تقييم)</span>
+                  <span className="font-cairo text-xs text-muted-foreground">{t('qv.reviewCount').replace('{n}', String(reviewStats.count))}</span>
                 </div>
               )}
 
@@ -172,9 +174,9 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
 
               {/* Stock status */}
               {outOfStock ? (
-                <Badge variant="destructive" className="font-cairo rounded-full">غير متوفر حالياً</Badge>
+                <Badge variant="destructive" className="font-cairo rounded-full">{t('qv.outOfStockNow')}</Badge>
               ) : product.stock && product.stock <= 5 ? (
-                <p className="font-cairo text-sm text-destructive font-bold animate-pulse">⚡ بقي {product.stock} فقط!</p>
+                <p className="font-cairo text-sm text-destructive font-bold animate-pulse">{t('qv.onlyLeft').replace('{n}', String(product.stock))}</p>
               ) : null}
             </div>
 
@@ -187,7 +189,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                   className="flex-1 font-cairo font-bold gap-2 rounded-2xl h-12 bg-gradient-to-l from-primary to-primary/90 shadow-md shadow-primary/20"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  أضف للسلة
+                  {t('qv.addToCart')}
                 </Button>
                 <Link to={`/checkout?product=${product.id}`} onClick={onClose}>
                   <Button
@@ -196,7 +198,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                     className="font-cairo font-bold gap-2 rounded-2xl h-12 px-5 border-primary/30 hover:bg-primary/5"
                   >
                     <Zap className="w-4 h-4" />
-                    اطلب
+                    {t('qv.order')}
                   </Button>
                 </Link>
               </div>
@@ -207,12 +209,12 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                   size="sm"
                   onClick={() => {
                     toggleWishlist({ id: product.id, name: product.name, price: product.price, image: images[0] || '' });
-                    toast({ title: wishlisted ? 'تمت الإزالة' : 'أُضيف للمفضلة ❤️' });
+                    toast({ title: wishlisted ? t('qv.removed') : t('qv.addedToWishlist') });
                   }}
                   className={`flex-1 font-cairo text-xs gap-1.5 rounded-xl h-9 ${wishlisted ? 'text-destructive' : 'text-muted-foreground'}`}
                 >
                   <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-current' : ''}`} />
-                  {wishlisted ? 'في المفضلة' : 'أضف للمفضلة'}
+                  {wishlisted ? t('qv.inWishlist') : t('qv.addToWishlist')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -221,7 +223,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                   className="flex-1 font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground"
                 >
                   <Share2 className="w-3.5 h-3.5" />
-                  مشاركة
+                  {t('qv.share')}
                 </Button>
                 <Link to={`/product/${product.id}`} onClick={onClose} className="flex-1">
                   <Button
@@ -230,7 +232,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                     className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    التفاصيل
+                    {t('qv.details')}
                   </Button>
                 </Link>
               </div>

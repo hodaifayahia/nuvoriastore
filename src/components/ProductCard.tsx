@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import QuickViewModal from '@/components/QuickViewModal';
+import { useTranslation } from '@/i18n';
 
 interface ProductCardProps {
   id: string;
@@ -28,6 +29,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
   const wishlisted = isInWishlist(id);
@@ -71,7 +73,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
       return;
     }
     addItem({ id, name, price, image: allImages[0] || '', stock, shippingPrice });
-    toast({ title: 'تمت الإضافة', description: `تمت إضافة "${name}" إلى السلة` });
+    toast({ title: t('pc.addedToCart'), description: t('pc.addedToCartDesc').replace('{name}', name) });
   };
 
   const handleDirectOrder = (e: React.MouseEvent) => {
@@ -142,7 +144,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
 
           {outOfStock && (
             <div className="absolute inset-0 bg-foreground/50 backdrop-blur-[3px] flex items-center justify-center">
-              <Badge variant="destructive" className="font-cairo text-sm px-5 py-2 rounded-full shadow-lg">غير متوفر</Badge>
+              <Badge variant="destructive" className="font-cairo text-sm px-5 py-2 rounded-full shadow-lg">{t('pc.outOfStock')}</Badge>
             </div>
           )}
 
@@ -150,7 +152,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
             {discount > 0 && (
               <Badge className="font-cairo text-[11px] bg-gradient-to-l from-red-500 to-red-600 text-white border-0 rounded-full px-3 py-1 shadow-md shadow-red-500/20">
-                خصم {discount}%
+                {t('pc.discount').replace('{n}', String(discount))}
               </Badge>
             )}
             <Badge className="font-cairo text-[11px] bg-foreground/60 backdrop-blur-md text-background border-0 rounded-full px-3 py-1">
@@ -165,8 +167,10 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               e.stopPropagation();
               toggleWishlist({ id, name, price, image: allImages[0] || '' });
               toast({
-                title: wishlisted ? 'تمت الإزالة' : 'تمت الإضافة',
-                description: wishlisted ? `تم إزالة "${name}" من المفضلة` : `تمت إضافة "${name}" إلى المفضلة`,
+                title: wishlisted ? t('pc.removedFromWishlist') : t('pc.addedToWishlist'),
+                description: wishlisted
+                  ? t('pc.removedFromWishlistDesc').replace('{name}', name)
+                  : t('pc.addedToWishlistDesc').replace('{name}', name),
               });
             }}
             className={`absolute top-3 left-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 ${
@@ -174,7 +178,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
                 ? 'bg-destructive/90 text-white scale-110 shadow-md shadow-destructive/30'
                 : 'bg-background/70 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive hover:scale-110'
             }`}
-            aria-label={wishlisted ? 'إزالة من المفضلة' : 'إضافة للمفضلة'}
+            aria-label={wishlisted ? t('pc.removeFromWishlist') : t('pc.addToWishlist')}
           >
             <Heart className={`w-4 h-4 ${wishlisted ? 'fill-current' : ''}`} />
           </button>
@@ -187,7 +191,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               setQuickViewOpen(true);
             }}
             className="absolute bottom-3 left-3 w-9 h-9 rounded-full bg-background/70 backdrop-blur-md flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-background hover:text-foreground hover:scale-110 shadow-md"
-            aria-label="عرض سريع"
+            aria-label={t('pc.quickView')}
           >
             <Eye className="w-4 h-4" />
           </button>
@@ -196,7 +200,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30">
               <ShoppingCart className="w-3.5 h-3.5" />
-              أضف للسلة
+              {t('pc.addToCart')}
             </Button>
           </div>
         </div>
@@ -254,7 +258,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               </Button>
               <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-9 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-gradient-to-l from-primary to-primary/90">
                 <Zap className="w-3.5 h-3.5" />
-                اطلب الآن
+                {t('pc.orderNow')}
               </Button>
             </div>
           </div>
