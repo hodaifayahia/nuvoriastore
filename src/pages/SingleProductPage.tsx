@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -586,6 +587,30 @@ export default function SingleProductPage() {
 
   return (
     <div className="container py-6 md:py-10">
+      <SEO
+        title={`${product.name} — سوق دزاير إكسبرس`}
+        description={(product.description || product.name).toString().slice(0, 160)}
+        path={`/product/${product.id}`}
+        type="product"
+        image={product.images?.[product.main_image_index ?? 0] || product.images?.[0]}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          description: product.description || product.name,
+          image: product.images || [],
+          offers: {
+            '@type': 'Offer',
+            price: Number(product.price),
+            priceCurrency: 'DZD',
+            availability:
+              (product.stock ?? 0) > 0
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            url: `https://souq-dzair-express.lovable.app/product/${product.id}`,
+          },
+        }}
+      />
       <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 font-cairo">
         <Link to="/" className="hover:text-primary transition-colors">الرئيسية</Link>
         <ChevronRight className="w-3 h-3 rotate-180 text-muted-foreground/40" />

@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -172,6 +173,23 @@ export default function IndexPage() {
 
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden" style={{ background: LIGHT_BG }}>
+      <SEO
+        title="سوق دزاير إكسبرس — إكسسوارات الهواتف والحواسيب في الجزائر"
+        description="تسوق أحدث إكسسوارات الهواتف والحواسيب: سماعات، شواحن، لوحات مفاتيح، حقائب، شاشات وأكثر. توصيل سريع إلى 58 ولاية."
+        path="/"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Souq Dzair Express',
+          url: 'https://souq-dzair-express.lovable.app/',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: 'https://souq-dzair-express.lovable.app/products?search={search_term_string}',
+            'query-input': 'required name=search_term_string',
+          },
+        }}
+      />
+
 
 
       {/* ────── HERO ────── */}

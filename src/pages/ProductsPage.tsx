@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { useState, useMemo, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -35,7 +36,6 @@ export default function ProductsPage() {
   const categoryScrollRef = useRef<HTMLDivElement>(null);
 
   const { data: categoriesData } = useCategories();
-  const categoryNames = categoriesData?.map(c => c.name) || [];
   const sortOptions = [
     { value: 'newest', label: t('productsPage.sort.newest') },
     { value: 'cheapest', label: t('productsPage.sort.cheapest') },
@@ -54,6 +54,15 @@ export default function ProductsPage() {
       return data;
     },
   });
+
+  const categoryNames = useMemo(() => {
+    const dbCats = categoriesData?.map(c => c.name) || [];
+    if (dbCats.length > 0) return dbCats;
+    // Fallback: derive from products
+    const set = new Set<string>();
+    products?.forEach(p => (p.category || []).forEach((c: string) => c && set.add(c)));
+    return Array.from(set);
+  }, [categoriesData, products]);
 
   // Compute max price for slider
   const maxPrice = useMemo(() => {
@@ -203,8 +212,17 @@ export default function ProductsPage() {
     </div>
   );
 
+  const seoTitle = selectedCategories[0]
+    ? `${selectedCategories[0]} — متجر سوق دزاير إكسبرس`
+    : 'كل المنتجات — إكسسوارات الهواتف والحواسيب';
+  const seoDesc = selectedCategories[0]
+    ? `تسوّق ${selectedCategories[0]} بأفضل الأسعار مع توصيل سريع إلى 58 ولاية في الجزائر.`
+    : 'تصفّح مجموعتنا الكاملة من إكسسوارات الهواتف والحواسيب: سماعات، شواحن، حقائب، لوحات مفاتيح وأكثر.';
+
   return (
     <div className="min-h-screen bg-background pb-24">
+      <SEO title={seoTitle} description={seoDesc} path="/products" />
+
 
       {/* ─── Hero Header ─── */}
       <section className="relative bg-primary border-b border-primary/20">
@@ -270,8 +288,8 @@ export default function ProductsPage() {
                   onClick={() => setSelectedCategories([])}
                   className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                     selectedCategories.length === 0
-                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25'
-                      : 'bg-muted hover:bg-muted/80 text-foreground border border-border/50'
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                   }`}
                 >
                   {t('productsPage.allCategories')}
@@ -282,8 +300,8 @@ export default function ProductsPage() {
                     onClick={() => selectSingleCategory(cat)}
                     className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                       selectedCategories.includes(cat)
-                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25'
-                        : 'bg-muted hover:bg-muted/80 text-foreground border border-border/50'
+                        ? 'bg-primary text-primary-foreground shadow-md'
+                        : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                     }`}
                   >
                     {cat}

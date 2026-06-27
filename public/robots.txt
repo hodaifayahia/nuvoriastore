@@ -1,8 +1,13 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /admin/
+Disallow: /confirmer/
+Disallow: /auth
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin/
+Disallow: /confirmer/
 
 User-agent: Twitterbot
 Allow: /
@@ -12,3 +17,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /confirmer/
+Disallow: /checkout
+Disallow: /cart
+
+Sitemap: https://souq-dzair-express.lovable.app/sitemap.xml
