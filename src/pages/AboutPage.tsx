@@ -2,16 +2,18 @@ import SEO from '@/components/SEO';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles } from 'lucide-react';
-
-
-const missions = [
-  { icon: Heart, title: 'جودة عالية', desc: 'نختار لك أفضل المنتجات بعناية فائقة لضمان رضاك التام' },
-  { icon: Truck, title: 'توصيل سريع', desc: 'نوصّل طلبك إلى باب بيتك في أسرع وقت ممكن إلى 58 ولاية' },
-  { icon: Shield, title: 'أمان وثقة', desc: 'نحمي بياناتك ونضمن لك تجربة شراء آمنة وموثوقة' },
-  { icon: Star, title: 'خدمة متميزة', desc: 'فريقنا جاهز لمساعدتك والإجابة على استفساراتك في أي وقت' },
-];
+import { useTranslation } from '@/i18n';
 
 export default function AboutPage() {
+  const { t } = useTranslation();
+
+  const missions = [
+    { icon: Heart,  title: t('about.missions.1.title'), desc: t('about.missions.1.description') },
+    { icon: Truck,  title: t('about.missions.2.title'), desc: t('about.missions.2.description') },
+    { icon: Shield, title: t('about.missions.3.title'), desc: t('about.missions.3.description') },
+    { icon: Star,   title: t('about.missions.4.title'), desc: t('about.missions.4.description') },
+  ];
+
   const { data: settings } = useQuery({
     queryKey: ['about-settings'],
     queryFn: async () => {
@@ -22,16 +24,16 @@ export default function AboutPage() {
     },
   });
 
-  const storeName = settings?.store_name || 'DZ Store';
-  const description = settings?.footer_description || 'متجرك الإلكتروني الأول في الجزائر للأدوات المنزلية، منتجات الزينة والإكسسوارات.';
+  const storeName = settings?.store_name || 'akram-mobile';
+  const description = settings?.footer_description || t('about.heroFallbackDescription');
   const phone = settings?.footer_phone;
   const email = settings?.footer_email;
-  const address = settings?.footer_address || 'الجزائر';
+  const address = settings?.footer_address || t('about.defaultAddress');
 
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title={`من نحن — ${storeName}`}
+        title={`${t('about.title')} — ${storeName}`}
         description={description}
         path="/about"
         jsonLd={{
@@ -52,7 +54,7 @@ export default function AboutPage() {
             <Store className="w-10 h-10 text-primary-foreground" />
           </div>
           <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            من نحن
+            {t('about.title')}
           </h1>
           <p className="font-cairo text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {description}
@@ -64,13 +66,11 @@ export default function AboutPage() {
       <section className="container py-16 md:py-20">
         <div className="max-w-3xl mx-auto text-center animate-fade-in">
           <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
-            قصتنا
+            {t('about.storyTitle')}
           </div>
-          <h2 className="font-cairo font-bold text-3xl md:text-4xl text-foreground mb-6">رحلتنا معك</h2>
+          <h2 className="font-cairo font-bold text-3xl md:text-4xl text-foreground mb-6">{t('about.story.heading')}</h2>
           <p className="font-cairo text-muted-foreground leading-loose text-lg">
-            بدأت رحلة <span className="text-primary font-bold">{storeName}</span> من شغفنا بتقديم أفضل المنتجات للعائلة الجزائرية.
-            نسعى دائماً لتوفير منتجات عالية الجودة بأسعار مناسبة مع خدمة توصيل سريعة وموثوقة إلى جميع ولايات الوطن.
-            هدفنا هو أن نكون الوجهة الأولى للتسوق الإلكتروني في الجزائر.
+            {t('about.story.body').replace('{storeName}', storeName)}
           </p>
         </div>
       </section>
@@ -80,9 +80,9 @@ export default function AboutPage() {
         <div className="container">
           <div className="text-center mb-12">
             <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
-              مميزاتنا
+              {t('about.features.label')}
             </div>
-            <h2 className="font-cairo font-bold text-3xl md:text-4xl text-secondary-foreground">لماذا تختارنا؟</h2>
+            <h2 className="font-cairo font-bold text-3xl md:text-4xl text-secondary-foreground">{t('about.whyChooseUs')}</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {missions.map((m, i) => (
@@ -102,10 +102,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-
       {/* Contact */}
       <section className="container py-16 md:py-24">
-        <h2 className="font-cairo font-bold text-3xl text-foreground text-center mb-12 animate-fade-in">تواصل معنا</h2>
+        <h2 className="font-cairo font-bold text-3xl text-foreground text-center mb-12 animate-fade-in">{t('about.contactTitle')}</h2>
         <div className="max-w-xl mx-auto space-y-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
           {phone && (
             <a href={`tel:${phone}`} className="flex items-center gap-4 bg-card border rounded-xl p-5 hover:border-primary/30 hover:shadow-md transition-all group">
@@ -113,7 +112,7 @@ export default function AboutPage() {
                 <Phone className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="font-cairo font-semibold text-foreground">الهاتف</p>
+                <p className="font-cairo font-semibold text-foreground">{t('about.phone')}</p>
                 <p className="font-roboto text-muted-foreground" dir="ltr">{phone}</p>
               </div>
             </a>
@@ -124,7 +123,7 @@ export default function AboutPage() {
                 <Mail className="w-5 h-5 text-secondary" />
               </div>
               <div>
-                <p className="font-cairo font-semibold text-foreground">البريد الإلكتروني</p>
+                <p className="font-cairo font-semibold text-foreground">{t('about.email')}</p>
                 <p className="font-roboto text-muted-foreground" dir="ltr">{email}</p>
               </div>
             </a>
@@ -134,7 +133,7 @@ export default function AboutPage() {
               <MapPin className="w-5 h-5 text-accent-foreground" />
             </div>
             <div>
-              <p className="font-cairo font-semibold text-foreground">العنوان</p>
+              <p className="font-cairo font-semibold text-foreground">{t('about.address')}</p>
               <p className="font-cairo text-muted-foreground">{address}</p>
             </div>
           </div>
