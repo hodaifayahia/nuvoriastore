@@ -350,18 +350,25 @@ export default function IndexPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {categoryCards.map((cat, i) => {
               const Icon = cat.icon as LucideIcon;
+              const img = (cat as any).image as string | undefined;
               return (
                 <Link
                   key={cat.name + i}
                   to={`/products?category=${encodeURIComponent(cat.name)}`}
-                  className={`group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br ${cat.accent} bg-card p-5 h-32 sm:h-36 flex flex-col justify-between hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]`}
+                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card h-36 sm:h-44 flex flex-col justify-end hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_hsl(244_76%_60%/0.4)]"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-background/60 backdrop-blur flex items-center justify-center border border-border/40">
+                  {img ? (
+                    <img src={img} alt={cat.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${cat.accent}`} />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
+                  <div className="absolute top-3 right-3 w-10 h-10 rounded-xl bg-background/90 backdrop-blur flex items-center justify-center border border-border/40 shadow-sm">
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-display font-semibold text-sm sm:text-base group-hover:text-primary transition-colors">{cat.name}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 inline-flex items-center gap-1">
+                  <div className="relative p-4">
+                    <p className="font-display font-bold text-base sm:text-lg text-background drop-shadow-sm">{cat.name}</p>
+                    <p className="text-[11px] text-background/80 mt-0.5 inline-flex items-center gap-1">
                       {t('idx.categories.shop')} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
