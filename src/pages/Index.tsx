@@ -526,8 +526,8 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">علامات موثوقة</p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl">تسوّق أفضل العلامات العالمية</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.brands.kicker')}</p>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.brands.title')}</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
             {['Apple','Dell','HP','Lenovo','ASUS','Logitech','Razer','Anker','Sony','JBL','Samsung','Bose'].slice(0, 8).map(brand => (
