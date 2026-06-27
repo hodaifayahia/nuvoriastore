@@ -272,18 +272,18 @@ export default function IndexPage() {
               <div className="absolute top-6 right-2 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-44 animate-fade-in shadow-2xl">
                 <div className="flex items-center gap-2 text-white">
                   <Sparkles className="w-4 h-4 text-fuchsia-300" />
-                  <span className="text-xs font-medium">Latest drop</span>
+                  <span className="text-xs font-medium">وصل حديثاً</span>
                 </div>
-                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 in stock</p>
+                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 متوفر</p>
               </div>
 
               <div className="absolute bottom-12 right-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-48 shadow-2xl">
                 <div className="flex items-center gap-2 text-white">
                   <Zap className="w-4 h-4 text-yellow-300" />
-                  <span className="text-xs font-medium">Express delivery</span>
+                  <span className="text-xs font-medium">توصيل سريع</span>
                 </div>
-                <p className="mt-1 text-2xl font-display font-bold text-white">24 hours</p>
-                <p className="text-[11px] text-white/60">in Algiers</p>
+                <p className="mt-1 text-2xl font-display font-bold text-white">24 ساعة</p>
+                <p className="text-[11px] text-white/60">في الجزائر العاصمة</p>
               </div>
 
               <div className="absolute bottom-2 left-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
@@ -296,7 +296,7 @@ export default function IndexPage() {
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-300 text-yellow-300" />)}
                   </div>
-                  <p className="text-[11px] text-white/70">2,300+ happy customers</p>
+                  <p className="text-[11px] text-white/70">+2,300 عميل سعيد</p>
                 </div>
               </div>
             </div>
