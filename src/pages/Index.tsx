@@ -147,8 +147,29 @@ export default function IndexPage() {
     return fromDb.length > 0 ? fromDb : DEFAULT_CATEGORIES.map(c => ({ ...c, image: undefined }));
   }, [categoriesData]);
 
+  // Section background tones — alternating light & dark
+  const LIGHT_BG = '#F8F9FA';
+  const DARK_BG = '#1A1A2E';
+
+  // Wavy SVG divider — fill should match the NEXT section's background
+  const Wave = ({ fill, flip = false }: { fill: string; flip?: boolean }) => (
+    <div className="relative -mb-px leading-[0]" aria-hidden="true">
+      <svg
+        viewBox="0 0 1440 100"
+        preserveAspectRatio="none"
+        className={`block w-full h-[60px] sm:h-[90px] ${flip ? 'rotate-180' : ''}`}
+      >
+        <path
+          d="M0,50 C180,100 360,0 540,40 C720,80 900,10 1080,40 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z"
+          fill={fill}
+        />
+      </svg>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen text-foreground overflow-x-hidden" style={{ background: LIGHT_BG }}>
+
 
       {/* ────── HERO ────── */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-6 pb-10">
@@ -314,6 +335,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── CATEGORIES BENTO ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-14">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
@@ -350,6 +377,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TRENDING ────── */}
       {trendingProducts.length > 0 && (
@@ -385,6 +414,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── ALL PRODUCTS ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
@@ -433,6 +468,8 @@ export default function IndexPage() {
           )}
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── DEALS OF THE DAY ────── */}
       {dealsProducts.length > 0 && (
@@ -481,6 +518,12 @@ export default function IndexPage() {
       )}
 
       {/* ────── BRANDS ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
@@ -499,6 +542,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TESTIMONIALS ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
@@ -541,6 +586,12 @@ export default function IndexPage() {
       </section>
 
       {/* ────── NEWSLETTER ────── */}
+      <div
+        style={{ background: DARK_BG }}
+        className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
+      >
+        <Wave fill={LIGHT_BG} flip />
+
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-card to-accent/15 p-8 sm:p-12 relative overflow-hidden text-center">
           <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-primary/20 blur-3xl" />
@@ -562,6 +613,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+        <Wave fill={LIGHT_BG} />
+      </div>
 
       {/* ────── TRUST STRIP ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
