@@ -604,7 +604,8 @@ export default function IndexPage() {
         <Wave fill={LIGHT_BG} flip />
 
       <section className="px-3 sm:px-6 lg:px-8 pb-16 pt-4">
-        <div className="max-w-7xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/15 via-white/[0.03] to-blue-500/15 p-6 sm:p-10 lg:p-14 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/15 via-white/[0.03] to-blue-500/15 p-5 sm:p-7 lg:p-9 relative overflow-hidden">
+
           <div className="pointer-events-none absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-sky-400/25 blur-[120px]" />
           <div className="pointer-events-none absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-[120px]" />
 
