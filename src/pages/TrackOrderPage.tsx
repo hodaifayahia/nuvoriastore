@@ -44,8 +44,8 @@ export default function TrackOrderPage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <SEO
-        title="تتبع طلبك — سوق دزاير إكسبرس"
-        description="تتبع حالة طلبك في الوقت الفعلي على متجر سوق دزاير إكسبرس. أدخل رقم الطلب لمعرفة حالة الشحن."
+        title={`${t('trackOrder.title')} — akram-mobile`}
+        description={t('trackOrder.inputPlaceholder')}
         path="/track"
       />
       {/* ─── Hero ─── */}

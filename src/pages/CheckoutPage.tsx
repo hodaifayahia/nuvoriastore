@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Copy, Upload, CheckCircle, LogIn, Truck, Building2, Home, X } from 'lucide-react';
 import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/FormSettingsTab';
+import { useTranslation } from '@/i18n';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { trackEvent } = useFacebookPixel();
+  const { t } = useTranslation();
 
   // Facebook Pixel: InitiateCheckout
   useEffect(() => {
@@ -56,12 +58,12 @@ export default function CheckoutPage() {
   const validatePhoneInternational = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s/g, ''));
 
   const handleBlurName = () => {
-    setErrors(e => ({ ...e, name: name.trim() ? '' : 'الاسم مطلوب' }));
+    setErrors(e => ({ ...e, name: name.trim() ? '' : t('checkout.err.nameRequired') }));
   };
   const handlePhoneChange = (v: string) => {
     setPhone(v);
     if (v && !validatePhone(v)) {
-      setErrors(e => ({ ...e, phone: 'رقم الهاتف يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام' }));
+      setErrors(e => ({ ...e, phone: t('checkout.err.phoneInvalid') }));
     } else {
       setErrors(e => ({ ...e, phone: '' }));
     }
@@ -208,11 +210,11 @@ export default function CheckoutPage() {
       .eq('is_active', true)
       .single();
     if (!data) {
-      toast({ title: 'خطأ', description: 'كود الخصم غير صالح', variant: 'destructive' });
+      toast({ title: t('checkout.err.title'), description: t('checkout.toast.invalidCoupon'), variant: 'destructive' });
       return;
     }
     if (data.expiry_date && new Date(data.expiry_date) < new Date()) {
-      toast({ title: 'خطأ', description: 'كود الخصم منتهي الصلاحية', variant: 'destructive' });
+      toast({ title: t('checkout.err.title'), description: t('checkout.toast.expiredCoupon'), variant: 'destructive' });
       return;
     }
 
@@ -235,29 +237,29 @@ export default function CheckoutPage() {
     const discountVal = Math.min(rawDiscount, eligibleSubtotal);
     setDiscount(discountVal);
     setCouponApplied(true);
-    toast({ title: 'تم تطبيق الخصم', description: `خصم ${formatPrice(discountVal)}` });
+    toast({ title: t('checkout.toast.couponApplied'), description: t('checkout.toast.discountAmount').replace('{amount}', formatPrice(discountVal)) });
   };
 
   const handleSubmit = async () => {
     const newErrors: Record<string, string> = {};
-    if (formConfig.name?.visible !== false && formConfig.name?.required !== false && !name.trim()) newErrors.name = 'الاسم مطلوب';
+    if (formConfig.name?.visible !== false && formConfig.name?.required !== false && !name.trim()) newErrors.name = t('checkout.err.nameRequired');
     if (isDigitalOnly) {
-      if (!phone.trim() || !validatePhoneInternational(phone)) newErrors.phone = 'رقم الهاتف غير صالح';
+      if (!phone.trim() || !validatePhoneInternational(phone)) newErrors.phone = t('checkout.err.phoneInternational');
     } else {
-      if (!phone.trim() || !validatePhone(phone)) newErrors.phone = 'رقم الهاتف يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام';
+      if (!phone.trim() || !validatePhone(phone)) newErrors.phone = t('checkout.err.phoneInvalid');
     }
-    if (!isDigitalOnly && formConfig.wilaya?.visible !== false && formConfig.wilaya?.required !== false && !wilayaId) newErrors.wilaya = 'يرجى اختيار الولاية';
-    if (!paymentMethod) newErrors.payment = 'يرجى اختيار طريقة الدفع';
-    if (!isDigitalOnly && formConfig.delivery_type?.visible !== false && formConfig.delivery_type?.required !== false && !deliveryType && wilayaId) newErrors.deliveryType = 'يرجى اختيار نوع التوصيل';
+    if (!isDigitalOnly && formConfig.wilaya?.visible !== false && formConfig.wilaya?.required !== false && !wilayaId) newErrors.wilaya = t('checkout.err.wilayaRequired');
+    if (!paymentMethod) newErrors.payment = t('checkout.err.paymentRequired');
+    if (!isDigitalOnly && formConfig.delivery_type?.visible !== false && formConfig.delivery_type?.required !== false && !deliveryType && wilayaId) newErrors.deliveryType = t('checkout.err.deliveryRequired');
     if (Object.values(newErrors).some(Boolean)) {
       setErrors(newErrors);
-      toast({ title: 'خطأ', description: 'يرجى ملء جميع الحقول المطلوبة بشكل صحيح', variant: 'destructive' });
+      toast({ title: t('checkout.err.title'), description: t('checkout.err.fillRequired'), variant: 'destructive' });
       return;
     }
 
     const receiptRequiredMethods = ['baridimob', 'flexy', 'binance', 'vodafone', 'redotpay'];
     if (receiptRequiredMethods.includes(paymentMethod) && !receiptFile) {
-      toast({ title: 'خطأ', description: 'يرجى إرفاق إيصال الدفع', variant: 'destructive' });
+      toast({ title: t('checkout.err.title'), description: t('checkout.err.attachReceipt'), variant: 'destructive' });
       return;
     }
 
@@ -313,7 +315,7 @@ export default function CheckoutPage() {
       clearCart();
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err) {
-      toast({ title: 'خطأ', description: 'حدث خطأ أثناء إرسال الطلب', variant: 'destructive' });
+      toast({ title: t('checkout.err.title'), description: t('checkout.err.submitFailed'), variant: 'destructive' });
     } finally {
       setSubmitting(false);
     }
@@ -321,7 +323,7 @@ export default function CheckoutPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: 'تم النسخ' });
+    toast({ title: t('checkout.toast.copied') });
   };
 
   const baridimobEnabled = settings?.baridimob_enabled === 'true';
@@ -334,12 +336,12 @@ export default function CheckoutPage() {
 
   return (
     <div className="container py-8 max-w-4xl">
-      <h1 className="font-cairo font-bold text-3xl mb-8">إتمام الطلب</h1>
+      <h1 className="font-cairo font-bold text-3xl mb-8">{t('checkout.title')}</h1>
 
       {!user && (
         <Link to="/auth" className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 hover:bg-primary/10 transition-colors">
           <LogIn className="w-5 h-5 text-primary" />
-          <span className="font-cairo text-sm text-foreground">سجّل دخولك لتتبع طلباتك بسهولة من حسابك</span>
+          <span className="font-cairo text-sm text-foreground">{t('checkout.signInPrompt')}</span>
         </Link>
       )}
 
@@ -347,24 +349,24 @@ export default function CheckoutPage() {
         <div className="md:col-span-3 space-y-6">
           {/* Customer Info */}
           <div className="bg-card border rounded-lg p-6 space-y-4">
-            <h2 className="font-cairo font-bold text-xl">معلومات العميل</h2>
+            <h2 className="font-cairo font-bold text-xl">{t('checkout.customerInfo')}</h2>
             {formConfig.name?.visible !== false && (
               <div>
-                <Label className="font-cairo">الاسم الكامل {formConfig.name?.required !== false ? '*' : ''}</Label>
-                <Input value={name} onChange={e => setName(e.target.value)} onBlur={handleBlurName} placeholder="أدخل اسمك الكامل" className={`font-cairo mt-1 ${errors.name ? 'border-destructive' : ''}`} />
+                <Label className="font-cairo">{t('checkout.fullName')} {formConfig.name?.required !== false ? '*' : ''}</Label>
+                <Input value={name} onChange={e => setName(e.target.value)} onBlur={handleBlurName} placeholder={t('checkout.fullNamePlaceholder')} className={`font-cairo mt-1 ${errors.name ? 'border-destructive' : ''}`} />
                 {errors.name && <p className="text-destructive text-xs font-cairo mt-1">{errors.name}</p>}
               </div>
             )}
             <div>
-              <Label className="font-cairo">رقم الهاتف *</Label>
-              <Input value={phone} onChange={e => handlePhoneChange(e.target.value)} placeholder="05/06/07XXXXXXXX" className={`font-roboto mt-1 ${errors.phone ? 'border-destructive' : ''}`} dir="ltr" />
+              <Label className="font-cairo">{t('checkout.phone')} *</Label>
+              <Input value={phone} onChange={e => handlePhoneChange(e.target.value)} placeholder={t('checkout.phonePlaceholder')} className={`font-roboto mt-1 ${errors.phone ? 'border-destructive' : ''}`} dir="ltr" />
               {errors.phone && <p className="text-destructive text-xs font-cairo mt-1">{errors.phone}</p>}
             </div>
             {formConfig.wilaya?.visible !== false && !isDigitalOnly && (
               <div>
-                <Label className="font-cairo">الولاية {formConfig.wilaya?.required !== false ? '*' : ''}</Label>
+                <Label className="font-cairo">{t('checkout.wilaya')} {formConfig.wilaya?.required !== false ? '*' : ''}</Label>
                 <Select value={wilayaId} onValueChange={handleWilayaChange}>
-                  <SelectTrigger className={`font-cairo mt-1 ${errors.wilaya ? 'border-destructive' : ''}`}><SelectValue placeholder="اختر الولاية" /></SelectTrigger>
+                  <SelectTrigger className={`font-cairo mt-1 ${errors.wilaya ? 'border-destructive' : ''}`}><SelectValue placeholder={t('checkout.selectWilaya')} /></SelectTrigger>
                   <SelectContent>
                     {wilayas?.map(w => (
                       <SelectItem key={w.id} value={w.id} className="font-cairo">
@@ -380,9 +382,9 @@ export default function CheckoutPage() {
             {/* Baladiya */}
             {formConfig.baladiya?.visible !== false && !isDigitalOnly && wilayaId && baladiyat && baladiyat.length > 0 && (
               <div>
-                <Label className="font-cairo">البلدية {formConfig.baladiya?.required ? '*' : ''}</Label>
+                <Label className="font-cairo">{t('checkout.baladiya')} {formConfig.baladiya?.required ? '*' : ''}</Label>
                 <Select value={baladiyaName} onValueChange={setBaladiyaName}>
-                  <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder="اختر البلدية" /></SelectTrigger>
+                  <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t('checkout.selectBaladiya')} /></SelectTrigger>
                   <SelectContent>
                     {baladiyat.map(b => (
                       <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
@@ -395,7 +397,7 @@ export default function CheckoutPage() {
             {/* Delivery Type */}
             {formConfig.delivery_type?.visible !== false && !isDigitalOnly && wilayaId && selectedWilaya && (
               <div>
-                <Label className="font-cairo">نوع التوصيل {formConfig.delivery_type?.required !== false ? '*' : ''}</Label>
+                <Label className="font-cairo">{t('checkout.deliveryType')} {formConfig.delivery_type?.required !== false ? '*' : ''}</Label>
                 <div className="grid grid-cols-2 gap-3 mt-2">
                   <button
                     type="button"
@@ -403,7 +405,7 @@ export default function CheckoutPage() {
                     className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${deliveryType === 'office' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}
                   >
                     <Building2 className={`w-6 h-6 ${deliveryType === 'office' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    <span className="font-cairo font-semibold text-sm">إلى المكتب</span>
+                    <span className="font-cairo font-semibold text-sm">{t('checkout.toOffice')}</span>
                     <span className="font-roboto font-bold text-primary text-sm">{formatPrice(Number(selectedWilaya.shipping_price))}</span>
                   </button>
                   <button
@@ -412,7 +414,7 @@ export default function CheckoutPage() {
                     className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${deliveryType === 'home' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}
                   >
                     <Home className={`w-6 h-6 ${deliveryType === 'home' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    <span className="font-cairo font-semibold text-sm">إلى المنزل</span>
+                    <span className="font-cairo font-semibold text-sm">{t('checkout.toHome')}</span>
                     <span className="font-roboto font-bold text-primary text-sm">{formatPrice(Number(selectedWilaya.shipping_price_home))}</span>
                   </button>
                 </div>
@@ -422,8 +424,8 @@ export default function CheckoutPage() {
 
             {formConfig.address?.visible !== false && !isDigitalOnly && (
               <div>
-                <Label className="font-cairo">العنوان التفصيلي {formConfig.address?.required ? '*' : ''}</Label>
-                <Textarea value={address} onChange={e => setAddress(e.target.value)} placeholder={formConfig.address?.required ? 'أدخل عنوانك' : 'اختياري'} className="font-cairo mt-1" />
+                <Label className="font-cairo">{t('checkout.address')} {formConfig.address?.required ? '*' : ''}</Label>
+                <Textarea value={address} onChange={e => setAddress(e.target.value)} placeholder={formConfig.address?.required ? t('checkout.addressPlaceholder') : t('checkout.addressOptional')} className="font-cairo mt-1" />
               </div>
             )}
           </div>
@@ -431,11 +433,11 @@ export default function CheckoutPage() {
           {/* Coupon */}
           {formConfig.coupon?.visible !== false && (
             <div className="bg-card border rounded-lg p-6">
-              <h2 className="font-cairo font-bold text-xl mb-4">كود الخصم</h2>
+              <h2 className="font-cairo font-bold text-xl mb-4">{t('checkout.couponTitle')}</h2>
               <div className="flex gap-2">
-                <Input value={couponCode} onChange={e => setCouponCode(e.target.value)} placeholder="أدخل كود الخصم" className="font-cairo" disabled={couponApplied} />
+                <Input value={couponCode} onChange={e => setCouponCode(e.target.value)} placeholder={t('checkout.couponPlaceholder')} className="font-cairo" disabled={couponApplied} />
                 <Button onClick={applyCoupon} disabled={couponApplied} variant="outline" className="font-cairo shrink-0">
-                  {couponApplied ? <><CheckCircle className="w-4 h-4 ml-1" /> تم</> : 'تطبيق'}
+                  {couponApplied ? <><CheckCircle className="w-4 h-4 ml-1" /> {t('checkout.applied')}</> : t('checkout.apply')}
                 </Button>
               </div>
             </div>
@@ -443,11 +445,11 @@ export default function CheckoutPage() {
 
           {/* Payment */}
           <div className="bg-card border rounded-lg p-6 space-y-4">
-            <h2 className="font-cairo font-bold text-xl">طريقة الدفع</h2>
+            <h2 className="font-cairo font-bold text-xl">{t('checkout.paymentMethod')}</h2>
             <div className="space-y-3">
               {!hasAnyPayment && settings && (
                 <div className="p-4 border border-dashed rounded-lg text-center text-muted-foreground font-cairo">
-                  لا توجد طرق دفع متاحة حالياً
+                  {t('checkout.noPayment')}
                 </div>
               )}
               {codEnabled && (
@@ -456,9 +458,9 @@ export default function CheckoutPage() {
                   <div className="flex-1">
                     <p className="font-cairo font-semibold flex items-center gap-2">
                       <Truck className="w-4 h-4 text-primary" />
-                      الدفع عند الاستلام
+                      {t('checkout.cod')}
                     </p>
-                    <p className="font-cairo text-xs text-muted-foreground mt-1">الدفع نقداً عند استلام الطلبية</p>
+                    <p className="font-cairo text-xs text-muted-foreground mt-1">{t('checkout.codDesc')}</p>
                   </div>
                 </label>
               )}
@@ -466,22 +468,22 @@ export default function CheckoutPage() {
                 <label className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${paymentMethod === 'baridimob' ? 'border-primary bg-accent' : ''}`}>
                   <input type="radio" name="payment" value="baridimob" checked={paymentMethod === 'baridimob'} onChange={e => setPaymentMethod(e.target.value)} className="mt-1" />
                   <div className="flex-1">
-                    <p className="font-cairo font-semibold">بريدي موب</p>
+                    <p className="font-cairo font-semibold">{t('checkout.baridimob')}</p>
                     {paymentMethod === 'baridimob' && settings && (
                       <div className="mt-3 space-y-2 text-sm">
                         <div className="flex items-center gap-2 bg-muted p-2 rounded">
-                          <span className="font-cairo">رقم الحساب:</span>
+                          <span className="font-cairo">{t('checkout.accountNumber')}</span>
                           <span className="font-roboto font-bold">{settings.ccp_number}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(settings.ccp_number)}><Copy className="w-3 h-3" /></Button>
                         </div>
-                        <p className="font-cairo">الاسم: {settings.ccp_name}</p>
-                        <p className="font-cairo">المبلغ: <span className="font-roboto font-bold">{formatPrice(total)}</span></p>
+                        <p className="font-cairo">{t('checkout.name')} {settings.ccp_name}</p>
+                        <p className="font-cairo">{t('checkout.amount')} <span className="font-roboto font-bold">{formatPrice(total)}</span></p>
                         <div className="mt-2">
-                          <Label className="font-cairo text-xs">أرفق إيصال الدفع *</Label>
+                          <Label className="font-cairo text-xs">{t('checkout.attachReceipt')}</Label>
                           <Input type="file" accept="image/*,.pdf" onChange={e => handleReceiptFile(e.target.files?.[0] || null)} className="mt-1" />
                           {receiptPreview && (
                             <div className="relative mt-2 inline-block">
-                              <img src={receiptPreview} alt="إيصال الدفع" className="w-32 h-32 object-cover rounded-lg border" />
+                              <img src={receiptPreview} alt="" className="w-32 h-32 object-cover rounded-lg border" />
                               <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                             </div>
                           )}
@@ -501,21 +503,21 @@ export default function CheckoutPage() {
                 <label className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${paymentMethod === 'flexy' ? 'border-primary bg-accent' : ''}`}>
                   <input type="radio" name="payment" value="flexy" checked={paymentMethod === 'flexy'} onChange={e => setPaymentMethod(e.target.value)} className="mt-1" />
                   <div className="flex-1">
-                    <p className="font-cairo font-semibold">فليكسي (تعبئة)</p>
+                    <p className="font-cairo font-semibold">{t('checkout.flexy')}</p>
                     {paymentMethod === 'flexy' && settings && (
                       <div className="mt-3 space-y-2 text-sm">
-                        <p className="font-cairo">أرسل تعبئة بقيمة <span className="font-roboto font-bold">{formatPrice(Number(settings.flexy_deposit_amount || 500))}</span> إلى الرقم:</p>
+                        <p className="font-cairo">{t('checkout.flexyMsg')} <span className="font-roboto font-bold">{formatPrice(Number(settings.flexy_deposit_amount || 500))}</span> {t('checkout.flexyTo')}</p>
                         <div className="flex items-center gap-2 bg-muted p-2 rounded">
                           <span className="font-roboto font-bold">{settings.flexy_number}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(settings.flexy_number)}><Copy className="w-3 h-3" /></Button>
                         </div>
-                        <p className="font-cairo">المبلغ المتبقي عند التسليم: <span className="font-roboto font-bold">{formatPrice(total - Number(settings.flexy_deposit_amount || 500))}</span></p>
+                        <p className="font-cairo">{t('checkout.flexyRemaining')} <span className="font-roboto font-bold">{formatPrice(total - Number(settings.flexy_deposit_amount || 500))}</span></p>
                         <div className="mt-2">
-                          <Label className="font-cairo text-xs">أرفق لقطة شاشة للتعبئة *</Label>
+                          <Label className="font-cairo text-xs">{t('checkout.attachScreenshot')}</Label>
                           <Input type="file" accept="image/*" onChange={e => handleReceiptFile(e.target.files?.[0] || null)} className="mt-1" />
                           {receiptPreview && (
                             <div className="relative mt-2 inline-block">
-                              <img src={receiptPreview} alt="لقطة الشاشة" className="w-32 h-32 object-cover rounded-lg border" />
+                              <img src={receiptPreview} alt="" className="w-32 h-32 object-cover rounded-lg border" />
                               <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
                             </div>
                           )}
@@ -536,19 +538,19 @@ export default function CheckoutPage() {
                 <label className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${paymentMethod === 'binance' ? 'border-primary bg-accent' : ''}`}>
                   <input type="radio" name="payment" value="binance" checked={paymentMethod === 'binance'} onChange={e => setPaymentMethod(e.target.value)} className="mt-1" />
                   <div className="flex-1">
-                    <p className="font-cairo font-semibold">Binance Pay</p>
+                    <p className="font-cairo font-semibold">{t('checkout.binance')}</p>
                     {paymentMethod === 'binance' && settings && (
                       <div className="mt-3 space-y-2 text-sm">
                         <div className="flex items-center gap-2 bg-muted p-2 rounded">
-                          <span className="font-cairo">العنوان:</span>
+                          <span className="font-cairo">{t('checkout.address_')}</span>
                           <span className="font-roboto font-bold text-xs break-all">{settings.binance_address}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => copyToClipboard(settings.binance_address)}><Copy className="w-3 h-3" /></Button>
                         </div>
-                        <p className="font-cairo">المبلغ: <span className="font-roboto font-bold">{formatPrice(total)}</span></p>
+                        <p className="font-cairo">{t('checkout.amount')} <span className="font-roboto font-bold">{formatPrice(total)}</span></p>
                         <div className="mt-2">
-                          <Label className="font-cairo text-xs">أرفق إيصال الدفع *</Label>
+                          <Label className="font-cairo text-xs">{t('checkout.attachReceipt')}</Label>
                           <Input type="file" accept="image/*,.pdf" onChange={e => handleReceiptFile(e.target.files?.[0] || null)} className="mt-1" />
-                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="إيصال" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
+                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
                         </div>
                       </div>
                     )}
@@ -560,18 +562,18 @@ export default function CheckoutPage() {
                 <label className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${paymentMethod === 'vodafone' ? 'border-primary bg-accent' : ''}`}>
                   <input type="radio" name="payment" value="vodafone" checked={paymentMethod === 'vodafone'} onChange={e => setPaymentMethod(e.target.value)} className="mt-1" />
                   <div className="flex-1">
-                    <p className="font-cairo font-semibold">Vodafone Cash</p>
+                    <p className="font-cairo font-semibold">{t('checkout.vodafone')}</p>
                     {paymentMethod === 'vodafone' && settings && (
                       <div className="mt-3 space-y-2 text-sm">
                         <div className="flex items-center gap-2 bg-muted p-2 rounded">
-                          <span className="font-cairo">الرقم:</span>
+                          <span className="font-cairo">{t('checkout.number')}</span>
                           <span className="font-roboto font-bold">{settings.vodafone_number}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(settings.vodafone_number)}><Copy className="w-3 h-3" /></Button>
                         </div>
                         <div className="mt-2">
-                          <Label className="font-cairo text-xs">أرفق إيصال الدفع *</Label>
+                          <Label className="font-cairo text-xs">{t('checkout.attachReceipt')}</Label>
                           <Input type="file" accept="image/*,.pdf" onChange={e => handleReceiptFile(e.target.files?.[0] || null)} className="mt-1" />
-                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="إيصال" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
+                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
                         </div>
                       </div>
                     )}
@@ -583,18 +585,18 @@ export default function CheckoutPage() {
                 <label className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${paymentMethod === 'redotpay' ? 'border-primary bg-accent' : ''}`}>
                   <input type="radio" name="payment" value="redotpay" checked={paymentMethod === 'redotpay'} onChange={e => setPaymentMethod(e.target.value)} className="mt-1" />
                   <div className="flex-1">
-                    <p className="font-cairo font-semibold">Redotpay</p>
+                    <p className="font-cairo font-semibold">{t('checkout.redotpay')}</p>
                     {paymentMethod === 'redotpay' && settings && (
                       <div className="mt-3 space-y-2 text-sm">
                         <div className="flex items-center gap-2 bg-muted p-2 rounded">
-                          <span className="font-cairo">العنوان:</span>
+                          <span className="font-cairo">{t('checkout.address_')}</span>
                           <span className="font-roboto font-bold text-xs break-all">{settings.redotpay_address}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => copyToClipboard(settings.redotpay_address)}><Copy className="w-3 h-3" /></Button>
                         </div>
                         <div className="mt-2">
-                          <Label className="font-cairo text-xs">أرفق إيصال الدفع *</Label>
+                          <Label className="font-cairo text-xs">{t('checkout.attachReceipt')}</Label>
                           <Input type="file" accept="image/*,.pdf" onChange={e => handleReceiptFile(e.target.files?.[0] || null)} className="mt-1" />
-                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="إيصال" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
+                          {receiptPreview && (<div className="relative mt-2 inline-block"><img src={receiptPreview} alt="" className="w-32 h-32 object-cover rounded-lg border" /><button onClick={removeReceipt} className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button></div>)}
                         </div>
                       </div>
                     )}
@@ -608,7 +610,7 @@ export default function CheckoutPage() {
         {/* Summary */}
         <div className="md:col-span-2">
           <div className="bg-card border rounded-lg p-6 sticky top-20 space-y-3">
-            <h2 className="font-cairo font-bold text-xl mb-4">ملخص الطلب</h2>
+            <h2 className="font-cairo font-bold text-xl mb-4">{t('checkout.summaryTitle')}</h2>
             {items.map((item, idx) => (
               <div key={`${item.id}-${item.variantId || item.variation?.value || ''}-${idx}`} className="flex justify-between text-sm font-cairo">
                 <span>
@@ -619,19 +621,19 @@ export default function CheckoutPage() {
             ))}
             <hr className="my-3" />
             <div className="flex justify-between font-cairo text-sm">
-              <span>المجموع الفرعي</span>
+              <span>{t('cart.subtotal')}</span>
               <span className="font-roboto font-bold">{formatPrice(subtotal)}</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between font-cairo text-sm text-success">
-                <span>الخصم</span>
+                <span>{t('checkout.discount')}</span>
                 <span className="font-roboto font-bold">-{formatPrice(discount)}</span>
               </div>
             )}
             {/* Shipping breakdown */}
             <div className="space-y-1">
               <div className="flex justify-between font-cairo text-sm">
-                <span className="flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> التوصيل {deliveryType === 'home' ? '(منزل)' : deliveryType === 'office' ? '(مكتب)' : ''}</span>
+                <span className="flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> {t('cart.delivery')} {deliveryType === 'home' ? t('checkout.deliveryHome') : deliveryType === 'office' ? t('checkout.deliveryOffice') : ''}</span>
                 <span className="font-roboto font-bold">{shippingCost > 0 ? formatPrice(shippingCost) : '—'}</span>
               </div>
               {shippingBreakdown.length > 1 && shippingCost > 0 && (
@@ -645,16 +647,16 @@ export default function CheckoutPage() {
                 </div>
               )}
               {shippingCost > 0 && (
-                <p className="text-[11px] text-muted-foreground font-cairo pr-1">* سعر التوصيل يُحسب لكل منتج حسب الكمية</p>
+                <p className="text-[11px] text-muted-foreground font-cairo pr-1">{t('checkout.perItemNote')}</p>
               )}
             </div>
             <hr className="my-3" />
             <div className="flex justify-between font-cairo font-bold text-lg">
-              <span>الإجمالي</span>
+              <span>{t('checkout.total')}</span>
               <span className="font-roboto text-primary">{formatPrice(total)}</span>
             </div>
             <Button onClick={handleSubmit} disabled={submitting} className="w-full font-cairo font-semibold mt-4">
-              {submitting ? 'جاري الإرسال...' : 'تأكيد الطلب'}
+              {submitting ? t('checkout.submitting') : t('checkout.confirmOrder')}
             </Button>
           </div>
         </div>
