@@ -97,6 +97,7 @@ export default function SingleProductPage() {
   const { addItem: addRecentlyViewed } = useRecentlyViewed();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const [qty, setQty] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
