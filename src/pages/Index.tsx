@@ -21,6 +21,7 @@ import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
 import heroImage from '@/assets/hero-tech-collection.jpg';
+import trustedTechImage from '@/assets/trusted-tech-algeria.jpg';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
