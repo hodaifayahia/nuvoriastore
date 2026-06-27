@@ -221,17 +221,17 @@ export default function IndexPage() {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                 </span>
-                Free shipping over 5,000 DA
+                شحن مجاني للطلبات فوق 5,000 دج
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
-                Gear up. <br />
+                جهّز عتادك. <br />
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  Power on.
+                  وانطلق.
                 </span>
 
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
-                Laptops, phones, audio and peripherals — curated, original, and delivered fast across Algeria.
+                حواسيب، هواتف، سماعات وملحقات — منتقاة، أصلية، وتُسلَّم بسرعة عبر الجزائر.
               </p>
 
               <form onSubmit={handleSearch} className="mt-7 flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
@@ -239,31 +239,31 @@ export default function IndexPage() {
                 <Input
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search MacBook, AirPods, Logitech…"
+                  placeholder="ابحث عن MacBook أو AirPods أو Logitech…"
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
                 <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
-                  Search
+                  بحث
                 </Button>
               </form>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    Shop now <ArrowRight className="w-4 h-4" />
+                    تسوّق الآن <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/products?category=Laptops">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    Browse laptops
+                    تصفّح الحواسيب
                   </Button>
                 </Link>
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/70">
-                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> 100% Authentic</span>
-                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 wilayas</span>
-                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> 7-day returns</span>
+                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> أصلي 100%</span>
+                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 ولاية</span>
+                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> إرجاع خلال 7 أيام</span>
               </div>
             </div>
 
