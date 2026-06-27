@@ -221,17 +221,17 @@ export default function IndexPage() {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                 </span>
-                Free shipping over 5,000 DA
+                شحن مجاني للطلبات فوق 5,000 دج
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
-                Gear up. <br />
+                جهّز عتادك. <br />
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  Power on.
+                  وانطلق.
                 </span>
 
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
-                Laptops, phones, audio and peripherals — curated, original, and delivered fast across Algeria.
+                حواسيب، هواتف، سماعات وملحقات — منتقاة، أصلية، وتُسلَّم بسرعة عبر الجزائر.
               </p>
 
               <form onSubmit={handleSearch} className="mt-7 flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
@@ -239,31 +239,31 @@ export default function IndexPage() {
                 <Input
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search MacBook, AirPods, Logitech…"
+                  placeholder="ابحث عن MacBook أو AirPods أو Logitech…"
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
                 <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
-                  Search
+                  بحث
                 </Button>
               </form>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    Shop now <ArrowRight className="w-4 h-4" />
+                    تسوّق الآن <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/products?category=Laptops">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    Browse laptops
+                    تصفّح الحواسيب
                   </Button>
                 </Link>
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/70">
-                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> 100% Authentic</span>
-                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 wilayas</span>
-                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> 7-day returns</span>
+                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> أصلي 100%</span>
+                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 ولاية</span>
+                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> إرجاع خلال 7 أيام</span>
               </div>
             </div>
 
@@ -272,18 +272,18 @@ export default function IndexPage() {
               <div className="absolute top-6 right-2 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-44 animate-fade-in shadow-2xl">
                 <div className="flex items-center gap-2 text-white">
                   <Sparkles className="w-4 h-4 text-fuchsia-300" />
-                  <span className="text-xs font-medium">Latest drop</span>
+                  <span className="text-xs font-medium">وصل حديثاً</span>
                 </div>
-                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 in stock</p>
+                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 متوفر</p>
               </div>
 
               <div className="absolute bottom-12 right-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-48 shadow-2xl">
                 <div className="flex items-center gap-2 text-white">
                   <Zap className="w-4 h-4 text-yellow-300" />
-                  <span className="text-xs font-medium">Express delivery</span>
+                  <span className="text-xs font-medium">توصيل سريع</span>
                 </div>
-                <p className="mt-1 text-2xl font-display font-bold text-white">24 hours</p>
-                <p className="text-[11px] text-white/60">in Algiers</p>
+                <p className="mt-1 text-2xl font-display font-bold text-white">24 ساعة</p>
+                <p className="text-[11px] text-white/60">في الجزائر العاصمة</p>
               </div>
 
               <div className="absolute bottom-2 left-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
@@ -296,7 +296,7 @@ export default function IndexPage() {
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-300 text-yellow-300" />)}
                   </div>
-                  <p className="text-[11px] text-white/70">2,300+ happy customers</p>
+                  <p className="text-[11px] text-white/70">+2,300 عميل سعيد</p>
                 </div>
               </div>
             </div>
@@ -310,15 +310,15 @@ export default function IndexPage() {
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Zap className="w-5 h-5 text-primary" />
             <div>
-              <p className="font-display font-bold text-3xl">24h</p>
-              <p className="text-xs text-muted-foreground mt-1">Express delivery in Algiers</p>
+              <p className="font-display font-bold text-3xl">24 س</p>
+              <p className="text-xs text-muted-foreground mt-1">توصيل سريع في الجزائر العاصمة</p>
             </div>
           </div>
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Cpu className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">{allProducts?.length ?? '500+'}</p>
-              <p className="text-xs text-muted-foreground mt-1">Accessories in stock</p>
+              <p className="text-xs text-muted-foreground mt-1">إكسسوار متوفر</p>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
@@ -326,11 +326,11 @@ export default function IndexPage() {
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="font-display font-semibold">Bundle & save up to 25%</p>
-              <p className="text-xs text-muted-foreground">Charger + cable + case combos</p>
+              <p className="font-display font-semibold">عروض الباقات — وفّر حتى 25%</p>
+              <p className="text-xs text-muted-foreground">باقات الشاحن + الكابل + الحافظة</p>
             </div>
             <Link to="/products" className="shrink-0">
-              <Button variant="outline" size="sm" className="rounded-full">Explore</Button>
+              <Button variant="outline" size="sm" className="rounded-full">اكتشف</Button>
             </Link>
           </div>
         </div>
@@ -368,11 +368,11 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Shop by category</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">Everything for your devices</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">تسوّق حسب الفئة</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">كل ما تحتاجه لأجهزتك</h2>
             </div>
             <Link to="/categories" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              View all <ChevronRight className="w-4 h-4" />
+              عرض الكل <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -391,7 +391,7 @@ export default function IndexPage() {
                   <div>
                     <p className="font-display font-semibold text-sm sm:text-base group-hover:text-primary transition-colors">{cat.name}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 inline-flex items-center gap-1">
-                      Shop <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                      تسوّق <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
                 </Link>
@@ -410,9 +410,9 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-primary" /> Trending now
+                  <Star className="w-3.5 h-3.5 fill-primary" /> الأكثر رواجاً
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">Most-loved this week</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">الأكثر تفضيلاً هذا الأسبوع</h2>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -447,12 +447,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">Fresh arrivals</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">New in store</h2>
-              <p className="text-sm text-white/60 mt-2 max-w-md">Just landed — the latest tech picks, hand-curated for you.</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">وصل حديثاً</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">جديد في المتجر</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">أحدث المنتجات التقنية المختارة بعناية لك.</p>
             </div>
             <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
-              All products <ChevronRight className="w-4 h-4" />
+              كل المنتجات <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -489,7 +489,7 @@ export default function IndexPage() {
                     to="/products"
                     className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium hover:from-sky-300 hover:to-blue-500 transition-all shadow-[0_10px_30px_-5px_rgba(56,189,248,0.5)]"
                   >
-                    View all products <ChevronRight className="w-4 h-4" />
+                    عرض كل المنتجات <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               )}
@@ -509,13 +509,13 @@ export default function IndexPage() {
             <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> Deals of the day
+                  <Flame className="w-3.5 h-3.5" /> عروض اليوم
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">Limited-time savings</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">تخفيضات لفترة محدودة</h2>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-xs text-muted-foreground">Ends in</span>
+                <span className="text-xs text-muted-foreground">ينتهي خلال</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
                     <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
@@ -557,8 +557,8 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Trusted brands</p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl">Shop the world's best</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">علامات موثوقة</p>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">تسوّق أفضل العلامات العالمية</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
             {['Apple','Dell','HP','Lenovo','ASUS','Logitech','Razer','Anker','Sony','JBL','Samsung','Bose'].slice(0, 8).map(brand => (
@@ -580,19 +580,19 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">Loved by customers</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">What people say</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">آراء عملائنا</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">ماذا يقول الناس</h2>
             </div>
             <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
               <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-              <span className="ms-2">4.9 / 5 · 2,300+ reviews</span>
+              <span className="ms-2">4.9 / 5 · +2,300 تقييم</span>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { name: 'Yacine B.', city: 'Algiers', text: 'Got my MacBook charger next day. Original product, sealed box. Will buy again.', rating: 5 },
-              { name: 'Lina K.',   city: 'Oran',    text: 'The Keychron keyboard is amazing. Great prices and fast delivery to Oran.', rating: 5 },
-              { name: 'Omar S.',   city: 'Constantine', text: 'Smooth checkout, real support over the phone, and packaging was perfect.', rating: 5 },
+              { name: 'ياسين ب.', city: 'الجزائر', text: 'استلمت شاحن MacBook في اليوم التالي. منتج أصلي وعلبة مغلقة. سأشتري مجدداً.', rating: 5 },
+              { name: 'لينا ك.',   city: 'وهران',  text: 'لوحة المفاتيح Keychron رائعة. أسعار ممتازة وتوصيل سريع إلى وهران.', rating: 5 },
+              { name: 'عمر س.',   city: 'قسنطينة', text: 'الدفع سلس، دعم حقيقي عبر الهاتف، والتغليف كان مثالياً.', rating: 5 },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border border-border/60 bg-card p-6 relative">
                 <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/15" />
@@ -633,45 +633,45 @@ export default function IndexPage() {
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
-                Trusted since day one
+                موثوق منذ اليوم الأول
               </span>
               <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
-                Your trusted{' '}
+                شريكك التقني{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  technology
+                  الموثوق
                 </span>{' '}
-                partner in Algeria
+                في الجزائر
               </h2>
 
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
-                Original products, fair prices and friendly support — delivered to all 58 wilayas.
-                Thousands of Algerians already trust us for their laptops, phones and accessories.
+                منتجات أصلية، أسعار منصفة ودعم ودود — توصيل إلى جميع الولايات الـ 58.
+                آلاف الجزائريين يثقون بنا لشراء حواسيبهم وهواتفهم وملحقاتها.
               </p>
 
               <div className="mt-7 grid grid-cols-3 gap-4 max-w-md">
                 <div>
-                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">2.3k+</p>
-                  <p className="text-xs text-white/60 mt-1">Happy customers</p>
+                  <p className="font-display font-bold text-2xl sm:text-3xl text-white">+2.3k</p>
+                  <p className="text-xs text-white/60 mt-1">عميل سعيد</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">58</p>
-                  <p className="text-xs text-white/60 mt-1">Wilayas covered</p>
+                  <p className="text-xs text-white/60 mt-1">ولاية مغطّاة</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">4.9★</p>
-                  <p className="text-xs text-white/60 mt-1">Average rating</p>
+                  <p className="text-xs text-white/60 mt-1">متوسط التقييم</p>
                 </div>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    Browse the store <ArrowRight className="w-4 h-4" />
+                    تصفّح المتجر <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/about">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    About us
+                    من نحن
                   </Button>
                 </Link>
               </div>
@@ -689,10 +689,10 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { icon: Truck,      label: 'Fast shipping',  desc: 'Across all 58 wilayas' },
-            { icon: Shield,     label: '7-day returns',  desc: 'No questions asked' },
-            { icon: BadgeCheck, label: 'Authentic',      desc: '100% original products' },
-            { icon: Headphones, label: 'Real support',   desc: 'Chat with our team' },
+            { icon: Truck,      label: 'شحن سريع',        desc: 'إلى جميع الولايات الـ 58' },
+            { icon: Shield,     label: 'إرجاع خلال 7 أيام', desc: 'بدون أسئلة' },
+            { icon: BadgeCheck, label: 'منتجات أصلية',     desc: 'أصلية 100%' },
+            { icon: Headphones, label: 'دعم حقيقي',        desc: 'تواصل مع فريقنا' },
           ].map(item => (
             <div key={item.label} className="flex items-start gap-3">
               <div className="w-11 h-11 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0">
