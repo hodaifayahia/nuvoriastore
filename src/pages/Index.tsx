@@ -20,6 +20,7 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import heroImage from '@/assets/hero-tech-collection.jpg';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
@@ -149,98 +150,117 @@ export default function IndexPage() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
 
-      {/* ────── HERO BENTO ────── */}
+      {/* ────── HERO ────── */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-6 pb-10">
-        {/* Ambient gradient blobs */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-primary/20 blur-[120px]" />
-          <div className="absolute top-40 -right-20 w-[420px] h-[420px] rounded-full bg-accent/15 blur-[120px]" />
-        </div>
+        <div className="relative max-w-7xl mx-auto rounded-[2rem] border border-border/60 overflow-hidden bg-gradient-to-br from-[#0b0820] via-[#140a2e] to-[#1a0c3a] shadow-[0_30px_80px_-20px_rgba(120,80,255,0.35)]">
+          {/* Background image */}
+          <img
+            src={heroImage}
+            alt="Tech accessories collection"
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            width={1600}
+            height={1024}
+          />
+          {/* Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0b0820]/95 via-[#140a2e]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0820] via-transparent to-transparent" />
+          <div className="pointer-events-none absolute -top-32 -left-20 w-[480px] h-[480px] rounded-full bg-primary/30 blur-[120px]" />
+          <div className="pointer-events-none absolute top-20 right-1/3 w-[360px] h-[360px] rounded-full bg-accent/25 blur-[120px]" />
 
-        <div className="relative max-w-7xl mx-auto grid grid-cols-12 grid-rows-[auto_auto] gap-3 sm:gap-4">
+          {/* Subtle grid */}
+          <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:48px_48px]" />
 
-          {/* Headline tile */}
-          <div className="col-span-12 lg:col-span-7 row-span-1 rounded-3xl border border-border/60 bg-gradient-to-br from-card via-card to-secondary/40 p-8 sm:p-12 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(hsl(var(--foreground))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground))_1px,transparent_1px)] [background-size:32px_32px]" />
-            <div className="relative">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-primary/15 text-primary border border-primary/30 mb-6">
+          <div className="relative grid lg:grid-cols-2 gap-8 p-8 sm:p-12 lg:p-16 min-h-[560px] lg:min-h-[620px] items-center">
+            {/* Left: copy */}
+            <div className="text-white">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-6">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                 </span>
-                New drops every week
+                Free shipping over 5,000 DA
               </span>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
-                Accessories <br />
-                <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                  for your devices.
+              <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
+                Gear up. <br />
+                <span className="bg-gradient-to-r from-fuchsia-300 via-violet-300 to-sky-300 bg-clip-text text-transparent">
+                  Power on.
                 </span>
               </h1>
-              <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-lg leading-relaxed">
-                Cases, chargers, audio, peripherals and more — curated gear for your phone, laptop and desk setup.
+              <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
+                Laptops, phones, audio and peripherals — curated, original, and delivered fast across Algeria.
               </p>
 
-              <form onSubmit={handleSearch} className="mt-7 flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-background/60 border border-border/60 backdrop-blur">
-                <Search className="w-4 h-4 text-muted-foreground ms-3 shrink-0" />
+              <form onSubmit={handleSearch} className="mt-7 flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
+                <Search className="w-4 h-4 text-white/60 ms-3 shrink-0" />
                 <Input
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search AirPods, USB-C, RGB keyboard…"
-                  className="flex-1 border-0 bg-transparent h-10 text-sm focus-visible:ring-0"
+                  placeholder="Search MacBook, AirPods, Logitech…"
+                  className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
-                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl">
+                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#140a2e] hover:bg-white/90">
                   Search
                 </Button>
               </form>
 
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-primary" /> Authentic</span>
-                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-primary" /> 58 wilayas</span>
-                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary" /> 7-day returns</span>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link to="/products">
+                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-fuchsia-500 to-violet-600 hover:from-fuchsia-400 hover:to-violet-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(217,70,239,0.5)]">
+                    Shop now <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link to="/products?category=Laptops">
+                  <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
+                    Browse laptops
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/70">
+                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> 100% Authentic</span>
+                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> 58 wilayas</span>
+                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> 7-day returns</span>
+              </div>
+            </div>
+
+            {/* Right: floating stat cards layered over the hero image */}
+            <div className="hidden lg:flex relative h-full items-center justify-center">
+              <div className="absolute top-6 right-2 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-44 animate-fade-in shadow-2xl">
+                <div className="flex items-center gap-2 text-white">
+                  <Sparkles className="w-4 h-4 text-fuchsia-300" />
+                  <span className="text-xs font-medium">Latest drop</span>
+                </div>
+                <p className="mt-1 text-sm text-white/70">MacBook Pro M3 in stock</p>
+              </div>
+
+              <div className="absolute bottom-12 right-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 w-48 shadow-2xl">
+                <div className="flex items-center gap-2 text-white">
+                  <Zap className="w-4 h-4 text-yellow-300" />
+                  <span className="text-xs font-medium">Express delivery</span>
+                </div>
+                <p className="mt-1 text-2xl font-display font-bold text-white">24 hours</p>
+                <p className="text-[11px] text-white/60">in Algiers</p>
+              </div>
+
+              <div className="absolute bottom-2 left-8 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-3 flex items-center gap-3 shadow-2xl">
+                <div className="flex -space-x-2">
+                  {[1,2,3,4].map(i => (
+                    <div key={i} className="w-7 h-7 rounded-full border-2 border-[#140a2e] bg-gradient-to-br from-fuchsia-400 to-violet-500" />
+                  ))}
+                </div>
+                <div className="text-white">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-300 text-yellow-300" />)}
+                  </div>
+                  <p className="text-[11px] text-white/70">2,300+ happy customers</p>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Hero product tile */}
-          <div className="col-span-12 lg:col-span-5 row-span-1 rounded-3xl border border-border/60 bg-gradient-to-br from-primary/20 via-secondary/40 to-card p-6 sm:p-8 relative overflow-hidden min-h-[280px] flex flex-col justify-between">
-            <div className="pointer-events-none absolute -top-10 -right-10 w-56 h-56 rounded-full bg-primary/30 blur-3xl" />
-            {heroProduct ? (
-              <>
-                <div className="flex items-center justify-between relative">
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-primary font-semibold">Featured</span>
-                  <Sparkles className="w-4 h-4 text-primary" />
-                </div>
-                <Link to={`/product/${heroProduct.id}`} className="relative group flex-1 flex items-center justify-center my-4">
-                  {heroProduct.images?.[0] ? (
-                    <img
-                      src={heroProduct.images[0]}
-                      alt={heroProduct.name}
-                      className="max-h-44 object-contain drop-shadow-[0_20px_30px_hsl(244_76%_60%/0.35)] group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-40 h-40 rounded-2xl bg-primary/20 flex items-center justify-center">
-                      <Headphones className="w-20 h-20 text-primary" />
-                    </div>
-                  )}
-                </Link>
-                <div className="relative">
-                  <h3 className="font-display font-semibold text-lg truncate">{heroProduct.name}</h3>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-2xl font-bold font-display">{Number(heroProduct.price).toLocaleString()} <span className="text-xs text-muted-foreground">DA</span></span>
-                    <Link to={`/product/${heroProduct.id}`}>
-                      <Button size="sm" className="rounded-full gap-1.5">
-                        Shop <ArrowRight className="w-3.5 h-3.5" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                <Headphones className="w-24 h-24 opacity-40" />
-              </div>
-            )}
-          </div>
+        {/* Bento promo strip */}
+        <div className="relative max-w-7xl mx-auto mt-3 sm:mt-4 grid grid-cols-12 gap-3 sm:gap-4">
 
           {/* Stats / promo strip */}
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
