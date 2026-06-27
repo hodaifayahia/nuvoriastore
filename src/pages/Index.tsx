@@ -402,7 +402,7 @@ export default function IndexPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-                {newestProducts.map((p, i) => (
+                {(allProducts?.slice(0, 8) || []).map((p, i) => (
                   <div key={p.id} style={{ animationDelay: `${i * 0.05}s` }} className="animate-fade-in opacity-0 [animation-fill-mode:forwards]">
                     <ProductCard
                       id={p.id}
@@ -419,7 +419,16 @@ export default function IndexPage() {
                   </div>
                 ))}
               </div>
-              {hasMore && <div ref={loadMoreRef} className="h-12" />}
+              {(allProducts?.length || 0) > 8 && (
+                <div className="mt-8 flex justify-center">
+                  <Link
+                    to="/products"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                  >
+                    View all products <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              )}
             </>
           )}
         </div>
