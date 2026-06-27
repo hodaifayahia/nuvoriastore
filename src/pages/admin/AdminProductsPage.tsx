@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Star, X, Upload, ImageIcon, Loader2, Package, Search, Copy, Download, FileUp, ChevronLeft, ChevronRight, DollarSign, Tag, CheckSquare, ExternalLink, PackageX, AlertTriangle, EyeOff, Layers } from 'lucide-react';
 import { formatPrice } from '@/lib/format';
 import { useCategories } from '@/hooks/useCategories';
+import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
