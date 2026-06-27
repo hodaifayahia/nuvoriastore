@@ -416,12 +416,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">وصل حديثاً</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">جديد في المتجر</h2>
-              <p className="text-sm text-white/60 mt-2 max-w-md">أحدث المنتجات التقنية المختارة بعناية لك.</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">{t('idx.newest.kicker')}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.newest.title')}</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">{t('idx.newest.desc')}</p>
             </div>
             <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
-              كل المنتجات <ChevronRight className="w-4 h-4" />
+              {t('idx.newest.allProducts')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
