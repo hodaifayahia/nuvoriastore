@@ -30,6 +30,17 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`من نحن — ${storeName}`}
+        description={description}
+        path="/about"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          name: storeName,
+          description,
+        }}
+      />
       {/* Hero */}
       <section className="relative bg-primary border-b border-primary/20">
         <div className="container relative z-10 py-16 md:py-20 text-center">
