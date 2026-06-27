@@ -45,6 +45,7 @@ const DEFAULT_CATEGORIES = [
 
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
