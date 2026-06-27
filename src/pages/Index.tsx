@@ -482,24 +482,28 @@ export default function IndexPage() {
       {/* ────── DEALS OF THE DAY ────── */}
       {dealsProducts.length > 0 && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-destructive/10 via-card to-primary/5 p-6 sm:p-8 relative overflow-hidden">
-            <div className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-destructive/20 blur-3xl" />
-            <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-destructive/15 bg-gradient-to-br from-destructive/8 via-card to-card p-5 sm:p-8 relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-destructive/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
+            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> {t('idx.deals.kicker')}
+                <p className="text-[11px] uppercase tracking-[0.2em] text-destructive font-semibold mb-2 flex items-center gap-2">
+                  <span className="inline-flex w-6 h-6 items-center justify-center rounded-full bg-destructive/10">
+                    <Flame className="w-3.5 h-3.5" />
+                  </span>
+                  {t('idx.deals.kicker')}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.deals.title')}</h2>
+                <h2 className="font-display font-bold text-2xl sm:text-4xl leading-tight">{t('idx.deals.title')}</h2>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-start sm:self-auto rounded-2xl border border-border/60 bg-background/70 backdrop-blur px-3 py-2 shadow-sm">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-xs text-muted-foreground">{t('idx.deals.endsIn')}</span>
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">{t('idx.deals.endsIn')}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
-                    <span className="font-display font-bold text-base bg-background border border-border/60 rounded-lg px-2.5 py-1 tabular-nums">
+                    <span className="font-display font-bold text-sm sm:text-base bg-destructive/10 text-destructive rounded-lg px-2 py-1 tabular-nums min-w-[2.25rem] text-center">
                       {String(countdown[k]).padStart(2, '0')}
                     </span>
-                    {i < 2 && <span className="text-muted-foreground">:</span>}
+                    {i < 2 && <span className="text-muted-foreground/60">:</span>}
                   </div>
                 ))}
               </div>
