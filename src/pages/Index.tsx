@@ -28,15 +28,16 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Phone Cases',   icon: Smartphone,        accent: 'from-indigo-500/30 to-violet-500/10', tag: 'phone' },
-  { name: 'Chargers',      icon: BatteryCharging,   accent: 'from-fuchsia-500/30 to-indigo-500/10', tag: 'charger' },
-  { name: 'Headphones',    icon: Headphones,        accent: 'from-blue-500/30 to-indigo-500/10', tag: 'headphone' },
-  { name: 'Keyboards',     icon: Keyboard,          accent: 'from-violet-500/30 to-fuchsia-500/10', tag: 'keyboard' },
-  { name: 'Mice',          icon: Mouse,             accent: 'from-cyan-500/25 to-indigo-500/10', tag: 'mouse' },
-  { name: 'Laptops',       icon: Laptop,            accent: 'from-indigo-500/30 to-purple-500/10', tag: 'laptop' },
-  { name: 'Cables',        icon: Cable,             accent: 'from-sky-500/25 to-violet-500/10', tag: 'cable' },
-  { name: 'Gaming',        icon: Gamepad2,          accent: 'from-purple-500/30 to-fuchsia-500/10', tag: 'gaming' },
+  { name: 'Phone Cases',   icon: Smartphone,        accent: 'from-sky-400/30 to-blue-500/10', tag: 'phone' },
+  { name: 'Chargers',      icon: BatteryCharging,   accent: 'from-cyan-400/30 to-sky-500/10', tag: 'charger' },
+  { name: 'Headphones',    icon: Headphones,        accent: 'from-blue-400/30 to-sky-500/10', tag: 'headphone' },
+  { name: 'Keyboards',     icon: Keyboard,          accent: 'from-sky-500/30 to-cyan-400/10', tag: 'keyboard' },
+  { name: 'Mice',          icon: Mouse,             accent: 'from-cyan-500/25 to-blue-500/10', tag: 'mouse' },
+  { name: 'Laptops',       icon: Laptop,            accent: 'from-blue-500/30 to-sky-400/10', tag: 'laptop' },
+  { name: 'Cables',        icon: Cable,             accent: 'from-sky-400/25 to-cyan-400/10', tag: 'cable' },
+  { name: 'Gaming',        icon: Gamepad2,          accent: 'from-blue-600/30 to-sky-400/10', tag: 'gaming' },
 ];
+
 
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
