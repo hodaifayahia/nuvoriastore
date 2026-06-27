@@ -447,8 +447,9 @@ export default function IndexPage() {
                   <div
                     key={p.id}
                     style={{ animationDelay: `${i * 0.05}s` }}
-                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards] rounded-3xl bg-white/[0.03] border border-white/10 hover:border-sky-300/40 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 overflow-hidden backdrop-blur-sm"
+                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards]"
                   >
+
                     <ProductCard
                       id={p.id}
                       name={p.name}
