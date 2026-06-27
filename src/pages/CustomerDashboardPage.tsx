@@ -9,16 +9,18 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LogOut, Package, ShoppingBag, User } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useTranslation } from '@/i18n';
 
-const STATUS_MAP: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  'جديد': { label: 'جديد', variant: 'default' },
-  'قيد التحضير': { label: 'قيد التحضير', variant: 'secondary' },
-  'تم الشحن': { label: 'تم الشحن', variant: 'outline' },
-  'تم التسليم': { label: 'تم التسليم', variant: 'default' },
-  'ملغي': { label: 'ملغي', variant: 'destructive' },
+const STATUS_MAP: Record<string, { key: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
+  'جديد': { key: 'dash.status.new', variant: 'default' },
+  'قيد التحضير': { key: 'dash.status.preparing', variant: 'secondary' },
+  'تم الشحن': { key: 'dash.status.shipped', variant: 'outline' },
+  'تم التسليم': { key: 'dash.status.delivered', variant: 'default' },
+  'ملغي': { key: 'dash.status.cancelled', variant: 'destructive' },
 };
 
 export default function CustomerDashboardPage() {
+  const { t } = useTranslation();
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -47,14 +49,15 @@ export default function CustomerDashboardPage() {
 
   return (
     <div className="container py-8 max-w-3xl">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
             <User className="w-7 h-7 text-primary" />
           </div>
           <div>
-            <h1 className="font-cairo font-bold text-2xl text-foreground">مرحباً، {displayName}</h1>
+            <h1 className="font-cairo font-bold text-2xl text-foreground">
+              {t('dash.welcome').replace('{name}', displayName)}
+            </h1>
             <p className="font-cairo text-sm text-muted-foreground">{user.email}</p>
           </div>
         </div>
@@ -64,15 +67,14 @@ export default function CustomerDashboardPage() {
           className="font-cairo gap-2 rounded-xl"
         >
           <LogOut className="w-4 h-4" />
-          خروج
+          {t('dash.logout')}
         </Button>
       </div>
 
-      {/* Orders */}
       <div className="bg-card border rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-6">
           <Package className="w-5 h-5 text-primary" />
-          <h2 className="font-cairo font-bold text-xl">طلباتي</h2>
+          <h2 className="font-cairo font-bold text-xl">{t('dash.myOrders')}</h2>
         </div>
 
         {isLoading ? (
@@ -95,7 +97,7 @@ export default function CustomerDashboardPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Badge variant={status.variant} className="font-cairo">{status.label}</Badge>
+                        <Badge variant={status.variant} className="font-cairo">{t(status.key)}</Badge>
                         <span className="font-roboto font-bold text-sm text-primary">{formatPrice(Number(order.total_amount))}</span>
                       </div>
                     </div>
@@ -127,7 +129,7 @@ export default function CustomerDashboardPage() {
         ) : (
           <div className="text-center py-12">
             <ShoppingBag className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-            <p className="font-cairo text-muted-foreground">لا توجد طلبات بعد</p>
+            <p className="font-cairo text-muted-foreground">{t('dash.empty')}</p>
           </div>
         )}
       </div>

@@ -5,8 +5,10 @@ import { Heart, ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/format';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/i18n';
 
 export default function WishlistPage() {
+  const { t } = useTranslation();
   const { items, removeItem, clearWishlist } = useWishlist();
   const { addItem } = useCart();
   const { toast } = useToast();
@@ -19,7 +21,10 @@ export default function WishlistPage() {
       image: item.image,
       stock: 99,
     });
-    toast({ title: 'تمت الإضافة', description: `تمت إضافة "${item.name}" إلى السلة` });
+    toast({
+      title: t('wishlist.added'),
+      description: t('wishlist.addedDesc').replace('{name}', item.name),
+    });
   };
 
   return (
@@ -30,8 +35,10 @@ export default function WishlistPage() {
             <Heart className="w-5 h-5 text-destructive fill-destructive" />
           </div>
           <div>
-            <h1 className="font-cairo font-bold text-2xl text-foreground">المفضلة</h1>
-            <p className="font-cairo text-sm text-muted-foreground">{items.length} منتج محفوظ</p>
+            <h1 className="font-cairo font-bold text-2xl text-foreground">{t('wishlist.title')}</h1>
+            <p className="font-cairo text-sm text-muted-foreground">
+              {t('wishlist.count').replace('{n}', String(items.length))}
+            </p>
           </div>
         </div>
         {items.length > 0 && (
@@ -42,7 +49,7 @@ export default function WishlistPage() {
             className="font-cairo text-xs text-muted-foreground hover:text-destructive gap-1.5"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            مسح الكل
+            {t('wishlist.clearAll')}
           </Button>
         )}
       </div>
@@ -52,12 +59,12 @@ export default function WishlistPage() {
           <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
             <Heart className="w-10 h-10 text-muted-foreground/30" />
           </div>
-          <h2 className="font-cairo font-bold text-xl text-foreground mb-2">قائمة المفضلة فارغة</h2>
-          <p className="font-cairo text-muted-foreground mb-6">أضف المنتجات التي تعجبك لتجدها بسهولة لاحقاً</p>
+          <h2 className="font-cairo font-bold text-xl text-foreground mb-2">{t('wishlist.empty.title')}</h2>
+          <p className="font-cairo text-muted-foreground mb-6">{t('wishlist.empty.description')}</p>
           <Link to="/products">
             <Button className="font-cairo gap-2">
               <ArrowRight className="w-4 h-4" />
-              تصفح المنتجات
+              {t('wishlist.browse')}
             </Button>
           </Link>
         </div>
@@ -82,7 +89,7 @@ export default function WishlistPage() {
                   <button
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeItem(item.id); }}
                     className="absolute top-3 left-3 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-destructive hover:text-white transition-colors"
-                    aria-label="إزالة من المفضلة"
+                    aria-label={t('wishlist.removeAria')}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -104,7 +111,7 @@ export default function WishlistPage() {
                     className="font-cairo text-xs gap-1.5 rounded-xl h-8"
                   >
                     <ShoppingCart className="w-3.5 h-3.5" />
-                    أضف للسلة
+                    {t('wishlist.addToCart')}
                   </Button>
                 </div>
               </div>
