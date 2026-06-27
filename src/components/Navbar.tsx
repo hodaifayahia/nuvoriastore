@@ -277,7 +277,7 @@ export default function Navbar() {
             <Link
               to="/wishlist"
               className="relative p-2.5 rounded-xl hover:bg-muted transition-colors"
-              aria-label="المفضلة"
+              aria-label={t('nav.wishlist')}
             >
               <Heart className={`w-5 h-5 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : 'text-muted-foreground'}`} />
               {wishlistCount > 0 && (
