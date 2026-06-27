@@ -193,8 +193,8 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
           </button>
 
           {/* Hover add-to-cart overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+            <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-neutral-900 hover:bg-black text-white shadow-lg shadow-black/30">
               <ShoppingCart className="w-3.5 h-3.5" />
               أضف للسلة
             </Button>
@@ -202,8 +202,8 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
         </div>
 
         {/* Content */}
-        <div className="p-4 pt-3.5 space-y-2.5">
-          <h3 className="font-cairo font-bold text-foreground text-sm leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors duration-300">
+        <div className="p-4 pt-3.5 space-y-2.5 bg-card">
+          <h3 className="font-cairo font-bold text-neutral-900 text-sm leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-neutral-700 transition-colors duration-300">
             {name}
           </h3>
 
@@ -223,7 +223,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
           {variationTypes && Object.keys(variationTypes).length > 0 && (
             <div className="flex flex-wrap gap-1">
               {Object.entries(variationTypes).map(([type, count]) => (
-                <span key={type} className="font-cairo text-[10px] bg-primary/5 text-primary/70 px-2.5 py-0.5 rounded-full border border-primary/10">
+                <span key={type} className="font-cairo text-[10px] bg-neutral-100 text-neutral-700 px-2.5 py-0.5 rounded-full border border-neutral-200">
                   {count} {type}
                 </span>
               ))}
@@ -233,7 +233,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
           <div className="space-y-2.5 pt-0.5">
             <div className="flex items-center justify-between">
               <div className="flex items-baseline gap-2">
-                <span className="font-roboto font-extrabold text-primary text-lg tracking-tight">
+                <span className="font-roboto font-extrabold text-neutral-900 text-lg tracking-tight">
                   {formatPrice(price)}
                 </span>
                 {oldPrice && oldPrice > price && (
@@ -243,16 +243,16 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
                 )}
               </div>
               {(shippingPrice ?? 0) > 0 && (
-                <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-0.5 bg-muted/50 px-1.5 py-0.5 rounded-md">
+                <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-0.5 bg-neutral-100 px-1.5 py-0.5 rounded-md">
                   <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
                 </p>
               )}
             </div>
             <div className="flex items-center gap-1.5 w-full">
-              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} className="font-cairo text-xs gap-1 rounded-xl h-9 px-3 shrink-0 border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-300">
+              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label="أضف للسلة" className="font-cairo text-xs gap-1 rounded-xl h-9 px-3 shrink-0 border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-all duration-300">
                 <ShoppingCart className="w-3.5 h-3.5" />
               </Button>
-              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-9 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-gradient-to-l from-primary to-primary/90">
+              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-xs gap-1 rounded-xl h-9 flex-1 bg-neutral-900 hover:bg-black text-white shadow-sm hover:shadow-md hover:shadow-black/20 transition-all duration-300">
                 <Zap className="w-3.5 h-3.5" />
                 اطلب الآن
               </Button>
