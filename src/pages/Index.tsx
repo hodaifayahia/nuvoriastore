@@ -458,7 +458,7 @@ export default function IndexPage() {
                     to="/products"
                     className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium hover:from-sky-300 hover:to-blue-500 transition-all shadow-[0_10px_30px_-5px_rgba(56,189,248,0.5)]"
                   >
-                    عرض كل المنتجات <ChevronRight className="w-4 h-4" />
+                    {t('idx.newest.viewAll')} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               )}
