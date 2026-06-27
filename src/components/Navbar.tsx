@@ -365,7 +365,7 @@ export default function Navbar() {
                     }`}
                   >
                     <link.icon className="w-4 h-4" />
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 );
               })}
@@ -375,7 +375,7 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
               >
                 <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : ''}`} />
-                المفضلة {wishlistCount > 0 && `(${wishlistCount})`}
+                {t('nav.wishlist')} {wishlistCount > 0 && `(${wishlistCount})`}
               </Link>
               <Link
                 to={user ? '/dashboard' : '/auth'}
@@ -383,7 +383,7 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
               >
                 <User className="w-4 h-4" />
-                {user ? 'حسابي' : 'تسجيل الدخول'}
+                {user ? t('nav.account') : t('nav.signIn')}
               </Link>
               {user && isAdmin && (
                 <Link
@@ -392,7 +392,7 @@ export default function Navbar() {
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-semibold text-sm bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                 >
                   <LayoutDashboard className="w-4 h-4" />
-                  لوحة التحكم
+                  {t('nav.adminPanel')}
                 </Link>
               )}
             </nav>
