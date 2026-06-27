@@ -442,18 +442,14 @@ export default function IndexPage() {
             <ProductGridSkeleton />
           ) : (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5
-                [&_.bg-card]:!bg-[#0d0d12] [&_.bg-card]:!border-white/10
-                [&_[class*='bg-white']]:!bg-[#0d0d12]
-                [&_.text-foreground]:!text-white
-                [&_.text-muted-foreground]:!text-white/60
-                [&_.text-card-foreground]:!text-white">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
                 {(allProducts?.slice(0, 8) || []).map((p, i) => (
                   <div
                     key={p.id}
                     style={{ animationDelay: `${i * 0.05}s` }}
-                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards] rounded-2xl overflow-hidden bg-[#0d0d12] border border-white/10 hover:border-sky-400/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(56,189,248,0.4)] transition-all duration-300"
+                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards]"
                   >
+
                     <ProductCard
                       id={p.id}
                       name={p.name}
