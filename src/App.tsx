@@ -26,6 +26,7 @@ import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 import AdminWilayasPage from "./pages/admin/AdminWilayasPage";
 import AdminCouponsPage from "./pages/admin/AdminCouponsPage";
 import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
+import AdminBrandsPage from "./pages/admin/AdminBrandsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import AdminIdentityPage from "./pages/admin/settings/AdminIdentityPage";
 import AdminPaymentPage from "./pages/admin/settings/AdminPaymentPage";
