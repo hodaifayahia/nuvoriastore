@@ -497,7 +497,7 @@ export default function IndexPage() {
 
 
       {/* ────── DEALS OF THE DAY ────── */}
-      {dealsProducts.length > 0 && (
+      {showSection('deals') && dealsProducts.length > 0 && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-7xl mx-auto rounded-3xl border border-destructive/15 bg-gradient-to-br from-destructive/8 via-card to-card p-5 sm:p-8 relative overflow-hidden">
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-destructive/15 blur-3xl" />
