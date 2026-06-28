@@ -1414,16 +1414,19 @@ export type Database = {
       settings: {
         Row: {
           id: string
+          is_public: boolean
           key: string
           value: string | null
         }
         Insert: {
           id?: string
+          is_public?: boolean
           key: string
           value?: string | null
         }
         Update: {
           id?: string
+          is_public?: boolean
           key?: string
           value?: string | null
         }
