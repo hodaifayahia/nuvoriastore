@@ -403,7 +403,7 @@ export default function IndexPage() {
       )}
 
       {/* ────── TRENDING ────── */}
-      {trendingProducts.length > 0 && (
+      {showSection('trending') && trendingProducts.length > 0 && (
         <section className="px-3 sm:px-6 lg:px-8 pb-14">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-6">
