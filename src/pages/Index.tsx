@@ -679,8 +679,10 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ────── TRUSTED TECHNOLOGY IN ALGERIA ────── */}
+      {showSection('trusted') && (
       <div
         style={{ background: DARK_BG }}
         className="text-white"
