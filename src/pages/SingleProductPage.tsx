@@ -591,7 +591,7 @@ export default function SingleProductPage() {
   return (
     <div className="container py-6 md:py-10">
       <SEO
-        title={`${product.name} — Akram-Mobile`}
+        title={`${product.name} — NuvoriaStore`}
         description={(product.description || product.name).toString().slice(0, 160)}
         path={`/product/${product.id}`}
         type="product"

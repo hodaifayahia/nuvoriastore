@@ -1391,8 +1391,8 @@ export const en: Record<string, string> = {
   'footer.trust.payment': 'Secure cash on delivery',
   'footer.trust.support': 'Premium customer support',
 
-  // ═══ Home (akram-mobile storefront) ═══
-  'idx.seo.title': 'Akram-Mobile — Phone & Computer Accessories in Algeria',
+  // ═══ Home (nuvoriastore storefront) ═══
+  'idx.seo.title': 'NuvoriaStore — Phone & Computer Accessories in Algeria',
   'idx.seo.description': 'Shop the latest phone and computer accessories: headphones, chargers, keyboards, cases, monitors and more. Fast delivery to 58 wilayas.',
   'idx.hero.badge': 'Free shipping on orders over 5,000 DZD',
   'idx.hero.title1': 'Gear up.',

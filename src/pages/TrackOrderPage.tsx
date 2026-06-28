@@ -44,7 +44,7 @@ export default function TrackOrderPage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <SEO
-        title={`${t('trackOrder.title')} — Akram-Mobile`}
+        title={`${t('trackOrder.title')} — NuvoriaStore`}
         description={t('trackOrder.inputPlaceholder')}
         path="/track"
       />

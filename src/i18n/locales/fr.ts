@@ -1391,8 +1391,8 @@ export const fr: Record<string, string> = {
   'footer.trust.payment': 'Paiement sécurisé à la livraison',
   'footer.trust.support': 'Service client premium',
 
-  // ═══ Home (akram-mobile storefront) ═══
-  'idx.seo.title': 'Akram-Mobile — Accessoires Téléphones & Ordinateurs en Algérie',
+  // ═══ Home (nuvoriastore storefront) ═══
+  'idx.seo.title': 'NuvoriaStore — Accessoires Téléphones & Ordinateurs en Algérie',
   'idx.seo.description': 'Découvrez les derniers accessoires pour téléphones et ordinateurs : écouteurs, chargeurs, claviers, coques, écrans et plus. Livraison rapide dans les 58 wilayas.',
   'idx.hero.badge': 'Livraison gratuite dès 5 000 DZD',
   'idx.hero.title1': 'Équipez-vous.',

@@ -17,7 +17,7 @@ Promise.all([
   supabase.from('settings').select('value').eq('key', 'store_favicon').maybeSingle(),
   supabase.from('settings').select('value').eq('key', 'store_logo').maybeSingle(),
 ]).then(([faviconRes, logoRes]) => {
-  const href = faviconRes.data?.value || logoRes.data?.value || '/akram-mobile-logo.jpg';
+  const href = faviconRes.data?.value || logoRes.data?.value || '/nuvoriastore-logo.jpg';
   const link = document.getElementById('dynamic-favicon') as HTMLLinkElement | null;
   if (link) {
     link.href = href;

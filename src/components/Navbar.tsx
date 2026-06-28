@@ -86,7 +86,7 @@ export default function Navbar() {
   });
 
   // Brand name is fixed across all languages
-  const displayName = 'Akram-Mobile';
+  const displayName = 'NuvoriaStore';
 
   const LANGS: { code: Language; label: string; short: string }[] = [
     { code: 'ar', label: 'العربية', short: 'AR' },
