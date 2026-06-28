@@ -24,7 +24,7 @@ export default function AboutPage() {
     },
   });
 
-  const storeName = settings?.store_name || 'akram-mobile';
+  const storeName = settings?.store_name || 'Akram-Mobile';
   const description = settings?.footer_description || t('about.heroFallbackDescription');
   const phone = settings?.footer_phone;
   const email = settings?.footer_email;

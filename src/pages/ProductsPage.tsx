@@ -213,7 +213,7 @@ export default function ProductsPage() {
   );
 
   const seoTitle = selectedCategories[0]
-    ? `${selectedCategories[0]} — akram-mobile`
+    ? `${selectedCategories[0]} — Akram-Mobile`
     : t('productsPage.seoTitle');
   const seoDesc = selectedCategories[0]
     ? t('productsPage.seoDescCategory').replace('{cat}', selectedCategories[0])

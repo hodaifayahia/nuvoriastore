@@ -86,7 +86,7 @@ export default function Navbar() {
   });
 
   // Brand name is fixed across all languages
-  const displayName = 'Akrem-mobile';
+  const displayName = 'Akram-Mobile';
 
   const LANGS: { code: Language; label: string; short: string }[] = [
     { code: 'ar', label: 'العربية', short: 'AR' },
