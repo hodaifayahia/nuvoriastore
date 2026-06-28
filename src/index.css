@@ -364,6 +364,52 @@
   background-color: hsl(var(--background));
 }
 
+/* Deep Horizon — Light variant (toggled via data-theme="light") */
+.admin-deep-horizon[data-theme="light"] {
+  --background: 222 40% 97%;
+  --foreground: 222 51% 10%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 51% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 51% 10%;
+
+  --primary: 217 100% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 217 60% 94%;
+  --secondary-foreground: 222 51% 14%;
+
+  --muted: 222 30% 95%;
+  --muted-foreground: 222 15% 42%;
+
+  --accent: 217 100% 55%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 4 78% 58%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 222 25% 88%;
+  --input: 222 25% 94%;
+  --ring: 217 100% 55%;
+
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 222 51% 10%;
+  --sidebar-primary: 217 100% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 60% 94%;
+  --sidebar-accent-foreground: 222 51% 14%;
+  --sidebar-border: 222 25% 88%;
+  --sidebar-ring: 217 100% 55%;
+}
+
+.admin-deep-horizon[data-theme="light"] .bg-card {
+  box-shadow:
+    0 1px 2px 0 hsl(222 51% 10% / 0.04),
+    0 4px 16px -8px hsl(217 100% 55% / 0.12);
+}
+
 /* Override the Cairo body default for the admin shell so headings feel Hanken */
 .admin-deep-horizon .font-cairo {
   font-family: 'Hanken Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;

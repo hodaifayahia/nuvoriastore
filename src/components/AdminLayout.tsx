@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback, useRef, ReactNode, FormEvent } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { LayoutDashboard, Package, MapPin, ShoppingCart, Tag, Settings, LogOut, Menu, X, Layers, Users, UserCheck, Bell, AlertTriangle, Clock, Palette, Search, ExternalLink, User, ChevronDown, PackageX, RotateCcw, DollarSign, Globe, Store, CreditCard, Bot, FormInput, Paintbrush, Shield, Rocket, Truck, ChevronRight, BarChart3, Award } from 'lucide-react';
+import { LayoutDashboard, Package, MapPin, ShoppingCart, Tag, Settings, LogOut, Menu, X, Layers, Users, UserCheck, Bell, AlertTriangle, Clock, Palette, Search, ExternalLink, User, ChevronDown, PackageX, RotateCcw, DollarSign, Globe, Store, CreditCard, Bot, FormInput, Paintbrush, Shield, Rocket, Truck, ChevronRight, BarChart3, Award, Sun, Moon } from 'lucide-react';
+import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
@@ -124,6 +125,7 @@ const LANG_OPTIONS: { value: Language; label: string; flag: string }[] = [
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { t, language, setLanguage, dir } = useTranslation();
   const isRtl = dir === 'rtl';
+  const { theme: adminTheme, toggle: toggleAdminTheme } = useAdminTheme();
 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -300,7 +302,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="admin-deep-horizon min-h-screen flex bg-background" dir={dir}>
+    <div className="admin-deep-horizon min-h-screen flex bg-background" dir={dir} data-theme={adminTheme}>
       {/* Sidebar — desktop persistent / mobile slide-over "More" panel */}
       <aside className={`fixed inset-y-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-out
         bg-gradient-to-b from-sidebar to-card/95 backdrop-blur-xl
@@ -470,6 +472,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               />
             </div>
           </form>
+
+          {/* Theme toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0 h-8 w-8"
+            onClick={toggleAdminTheme}
+            aria-label={adminTheme === 'dark' ? t('sidebar.lightMode') || 'Light mode' : t('sidebar.darkMode') || 'Dark mode'}
+            title={adminTheme === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            {adminTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
 
           {/* Language Switcher */}
           <Popover>
