@@ -218,6 +218,20 @@ export default function Navbar() {
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
 
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl hover:bg-muted transition-colors"
+              aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground" />
+              )}
+            </button>
+
+
             {/* Language switcher */}
             <div
               className="relative"
