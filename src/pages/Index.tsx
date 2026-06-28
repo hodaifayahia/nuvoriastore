@@ -493,6 +493,7 @@ export default function IndexPage() {
       </section>
         <Wave fill={LIGHT_BG} />
       </div>
+      )}
 
 
       {/* ────── DEALS OF THE DAY ────── */}
