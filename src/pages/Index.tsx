@@ -640,6 +640,7 @@ export default function IndexPage() {
       )}
 
       {/* ────── TESTIMONIALS ────── */}
+      {showSection('testimonials') && (
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
