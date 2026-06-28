@@ -436,3 +436,84 @@
 .admin-deep-horizon aside a[class*="bg-primary"] {
   position: relative;
 }
+
+/* === Nuvoria glass + neon utilities === */
+@layer utilities {
+  .glass-card {
+    background: hsl(var(--card) / 0.55);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
+      0 20px 60px -20px hsl(224 80% 2% / 0.6);
+  }
+  .glass-panel {
+    background: hsl(var(--card) / 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+  }
+  .neon-border {
+    position: relative;
+  }
+  .neon-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--grad-teal) / 0.9), hsl(var(--grad-violet) / 0.9));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+  }
+  .neon-border:hover::before { opacity: 1; }
+  .neon-glow {
+    box-shadow:
+      0 0 0 1px hsl(var(--grad-teal) / 0.25),
+      0 0 24px -4px hsl(var(--grad-teal) / 0.45),
+      0 0 48px -8px hsl(var(--grad-violet) / 0.35);
+  }
+  .text-gradient-neon {
+    background: linear-gradient(135deg, hsl(var(--grad-teal)), hsl(var(--grad-violet)));
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+  .btn-neon {
+    background: linear-gradient(135deg, hsl(var(--grad-teal)), hsl(var(--grad-violet)));
+    color: hsl(224 47% 6%);
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .btn-neon:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    box-shadow: 0 10px 30px -8px hsl(var(--grad-teal) / 0.55), 0 8px 24px -8px hsl(var(--grad-violet) / 0.45);
+  }
+  .aura-teal {
+    position: relative;
+  }
+  .aura-teal::after {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(closest-side, hsl(var(--grad-teal) / 0.25), transparent 70%);
+    z-index: -1;
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  .aura-violet::after {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(closest-side, hsl(var(--grad-violet) / 0.25), transparent 70%);
+    z-index: -1;
+    filter: blur(20px);
+    pointer-events: none;
+  }
+}
