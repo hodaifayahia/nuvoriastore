@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,91 +6,89 @@
 
 @layer base {
   :root {
-    /* === Akram Mobile storefront — Deep Horizon-aligned palette === */
-    --background: 222 40% 97%;            /* near-white with navy tint */
-    --foreground: 222 51% 10%;            /* deep navy text */
+    /* === Celestial Modernist — Light === */
+    --background: 0 0% 98%;                /* #f9f9f9 surface */
+    --foreground: 180 3% 11%;              /* #1a1c1c on-surface */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 51% 10%;
+    --card: 0 0% 100%;                     /* #ffffff surface-container-lowest */
+    --card-foreground: 180 3% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 51% 10%;
+    --popover-foreground: 180 3% 11%;
 
-    --primary: 217 100% 55%;              /* #1A6BFF electric blue (dashboard) */
+    --primary: 222 95% 13%;                /* #021541 Midnight Navy */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 60% 94%;             /* pale electric blue */
-    --secondary-foreground: 222 51% 14%;
+    --secondary: 220 14% 96%;              /* #f3f3f4 soft slate */
+    --secondary-foreground: 222 95% 13%;
 
-    --muted: 222 30% 95%;
-    --muted-foreground: 222 15% 42%;
+    --muted: 220 14% 94%;                  /* #eeeeee */
+    --muted-foreground: 231 7% 29%;        /* #45464f */
 
-    --accent: 217 100% 55%;
+    --accent: 222 54% 22%;                 /* #1a2b56 primary-container */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 4 78% 58%;
+    --destructive: 0 75% 42%;              /* #ba1a1a */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 25% 88%;
-    --input: 222 25% 92%;
-    --ring: 217 100% 55%;
+    --border: 220 13% 91%;                 /* #e5e7eb outline-variant */
+    --input: 220 13% 91%;
+    --ring: 222 95% 13%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 222 40% 97%;
-    --sidebar-foreground: 222 51% 10%;
-    --sidebar-primary: 217 100% 55%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 180 3% 11%;
+    --sidebar-primary: 222 95% 13%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 60% 94%;
-    --sidebar-accent-foreground: 222 51% 14%;
-    --sidebar-border: 222 25% 88%;
-    --sidebar-ring: 217 100% 55%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222 95% 13%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 222 95% 13%;
 
     --success: 152 60% 42%;
     --warning: 38 95% 55%;
-    --info: 217 100% 55%;
-
-
+    --info: 222 54% 22%;
   }
 
   .dark {
-    /* === Akram Mobile storefront — Dark mode (Deep Horizon aligned) === */
-    --background: 222 51% 7%;             /* deep navy */
-    --foreground: 210 20% 92%;
+    /* === Celestial Modernist — Dark === */
+    --background: 222 50% 6%;
+    --foreground: 220 9% 94%;
 
-    --card: 226 35% 12%;
-    --card-foreground: 210 20% 92%;
+    --card: 222 40% 10%;
+    --card-foreground: 220 9% 94%;
 
-    --popover: 226 35% 12%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 222 40% 10%;
+    --popover-foreground: 220 9% 94%;
 
-    --primary: 217 100% 60%;              /* electric blue */
-    --primary-foreground: 0 0% 100%;
+    --primary: 222 84% 85%;                /* #b5c5f9 inverse-primary */
+    --primary-foreground: 222 95% 13%;
 
-    --secondary: 226 30% 18%;
-    --secondary-foreground: 210 20% 92%;
+    --secondary: 222 30% 14%;
+    --secondary-foreground: 220 9% 94%;
 
-    --muted: 222 25% 15%;
-    --muted-foreground: 220 12% 68%;
+    --muted: 222 25% 13%;
+    --muted-foreground: 228 13% 67%;
 
-    --accent: 217 100% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 222 84% 85%;
+    --accent-foreground: 222 95% 13%;
 
-    --destructive: 4 78% 58%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 24% 22%;
-    --input: 222 30% 14%;
-    --ring: 217 100% 60%;
+    --border: 222 22% 20%;
+    --input: 222 30% 12%;
+    --ring: 222 84% 85%;
 
-    --sidebar-background: 226 35% 10%;
-    --sidebar-foreground: 210 20% 92%;
-    --sidebar-primary: 217 100% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 25% 15%;
-    --sidebar-accent-foreground: 210 20% 92%;
-    --sidebar-border: 217 24% 22%;
-    --sidebar-ring: 217 100% 60%;
+    --sidebar-background: 222 40% 8%;
+    --sidebar-foreground: 220 9% 94%;
+    --sidebar-primary: 222 84% 85%;
+    --sidebar-primary-foreground: 222 95% 13%;
+    --sidebar-accent: 222 25% 13%;
+    --sidebar-accent-foreground: 220 9% 94%;
+    --sidebar-border: 222 22% 20%;
+    --sidebar-ring: 222 84% 85%;
   }
 }
 
@@ -105,7 +103,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'DM Sans', 'Cairo', system-ui, sans-serif;
+    font-family: 'Inter', 'Cairo', system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
