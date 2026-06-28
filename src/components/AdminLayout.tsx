@@ -125,6 +125,7 @@ const LANG_OPTIONS: { value: Language; label: string; flag: string }[] = [
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { t, language, setLanguage, dir } = useTranslation();
   const isRtl = dir === 'rtl';
+  const { theme: adminTheme, toggle: toggleAdminTheme } = useAdminTheme();
 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
