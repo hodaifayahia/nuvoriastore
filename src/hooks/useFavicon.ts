@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { NUVORIA_LOGO_URL } from './useStoreLogo';
 
 export function useFavicon() {
   const { data: faviconUrl } = useQuery({
     queryKey: ['store-favicon'],
     queryFn: async () => {
       const { data } = await supabase.from('settings').select('value').eq('key', 'store_favicon').maybeSingle();
-      return data?.value || '/akram-mobile-logo.jpg';
+      return data?.value || NUVORIA_LOGO_URL;
     },
     staleTime: 10 * 60 * 1000,
   });
@@ -23,3 +24,4 @@ export function useFavicon() {
     link.href = faviconUrl;
   }, [faviconUrl]);
 }
+
