@@ -552,7 +552,7 @@ export default function IndexPage() {
       {/* ────── LIMITED EDITION (configurable) ────── */}
       {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card overflow-hidden grid md:grid-cols-2 gap-0 relative shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.3)]">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-primary/20 bg-card overflow-hidden grid md:grid-cols-2 gap-0 relative">
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-primary/25 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
             <div className="relative p-6 sm:p-10 flex flex-col justify-center">
