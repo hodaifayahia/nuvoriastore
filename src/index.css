@@ -306,129 +306,121 @@
 }
 
 /* ============================================
-   Deep Horizon — scoped admin dashboard theme
-   Applies only inside `.admin-deep-horizon`.
-   Storefront / customer pages are untouched.
+   Celestial Modernist — scoped admin dashboard
    ============================================ */
 .admin-deep-horizon {
-  /* Surfaces */
-  --background: 222 51% 8%;             /* #0A0F1E surface-deep */
-  --foreground: 200 6% 89%;             /* #e0e3e5 on-surface */
+  /* Default = Dark (navy-on-navy editorial) */
+  --background: 222 50% 6%;
+  --foreground: 220 9% 94%;
 
-  --card: 226 35% 13%;                  /* #161B2E surface-elevated */
-  --card-foreground: 200 6% 89%;
+  --card: 222 40% 10%;
+  --card-foreground: 220 9% 94%;
 
-  --popover: 222 18% 12%;               /* #1d2022 surface-container */
-  --popover-foreground: 200 6% 89%;
+  --popover: 222 40% 10%;
+  --popover-foreground: 220 9% 94%;
 
-  --primary: 217 100% 55%;              /* #1A6BFF electric blue */
-  --primary-foreground: 0 0% 100%;
+  --primary: 222 84% 85%;                /* #b5c5f9 */
+  --primary-foreground: 222 95% 13%;
 
-  --secondary: 226 28% 17%;             /* slightly lifted navy */
-  --secondary-foreground: 228 27% 81%;  /* #c2c6db */
+  --secondary: 222 30% 14%;
+  --secondary-foreground: 220 9% 94%;
 
-  --muted: 222 18% 14%;
-  --muted-foreground: 228 13% 67%;      /* #8c90a1 outline */
+  --muted: 222 25% 13%;
+  --muted-foreground: 228 13% 67%;
 
-  --accent: 217 100% 55%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 222 84% 85%;
+  --accent-foreground: 222 95% 13%;
 
-  --destructive: 4 100% 65%;            /* #ffb4ab error */
+  --destructive: 0 75% 55%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 217 24% 23%;                /* #2D3748 surface-border */
-  --input: 222 51% 8%;                  /* inset look — same as background */
-  --ring: 217 100% 55%;
+  --border: 222 22% 20%;
+  --input: 222 30% 12%;
+  --ring: 222 84% 85%;
 
   --radius: 0.5rem;
 
-  /* Sidebar */
-  --sidebar-background: 226 35% 11%;
-  --sidebar-foreground: 200 6% 89%;
-  --sidebar-primary: 217 100% 55%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 222 18% 14%;
-  --sidebar-accent-foreground: 200 6% 89%;
-  --sidebar-border: 217 24% 23%;
-  --sidebar-ring: 217 100% 55%;
+  --sidebar-background: 222 40% 8%;
+  --sidebar-foreground: 220 9% 94%;
+  --sidebar-primary: 222 84% 85%;
+  --sidebar-primary-foreground: 222 95% 13%;
+  --sidebar-accent: 222 25% 13%;
+  --sidebar-accent-foreground: 220 9% 94%;
+  --sidebar-border: 222 22% 20%;
+  --sidebar-ring: 222 84% 85%;
 
   --success: 152 60% 45%;
   --warning: 38 92% 55%;
-  --info: 217 100% 55%;
+  --info: 222 84% 85%;
 
-  /* Typography */
-  font-family: 'Hanken Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  font-family: 'Inter', 'Cairo', 'Tajawal', system-ui, sans-serif;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
 }
 
-/* Deep Horizon — Light variant (toggled via data-theme="light") */
+/* Light variant */
 .admin-deep-horizon[data-theme="light"] {
-  --background: 222 40% 97%;
-  --foreground: 222 51% 10%;
+  --background: 0 0% 98%;
+  --foreground: 180 3% 11%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 51% 10%;
+  --card-foreground: 180 3% 11%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222 51% 10%;
+  --popover-foreground: 180 3% 11%;
 
-  --primary: 217 100% 55%;
+  --primary: 222 95% 13%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 217 60% 94%;
-  --secondary-foreground: 222 51% 14%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 222 95% 13%;
 
-  --muted: 222 30% 95%;
-  --muted-foreground: 222 15% 42%;
+  --muted: 220 14% 94%;
+  --muted-foreground: 231 7% 29%;
 
-  --accent: 217 100% 55%;
+  --accent: 222 54% 22%;
   --accent-foreground: 0 0% 100%;
 
-  --destructive: 4 78% 58%;
+  --destructive: 0 75% 42%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 222 25% 88%;
-  --input: 222 25% 94%;
-  --ring: 217 100% 55%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 222 95% 13%;
 
   --sidebar-background: 0 0% 100%;
-  --sidebar-foreground: 222 51% 10%;
-  --sidebar-primary: 217 100% 55%;
+  --sidebar-foreground: 180 3% 11%;
+  --sidebar-primary: 222 95% 13%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217 60% 94%;
-  --sidebar-accent-foreground: 222 51% 14%;
-  --sidebar-border: 222 25% 88%;
-  --sidebar-ring: 217 100% 55%;
+  --sidebar-accent: 220 14% 96%;
+  --sidebar-accent-foreground: 222 95% 13%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 222 95% 13%;
 }
 
 .admin-deep-horizon[data-theme="light"] .bg-card {
   box-shadow:
-    0 1px 2px 0 hsl(222 51% 10% / 0.04),
-    0 4px 16px -8px hsl(217 100% 55% / 0.12);
+    0 1px 2px 0 hsl(222 95% 13% / 0.04),
+    0 12px 32px -16px hsl(222 95% 13% / 0.10);
 }
 
-/* Override the Cairo body default for the admin shell so headings feel Hanken */
 .admin-deep-horizon .font-cairo {
-  font-family: 'Hanken Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;
-  letter-spacing: -0.005em;
+  font-family: 'Space Grotesk', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Monospaced data / status labels (chips, IDs, prices) */
 .admin-deep-horizon .font-roboto,
 .admin-deep-horizon .price-text {
-  font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
   letter-spacing: 0.02em;
 }
 
-/* Card depth: subtle blue "sky glow" instead of dark drop shadow */
 .admin-deep-horizon .bg-card {
   box-shadow:
-    0 1px 0 0 hsl(217 100% 55% / 0.04) inset,
-    0 8px 24px -12px hsl(217 100% 55% / 0.15);
+    0 1px 0 0 hsl(0 0% 100% / 0.03) inset,
+    0 8px 24px -12px hsl(222 95% 13% / 0.45);
 }
 
-/* Inputs get an inset, glow-on-focus treatment */
 .admin-deep-horizon input,
 .admin-deep-horizon textarea,
 .admin-deep-horizon select {
@@ -437,16 +429,14 @@
 .admin-deep-horizon input:focus-visible,
 .admin-deep-horizon textarea:focus-visible,
 .admin-deep-horizon select:focus-visible {
-  box-shadow: 0 0 0 2px hsl(217 100% 55% / 0.35);
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.35);
 }
 
-/* Interactive lift for buttons & cards */
 .admin-deep-horizon .hover-lift:hover,
 .admin-deep-horizon button:not(:disabled):hover {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Active sidebar pill gets a sharp 2px leading accent bar */
 .admin-deep-horizon aside a.bg-primary,
 .admin-deep-horizon aside a[class*="bg-primary"] {
   position: relative;
