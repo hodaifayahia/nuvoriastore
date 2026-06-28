@@ -546,7 +546,56 @@ export default function IndexPage() {
         </section>
       )}
 
+      {/* ────── LIMITED EDITION (configurable) ────── */}
+      {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
+        <section className="px-3 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card overflow-hidden grid md:grid-cols-2 gap-0 relative shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.3)]">
+            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-primary/25 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
+            <div className="relative p-6 sm:p-10 flex flex-col justify-center">
+              <span className="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] font-semibold bg-primary/15 text-primary border border-primary/20 mb-4">
+                <Sparkles className="w-3.5 h-3.5" /> Limited Edition
+              </span>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl leading-tight">{hp?.limited.title}</h2>
+              {hp?.limited.subtitle && (
+                <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-md leading-relaxed">{hp.limited.subtitle}</p>
+              )}
+              {hp?.limited.end_date && (() => {
+                const diff = new Date(hp.limited.end_date).getTime() - Date.now();
+                if (diff <= 0) return null;
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                return (
+                  <div className="mt-5 inline-flex items-center gap-2 self-start rounded-2xl border border-border/60 bg-background/70 backdrop-blur px-3 py-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span className="text-[11px] text-muted-foreground">ينتهي العرض خلال</span>
+                    <span className="font-display font-bold tabular-nums text-primary">{d}د {String(h).padStart(2,'0')}س {String(m).padStart(2,'0')}د</span>
+                  </div>
+                );
+              })()}
+              <div className="mt-6">
+                <Link to={hp?.limited.link || '/products'}>
+                  <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
+                    {hp?.limited.cta || 'اطلب الآن'} <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="relative min-h-[260px] md:min-h-full">
+              {hp?.limited.image ? (
+                <img src={hp.limited.image} alt={hp.limited.title} className="absolute inset-0 w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/20" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-r md:from-card md:via-card/40 md:to-transparent from-transparent to-card/60" />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ────── BRANDS ────── */}
+      {showSection('brands') && (
       <div
         style={{ background: DARK_BG }}
         className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
