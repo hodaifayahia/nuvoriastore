@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "98103352-05b0-4572-89c5-d283933d4110",
-  "project_id": "71f70d55-4252-4b0d-801a-320ac9334653",
-  "url": "/__l5e/assets-v1/98103352-05b0-4572-89c5-d283933d4110/asus.jpg",
-  "r2_key": "a/v1/71f70d55-4252-4b0d-801a-320ac9334653/98103352-05b0-4572-89c5-d283933d4110/asus.jpg",
-  "original_filename": "asus.jpg",
-  "size": 27980,
   "content_type": "image/jpeg",
-  "created_at": "2026-06-27T21:17:00Z"
+  "created_at": "2026-06-27T21:17:00Z",
+  "original_filename": "asus.jpg",
+  "project_id": "a324f714-8287-4eed-8a2c-dd468f476a4d",
+  "r2_key": "a/v1/a324f714-8287-4eed-8a2c-dd468f476a4d/98103352-05b0-4572-89c5-d283933d4110/asus.jpg",
+  "size": 27980,
+  "url": "/__l5e/assets-v1/98103352-05b0-4572-89c5-d283933d4110/asus.jpg",
+  "version": 1
 }

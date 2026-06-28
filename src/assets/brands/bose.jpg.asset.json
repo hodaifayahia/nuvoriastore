@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "459667dd-894b-4eba-b0bf-e3aea9011690",
-  "project_id": "71f70d55-4252-4b0d-801a-320ac9334653",
-  "url": "/__l5e/assets-v1/459667dd-894b-4eba-b0bf-e3aea9011690/bose.jpg",
-  "r2_key": "a/v1/71f70d55-4252-4b0d-801a-320ac9334653/459667dd-894b-4eba-b0bf-e3aea9011690/bose.jpg",
-  "original_filename": "bose.jpg",
-  "size": 53378,
   "content_type": "image/jpeg",
-  "created_at": "2026-06-27T21:17:00Z"
+  "created_at": "2026-06-27T21:17:00Z",
+  "original_filename": "bose.jpg",
+  "project_id": "a324f714-8287-4eed-8a2c-dd468f476a4d",
+  "r2_key": "a/v1/a324f714-8287-4eed-8a2c-dd468f476a4d/459667dd-894b-4eba-b0bf-e3aea9011690/bose.jpg",
+  "size": 53378,
+  "url": "/__l5e/assets-v1/459667dd-894b-4eba-b0bf-e3aea9011690/bose.jpg",
+  "version": 1
 }

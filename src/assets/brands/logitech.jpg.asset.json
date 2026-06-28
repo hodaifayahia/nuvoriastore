@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "b0683a13-e5e3-4d3c-9cf6-68660c298391",
-  "project_id": "71f70d55-4252-4b0d-801a-320ac9334653",
-  "url": "/__l5e/assets-v1/b0683a13-e5e3-4d3c-9cf6-68660c298391/logitech.jpg",
-  "r2_key": "a/v1/71f70d55-4252-4b0d-801a-320ac9334653/b0683a13-e5e3-4d3c-9cf6-68660c298391/logitech.jpg",
-  "original_filename": "logitech.jpg",
-  "size": 29776,
   "content_type": "image/jpeg",
-  "created_at": "2026-06-27T21:17:00Z"
+  "created_at": "2026-06-27T21:17:00Z",
+  "original_filename": "logitech.jpg",
+  "project_id": "a324f714-8287-4eed-8a2c-dd468f476a4d",
+  "r2_key": "a/v1/a324f714-8287-4eed-8a2c-dd468f476a4d/b0683a13-e5e3-4d3c-9cf6-68660c298391/logitech.jpg",
+  "size": 29776,
+  "url": "/__l5e/assets-v1/b0683a13-e5e3-4d3c-9cf6-68660c298391/logitech.jpg",
+  "version": 1
 }

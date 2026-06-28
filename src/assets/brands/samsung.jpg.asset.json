@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "59f25974-221e-4357-ba2a-113bc2e737d0",
-  "project_id": "71f70d55-4252-4b0d-801a-320ac9334653",
-  "url": "/__l5e/assets-v1/59f25974-221e-4357-ba2a-113bc2e737d0/samsung.jpg",
-  "r2_key": "a/v1/71f70d55-4252-4b0d-801a-320ac9334653/59f25974-221e-4357-ba2a-113bc2e737d0/samsung.jpg",
-  "original_filename": "samsung.jpg",
-  "size": 24705,
   "content_type": "image/jpeg",
-  "created_at": "2026-06-27T21:17:00Z"
+  "created_at": "2026-06-27T21:17:00Z",
+  "original_filename": "samsung.jpg",
+  "project_id": "a324f714-8287-4eed-8a2c-dd468f476a4d",
+  "r2_key": "a/v1/a324f714-8287-4eed-8a2c-dd468f476a4d/59f25974-221e-4357-ba2a-113bc2e737d0/samsung.jpg",
+  "size": 24705,
+  "url": "/__l5e/assets-v1/59f25974-221e-4357-ba2a-113bc2e737d0/samsung.jpg",
+  "version": 1
 }
