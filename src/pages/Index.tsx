@@ -345,6 +345,7 @@ export default function IndexPage() {
       )}
 
       {/* ────── CATEGORIES BENTO ────── */}
+      {showSection('categories') && (
       <div
         style={{ background: DARK_BG }}
         className="text-white [&_h2]:!text-white [&_.text-muted-foreground]:!text-white/60 [&_.bg-card]:!bg-white/[0.04] [&_.border-border\/60]:!border-white/10"
