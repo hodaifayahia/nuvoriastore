@@ -89,7 +89,6 @@ const NAV_GROUPS = [
     groupKey: 'sidebar.management',
     items: [
       { href: '/admin/wilayas', key: 'sidebar.wilayas', icon: MapPin },
-      { href: '/admin/coupons', key: 'sidebar.coupons', icon: Tag },
       { href: '/admin/delivery', key: 'delivery.title', icon: Truck },
     ],
   },
