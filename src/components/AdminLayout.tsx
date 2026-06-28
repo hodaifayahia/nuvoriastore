@@ -473,6 +473,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             </div>
           </form>
 
+          {/* Theme toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0 h-8 w-8"
+            onClick={toggleAdminTheme}
+            aria-label={adminTheme === 'dark' ? t('sidebar.lightMode') || 'Light mode' : t('sidebar.darkMode') || 'Dark mode'}
+            title={adminTheme === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            {adminTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+
           {/* Language Switcher */}
           <Popover>
             <PopoverTrigger asChild>
