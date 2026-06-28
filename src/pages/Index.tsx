@@ -310,7 +310,7 @@ export default function IndexPage() {
               <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.accessoriesAvailable')}</p>
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
+          <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-card p-5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
