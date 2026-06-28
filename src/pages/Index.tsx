@@ -450,26 +450,20 @@ export default function IndexPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-                {(allProducts?.slice(0, 8) || []).map((p, i) => (
-                  <div
+                {(allProducts?.slice(0, 8) || []).map((p) => (
+                  <ProductCard
                     key={p.id}
-                    style={{ animationDelay: `${i * 0.05}s` }}
-                    className="animate-fade-in opacity-0 [animation-fill-mode:forwards]"
-                  >
-
-                    <ProductCard
-                      id={p.id}
-                      name={p.name}
-                      price={Number(p.price)}
-                      oldPrice={p.old_price ? Number(p.old_price) : undefined}
-                      image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
-                      images={p.images || []}
-                      mainImageIndex={p.main_image_index ?? 0}
-                      category={p.category || []}
-                      stock={p.stock ?? 0}
-                      shippingPrice={Number(p.shipping_price) || 0}
-                    />
-                  </div>
+                    id={p.id}
+                    name={p.name}
+                    price={Number(p.price)}
+                    oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                    image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
+                    images={p.images || []}
+                    mainImageIndex={p.main_image_index ?? 0}
+                    category={p.category || []}
+                    stock={p.stock ?? 0}
+                    shippingPrice={Number(p.shipping_price) || 0}
+                  />
                 ))}
               </div>
               {(allProducts?.length || 0) > 8 && (
