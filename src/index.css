@@ -6,89 +6,76 @@
 
 @layer base {
   :root {
-    /* === Celestial Modernist — Light === */
-    --background: 0 0% 98%;                /* #f9f9f9 surface */
-    --foreground: 180 3% 11%;              /* #1a1c1c on-surface */
+    /* === NuvoriaStore — Premium Dark Glass (default) === */
+    --background: 224 47% 5%;              /* deep navy-charcoal */
+    --foreground: 210 30% 96%;
 
-    --card: 0 0% 100%;                     /* #ffffff surface-container-lowest */
-    --card-foreground: 180 3% 11%;
+    --card: 224 40% 9%;                    /* glass surface base */
+    --card-foreground: 210 30% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 180 3% 11%;
+    --popover: 224 45% 8%;
+    --popover-foreground: 210 30% 96%;
 
-    --primary: 222 95% 13%;                /* #021541 Midnight Navy */
-    --primary-foreground: 0 0% 100%;
+    --primary: 180 88% 55%;                /* electric teal */
+    --primary-foreground: 224 47% 6%;
 
-    --secondary: 220 14% 96%;              /* #f3f3f4 soft slate */
-    --secondary-foreground: 222 95% 13%;
+    --secondary: 270 85% 65%;              /* electric violet */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 14% 94%;                  /* #eeeeee */
-    --muted-foreground: 231 7% 29%;        /* #45464f */
+    --muted: 224 25% 14%;
+    --muted-foreground: 220 14% 70%;
 
-    --accent: 222 54% 22%;                 /* #1a2b56 primary-container */
+    --accent: 270 85% 65%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 75% 42%;              /* #ba1a1a */
+    --destructive: 0 75% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;                 /* #e5e7eb outline-variant */
-    --input: 220 13% 91%;
-    --ring: 222 95% 13%;
+    --border: 220 20% 22%;
+    --input: 224 30% 12%;
+    --ring: 180 88% 55%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 180 3% 11%;
-    --sidebar-primary: 222 95% 13%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 222 95% 13%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 222 95% 13%;
+    --sidebar-background: 224 45% 7%;
+    --sidebar-foreground: 210 30% 96%;
+    --sidebar-primary: 180 88% 55%;
+    --sidebar-primary-foreground: 224 47% 6%;
+    --sidebar-accent: 224 30% 12%;
+    --sidebar-accent-foreground: 210 30% 96%;
+    --sidebar-border: 220 20% 22%;
+    --sidebar-ring: 180 88% 55%;
 
-    --success: 152 60% 42%;
-    --warning: 38 95% 55%;
-    --info: 222 54% 22%;
+    --success: 152 70% 50%;
+    --warning: 38 95% 60%;
+    --info: 180 88% 55%;
+
+    /* Brand gradient tokens */
+    --grad-teal: 180 88% 55%;
+    --grad-violet: 270 85% 65%;
   }
 
-  .dark {
-    /* === Celestial Modernist — Dark === */
-    --background: 222 50% 6%;
-    --foreground: 220 9% 94%;
-
-    --card: 222 40% 10%;
-    --card-foreground: 220 9% 94%;
-
-    --popover: 222 40% 10%;
-    --popover-foreground: 220 9% 94%;
-
-    --primary: 222 84% 85%;                /* #b5c5f9 inverse-primary */
-    --primary-foreground: 222 95% 13%;
-
-    --secondary: 222 30% 14%;
-    --secondary-foreground: 220 9% 94%;
-
-    --muted: 222 25% 13%;
-    --muted-foreground: 228 13% 67%;
-
-    --accent: 222 84% 85%;
-    --accent-foreground: 222 95% 13%;
-
-    --destructive: 0 75% 55%;
+  .light {
+    /* Light fallback (kept restrained — storefront defaults to dark) */
+    --background: 0 0% 98%;
+    --foreground: 224 47% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 47% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 47% 8%;
+    --primary: 180 88% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 70% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 224 20% 30%;
+    --accent: 270 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 48%;
     --destructive-foreground: 0 0% 100%;
-
-    --border: 222 22% 20%;
-    --input: 222 30% 12%;
-    --ring: 222 84% 85%;
-
-    --sidebar-background: 222 40% 8%;
-    --sidebar-foreground: 220 9% 94%;
-    --sidebar-primary: 222 84% 85%;
-    --sidebar-primary-foreground: 222 95% 13%;
-    --sidebar-accent: 222 25% 13%;
-    --sidebar-accent-foreground: 220 9% 94%;
-    --sidebar-border: 222 22% 20%;
-    --sidebar-ring: 222 84% 85%;
+    --border: 220 13% 88%;
+    --input: 220 14% 96%;
+    --ring: 180 88% 38%;
   }
 }
 
@@ -104,13 +91,21 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', 'Cairo', system-ui, sans-serif;
+    background-image:
+      radial-gradient(900px 600px at 12% -10%, hsl(var(--grad-teal) / 0.18), transparent 60%),
+      radial-gradient(900px 600px at 95% 10%, hsl(var(--grad-violet) / 0.22), transparent 60%),
+      radial-gradient(1200px 800px at 50% 110%, hsl(var(--grad-teal) / 0.12), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Space Grotesk', 'Cairo', system-ui, sans-serif;
+    font-family: 'Inter', 'Space Grotesk', 'Cairo', system-ui, sans-serif;
     letter-spacing: -0.02em;
+    font-weight: 800;
   }
 }
+
 
 @layer utilities {
   .font-roboto {
