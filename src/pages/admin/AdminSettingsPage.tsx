@@ -9,7 +9,7 @@ const SETTINGS_CARDS = [
   { href: '/admin/settings/telegram', key: 'settings.telegram', descKey: 'settings.telegramDescCard', icon: Bot },
   { href: '/admin/settings/returns', key: 'settings.returnsTab', descKey: 'settings.returnsDesc', icon: RotateCcw },
   { href: '/admin/settings/form', key: 'sidebar.form', descKey: 'settings.formDesc', icon: FormInput },
-  { href: '/admin/settings/appearance', key: 'sidebar.appearance', descKey: 'settings.appearanceDesc', icon: Paintbrush },
+  
   { href: '/admin/settings/homepage', labelOverride: 'الصفحة الرئيسية', descOverride: 'إظهار/إخفاء الأقسام، تعديل النصوص، وإضافة قسم الإصدار المحدود', icon: LayoutTemplate },
   { href: '/admin/settings/security', key: 'settings.security', descKey: 'settings.securityDesc', icon: Shield },
   { href: '/admin/settings/pixels', key: 'pixels.title', descKey: 'pixels.description', icon: Facebook },

@@ -33,7 +33,7 @@ import AdminPaymentPage from "./pages/admin/settings/AdminPaymentPage";
 import AdminTelegramPage from "./pages/admin/settings/AdminTelegramPage";
 import AdminReturnsSettingsPage from "./pages/admin/settings/AdminReturnsSettingsPage";
 import AdminFormSettingsPage from "./pages/admin/settings/AdminFormSettingsPage";
-import AdminAppearancePage from "./pages/admin/settings/AdminAppearancePage";
+
 import AdminHomepagePage from "./pages/admin/settings/AdminHomepagePage";
 import AdminSecurityPage from "./pages/admin/settings/AdminSecurityPage";
 import AdminLeadsPage from "./pages/admin/AdminLeadsPage";
@@ -152,7 +152,7 @@ const App = () => (
             <Route path="/admin/settings/telegram" element={<LanguageProvider><AdminLayout><AdminTelegramPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/returns" element={<LanguageProvider><AdminLayout><AdminReturnsSettingsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/form" element={<LanguageProvider><AdminLayout><AdminFormSettingsPage /></AdminLayout></LanguageProvider>} />
-            <Route path="/admin/settings/appearance" element={<LanguageProvider><AdminLayout><AdminAppearancePage /></AdminLayout></LanguageProvider>} />
+            
             <Route path="/admin/settings/security" element={<LanguageProvider><AdminLayout><AdminSecurityPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/pixels" element={<LanguageProvider><AdminLayout><AdminPixelsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/delivery" element={<LanguageProvider><AdminLayout><AdminDeliveryPage /></AdminLayout></LanguageProvider>} />
