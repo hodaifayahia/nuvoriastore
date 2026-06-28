@@ -89,8 +89,8 @@ export default function Footer() {
             </div>
           </div>
           {logoUrl && (
-            <div className="w-14 h-14 rounded-2xl bg-background border border-border overflow-hidden shrink-0 flex items-center justify-center">
-              <img src={logoUrl} alt={storeName} className="w-full h-full object-contain p-1" />
+            <div className="w-14 h-14 rounded-full bg-background border border-border overflow-hidden shrink-0 flex items-center justify-center">
+              <img src={logoUrl} alt={storeName} className="w-full h-full object-cover" />
             </div>
           )}
         </div>
