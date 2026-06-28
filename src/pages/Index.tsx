@@ -202,7 +202,7 @@ export default function IndexPage() {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebSite',
-          name: 'Akram-Mobile',
+          name: 'NuvoriaStore',
           url: 'https://souq-dzair-express.lovable.app/',
           potentialAction: {
             '@type': 'SearchAction',

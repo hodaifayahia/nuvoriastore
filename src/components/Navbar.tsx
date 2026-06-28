@@ -5,7 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { useStoreLogo } from '@/hooks/useStoreLogo';
+import { useStoreLogo, NUVORIA_LOGO_URL } from '@/hooks/useStoreLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useCategories } from '@/hooks/useCategories';
 import { useQuery } from '@tanstack/react-query';
@@ -86,7 +86,7 @@ export default function Navbar() {
   });
 
   // Brand name is fixed across all languages
-  const displayName = 'Akram-Mobile';
+  const displayName = 'NuvoriaStore';
 
   const LANGS: { code: Language; label: string; short: string }[] = [
     { code: 'ar', label: 'العربية', short: 'AR' },
@@ -113,22 +113,24 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50">
-      {/* Main Nav */}
-      <div className="bg-card/90 backdrop-blur-xl relative">
-        <div className="container flex items-center justify-between h-[60px]">
+    <header className="sticky top-0 z-50 px-3 pt-3">
+      {/* Floating glass nav */}
+      <div className="relative mx-auto max-w-6xl rounded-2xl border border-white/10 bg-card/40 backdrop-blur-xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.6)]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-2xl opacity-60"
+          style={{
+            background:
+              'radial-gradient(60% 100% at 0% 0%, hsl(180 90% 45% / 0.18), transparent 60%), radial-gradient(60% 100% at 100% 100%, hsl(270 90% 60% / 0.18), transparent 60%)',
+          }}
+        />
+        <div className="relative container flex items-center justify-between h-[64px]">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-            {logoUrl ? (
-              <span className="h-12 w-12 rounded-full bg-card border border-border/70 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
-                <img src={logoUrl} alt={displayName} className="h-full w-full object-cover" />
-              </span>
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
-                <span className="text-primary-foreground font-cairo font-bold text-sm">🌴</span>
-              </div>
-            )}
-            <span className="font-cairo font-bold text-lg text-foreground hidden lg:inline">{displayName}</span>
+            <span className="h-11 w-11 rounded-full bg-white/95 border border-white/20 overflow-hidden flex items-center justify-center shadow-[0_0_24px_-4px_hsl(180_90%_50%/0.5)] transition-transform group-hover:scale-105">
+              <img src={logoUrl || NUVORIA_LOGO_URL} alt={displayName} className="h-full w-full object-cover" />
+            </span>
+            <span className="font-display font-extrabold text-lg tracking-tight text-foreground hidden lg:inline uppercase">{displayName}</span>
           </Link>
 
           {/* Desktop nav */}

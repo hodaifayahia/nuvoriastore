@@ -1,15 +1,15 @@
 {
-  "name": "Akrem-mobile Admin",
-  "short_name": "Akrem Admin",
-  "description": "لوحة تحكم أكرم موبايل — إدارة المتجر والطلبات.",
+  "name": "NuvoriaStore Admin",
+  "short_name": "Nuvoria Admin",
+  "description": "NuvoriaStore admin dashboard — manage products, orders and store settings.",
   "start_url": "/akrem-control/login?source=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#1A6BFF",
-  "background_color": "#0B1220",
-  "lang": "ar",
-  "dir": "rtl",
+  "theme_color": "#0B1220",
+  "background_color": "#04060F",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/pwa-icon-192.png",
@@ -22,30 +22,24 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/akram-mobile-logo.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
-      "name": "لوحة التحكم",
-      "short_name": "الرئيسية",
+      "name": "Dashboard",
+      "short_name": "Home",
       "url": "/admin",
       "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "الطلبات",
-      "short_name": "الطلبات",
+      "name": "Orders",
+      "short_name": "Orders",
       "url": "/admin/orders",
       "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "المنتجات",
-      "short_name": "المنتجات",
+      "name": "Products",
+      "short_name": "Products",
       "url": "/admin/products",
       "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }]
     }

@@ -31,7 +31,7 @@ export default function Footer() {
     },
   });
 
-  const storeName = 'Akram-Mobile';
+  const storeName = 'NuvoriaStore';
   const description = settings?.footer_description || '';
   const phone = settings?.footer_phone;
   const email = settings?.footer_email;
