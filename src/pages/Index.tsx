@@ -753,6 +753,7 @@ export default function IndexPage() {
 
 
       {/* ────── TRUST STRIP ────── */}
+      {showSection('trust_strip') && (
       <section className="px-3 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
           {[
