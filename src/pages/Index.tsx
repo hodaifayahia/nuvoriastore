@@ -436,6 +436,7 @@ export default function IndexPage() {
       )}
 
       {/* ────── ALL PRODUCTS ────── */}
+      {showSection('newest') && (
       <div
         style={{ background: DARK_BG }}
         className="text-white [&_h2]:!text-white"
