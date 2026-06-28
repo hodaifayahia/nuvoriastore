@@ -302,7 +302,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="admin-deep-horizon min-h-screen flex bg-background" dir={dir}>
+    <div className="admin-deep-horizon min-h-screen flex bg-background" dir={dir} data-theme={adminTheme}>
       {/* Sidebar — desktop persistent / mobile slide-over "More" panel */}
       <aside className={`fixed inset-y-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-out
         bg-gradient-to-b from-sidebar to-card/95 backdrop-blur-xl
