@@ -754,21 +754,21 @@ export default function IndexPage() {
 
       {/* ────── TRUST STRIP ────── */}
       {showSection('trust_strip') && (
-      <section className="px-3 sm:px-6 lg:px-8 pb-20">
-        <div className="max-w-7xl mx-auto rounded-3xl border border-border/60 bg-gradient-to-br from-card via-secondary/30 to-card p-6 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="px-3 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto rounded-3xl border border-border bg-card p-5 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { icon: Truck,      label: t('idx.trust.delivery'),  desc: t('idx.trust.deliveryDesc') },
             { icon: Shield,     label: t('idx.trust.returns'),   desc: t('idx.trust.returnsDesc') },
             { icon: BadgeCheck, label: t('idx.trust.original'),  desc: t('idx.trust.originalDesc') },
             { icon: Headphones, label: t('idx.trust.support'),   desc: t('idx.trust.supportDesc') },
           ].map(item => (
-            <div key={item.label} className="flex items-start gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0">
+            <div key={item.label} className="flex items-center gap-3 p-3 rounded-2xl hover:bg-secondary/40 transition-colors">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
                 <item.icon className="w-5 h-5 text-primary" />
               </div>
-              <div>
-                <p className="font-display font-semibold">{item.label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+              <div className="min-w-0">
+                <p className="font-display font-semibold text-sm leading-tight">{item.label}</p>
+                <p className="text-xs text-muted-foreground mt-1 leading-tight">{item.desc}</p>
               </div>
             </div>
           ))}
