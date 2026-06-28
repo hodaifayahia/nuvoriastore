@@ -66,6 +66,7 @@ export default function Navbar() {
   const { user, loading } = useAuth();
   const { language, setLanguage, t } = useTranslation();
   const { data: categoriesData } = useCategories();
+  const { theme, toggle: toggleTheme } = useTheme();
   const categories = useMemo(
     () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
     [categoriesData],
