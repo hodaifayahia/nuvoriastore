@@ -95,8 +95,8 @@ export default function IndexPage() {
 
   const { data: hp } = useHomepageSettings();
   const showSection = (s: 'hero'|'categories'|'trending'|'newest'|'deals'|'limited'|'brands'|'testimonials'|'trusted'|'trust_strip') => hp?.show?.[s] ?? (s !== 'limited');
-  const sectionTitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.title?.[s] || def;
-  const sectionSubtitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.subtitle?.[s] || def;
+  // Per-field text override with translation fallback
+  const txt = (key: string, fallback: string) => hp?.text?.[key] || fallback;
 
   const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
   const trendingProducts = useMemo(
