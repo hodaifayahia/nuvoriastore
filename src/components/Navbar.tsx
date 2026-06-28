@@ -11,6 +11,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import SmartSearch from '@/components/SmartSearch';
+import { useTheme } from '@/hooks/useTheme';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Shirt,
