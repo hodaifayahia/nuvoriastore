@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, type LucideIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, Sun, Moon, type LucideIcon } from 'lucide-react';
 import { useTranslation, type Language } from '@/i18n';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -11,6 +11,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import SmartSearch from '@/components/SmartSearch';
+import { useTheme } from '@/hooks/useTheme';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Shirt,
@@ -65,6 +66,7 @@ export default function Navbar() {
   const { user, loading } = useAuth();
   const { language, setLanguage, t } = useTranslation();
   const { data: categoriesData } = useCategories();
+  const { theme, toggle: toggleTheme } = useTheme();
   const categories = useMemo(
     () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
     [categoriesData],
@@ -215,6 +217,20 @@ export default function Navbar() {
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl hover:bg-muted transition-colors"
+              aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground" />
+              )}
+            </button>
+
 
             {/* Language switcher */}
             <div

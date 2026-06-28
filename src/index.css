@@ -54,42 +54,43 @@
   }
 
   .dark {
-    --background: 30 30% 6%;
-    --foreground: 35 30% 93%;
+    /* === Akram Mobile storefront — Dark mode (Deep Horizon aligned) === */
+    --background: 222 51% 7%;             /* deep navy */
+    --foreground: 210 20% 92%;
 
-    --card: 30 25% 10%;
-    --card-foreground: 35 30% 93%;
+    --card: 226 35% 12%;
+    --card-foreground: 210 20% 92%;
 
-    --popover: 30 25% 10%;
-    --popover-foreground: 35 30% 93%;
+    --popover: 226 35% 12%;
+    --popover-foreground: 210 20% 92%;
 
-    --primary: 25 95% 45%;
+    --primary: 217 100% 60%;              /* electric blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 96% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 226 30% 18%;
+    --secondary-foreground: 210 20% 92%;
 
-    --muted: 30 15% 18%;
-    --muted-foreground: 30 15% 55%;
+    --muted: 222 25% 15%;
+    --muted-foreground: 220 12% 68%;
 
-    --accent: 160 84% 30%;
-    --accent-foreground: 160 84% 80%;
+    --accent: 217 100% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 4 78% 50%;
+    --destructive: 4 78% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 20%;
-    --input: 30 15% 20%;
-    --ring: 25 95% 45%;
+    --border: 217 24% 22%;
+    --input: 222 30% 14%;
+    --ring: 217 100% 60%;
 
-    --sidebar-background: 30 30% 6%;
-    --sidebar-foreground: 35 30% 93%;
-    --sidebar-primary: 25 95% 45%;
+    --sidebar-background: 226 35% 10%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 217 100% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 20% 15%;
-    --sidebar-accent-foreground: 25 95% 70%;
-    --sidebar-border: 30 15% 20%;
-    --sidebar-ring: 25 95% 45%;
+    --sidebar-accent: 222 25% 15%;
+    --sidebar-accent-foreground: 210 20% 92%;
+    --sidebar-border: 217 24% 22%;
+    --sidebar-ring: 217 100% 60%;
   }
 }
 
