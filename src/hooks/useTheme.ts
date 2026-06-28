@@ -6,18 +6,19 @@ const STORAGE_KEY = 'akrem-theme';
 const listeners = new Set<(t: Theme) => void>();
 
 function getInitial(): Theme {
-  if (typeof window === 'undefined') return 'light';
+  if (typeof window === 'undefined') return 'dark';
   const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
   if (stored === 'light' || stored === 'dark') return stored;
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'dark';
 }
 
 function apply(theme: Theme) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  if (theme === 'dark') root.classList.add('dark');
-  else root.classList.remove('dark');
+  root.classList.toggle('light', theme === 'light');
+  root.classList.toggle('dark', theme === 'dark');
 }
+
 
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => {
