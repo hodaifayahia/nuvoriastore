@@ -1,0 +1,265 @@
+import { useEffect, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Save, Eye, EyeOff, Sparkles, Upload, Trash2 } from 'lucide-react';
+import { HP_SECTIONS, HP_TITLE_SECTIONS, type HpSection } from '@/hooks/useHomepageSettings';
+
+const SECTION_LABEL_AR: Record<HpSection, string> = {
+  hero: 'القسم الرئيسي (Hero)',
+  categories: 'الفئات',
+  trending: 'المنتجات الرائجة',
+  newest: 'جديد في المتجر',
+  deals: 'تخفيضات لفترة محدودة',
+  limited: 'إصدار محدود (Limited Edition)',
+  brands: 'العلامات التجارية',
+  testimonials: 'آراء العملاء',
+  trusted: 'تقنيتك الموثوقة في الجزائر',
+  trust_strip: 'شريط الضمانات',
+};
+
+const HP_KEYS = [
+  ...HP_SECTIONS.map(s => `hp_show_${s}`),
+  ...HP_TITLE_SECTIONS.map(s => `hp_title_${s}`),
+  ...HP_TITLE_SECTIONS.map(s => `hp_subtitle_${s}`),
+  'hp_limited_title',
+  'hp_limited_subtitle',
+  'hp_limited_image',
+  'hp_limited_link',
+  'hp_limited_cta',
+  'hp_limited_end_date',
+];
+
+export default function AdminHomepagePage() {
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const [form, setForm] = useState<Record<string, string>>({});
+  const [uploading, setUploading] = useState(false);
+
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ['admin-hp-settings'],
+    queryFn: async () => {
+      const { data } = await supabase.from('settings').select('key,value').in('key', HP_KEYS);
+      const map: Record<string, string> = {};
+      data?.forEach(r => { map[r.key] = r.value || ''; });
+      return map;
+    },
+  });
+
+  useEffect(() => { setForm({}); }, [settings]);
+
+  const merged = { ...(settings || {}), ...form };
+  const setField = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+
+  const getShow = (s: HpSection) => {
+    const v = merged[`hp_show_${s}`];
+    return v === '' || v === undefined ? s !== 'limited' : v !== 'false';
+  };
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const entries = Object.entries(form);
+      for (const [key, value] of entries) {
+        const { data } = await supabase.from('settings').update({ value }).eq('key', key).select();
+        if (!data || data.length === 0) {
+          await supabase.from('settings').insert({ key, value });
+        }
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-hp-settings'] });
+      qc.invalidateQueries({ queryKey: ['homepage-settings'] });
+      toast({ title: 'تم حفظ إعدادات الصفحة الرئيسية ✅' });
+      setForm({});
+    },
+    onError: () => toast({ title: 'فشل الحفظ', variant: 'destructive' }),
+  });
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'الحد الأقصى 2MB', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `hp-limited-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('store').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from('store').getPublicUrl(path);
+      setField('hp_limited_image', data.publicUrl);
+    } catch {
+      toast({ title: 'فشل رفع الصورة', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (isLoading) return null;
+
+  const hasChanges = Object.keys(form).length > 0;
+
+  return (
+    <div className="space-y-6 max-w-4xl p-4 md:p-6" dir="rtl">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="font-cairo font-bold text-2xl">إعدادات الصفحة الرئيسية</h1>
+          <p className="font-cairo text-sm text-muted-foreground mt-1">تحكّم في إظهار/إخفاء الأقسام وتعديل نصوصها</p>
+        </div>
+        <Button onClick={() => save.mutate()} disabled={save.isPending || !hasChanges} className="font-cairo gap-2">
+          <Save className="w-4 h-4" />
+          {save.isPending ? 'جاري الحفظ...' : 'حفظ'}
+        </Button>
+      </div>
+
+      {/* Section visibility + titles */}
+      <div className="bg-card border rounded-2xl p-5 space-y-5">
+        <h2 className="font-cairo font-bold text-lg">الأقسام</h2>
+        <div className="space-y-4">
+          {HP_SECTIONS.map(s => {
+            const visible = getShow(s);
+            const hasTextFields = HP_TITLE_SECTIONS.includes(s);
+            return (
+              <div key={s} className="border rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    {visible ? <Eye className="w-4 h-4 text-primary" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}
+                    <span className="font-cairo font-semibold">{SECTION_LABEL_AR[s]}</span>
+                  </div>
+                  <Switch
+                    checked={visible}
+                    onCheckedChange={v => setField(`hp_show_${s}`, v ? 'true' : 'false')}
+                  />
+                </div>
+                {hasTextFields && visible && (
+                  <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <Label className="font-cairo text-xs text-muted-foreground">العنوان (اختياري)</Label>
+                      <Input
+                        className="font-cairo mt-1"
+                        placeholder="اتركه فارغًا لاستخدام الافتراضي"
+                        value={merged[`hp_title_${s}`] || ''}
+                        onChange={e => setField(`hp_title_${s}`, e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="font-cairo text-xs text-muted-foreground">الوصف/السطر الفرعي</Label>
+                      <Input
+                        className="font-cairo mt-1"
+                        placeholder="اتركه فارغًا لاستخدام الافتراضي"
+                        value={merged[`hp_subtitle_${s}`] || ''}
+                        onChange={e => setField(`hp_subtitle_${s}`, e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Limited Edition config */}
+      <div className="bg-card border rounded-2xl p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-primary" />
+          <h2 className="font-cairo font-bold text-lg">قسم الإصدار المحدود</h2>
+        </div>
+        <p className="font-cairo text-sm text-muted-foreground">
+          قسم ترويجي بارز يظهر بين «التخفيضات» و«العلامات». فعّله من الأعلى لإظهاره في الصفحة الرئيسية.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <Label className="font-cairo text-xs">العنوان</Label>
+            <Input
+              className="font-cairo mt-1"
+              placeholder="مثال: إصدار محدود — لا يفوّت"
+              value={merged.hp_limited_title || ''}
+              onChange={e => setField('hp_limited_title', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label className="font-cairo text-xs">الوصف</Label>
+            <Input
+              className="font-cairo mt-1"
+              placeholder="وصف قصير يجذب الانتباه"
+              value={merged.hp_limited_subtitle || ''}
+              onChange={e => setField('hp_limited_subtitle', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label className="font-cairo text-xs">نص الزر</Label>
+            <Input
+              className="font-cairo mt-1"
+              placeholder="اطلب الآن"
+              value={merged.hp_limited_cta || ''}
+              onChange={e => setField('hp_limited_cta', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label className="font-cairo text-xs">رابط الزر</Label>
+            <Input
+              className="font-cairo mt-1"
+              placeholder="/products"
+              value={merged.hp_limited_link || ''}
+              onChange={e => setField('hp_limited_link', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label className="font-cairo text-xs">تاريخ انتهاء العرض (اختياري)</Label>
+            <Input
+              type="datetime-local"
+              className="font-cairo mt-1"
+              value={merged.hp_limited_end_date || ''}
+              onChange={e => setField('hp_limited_end_date', e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label className="font-cairo text-xs">صورة القسم</Label>
+          <div className="mt-2 flex items-start gap-3">
+            {merged.hp_limited_image ? (
+              <div className="relative group">
+                <img src={merged.hp_limited_image} alt="" className="w-32 h-32 object-cover rounded-xl border" />
+                <button
+                  onClick={() => setField('hp_limited_image', '')}
+                  className="absolute top-1 left-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <div className="w-32 h-32 rounded-xl border border-dashed flex items-center justify-center text-muted-foreground text-xs font-cairo">
+                لا توجد صورة
+              </div>
+            )}
+            <label className="cursor-pointer">
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              <Button asChild variant="outline" className="font-cairo gap-2" disabled={uploading}>
+                <span>
+                  <Upload className="w-4 h-4" />
+                  {uploading ? 'جاري الرفع...' : 'رفع صورة'}
+                </span>
+              </Button>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <Button onClick={() => save.mutate()} disabled={save.isPending || !hasChanges} className="font-cairo gap-2">
+          <Save className="w-4 h-4" />
+          {save.isPending ? 'جاري الحفظ...' : 'حفظ التغييرات'}
+        </Button>
+      </div>
+    </div>
+  );
+}
