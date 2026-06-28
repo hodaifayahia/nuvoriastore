@@ -92,7 +92,11 @@ export default function IndexPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
+  const { data: hp } = useHomepageSettings();
+  const showSection = (s: 'hero'|'categories'|'trending'|'newest'|'deals'|'limited'|'brands'|'testimonials'|'trusted'|'trust_strip') => hp?.show?.[s] ?? (s !== 'limited');
+  const sectionTitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.title?.[s] || def;
+  const sectionSubtitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.subtitle?.[s] || def;
+
   const trendingProducts = useMemo(
     () => [...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4),
     [allProducts],
