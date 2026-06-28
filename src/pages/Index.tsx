@@ -169,9 +169,11 @@ export default function IndexPage() {
     return fromDb.length > 0 ? fromDb : DEFAULT_CATEGORIES.map(c => ({ ...c, image: undefined }));
   }, [categoriesData]);
 
-  // Section background tones — alternating light & dark
-  const LIGHT_BG = '#EAF4FF';
-  const DARK_BG = '#0B3B6F';
+  // Section background tones — theme-aware
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const LIGHT_BG = isDark ? '#0B1220' : '#EAF4FF';   // page base
+  const DARK_BG  = isDark ? '#111A2E' : '#0B3B6F';   // alternating band
 
 
   // Wavy SVG divider — fill should match the NEXT section's background
