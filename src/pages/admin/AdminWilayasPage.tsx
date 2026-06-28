@@ -1,16 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, BarChart3, Upload, Loader2, Search, MapPin, CheckCircle, DollarSign } from 'lucide-react';
-import { formatPrice } from '@/lib/format';
+import {
+  Search, MapPin, Building2, Package, Truck, Save, ChevronLeft, Upload, Loader2,
+} from 'lucide-react';
 import { ALGERIA_WILAYAS } from '@/data/algeria-wilayas';
 import { useTranslation } from '@/i18n';
 
@@ -18,16 +15,14 @@ export default function AdminWilayasPage() {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const { toast } = useToast();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<any>(null);
-  const [form, setForm] = useState({ name: '', shipping_price: '', shipping_price_home: '', is_active: true });
 
-  // Stats dialog
-  const [statsWilaya, setStatsWilaya] = useState<any>(null);
-  const [statsOpen, setStatsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [wilayaSearch, setWilayaSearch] = useState('');
+  const [baladiyaSearch, setBaladiyaSearch] = useState('');
+  const [priceOffice, setPriceOffice] = useState('');
+  const [priceHome, setPriceHome] = useState('');
 
-  const { data: wilayas } = useQuery({
+  const { data: wilayas = [] } = useQuery({
     queryKey: ['admin-wilayas'],
     queryFn: async () => {
       const { data } = await supabase.from('wilayas').select('*').order('name');
@@ -35,224 +30,274 @@ export default function AdminWilayasPage() {
     },
   });
 
-  const { data: statsOrders, isLoading: statsLoading } = useQuery({
-    queryKey: ['wilaya-stats', statsWilaya?.id],
+  const { data: baladiyat = [] } = useQuery({
+    queryKey: ['admin-baladiyat'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('orders')
-        .select('id, status, total_amount')
-        .eq('wilaya_id', statsWilaya.id);
+      const { data } = await supabase.from('baladiyat').select('*').order('name');
       return data || [];
     },
-    enabled: !!statsWilaya?.id,
   });
 
-  const statsData = statsOrders ? (() => {
-    const totalOrders = statsOrders.length;
-    const totalRevenue = statsOrders.reduce((s, o) => s + (Number(o.total_amount) || 0), 0);
-    const byStatus: Record<string, number> = {};
-    statsOrders.forEach(o => {
-      const st = o.status || 'غير محدد';
-      byStatus[st] = (byStatus[st] || 0) + 1;
+  // Auto-select first wilaya
+  useEffect(() => {
+    if (!selectedId && wilayas.length > 0) setSelectedId(wilayas[0].id);
+  }, [wilayas, selectedId]);
+
+  const selected = useMemo(() => wilayas.find(w => w.id === selectedId), [wilayas, selectedId]);
+
+  useEffect(() => {
+    if (selected) {
+      setPriceOffice(String(selected.shipping_price ?? ''));
+      setPriceHome(String(selected.shipping_price_home ?? ''));
+    }
+  }, [selected]);
+
+  // Counts per wilaya
+  const baladiyatByWilaya = useMemo(() => {
+    const map = new Map<string, { total: number; office: number }>();
+    baladiyat.forEach((b: any) => {
+      const cur = map.get(b.wilaya_id) || { total: 0, office: 0 };
+      cur.total += 1;
+      if (b.is_active) cur.office += 1;
+      map.set(b.wilaya_id, cur);
     });
-    return { totalOrders, totalRevenue, byStatus };
-  })() : null;
+    return map;
+  }, [baladiyat]);
 
-  const saveMutation = useMutation({
+  const totalBaladiyat = baladiyat.length;
+  const totalOffice = baladiyat.filter((b: any) => b.is_active).length;
+  const activeWilayas = wilayas.filter(w => w.is_active).length;
+
+  const filteredWilayas = wilayas.filter(w =>
+    !wilayaSearch || w.name.toLowerCase().includes(wilayaSearch.toLowerCase())
+  );
+  const selectedBaladiyat = baladiyat
+    .filter((b: any) => b.wilaya_id === selectedId)
+    .filter((b: any) => !baladiyaSearch || b.name.toLowerCase().includes(baladiyaSearch.toLowerCase()));
+
+  const savePrices = useMutation({
     mutationFn: async () => {
-      const payload = { name: form.name, shipping_price: Number(form.shipping_price), shipping_price_home: Number(form.shipping_price_home), is_active: form.is_active };
-      if (editing) {
-        await supabase.from('wilayas').update(payload).eq('id', editing.id);
-      } else {
-        await supabase.from('wilayas').insert(payload);
-      }
+      if (!selected) return;
+      await supabase.from('wilayas').update({
+        shipping_price: Number(priceOffice) || 0,
+        shipping_price_home: Number(priceHome) || 0,
+      }).eq('id', selected.id);
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-wilayas'] }); setDialogOpen(false); toast({ title: t('common.savedSuccess') }); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      toast({ title: t('common.savedSuccess') });
+    },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => { await supabase.from('wilayas').delete().eq('id', id); },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-wilayas'] }); toast({ title: t('common.deletedSuccess') }); },
+  const toggleBaladiya = useMutation({
+    mutationFn: async ({ id, val }: { id: string; val: boolean }) => {
+      await supabase.from('baladiyat').update({ is_active: val }).eq('id', id);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-baladiyat'] }),
   });
 
-  const bulkImportMutation = useMutation({
+  const bulkImport = useMutation({
     mutationFn: async () => {
       for (const w of ALGERIA_WILAYAS) {
-        // Check if wilaya already exists
         const { data: existing } = await supabase.from('wilayas').select('id').eq('name', w.name).maybeSingle();
         let wilayaId: string;
-        if (existing) {
-          wilayaId = existing.id;
-        } else {
-          const { data: inserted, error } = await supabase.from('wilayas').insert({ name: w.name, shipping_price: 0, shipping_price_home: 0, is_active: true }).select('id').single();
-          if (error || !inserted) continue;
-          wilayaId = inserted.id;
+        if (existing) wilayaId = existing.id;
+        else {
+          const { data: ins } = await supabase.from('wilayas').insert({ name: w.name, shipping_price: 0, shipping_price_home: 0, is_active: true }).select('id').single();
+          if (!ins) continue;
+          wilayaId = ins.id;
         }
-        // Insert baladiyat (skip duplicates)
         for (const b of w.baladiyat) {
-          const { data: bExists } = await supabase.from('baladiyat').select('id').eq('name', b).eq('wilaya_id', wilayaId).maybeSingle();
-          if (!bExists) {
-            await supabase.from('baladiyat').insert({ name: b, wilaya_id: wilayaId, is_active: true });
-          }
+          const { data: bE } = await supabase.from('baladiyat').select('id').eq('name', b).eq('wilaya_id', wilayaId).maybeSingle();
+          if (!bE) await supabase.from('baladiyat').insert({ name: b, wilaya_id: wilayaId, is_active: true });
         }
       }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
       toast({ title: t('wilayas.imported').replace('{n}', String(ALGERIA_WILAYAS.length)) });
     },
-    onError: () => toast({ title: t('wilayas.importError'), variant: 'destructive' }),
   });
 
+  // Find wilaya index in original list (01..58)
+  const wilayaIndex = (id: string) => {
+    const i = wilayas.findIndex(w => w.id === id);
+    return String(i + 1).padStart(2, '0');
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap justify-between items-center gap-2">
-        <h2 className="font-cairo font-bold text-xl">{t('wilayas.title')} ({wilayas?.length || 0})</h2>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => { if (confirm(t('wilayas.importConfirm'))) bulkImportMutation.mutate(); }} disabled={bulkImportMutation.isPending} className="font-cairo gap-1" size="sm">
-            {bulkImportMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            {t('wilayas.importAll')} ({ALGERIA_WILAYAS.length})
-          </Button>
-          <Button onClick={() => { setEditing(null); setForm({ name: '', shipping_price: '', shipping_price_home: '', is_active: true }); setDialogOpen(true); }} className="font-cairo gap-1" size="sm"><Plus className="w-4 h-4" /> {t('wilayas.addWilaya')}</Button>
+    <div className="space-y-5" dir="rtl">
+      {/* Header */}
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="font-cairo font-bold text-3xl">مناطق التوصيل</h1>
+          <p className="font-cairo text-sm text-muted-foreground mt-1">إدارة أسعار التوصيل</p>
         </div>
+        <Button variant="outline" size="sm" onClick={() => bulkImport.mutate()} disabled={bulkImport.isPending} className="font-cairo gap-1">
+          {bulkImport.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+          استيراد الكل ({ALGERIA_WILAYAS.length})
+        </Button>
       </div>
 
-      {/* KPI Cards */}
-      {(() => {
-        const total = wilayas?.length ?? 0;
-        const active = wilayas?.filter(w => w.is_active).length ?? 0;
-        const avgOffice = total > 0 ? (wilayas ?? []).reduce((s, w) => s + Number(w.shipping_price), 0) / total : 0;
-        const avgHome = total > 0 ? (wilayas ?? []).reduce((s, w) => s + Number(w.shipping_price_home), 0) / total : 0;
-        return (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Card><CardContent className="p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><MapPin className="w-5 h-5 text-primary" /></div>
-              <div><p className="font-cairo text-xs text-muted-foreground">{t('wilayas.totalWilayas')}</p><p className="font-roboto font-bold text-xl">{total}</p></div>
-            </CardContent></Card>
-            <Card><CardContent className="p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0"><CheckCircle className="w-5 h-5 text-green-600" /></div>
-              <div><p className="font-cairo text-xs text-muted-foreground">{t('wilayas.activeWilayas')}</p><p className="font-roboto font-bold text-xl">{active}</p></div>
-            </CardContent></Card>
-            <Card><CardContent className="p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0"><DollarSign className="w-5 h-5 text-blue-600" /></div>
-              <div><p className="font-cairo text-xs text-muted-foreground">{t('wilayas.avgOfficePrice')}</p><p className="font-roboto font-bold text-xl">{formatPrice(Math.round(avgOffice))}</p></div>
-            </CardContent></Card>
-            <Card><CardContent className="p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0"><DollarSign className="w-5 h-5 text-purple-600" /></div>
-              <div><p className="font-cairo text-xs text-muted-foreground">{t('wilayas.avgHomePrice')}</p><p className="font-roboto font-bold text-xl">{formatPrice(Math.round(avgHome))}</p></div>
-            </CardContent></Card>
+      {/* KPI cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCard label="نشطة" value={activeWilayas} icon={<Truck className="w-5 h-5" />} color="bg-orange-100 text-orange-600" />
+        <KpiCard label="بمكتب" value={totalOffice} icon={<Package className="w-5 h-5" />} color="bg-violet-100 text-violet-600" />
+        <KpiCard label="بلدية" value={totalBaladiyat} icon={<Building2 className="w-5 h-5" />} color="bg-emerald-100 text-emerald-600" />
+        <KpiCard label="ولاية" value={wilayas.length} icon={<MapPin className="w-5 h-5" />} color="bg-blue-100 text-blue-600" />
+      </div>
+
+      {/* 3-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Wilayas column (right) */}
+        <div className="bg-card border rounded-2xl p-4 order-1">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-cairo font-bold text-lg">الولايات</h3>
+            <MapPin className="w-5 h-5 text-muted-foreground" />
           </div>
-        );
-      })()}
-
-      {/* Search */}
-      <div className="relative max-w-sm">
-        <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder={t('wilayas.searchWilayas')} className="ps-9 font-cairo" />
-      </div>
-      {/* Desktop Table */}
-      <div className="hidden md:block bg-card border rounded-lg overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-muted">
-            <tr>
-              <th className="p-3 text-right font-cairo">{t('wilayas.wilayaName')}</th>
-              <th className="p-3 text-right font-cairo">{t('wilayas.officeDelivery')}</th>
-              <th className="p-3 text-right font-cairo">{t('wilayas.homeDelivery')}</th>
-              <th className="p-3 text-right font-cairo">{t('common.status')}</th>
-              <th className="p-3 text-right font-cairo">{t('common.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(wilayas ?? []).filter(w => !searchQuery || w.name.toLowerCase().includes(searchQuery.toLowerCase())).map(w => (
-              <tr key={w.id} className="border-b hover:bg-muted/50 cursor-pointer" onClick={() => { setStatsWilaya(w); setStatsOpen(true); }}>
-                <td className="p-3 font-cairo">{w.name}</td>
-                <td className="p-3 font-roboto">{formatPrice(Number(w.shipping_price))}</td>
-                <td className="p-3 font-roboto">{formatPrice(Number(w.shipping_price_home))}</td>
-                <td className="p-3"><span className={`text-xs px-2 py-1 rounded-full font-cairo ${w.is_active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>{w.is_active ? t('common.active') : t('common.inactive')}</span></td>
-                <td className="p-3">
-                  <div className="flex gap-1" onClick={e => e.stopPropagation()}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setStatsWilaya(w); setStatsOpen(true); }}><BarChart3 className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(w); setForm({ name: w.name, shipping_price: String(w.shipping_price), shipping_price_home: String(w.shipping_price_home), is_active: w.is_active ?? true }); setDialogOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => { if (confirm(t('common.delete') + '?')) deleteMutation.mutate(w.id); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+          <div className="relative mb-3">
+            <Search className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input value={wilayaSearch} onChange={e => setWilayaSearch(e.target.value)} placeholder="بحث..." className="pe-9 font-cairo" />
+          </div>
+          <div className="space-y-1.5 max-h-[520px] overflow-y-auto pe-1">
+            {filteredWilayas.map((w) => {
+              const isActive = w.id === selectedId;
+              const counts = baladiyatByWilaya.get(w.id) || { total: 0, office: 0 };
+              const idx = wilayaIndex(w.id);
+              return (
+                <button
+                  key={w.id}
+                  onClick={() => setSelectedId(w.id)}
+                  className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl transition text-right ${
+                    isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 text-xs">
+                    <ChevronLeft className={`w-4 h-4 ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`} />
+                    <span className={`font-roboto ${isActive ? 'text-primary-foreground/90' : 'text-foreground'}`}>{counts.total}</span>
+                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-roboto font-bold ${
+                      isActive ? 'bg-primary-foreground text-primary' : 'bg-amber-100 text-amber-700'
+                    }`}>{counts.office}</span>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile Cards */}
-      <div className="md:hidden space-y-3">
-        {(wilayas ?? []).filter(w => !searchQuery || w.name.toLowerCase().includes(searchQuery.toLowerCase())).map(w => (
-          <div key={w.id} className="bg-card border rounded-xl p-4 space-y-2" onClick={() => { setStatsWilaya(w); setStatsOpen(true); }}>
-            <div className="flex items-center justify-between">
-              <span className="font-cairo font-medium text-sm">{w.name}</span>
-              <span className={`text-xs px-2 py-0.5 rounded-full font-cairo ${w.is_active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>{w.is_active ? t('common.active') : t('common.inactive')}</span>
-            </div>
-            <div className="grid grid-cols-2 gap-1 text-xs font-cairo text-muted-foreground">
-              <div>مكتب: <span className="font-roboto font-bold text-foreground">{formatPrice(Number(w.shipping_price))}</span></div>
-              <div>منزل: <span className="font-roboto font-bold text-foreground">{formatPrice(Number(w.shipping_price_home))}</span></div>
-            </div>
-            <div className="flex justify-end gap-1 pt-2 border-t" onClick={e => e.stopPropagation()}>
-              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => { setStatsWilaya(w); setStatsOpen(true); }}><BarChart3 className="w-3.5 h-3.5" /></Button>
-              <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => { setEditing(w); setForm({ name: w.name, shipping_price: String(w.shipping_price), shipping_price_home: String(w.shipping_price_home), is_active: w.is_active ?? true }); setDialogOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>
-              <Button variant="outline" size="icon" className="h-8 w-8 text-destructive" onClick={() => { if (confirm(t('common.delete') + '?')) deleteMutation.mutate(w.id); }}><Trash2 className="w-3.5 h-3.5" /></Button>
-            </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`font-cairo font-semibold text-sm ${isActive ? '' : ''}`}>{w.name}</span>
+                    <span className={`font-roboto text-xs ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{idx}</span>
+                  </div>
+                </button>
+              );
+            })}
+            {filteredWilayas.length === 0 && (
+              <p className="text-center text-sm text-muted-foreground font-cairo py-6">لا توجد نتائج</p>
+            )}
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Edit/Add Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader><DialogTitle className="font-cairo">{editing ? t('wilayas.editWilaya') : t('wilayas.addWilaya')}</DialogTitle></DialogHeader>
-          <div className="space-y-3">
-            <div><Label className="font-cairo">{t('wilayas.wilayaName')}</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="font-cairo mt-1" /></div>
-            <div><Label className="font-cairo">{t('wilayas.officePrice')}</Label><Input type="number" value={form.shipping_price} onChange={e => setForm(f => ({ ...f, shipping_price: e.target.value }))} className="font-roboto mt-1" /></div>
-            <div><Label className="font-cairo">{t('wilayas.homePrice')}</Label><Input type="number" value={form.shipping_price_home} onChange={e => setForm(f => ({ ...f, shipping_price_home: e.target.value }))} className="font-roboto mt-1" /></div>
-            <div className="flex items-center gap-2"><Switch checked={form.is_active} onCheckedChange={v => setForm(f => ({ ...f, is_active: v }))} /><Label className="font-cairo">{t('common.active')}</Label></div>
-            <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="w-full font-cairo font-semibold">{t('common.save')}</Button>
+        {/* Prices column (middle) */}
+        <div className="bg-card border rounded-2xl p-4 order-2">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-cairo font-bold text-lg">الأسعار</h3>
+            <span className="text-muted-foreground">$</span>
           </div>
-        </DialogContent>
-      </Dialog>
 
-      {/* Stats Dialog */}
-      <Dialog open={statsOpen} onOpenChange={setStatsOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle className="font-cairo flex items-center gap-2"><BarChart3 className="w-5 h-5" /> {t('wilayas.stats')} — {statsWilaya?.name}</DialogTitle></DialogHeader>
-          {statsLoading ? (
-            <p className="font-cairo text-muted-foreground text-center py-8">{t('common.loading')}</p>
-          ) : statsData ? (
+          {selected ? (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-muted rounded-lg p-4 text-center">
-                  <p className="text-2xl font-roboto font-bold">{statsData.totalOrders}</p>
-                  <p className="text-xs font-cairo text-muted-foreground mt-1">{t('wilayas.totalOrders')}</p>
+              <div className="bg-muted/50 rounded-xl p-4 text-right">
+                <p className="font-cairo font-bold text-xl">{selected.name}</p>
+                <p className="font-cairo text-xs text-muted-foreground mt-1">الولاية {wilayaIndex(selected.id)}</p>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Truck className="w-4 h-4 text-muted-foreground" />
+                  <label className="font-cairo text-sm font-semibold">للمنزل</label>
                 </div>
-                <div className="bg-muted rounded-lg p-4 text-center">
-                  <p className="text-2xl font-roboto font-bold">{formatPrice(statsData.totalRevenue)}</p>
-                  <p className="text-xs font-cairo text-muted-foreground mt-1">{t('wilayas.totalRevenue')}</p>
+                <div className="relative">
+                  <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs font-roboto text-muted-foreground">DA</span>
+                  <Input
+                    type="number"
+                    value={priceHome}
+                    onChange={e => setPriceHome(e.target.value)}
+                    className="text-right font-roboto pe-3 ps-12"
+                  />
                 </div>
               </div>
-              {Object.keys(statsData.byStatus).length > 0 ? (
-                <div>
-                  <p className="font-cairo font-semibold text-sm mb-2">حسب الحالة</p>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(statsData.byStatus).map(([status, count]) => (
-                      <Badge key={status} variant="secondary" className="font-cairo gap-1">
-                        {status} <span className="font-roboto font-bold">{count}</span>
-                      </Badge>
-                    ))}
-                  </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Package className="w-4 h-4 text-muted-foreground" />
+                  <label className="font-cairo text-sm font-semibold">للمكتب</label>
                 </div>
-              ) : (
-                <p className="font-cairo text-muted-foreground text-center text-sm">لا توجد طلبات لهذه الولاية</p>
-              )}
+                <div className="relative">
+                  <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs font-roboto text-muted-foreground">DA</span>
+                  <Input
+                    type="number"
+                    value={priceOffice}
+                    onChange={e => setPriceOffice(e.target.value)}
+                    className="text-right font-roboto pe-3 ps-12"
+                  />
+                </div>
+              </div>
+
+              <Button
+                onClick={() => savePrices.mutate()}
+                disabled={savePrices.isPending}
+                className="w-full font-cairo font-semibold gap-2"
+              >
+                {savePrices.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                حفظ
+              </Button>
             </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+          ) : (
+            <p className="text-center text-sm text-muted-foreground font-cairo py-12">اختر ولاية</p>
+          )}
+        </div>
+
+        {/* Baladiyat column (left) */}
+        <div className="bg-card border rounded-2xl p-4 order-3">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-cairo font-bold text-lg">البلديات</h3>
+            <Building2 className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <div className="relative mb-3">
+            <Search className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input value={baladiyaSearch} onChange={e => setBaladiyaSearch(e.target.value)} placeholder="بحث..." className="pe-9 font-cairo" />
+          </div>
+          <div className="space-y-2 max-h-[520px] overflow-y-auto pe-1">
+            {selectedBaladiyat.map((b: any) => (
+              <div key={b.id} className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border bg-background">
+                <div className="flex items-center gap-2">
+                  <Switch checked={!!b.is_active} onCheckedChange={(v) => toggleBaladiya.mutate({ id: b.id, val: v })} />
+                  <span className="font-cairo text-xs text-muted-foreground">مكتب</span>
+                </div>
+                <div className="text-right">
+                  <p className="font-cairo font-semibold text-sm">{b.name}</p>
+                  <p className="font-cairo text-[10px] text-muted-foreground mt-0.5">
+                    {b.is_active ? 'مكتب متاح' : 'منزل فقط'}
+                  </p>
+                </div>
+              </div>
+            ))}
+            {selectedBaladiyat.length === 0 && (
+              <p className="text-center text-sm text-muted-foreground font-cairo py-6">لا توجد بلديات</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function KpiCard({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) {
+  return (
+    <div className="bg-card border rounded-2xl p-4 flex items-center justify-between">
+      <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${color}`}>
+        {icon}
+      </div>
+      <div className="text-right">
+        <p className="font-roboto font-bold text-2xl leading-none">{value}</p>
+        <p className="font-cairo text-xs text-muted-foreground mt-1">{label}</p>
+      </div>
     </div>
   );
 }
