@@ -20,6 +20,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
+import { useTheme } from '@/hooks/useTheme';
 import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
@@ -168,9 +169,11 @@ export default function IndexPage() {
     return fromDb.length > 0 ? fromDb : DEFAULT_CATEGORIES.map(c => ({ ...c, image: undefined }));
   }, [categoriesData]);
 
-  // Section background tones — alternating light & dark
-  const LIGHT_BG = '#EAF4FF';
-  const DARK_BG = '#0B3B6F';
+  // Section background tones — theme-aware
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const LIGHT_BG = isDark ? '#0B1220' : '#EAF4FF';   // page base
+  const DARK_BG  = isDark ? '#111A2E' : '#0B3B6F';   // alternating band
 
 
   // Wavy SVG divider — fill should match the NEXT section's background
@@ -307,7 +310,7 @@ export default function IndexPage() {
               <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.accessoriesAvailable')}</p>
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-gradient-to-r from-secondary/60 to-card p-5 flex items-center gap-4">
+          <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-card p-5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
@@ -499,7 +502,7 @@ export default function IndexPage() {
       {/* ────── DEALS OF THE DAY ────── */}
       {showSection('deals') && dealsProducts.length > 0 && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-destructive/15 bg-gradient-to-br from-destructive/8 via-card to-card p-5 sm:p-8 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-destructive/15 bg-card p-5 sm:p-8 relative overflow-hidden">
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-destructive/15 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
             <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -549,7 +552,7 @@ export default function IndexPage() {
       {/* ────── LIMITED EDITION (configurable) ────── */}
       {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
         <section className="px-3 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card overflow-hidden grid md:grid-cols-2 gap-0 relative shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.3)]">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-primary/20 bg-card overflow-hidden grid md:grid-cols-2 gap-0 relative">
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-primary/25 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
             <div className="relative p-6 sm:p-10 flex flex-col justify-center">
@@ -666,7 +669,7 @@ export default function IndexPage() {
                 </div>
                 <p className="text-sm text-foreground/80 leading-relaxed mb-4">"{t.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-display font-bold text-sm">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-display font-bold text-sm">
                     {t.name.charAt(0)}
                   </div>
                   <div>
