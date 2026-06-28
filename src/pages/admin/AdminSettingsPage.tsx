@@ -34,8 +34,8 @@ export default function AdminSettingsPage() {
                 <card.icon className="w-5 h-5 text-primary" />
               </div>
               <div className="space-y-1">
-                <CardTitle className="text-base font-cairo">{t(card.key)}</CardTitle>
-                <CardDescription className="text-xs font-cairo">{t(card.descKey)}</CardDescription>
+                <CardTitle className="text-base font-cairo">{(card as any).labelOverride || t((card as any).key)}</CardTitle>
+                <CardDescription className="text-xs font-cairo">{(card as any).descOverride || t((card as any).descKey)}</CardDescription>
               </div>
             </CardHeader>
           </Card>
