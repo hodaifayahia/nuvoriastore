@@ -774,6 +774,7 @@ export default function IndexPage() {
           ))}
         </div>
       </section>
+      )}
     </div>
   );
 }
