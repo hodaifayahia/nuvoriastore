@@ -19,6 +19,7 @@ import { ProductGridSkeleton } from '@/components/LoadingSkeleton';
 import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
+import { useHomepageSettings } from '@/hooks/useHomepageSettings';
 import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
