@@ -400,6 +400,7 @@ export default function IndexPage() {
       </section>
         <Wave fill={LIGHT_BG} />
       </div>
+      )}
 
       {/* ────── TRENDING ────── */}
       {trendingProducts.length > 0 && (
