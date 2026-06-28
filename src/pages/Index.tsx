@@ -321,6 +321,7 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ────── HERO SLIDES (optional) ────── */}
       {heroSlides && heroSlides.length > 0 && (
