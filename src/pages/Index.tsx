@@ -244,16 +244,16 @@ export default function IndexPage() {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                 </span>
-                {t('idx.hero.badge')}
+                {txt('hero_badge', t('idx.hero.badge'))}
               </span>
               <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
-                {t('idx.hero.title1')} <br />
+                {txt('hero_title1', t('idx.hero.title1'))} <br />
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  {t('idx.hero.title2')}
+                  {txt('hero_title2', t('idx.hero.title2'))}
                 </span>
               </h1>
               <p className="mt-5 text-base sm:text-lg text-white/70 max-w-lg mx-auto leading-relaxed">
-                {t('idx.hero.subtitle')}
+                {txt('hero_subtitle', t('idx.hero.subtitle'))}
               </p>
 
               <form onSubmit={handleSearch} className="mt-7 mx-auto flex items-center gap-2 max-w-md p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
@@ -261,31 +261,31 @@ export default function IndexPage() {
                 <Input
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={t('idx.hero.searchPlaceholder')}
+                  placeholder={txt('hero_searchPh', t('idx.hero.searchPlaceholder'))}
                   className="flex-1 border-0 bg-transparent h-10 text-sm text-white placeholder:text-white/50 focus-visible:ring-0"
                 />
                 <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-white text-[#0B3B6F] hover:bg-white/90">
-                  {t('idx.hero.searchBtn')}
+                  {txt('hero_searchBtn', t('idx.hero.searchBtn'))}
                 </Button>
               </form>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full gap-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    {t('idx.hero.shopNow')} <ArrowRight className="w-4 h-4" />
+                    {txt('hero_shopNow', t('idx.hero.shopNow'))} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/products?category=Laptops">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    {t('idx.hero.browseLaptops')}
+                    {txt('hero_browseLaptops', t('idx.hero.browseLaptops'))}
                   </Button>
                 </Link>
               </div>
 
               <div className="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-white/70">
-                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> {t('idx.hero.original')}</span>
-                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> {t('idx.hero.wilayas')}</span>
-                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> {t('idx.hero.returns')}</span>
+                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-fuchsia-300" /> {txt('hero_original', t('idx.hero.original'))}</span>
+                <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-violet-300" /> {txt('hero_wilayas', t('idx.hero.wilayas'))}</span>
+                <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-sky-300" /> {txt('hero_returns', t('idx.hero.returns'))}</span>
               </div>
             </div>
           </div>
@@ -299,15 +299,15 @@ export default function IndexPage() {
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Zap className="w-5 h-5 text-primary" />
             <div>
-              <p className="font-display font-bold text-3xl">{t('idx.bento.fastDeliveryHours')}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.fastDeliveryDesc')}</p>
+              <p className="font-display font-bold text-3xl">{txt('bento_fastHrs', t('idx.bento.fastDeliveryHours'))}</p>
+              <p className="text-xs text-muted-foreground mt-1">{txt('bento_fastDesc', t('idx.bento.fastDeliveryDesc'))}</p>
             </div>
           </div>
           <div className="col-span-6 lg:col-span-3 rounded-3xl border border-border/60 bg-card p-5 flex flex-col justify-between">
             <Cpu className="w-5 h-5 text-primary" />
             <div>
               <p className="font-display font-bold text-3xl">{allProducts?.length ?? '500+'}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t('idx.bento.accessoriesAvailable')}</p>
+              <p className="text-xs text-muted-foreground mt-1">{txt('bento_accessoriesAvail', t('idx.bento.accessoriesAvailable'))}</p>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 rounded-3xl border border-border/60 bg-card p-5 flex items-center gap-4">
@@ -315,11 +315,11 @@ export default function IndexPage() {
               <BatteryCharging className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="font-display font-semibold">{t('idx.bento.bundlesTitle')}</p>
-              <p className="text-xs text-muted-foreground">{t('idx.bento.bundlesDesc')}</p>
+              <p className="font-display font-semibold">{txt('bento_bundlesTitle', t('idx.bento.bundlesTitle'))}</p>
+              <p className="text-xs text-muted-foreground">{txt('bento_bundlesDesc', t('idx.bento.bundlesDesc'))}</p>
             </div>
             <Link to="/products" className="shrink-0">
-              <Button variant="outline" size="sm" className="rounded-full">{t('idx.bento.discover')}</Button>
+              <Button variant="outline" size="sm" className="rounded-full">{txt('bento_discover', t('idx.bento.discover'))}</Button>
             </Link>
           </div>
         </div>
@@ -359,11 +359,11 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.categories.kicker')}</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.categories.title')}</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{txt('cat_kicker', t('idx.categories.kicker'))}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{txt('cat_title', t('idx.categories.title'))}</h2>
             </div>
             <Link to="/categories" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t('idx.categories.viewAll')} <ChevronRight className="w-4 h-4" />
+              {txt('cat_viewAll', t('idx.categories.viewAll'))} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -392,7 +392,7 @@ export default function IndexPage() {
                     )}
                     <p className="font-display font-bold text-base sm:text-lg text-background drop-shadow-md text-center">{cat.name}</p>
                     <p className="text-[11px] text-background/90 inline-flex items-center gap-1">
-                      {t('idx.categories.shop')} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                      {txt('cat_shop', t('idx.categories.shop'))} <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                     </p>
                   </div>
                 </Link>
@@ -412,9 +412,9 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-primary" /> {t('idx.trending.kicker')}
+                  <Star className="w-3.5 h-3.5 fill-primary" /> {txt('trend_kicker', t('idx.trending.kicker'))}
                 </p>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.trending.title')}</h2>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl">{txt('trend_title', t('idx.trending.title'))}</h2>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -450,12 +450,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">{t('idx.newest.kicker')}</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.newest.title')}</h2>
-              <p className="text-sm text-white/60 mt-2 max-w-md">{t('idx.newest.desc')}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-sky-300 font-semibold mb-2">{txt('new_kicker', t('idx.newest.kicker'))}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{txt('new_title', t('idx.newest.title'))}</h2>
+              <p className="text-sm text-white/60 mt-2 max-w-md">{txt('new_desc', t('idx.newest.desc'))}</p>
             </div>
             <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
-              {t('idx.newest.allProducts')} <ChevronRight className="w-4 h-4" />
+              {txt('new_allProducts', t('idx.newest.allProducts'))} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -486,7 +486,7 @@ export default function IndexPage() {
                     to="/products"
                     className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium hover:from-sky-300 hover:to-blue-500 transition-all shadow-[0_10px_30px_-5px_rgba(56,189,248,0.5)]"
                   >
-                    {t('idx.newest.viewAll')} <ChevronRight className="w-4 h-4" />
+                    {txt('new_viewAll', t('idx.newest.viewAll'))} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               )}
@@ -511,13 +511,13 @@ export default function IndexPage() {
                   <span className="inline-flex w-6 h-6 items-center justify-center rounded-full bg-destructive/10">
                     <Flame className="w-3.5 h-3.5" />
                   </span>
-                  {t('idx.deals.kicker')}
+                  {txt('deals_kicker', t('idx.deals.kicker'))}
                 </p>
-                <h2 className="font-display font-bold text-2xl sm:text-4xl leading-tight">{t('idx.deals.title')}</h2>
+                <h2 className="font-display font-bold text-2xl sm:text-4xl leading-tight">{txt('deals_title', t('idx.deals.title'))}</h2>
               </div>
               <div className="flex items-center gap-2 self-start sm:self-auto rounded-2xl border border-border/60 bg-background/70 backdrop-blur px-3 py-2 shadow-sm">
                 <Clock className="w-4 h-4 text-destructive" />
-                <span className="text-[11px] text-muted-foreground hidden sm:inline">{t('idx.deals.endsIn')}</span>
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">{txt('deals_endsIn', t('idx.deals.endsIn'))}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
                     <span className="font-display font-bold text-sm sm:text-base bg-destructive/10 text-destructive rounded-lg px-2 py-1 tabular-nums min-w-[2.25rem] text-center">
@@ -608,8 +608,8 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.brands.kicker')}</p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.brands.title')}</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{txt('brands_kicker', t('idx.brands.kicker'))}</p>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl">{txt('brands_title', t('idx.brands.title'))}</h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {(brandsData && brandsData.length > 0
@@ -648,12 +648,12 @@ export default function IndexPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{t('idx.testimonials.kicker')}</p>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl">{t('idx.testimonials.title')}</h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">{txt('tst_kicker', t('idx.testimonials.kicker'))}</p>
+              <h2 className="font-display font-bold text-3xl sm:text-4xl">{txt('tst_title', t('idx.testimonials.title'))}</h2>
             </div>
             <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
               <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-              <span className="ms-2">{t('idx.testimonials.ratingSuffix')}</span>
+              <span className="ms-2">{txt('tst_ratingSuffix', t('idx.testimonials.ratingSuffix'))}</span>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
@@ -703,44 +703,44 @@ export default function IndexPage() {
             <div>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 backdrop-blur-md text-white border border-white/20 mb-5">
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-300" />
-                {t('idx.trusted.badge')}
+                {txt('trusted_badge', t('idx.trusted.badge'))}
               </span>
               <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
-                {t('idx.trusted.title1')}{' '}
+                {txt('trusted_title1', t('idx.trusted.title1'))}{' '}
                 <span className="bg-gradient-to-r from-sky-200 via-cyan-200 to-white bg-clip-text text-transparent">
-                  {t('idx.trusted.title2')}
+                  {txt('trusted_title2', t('idx.trusted.title2'))}
                 </span>{' '}
-                {t('idx.trusted.title3')}
+                {txt('trusted_title3', t('idx.trusted.title3'))}
               </h2>
 
               <p className="mt-5 text-white/70 text-base sm:text-lg leading-relaxed max-w-lg">
-                {t('idx.trusted.desc')}
+                {txt('trusted_desc', t('idx.trusted.desc'))}
               </p>
 
               <div className="mt-7 grid grid-cols-3 gap-4 max-w-md">
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">+2.3k</p>
-                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.customers')}</p>
+                  <p className="text-xs text-white/60 mt-1">{txt('trusted_customers', t('idx.trusted.customers'))}</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">58</p>
-                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.wilayas')}</p>
+                  <p className="text-xs text-white/60 mt-1">{txt('trusted_wilayas', t('idx.trusted.wilayas'))}</p>
                 </div>
                 <div>
                   <p className="font-display font-bold text-2xl sm:text-3xl text-white">4.9★</p>
-                  <p className="text-xs text-white/60 mt-1">{t('idx.trusted.rating')}</p>
+                  <p className="text-xs text-white/60 mt-1">{txt('trusted_rating', t('idx.trusted.rating'))}</p>
                 </div>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/products">
                   <Button size="lg" className="rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white border-0 shadow-[0_10px_30px_-5px_rgba(56,189,248,0.6)]">
-                    {t('idx.trusted.browse')} <ArrowRight className="w-4 h-4" />
+                    {txt('trusted_browse', t('idx.trusted.browse'))} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/about">
                   <Button size="lg" variant="outline" className="rounded-full bg-white/5 text-white border-white/20 hover:bg-white/15 hover:text-white">
-                    {t('idx.trusted.about')}
+                    {txt('trusted_about', t('idx.trusted.about'))}
                   </Button>
                 </Link>
               </div>
@@ -760,10 +760,10 @@ export default function IndexPage() {
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto rounded-3xl border border-border bg-card p-5 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Truck,      label: t('idx.trust.delivery'),  desc: t('idx.trust.deliveryDesc') },
-            { icon: Shield,     label: t('idx.trust.returns'),   desc: t('idx.trust.returnsDesc') },
-            { icon: BadgeCheck, label: t('idx.trust.original'),  desc: t('idx.trust.originalDesc') },
-            { icon: Headphones, label: t('idx.trust.support'),   desc: t('idx.trust.supportDesc') },
+            { icon: Truck,      label: txt('ts_delivery',  t('idx.trust.delivery')),  desc: txt('ts_deliveryDesc', t('idx.trust.deliveryDesc')) },
+            { icon: Shield,     label: txt('ts_returns',   t('idx.trust.returns')),   desc: txt('ts_returnsDesc',  t('idx.trust.returnsDesc')) },
+            { icon: BadgeCheck, label: txt('ts_original',  t('idx.trust.original')),  desc: txt('ts_originalDesc', t('idx.trust.originalDesc')) },
+            { icon: Headphones, label: txt('ts_support',   t('idx.trust.support')),   desc: txt('ts_supportDesc',  t('idx.trust.supportDesc')) },
           ].map(item => (
             <div key={item.label} className="flex items-center gap-3 p-3 rounded-2xl hover:bg-secondary/40 transition-colors">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
