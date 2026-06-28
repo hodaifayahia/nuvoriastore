@@ -637,6 +637,7 @@ export default function IndexPage() {
       </section>
         <Wave fill={LIGHT_BG} />
       </div>
+      )}
 
       {/* ────── TESTIMONIALS ────── */}
       <section className="px-3 sm:px-6 lg:px-8 pb-16">
