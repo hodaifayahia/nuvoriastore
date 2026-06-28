@@ -1,9 +1,9 @@
-import { useEffect, useState, useCallback, useSyncExternalStore } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'akrem-theme';
-const EVENT = 'akrem-theme-change';
+const listeners = new Set<(t: Theme) => void>();
 
 function getInitial(): Theme {
   if (typeof window === 'undefined') return 'light';
@@ -13,57 +13,34 @@ function getInitial(): Theme {
 }
 
 function apply(theme: Theme) {
+  if (typeof document === 'undefined') return;
   const root = document.documentElement;
   if (theme === 'dark') root.classList.add('dark');
   else root.classList.remove('dark');
 }
 
-function subscribe(cb: () => void) {
-  window.addEventListener(EVENT, cb);
-  window.addEventListener('storage', cb);
-  return () => {
-    window.removeEventListener(EVENT, cb);
-    window.removeEventListener('storage', cb);
-  };
-}
-
-function getSnapshot(): Theme {
-  return (localStorage.getItem(STORAGE_KEY) as Theme) || 'light';
-}
-
 export function useTheme() {
-  const theme = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    () => 'light' as Theme,
-  );
+  const [theme, setThemeState] = useState<Theme>(() => {
+    const t = getInitial();
+    apply(t);
+    return t;
+  });
 
   useEffect(() => {
-    apply(theme);
-  }, [theme]);
-
-  // Ensure initial theme is set on first mount
-  useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      const initial = getInitial();
-      localStorage.setItem(STORAGE_KEY, initial);
-      apply(initial);
-      window.dispatchEvent(new Event(EVENT));
-    } else {
-      apply((localStorage.getItem(STORAGE_KEY) as Theme) || 'light');
-    }
+    const cb = (t: Theme) => setThemeState(t);
+    listeners.add(cb);
+    return () => { listeners.delete(cb); };
   }, []);
 
   const setTheme = useCallback((t: Theme) => {
     localStorage.setItem(STORAGE_KEY, t);
     apply(t);
-    window.dispatchEvent(new Event(EVENT));
+    listeners.forEach(l => l(t));
   }, []);
 
   const toggle = useCallback(() => {
-    const next: Theme = (localStorage.getItem(STORAGE_KEY) as Theme) === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-  }, [setTheme]);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   return { theme, setTheme, toggle };
 }
