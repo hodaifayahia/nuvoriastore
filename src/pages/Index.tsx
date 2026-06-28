@@ -669,7 +669,7 @@ export default function IndexPage() {
                 </div>
                 <p className="text-sm text-foreground/80 leading-relaxed mb-4">"{t.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-display font-bold text-sm">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-display font-bold text-sm">
                     {t.name.charAt(0)}
                   </div>
                   <div>
