@@ -86,15 +86,6 @@ const NAV_GROUPS = [
     ],
   },
   {
-    groupKey: 'sidebar.crm',
-    items: [
-      { href: '/admin/leads', key: 'sidebar.leads', icon: Users },
-      { href: '/admin/clients', key: 'sidebar.clients', icon: Users },
-      { href: '/admin/confirmers', key: 'sidebar.confirmers', icon: UserCheck },
-      { href: '/admin/suppliers', key: 'sidebar.suppliers', icon: Truck },
-    ],
-  },
-  {
     groupKey: 'sidebar.management',
     items: [
       { href: '/admin/wilayas', key: 'sidebar.wilayas', icon: MapPin },
