@@ -5,7 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { useStoreLogo } from '@/hooks/useStoreLogo';
+import { useStoreLogo, NUVORIA_LOGO_URL } from '@/hooks/useStoreLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useCategories } from '@/hooks/useCategories';
 import { useQuery } from '@tanstack/react-query';
