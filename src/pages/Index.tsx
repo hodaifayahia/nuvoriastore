@@ -749,6 +749,7 @@ export default function IndexPage() {
 
         <Wave fill={LIGHT_BG} />
       </div>
+      )}
 
 
       {/* ────── TRUST STRIP ────── */}
