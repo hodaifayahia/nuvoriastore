@@ -97,6 +97,7 @@ export default function IndexPage() {
   const sectionTitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.title?.[s] || def;
   const sectionSubtitle = (s: 'categories'|'trending'|'newest'|'deals'|'brands'|'testimonials'|'trusted', def: string) => hp?.subtitle?.[s] || def;
 
+  const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
   const trendingProducts = useMemo(
     () => [...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4),
     [allProducts],
