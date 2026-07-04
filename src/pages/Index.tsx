@@ -201,6 +201,16 @@ export default function IndexPage() {
   if (storeTemplate === 'liquid')  return <LiquidTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
   if (storeTemplate === 'digital') return <DigitalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
 
+  const bentoCats = useMemo(() => {
+    return (categoriesData || [])
+      .filter((c: any) => c?.name)
+      .map((c: any) => ({
+        name: c.name as string,
+        image: c.image as string | undefined,
+        icon: (c.icon && ICON_MAP[c.icon]) || Tag,
+      }));
+  }, [categoriesData]);
+
   const extraCats = useMemo(() => {
     const fromDb = (categoriesData || [])
       .filter((c: any) => c?.name)
