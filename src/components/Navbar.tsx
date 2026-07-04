@@ -161,15 +161,15 @@ export default function Navbar() {
                 onMouseLeave={handleCatLeave}
               >
                 <button
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-cairo font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2 rounded-xl text-[12px] lg:text-sm font-cairo font-medium transition-all duration-200 ${
                     catOpen
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
-                  <Grid3X3 className="w-4 h-4" />
+                  <Grid3X3 className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   {t('nav.categories')}
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3 h-3 lg:w-3.5 lg:h-3.5 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Dropdown */}
