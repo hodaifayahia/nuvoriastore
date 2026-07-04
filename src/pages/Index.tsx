@@ -133,6 +133,10 @@ export default function IndexPage() {
   const txt = (key: string, fallback: string) => hp?.text?.[key] || fallback;
 
   const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
+  const featuredProducts = useMemo(
+    () => (allProducts || []).filter((p: any) => p.is_featured).slice(0, 8),
+    [allProducts],
+  );
   const trendingProducts = useMemo(
     () => [...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4),
     [allProducts],
