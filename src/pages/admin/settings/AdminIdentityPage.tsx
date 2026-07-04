@@ -257,7 +257,9 @@ export default function AdminIdentityPage() {
             className="font-cairo mt-1"
             placeholder="مرحبًا، أود الاستفسار عن..."
           />
+        </div>
       </div>
+
 
 
       {/* Facebook Pixel */}
