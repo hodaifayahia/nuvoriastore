@@ -33,11 +33,32 @@ export default function AboutPage() {
   const address = settings?.footer_address || t('about.defaultAddress');
 
   const stats = [
-    { value: '1000+', label: t('about.stats.customers') || 'عميل سعيد' },
-    { value: '58',    label: t('about.stats.wilayas')   || 'ولاية مغطاة' },
-    { value: '24/7',  label: t('about.stats.support')   || 'دعم فوري' },
-    { value: '100%',  label: t('about.stats.original')  || 'منتجات أصلية' },
+    { value: '1000+', label: 'عميل سعيد' },
+    { value: '58',    label: 'ولاية مغطاة' },
+    { value: '24/7',  label: 'دعم فوري' },
+    { value: '100%',  label: 'منتجات أصلية' },
   ];
+
+  const TikTokIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+    </svg>
+  );
+
+  const whatsappHref = settings?.whatsapp_number
+    ? `https://wa.me/${settings.whatsapp_number.replace(/\D/g, '')}`
+    : phone ? `https://wa.me/${phone.replace(/\D/g, '')}` : '';
+
+  const socials = [
+    { url: settings?.instagram_url, Icon: Instagram,   label: 'Instagram', color: 'from-pink-500 to-purple-600' },
+    { url: settings?.facebook_url,  Icon: Facebook,    label: 'Facebook',  color: 'from-blue-600 to-blue-700' },
+    { url: settings?.tiktok_url,    Icon: TikTokIcon,  label: 'TikTok',    color: 'from-slate-900 to-slate-700' },
+    { url: whatsappHref,            Icon: MessageCircle, label: 'WhatsApp', color: 'from-emerald-500 to-emerald-600' },
+    { url: settings?.youtube_url,   Icon: Youtube,     label: 'YouTube',   color: 'from-red-500 to-red-600' },
+    { url: settings?.twitter_url,   Icon: Twitter,     label: 'Twitter',   color: 'from-sky-500 to-sky-600' },
+    { url: settings?.telegram_url,  Icon: Send,        label: 'Telegram',  color: 'from-cyan-500 to-blue-500' },
+    { url: settings?.linkedin_url,  Icon: Linkedin,    label: 'LinkedIn',  color: 'from-blue-700 to-blue-800' },
+  ].filter(s => s.url);
 
   return (
     <div className="min-h-screen bg-background">
