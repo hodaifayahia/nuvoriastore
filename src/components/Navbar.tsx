@@ -133,7 +133,7 @@ export default function Navbar() {
             <span className="h-11 w-11 rounded-full bg-white/95 border border-white/20 overflow-hidden flex items-center justify-center shadow-[0_0_24px_-4px_hsl(180_90%_50%/0.5)] transition-transform group-hover:scale-105">
               <img src={logoUrl || NUVORIA_LOGO_URL} alt={displayName} className="h-full w-full object-cover" />
             </span>
-            <span className="font-display font-extrabold text-lg tracking-tight text-foreground hidden lg:inline uppercase">{displayName}</span>
+            <span className="font-display font-extrabold text-base tracking-tight text-foreground hidden lg:inline uppercase">{displayName}</span>
           </Link>
 
           {/* Desktop nav */}
@@ -150,7 +150,7 @@ export default function Navbar() {
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
-                  <link.icon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  <link.icon className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                   {t(link.key)}
                 </Link>
               );
@@ -164,7 +164,7 @@ export default function Navbar() {
                 onMouseLeave={handleCatLeave}
               >
                 <button
-                  className={`flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2 rounded-xl text-[12px] lg:text-sm font-cairo font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1 px-2 lg:px-2.5 py-1.5 rounded-lg text-[11px] lg:text-xs font-cairo font-medium transition-all duration-200 ${
                     catOpen
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -242,10 +242,10 @@ export default function Navbar() {
             {!loading && user && isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 title={t('nav.adminPanel')}
               >
-                <LayoutDashboard className="w-3.5 h-3.5" />
+                <LayoutDashboard className="w-3 h-3" />
                 {t('nav.adminPanel')}
               </Link>
             )}
