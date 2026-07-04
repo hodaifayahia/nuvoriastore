@@ -37,7 +37,10 @@ const ALL_KEYS = [
   'hp_limited_link',
   'hp_limited_cta',
   'hp_limited_end_date',
+  'hero_slides',
 ];
+
+type HeroSlide = { url: string; link?: string; alt?: string };
 
 export default function AdminHomepagePage() {
   const qc = useQueryClient();
@@ -175,6 +178,13 @@ export default function AdminHomepagePage() {
 
                 {isOpen && (
                   <div className="p-4 space-y-4">
+                    {s === 'hero' && (
+                      <HeroSlidesFields
+                        value={merged.hero_slides || ''}
+                        onChange={v => setField('hero_slides', v)}
+                      />
+                    )}
+
                     {s === 'limited' && (
                       <LimitedEditionFields
                         merged={merged}
@@ -184,7 +194,7 @@ export default function AdminHomepagePage() {
                       />
                     )}
 
-                    {fields.length === 0 && s !== 'limited' && (
+                    {fields.length === 0 && s !== 'limited' && s !== 'hero' && (
                       <p className="font-cairo text-sm text-muted-foreground">
                         لا توجد نصوص خاصة بهذا القسم. يمكنك إظهاره/إخفاؤه فقط.
                       </p>
