@@ -404,22 +404,28 @@ export default function IndexPage() {
 
 
 
-      {/* ─────────── TRENDING ─────────── */}
-      {showSection('trending') && trendingProducts.length > 0 && (
+      {/* ─────────── FEATURED PRODUCTS (admin picks) ─────────── */}
+      {featuredProducts.length > 0 && (
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between mb-8">
+            <div className="flex items-end justify-between mb-8 gap-4">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('trend_kicker', 'الأكثر رواجاً')}
+                <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2 flex items-center gap-2">
+                  <Star className="w-3.5 h-3.5 fill-current" /> منتجات مميزة
                 </p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('trend_title', 'الأكثر تفضيلاً هذا الأسبوع')}</h2>
-
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">اختيارات المتجر</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">منتجات مختارة بعناية من طرف فريقنا خصيصاً لك.</p>
               </div>
+              <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                عرض الكل <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              {trendingProducts.map(p => (
-                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+              {featuredProducts.map(p => (
+                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden relative">
+                  <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[10px] font-bold shadow-lg">
+                    <Star className="w-3 h-3 fill-current" /> مميز
+                  </div>
                   <ProductCard
                     id={p.id}
                     name={p.name}
@@ -438,6 +444,7 @@ export default function IndexPage() {
           </div>
         </section>
       )}
+
 
       {/* ─────────── NEWEST ─────────── */}
       {showSection('newest') && (
