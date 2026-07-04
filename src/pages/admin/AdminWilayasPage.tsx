@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Search, MapPin, Building2, Package, Truck, Save, ChevronLeft, Upload, Loader2,
+  Search, MapPin, Building2, Package, Truck, Save, ChevronLeft, Upload, Loader2, Plus, Trash2,
 } from 'lucide-react';
+
 import { ALGERIA_WILAYAS } from '@/data/algeria-wilayas';
 import { useTranslation } from '@/i18n';
 
@@ -21,6 +22,9 @@ export default function AdminWilayasPage() {
   const [baladiyaSearch, setBaladiyaSearch] = useState('');
   const [priceOffice, setPriceOffice] = useState('');
   const [priceHome, setPriceHome] = useState('');
+  const [newWilayaName, setNewWilayaName] = useState('');
+  const [newBaladiyaName, setNewBaladiyaName] = useState('');
+
 
   const { data: wilayas = [] } = useQuery({
     queryKey: ['admin-wilayas'],
@@ -120,7 +124,71 @@ export default function AdminWilayasPage() {
     },
   });
 
-  // Find wilaya index in original list (01..58)
+  const addWilaya = useMutation({
+    mutationFn: async (name: string) => {
+      const n = name.trim();
+      if (!n) throw new Error('empty');
+      const { data, error } = await supabase.from('wilayas').insert({
+        name: n, shipping_price: 0, shipping_price_home: 0, is_active: true,
+      }).select('id').single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      setNewWilayaName('');
+      if (data?.id) setSelectedId(data.id);
+      toast({ title: 'تمت إضافة الولاية ✅' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الإضافة', description: e.message, variant: 'destructive' }),
+  });
+
+  const deleteWilaya = useMutation({
+    mutationFn: async (id: string) => {
+      await supabase.from('baladiyat').delete().eq('wilaya_id', id);
+      const { error } = await supabase.from('wilayas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_d, id) => {
+      qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      if (selectedId === id) setSelectedId(null);
+      toast({ title: 'تم حذف الولاية' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الحذف', description: e.message, variant: 'destructive' }),
+  });
+
+  const addBaladiya = useMutation({
+    mutationFn: async (name: string) => {
+      if (!selectedId) throw new Error('no wilaya');
+      const n = name.trim();
+      if (!n) throw new Error('empty');
+      const { error } = await supabase.from('baladiyat').insert({
+        name: n, wilaya_id: selectedId, is_active: true,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      setNewBaladiyaName('');
+      toast({ title: 'تمت إضافة البلدية ✅' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الإضافة', description: e.message, variant: 'destructive' }),
+  });
+
+  const deleteBaladiya = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('baladiyat').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      toast({ title: 'تم حذف البلدية' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الحذف', description: e.message, variant: 'destructive' }),
+  });
+
+
   const wilayaIndex = (id: string) => {
     const i = wilayas.findIndex(w => w.id === id);
     return String(i + 1).padStart(2, '0');
@@ -156,6 +224,23 @@ export default function AdminWilayasPage() {
             <h3 className="font-cairo font-bold text-lg">الولايات</h3>
             <MapPin className="w-5 h-5 text-muted-foreground" />
           </div>
+          <div className="flex gap-2 mb-2">
+            <Input
+              value={newWilayaName}
+              onChange={e => setNewWilayaName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && newWilayaName.trim()) addWilaya.mutate(newWilayaName); }}
+              placeholder="اسم ولاية جديدة"
+              className="font-cairo"
+            />
+            <Button
+              size="icon"
+              onClick={() => addWilaya.mutate(newWilayaName)}
+              disabled={addWilaya.isPending || !newWilayaName.trim()}
+              className="shrink-0"
+            >
+              {addWilaya.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            </Button>
+          </div>
           <div className="relative mb-3">
             <Search className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={wilayaSearch} onChange={e => setWilayaSearch(e.target.value)} placeholder="بحث..." className="pe-9 font-cairo" />
@@ -166,27 +251,42 @@ export default function AdminWilayasPage() {
               const counts = baladiyatByWilaya.get(w.id) || { total: 0, office: 0 };
               const idx = wilayaIndex(w.id);
               return (
-                <button
+                <div
                   key={w.id}
-                  onClick={() => setSelectedId(w.id)}
-                  className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl transition text-right ${
+                  className={`w-full flex items-center gap-1 rounded-xl transition ${
                     isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-xs">
-                    <ChevronLeft className={`w-4 h-4 ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`} />
-                    <span className={`font-roboto ${isActive ? 'text-primary-foreground/90' : 'text-foreground'}`}>{counts.total}</span>
-                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-roboto font-bold ${
-                      isActive ? 'bg-primary-foreground text-primary' : 'bg-amber-100 text-amber-700'
-                    }`}>{counts.office}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`font-cairo font-semibold text-sm ${isActive ? '' : ''}`}>{w.name}</span>
-                    <span className={`font-roboto text-xs ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{idx}</span>
-                  </div>
-                </button>
+                  <button
+                    onClick={() => setSelectedId(w.id)}
+                    className="flex-1 flex items-center justify-between gap-2 px-3 py-2.5 text-right"
+                  >
+                    <div className="flex items-center gap-2 text-xs">
+                      <ChevronLeft className={`w-4 h-4 ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`} />
+                      <span className={`font-roboto ${isActive ? 'text-primary-foreground/90' : 'text-foreground'}`}>{counts.total}</span>
+                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-roboto font-bold ${
+                        isActive ? 'bg-primary-foreground text-primary' : 'bg-amber-100 text-amber-700'
+                      }`}>{counts.office}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-cairo font-semibold text-sm">{w.name}</span>
+                      <span className={`font-roboto text-xs ${isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{idx}</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`حذف الولاية "${w.name}" وجميع بلدياتها؟`)) deleteWilaya.mutate(w.id);
+                    }}
+                    className={`p-2 rounded-lg opacity-70 hover:opacity-100 hover:bg-destructive/20 ${isActive ? 'text-primary-foreground' : 'text-destructive'}`}
+                    title="حذف"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               );
             })}
+
             {filteredWilayas.length === 0 && (
               <p className="text-center text-sm text-muted-foreground font-cairo py-6">لا توجد نتائج</p>
             )}
@@ -259,6 +359,24 @@ export default function AdminWilayasPage() {
             <h3 className="font-cairo font-bold text-lg">البلديات</h3>
             <Building2 className="w-5 h-5 text-muted-foreground" />
           </div>
+          <div className="flex gap-2 mb-2">
+            <Input
+              value={newBaladiyaName}
+              onChange={e => setNewBaladiyaName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && newBaladiyaName.trim() && selectedId) addBaladiya.mutate(newBaladiyaName); }}
+              placeholder={selectedId ? 'اسم بلدية جديدة' : 'اختر ولاية أولاً'}
+              disabled={!selectedId}
+              className="font-cairo"
+            />
+            <Button
+              size="icon"
+              onClick={() => addBaladiya.mutate(newBaladiyaName)}
+              disabled={addBaladiya.isPending || !selectedId || !newBaladiyaName.trim()}
+              className="shrink-0"
+            >
+              {addBaladiya.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            </Button>
+          </div>
           <div className="relative mb-3">
             <Search className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={baladiyaSearch} onChange={e => setBaladiyaSearch(e.target.value)} placeholder="بحث..." className="pe-9 font-cairo" />
@@ -267,6 +385,13 @@ export default function AdminWilayasPage() {
             {selectedBaladiyat.map((b: any) => (
               <div key={b.id} className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border bg-background">
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { if (confirm(`حذف البلدية "${b.name}"؟`)) deleteBaladiya.mutate(b.id); }}
+                    className="p-1.5 rounded-lg text-destructive opacity-70 hover:opacity-100 hover:bg-destructive/10"
+                    title="حذف"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                   <Switch checked={!!b.is_active} onCheckedChange={(v) => toggleBaladiya.mutate({ id: b.id, val: v })} />
                   <span className="font-cairo text-xs text-muted-foreground">مكتب</span>
                 </div>
@@ -282,6 +407,7 @@ export default function AdminWilayasPage() {
               <p className="text-center text-sm text-muted-foreground font-cairo py-6">لا توجد بلديات</p>
             )}
           </div>
+
         </div>
       </div>
     </div>
