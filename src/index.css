@@ -93,12 +93,12 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', 'Cairo', system-ui, sans-serif;
     background-image:
-      radial-gradient(900px 600px at 12% -10%, hsl(var(--grad-teal) / 0.18), transparent 60%),
-      radial-gradient(900px 600px at 95% 10%, hsl(var(--grad-violet) / 0.22), transparent 60%),
-      radial-gradient(1200px 800px at 50% 110%, hsl(var(--grad-teal) / 0.12), transparent 60%);
+      radial-gradient(900px 600px at 12% -10%, hsl(222 78% 42% / 0.08), transparent 60%),
+      radial-gradient(900px 600px at 95% 10%, hsl(222 54% 22% / 0.06), transparent 60%);
     background-attachment: fixed;
     min-height: 100vh;
   }
+
 
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Inter', 'Space Grotesk', 'Cairo', system-ui, sans-serif;
