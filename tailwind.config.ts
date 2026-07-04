@@ -133,6 +133,10 @@ export default {
           from: { opacity: "0", transform: "translateY(100%)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "brand-marquee": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-25%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
