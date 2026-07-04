@@ -20,8 +20,8 @@ export default function AdminIdentityPage() {
 
   const currentLogo = mergedSettings.store_logo;
   const currentFavicon = mergedSettings.store_favicon;
-  const primaryColor = mergedSettings.primary_color || '#2ecc71';
-  const secondaryColor = mergedSettings.secondary_color || '#3498db';
+  const primaryColor = mergedSettings.primary_color || '#184ABF';
+  const secondaryColor = mergedSettings.secondary_color || '#0F2E7A';
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -100,14 +100,14 @@ export default function AdminIdentityPage() {
             <Label className="font-cairo">اللون الأساسي</Label>
             <div className="flex items-center gap-2">
               <input type="color" value={primaryColor} onChange={e => setField('primary_color', e.target.value)} className="w-10 h-10 rounded-lg border cursor-pointer" />
-              <Input value={form.primary_color ?? primaryColor} onChange={e => setField('primary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#2ecc71" />
+              <Input value={form.primary_color ?? primaryColor} onChange={e => setField('primary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#184ABF" />
             </div>
           </div>
           <div className="space-y-2">
             <Label className="font-cairo">اللون الثانوي</Label>
             <div className="flex items-center gap-2">
               <input type="color" value={secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="w-10 h-10 rounded-lg border cursor-pointer" />
-              <Input value={form.secondary_color ?? secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#3498db" />
+              <Input value={form.secondary_color ?? secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#0F2E7A" />
             </div>
           </div>
         </div>
