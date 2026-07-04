@@ -418,6 +418,43 @@ export default function Navbar() {
                 </Link>
               )}
             </nav>
+
+            {/* Social media - mobile */}
+            {(socials?.facebook || socials?.instagram || socials?.tiktok || socials?.whatsapp) && (
+              <div className="pt-4 mt-2 border-t border-border">
+                <p className="font-cairo text-xs font-semibold text-muted-foreground mb-3 px-3">
+                  {t('nav.followUs') || 'تابعنا'}
+                </p>
+                <div className="flex items-center gap-2 px-3">
+                  {socials?.facebook && (
+                    <a href={socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#1877F2] hover:border-[#1877F2] transition-colors">
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socials?.instagram && (
+                    <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#E4405F] hover:border-[#E4405F] transition-colors">
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socials?.tiktok && (
+                    <a href={socials.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors">
+                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+                      </svg>
+                    </a>
+                  )}
+                  {socials?.whatsapp && (
+                    <a href={socials.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#25D366] hover:border-[#25D366] transition-colors">
+                      <MessageCircle className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
