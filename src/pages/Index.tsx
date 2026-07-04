@@ -212,16 +212,16 @@ export default function IndexPage() {
 
             <span className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] font-semibold text-foreground/80 glass-panel neon-border">
               <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" />
-              {txt('hero_badge', 'New collection 2026')}
+              {txt('hero_badge', 'مجموعة جديدة 2026')}
             </span>
 
             <h1 className="relative mt-6 font-display font-extrabold uppercase leading-[0.95] tracking-tight text-[2.5rem] sm:text-6xl lg:text-7xl xl:text-8xl">
-              {txt('hero_title1', 'Your Tech Ecosystem,')} <br />
-              <span className="text-gradient-neon">{txt('hero_title2', 'Defined.')}</span>
+              {txt('hero_title1', 'منظومتك التقنية،')} <br />
+              <span className="text-gradient-neon">{txt('hero_title2', 'بأسلوبك.')}</span>
             </h1>
 
             <p className="relative mt-6 text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              {txt('hero_subtitle', 'Curated laptops, smartphones and essential gear — engineered for performance, designed for life.')}
+              {txt('hero_subtitle', 'حواسيب محمولة وهواتف ذكية وإكسسوارات مختارة — مصممة للأداء وللحياة اليومية.')}
             </p>
 
             <form onSubmit={handleSearch} className="relative mt-8 mx-auto flex items-center gap-2 max-w-xl p-1.5 rounded-2xl glass-panel neon-border">
@@ -229,32 +229,33 @@ export default function IndexPage() {
               <Input
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder={txt('hero_searchPh', 'Search laptops, phones, gear...')}
+                placeholder={txt('hero_searchPh', 'ابحث عن حواسيب، هواتف، إكسسوارات...')}
                 className="flex-1 border-0 bg-transparent h-11 sm:h-12 text-sm text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0"
               />
               <Button type="submit" size="sm" className="btn-neon h-11 sm:h-12 min-h-[48px] px-5 rounded-xl border-0">
-                {txt('hero_searchBtn', 'Search')}
+                {txt('hero_searchBtn', 'بحث')}
               </Button>
             </form>
 
             <div className="relative mt-7 flex flex-wrap justify-center gap-3">
               <Link to="/products">
                 <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                  {txt('hero_shopNow', 'Shop Now')} <ArrowRight className="w-4 h-4" />
+                  {txt('hero_shopNow', 'تسوق الآن')} <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link to="/products?category=Laptops">
                 <Button size="lg" variant="outline" className="rounded-full min-h-[48px] glass-panel border-white/15 text-foreground hover:bg-white/10">
-                  {txt('hero_browseLaptops', 'Browse Laptops')}
+                  {txt('hero_browseLaptops', 'تصفح الحواسيب')}
                 </Button>
               </Link>
             </div>
 
             <div className="relative mt-10 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_original', 'Authentic products')}</span>
-              <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-[hsl(var(--grad-violet))]" /> {txt('hero_wilayas', '58 wilayas delivery')}</span>
-              <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_returns', '7-day returns')}</span>
+              <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_original', 'منتجات أصلية')}</span>
+              <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-[hsl(var(--grad-violet))]" /> {txt('hero_wilayas', 'توصيل لـ 58 ولاية')}</span>
+              <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_returns', 'إرجاع خلال 7 أيام')}</span>
             </div>
+
           </div>
 
           {/* Stat strip */}
