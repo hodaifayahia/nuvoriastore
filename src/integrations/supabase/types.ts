@@ -1714,6 +1714,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      count_guest_orders_for_phone: {
+        Args: { p_phone: string }
+        Returns: number
+      }
       get_active_facebook_pixels: {
         Args: never
         Returns: {
