@@ -1,17 +1,19 @@
 import SEO from '@/components/SEO';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles } from 'lucide-react';
+import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles, Quote, ArrowLeft, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/i18n';
 
 export default function AboutPage() {
   const { t } = useTranslation();
 
   const missions = [
-    { icon: Heart,  title: t('about.missions.1.title'), desc: t('about.missions.1.description') },
-    { icon: Truck,  title: t('about.missions.2.title'), desc: t('about.missions.2.description') },
-    { icon: Shield, title: t('about.missions.3.title'), desc: t('about.missions.3.description') },
-    { icon: Star,   title: t('about.missions.4.title'), desc: t('about.missions.4.description') },
+    { icon: Heart,  title: t('about.missions.1.title'), desc: t('about.missions.1.description'), tone: 'from-rose-500/15 to-rose-500/5',   accent: 'text-rose-500',   ring: 'ring-rose-500/20' },
+    { icon: Truck,  title: t('about.missions.2.title'), desc: t('about.missions.2.description'), tone: 'from-primary/15 to-primary/5',     accent: 'text-primary',    ring: 'ring-primary/20' },
+    { icon: Shield, title: t('about.missions.3.title'), desc: t('about.missions.3.description'), tone: 'from-emerald-500/15 to-emerald-500/5', accent: 'text-emerald-500', ring: 'ring-emerald-500/20' },
+    { icon: Star,   title: t('about.missions.4.title'), desc: t('about.missions.4.description'), tone: 'from-amber-500/15 to-amber-500/5', accent: 'text-amber-500',  ring: 'ring-amber-500/20' },
   ];
 
   const { data: settings } = useQuery({
@@ -30,6 +32,13 @@ export default function AboutPage() {
   const email = settings?.footer_email;
   const address = settings?.footer_address || t('about.defaultAddress');
 
+  const stats = [
+    { value: '1000+', label: t('about.stats.customers') || 'عميل سعيد' },
+    { value: '58',    label: t('about.stats.wilayas')   || 'ولاية مغطاة' },
+    { value: '24/7',  label: t('about.stats.support')   || 'دعم فوري' },
+    { value: '100%',  label: t('about.stats.original')  || 'منتجات أصلية' },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <SEO
@@ -43,108 +52,263 @@ export default function AboutPage() {
           description,
         }}
       />
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/90">
-        <div className="pointer-events-none absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+
+      {/* ─────────── EDITORIAL HERO ─────────── */}
+      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/85">
+        {/* Ambient blobs */}
+        <div className="pointer-events-none absolute -top-40 -right-20 w-[32rem] h-[32rem] rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 -left-20 w-[32rem] h-[32rem] rounded-full bg-accent/25 blur-3xl" />
+        {/* Dot grid */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
-            backgroundSize: '24px 24px',
+            backgroundSize: '22px 22px',
             color: 'hsl(var(--primary-foreground))',
           }}
         />
-        <div className="container relative z-10 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 mb-6 animate-fade-in shadow-lg shadow-primary-foreground/10">
-            <Sparkles className="w-4 h-4" />
-            {storeName}
+
+        <div className="container relative z-10 py-16 md:py-24 lg:py-28">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* Copy column */}
+            <div className="lg:col-span-7 space-y-6 animate-fade-in">
+              <div className="inline-flex items-center gap-2 text-xs md:text-sm font-semibold text-primary bg-primary-foreground rounded-full px-4 py-1.5 shadow-lg shadow-primary-foreground/10">
+                <Sparkles className="w-3.5 h-3.5" />
+                {storeName}
+              </div>
+
+              <h1 className="font-cairo font-black text-[clamp(2.25rem,5vw,4.5rem)] leading-[1.05] text-primary-foreground drop-shadow-sm">
+                {t('about.title')}
+                <span className="block text-primary-foreground/60 font-cairo font-bold text-[clamp(1.25rem,2.5vw,2rem)] mt-3">
+                  {t('about.story.heading')}
+                </span>
+              </h1>
+
+              <p className="font-cairo text-base md:text-lg lg:text-xl text-primary-foreground/85 leading-relaxed max-w-2xl">
+                {description}
+              </p>
+
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link to="/products">
+                  <Button size="lg" className="font-cairo font-bold h-12 md:h-13 px-6 rounded-2xl bg-primary-foreground text-primary hover:bg-primary-foreground/95 shadow-xl shadow-primary/30 gap-2 group">
+                    {t('about.cta.shopNow') || 'تسوق الآن'}
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                {phone && (
+                  <a href={`https://wa.me/${phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" variant="outline" className="font-cairo font-bold h-12 md:h-13 px-6 rounded-2xl bg-primary-foreground/10 backdrop-blur-sm border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground gap-2">
+                      <MessageCircle className="w-4 h-4" />
+                      {t('about.cta.contact') || 'تواصل معنا'}
+                    </Button>
+                  </a>
+                )}
+              </div>
+
+              {/* Trust chips */}
+              <div className="flex flex-wrap gap-x-5 gap-y-2 pt-4 text-primary-foreground/85">
+                {['شحن سريع', 'ضمان أصلي', 'دفع عند التسليم'].map(chip => (
+                  <div key={chip} className="flex items-center gap-2 font-cairo text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-accent" />
+                    <span>{chip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Visual column — floating icon medallions */}
+            <div className="lg:col-span-5 relative h-[380px] md:h-[440px] hidden lg:block">
+              {/* Big glass disc */}
+              <div className="absolute inset-4 rounded-[2.5rem] bg-primary-foreground/10 backdrop-blur-xl border border-primary-foreground/20 shadow-2xl shadow-primary/40" />
+              <div className="absolute inset-10 rounded-[2rem] border border-primary-foreground/15" />
+
+              {/* Central store medallion */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-accent/40 blur-2xl scale-110 animate-pulse" />
+                  <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-primary-foreground to-primary-foreground/80 flex items-center justify-center shadow-2xl shadow-primary/50">
+                    <Store className="w-14 h-14 text-primary" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Orbiting mission chips */}
+              {missions.map((m, i) => {
+                const positions = [
+                  'top-4 right-4',
+                  'top-4 left-4',
+                  'bottom-4 right-4',
+                  'bottom-4 left-4',
+                ];
+                return (
+                  <div
+                    key={m.title}
+                    className={`absolute ${positions[i]} bg-primary-foreground/95 backdrop-blur-sm rounded-2xl px-3.5 py-2.5 flex items-center gap-2 shadow-xl shadow-primary/30 border border-primary-foreground/50 animate-fade-in`}
+                    style={{ animationDelay: `${0.2 + i * 0.1}s` }}
+                  >
+                    <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${m.tone} ring-1 ${m.ring} flex items-center justify-center`}>
+                      <m.icon className={`w-4 h-4 ${m.accent}`} />
+                    </div>
+                    <span className="font-cairo font-bold text-xs text-primary whitespace-nowrap max-w-[110px] truncate">
+                      {m.title}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 animate-fade-in shadow-xl shadow-primary/20">
-            <Store className="w-10 h-10 text-primary-foreground" />
-          </div>
-          <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-4 animate-fade-in drop-shadow-sm" style={{ animationDelay: '0.1s' }}>
-            {t('about.title')}
-          </h1>
-          <p className="font-cairo text-lg md:text-xl text-primary-foreground/85 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            {description}
-          </p>
+        </div>
+
+        {/* Bottom fade to next section */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-background/10" />
+      </section>
+
+      {/* ─────────── STATS STRIP ─────────── */}
+      <section className="relative -mt-8 md:-mt-10 container z-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 bg-card/95 backdrop-blur-xl border border-border/60 rounded-3xl p-5 md:p-6 shadow-xl shadow-primary/10 animate-fade-in">
+          {stats.map((s, i) => (
+            <div
+              key={s.label}
+              className={`text-center px-3 py-2 ${i > 0 ? 'md:border-r md:border-border/50 md:first:border-r-0' : ''}`}
+            >
+              <p className="font-roboto font-black text-3xl md:text-4xl bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+                {s.value}
+              </p>
+              <p className="font-cairo text-xs md:text-sm text-muted-foreground font-semibold mt-1">
+                {s.label}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
-
-      {/* Story */}
-      <section className="container py-16 md:py-20">
-        <div className="max-w-3xl mx-auto text-center animate-fade-in">
-          <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
-            {t('about.storyTitle')}
+      {/* ─────────── STORY (pull quote) ─────────── */}
+      <section className="container py-20 md:py-28">
+        <div className="max-w-3xl mx-auto animate-fade-in">
+          <div className="text-center mb-8">
+            <div className="inline-block font-cairo text-xs font-bold uppercase tracking-[0.2em] text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
+              {t('about.storyTitle')}
+            </div>
+            <h2 className="font-cairo font-bold text-3xl md:text-5xl text-foreground leading-tight">
+              {t('about.story.heading')}
+            </h2>
           </div>
-          <h2 className="font-cairo font-bold text-3xl md:text-4xl text-foreground mb-6">{t('about.story.heading')}</h2>
-          <p className="font-cairo text-muted-foreground leading-loose text-lg">
-            {t('about.story.body').replace('{storeName}', storeName)}
-          </p>
+
+          <div className="relative bg-gradient-to-br from-card via-card to-primary/[0.03] border border-border/60 rounded-3xl p-8 md:p-12 shadow-sm">
+            <Quote className="absolute top-6 right-6 w-14 h-14 text-primary/10 rotate-180" />
+            <p className="font-cairo text-muted-foreground leading-loose text-base md:text-lg text-center relative z-10">
+              {t('about.story.body').replace('{storeName}', storeName)}
+            </p>
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <div className="h-px w-12 bg-gradient-to-l from-primary/40 to-transparent" />
+              <div className="font-cairo font-bold text-primary">{storeName}</div>
+              <div className="h-px w-12 bg-gradient-to-r from-primary/40 to-transparent" />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Mission Cards */}
-      <section className="bg-secondary py-16 md:py-24 border-y border-border">
-        <div className="container">
-          <div className="text-center mb-12">
-            <div className="inline-block font-cairo text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
+      {/* ─────────── MISSIONS (colored medallions) ─────────── */}
+      <section className="relative py-20 md:py-28 border-y border-border/60 bg-gradient-to-b from-secondary/40 via-secondary/60 to-secondary/40 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+            backgroundSize: '20px 20px',
+          }}
+        />
+        <div className="container relative">
+          <div className="text-center mb-14">
+            <div className="inline-block font-cairo text-xs font-bold uppercase tracking-[0.2em] text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
               {t('about.features.label')}
             </div>
-            <h2 className="font-cairo font-bold text-3xl md:text-4xl text-secondary-foreground">{t('about.whyChooseUs')}</h2>
+            <h2 className="font-cairo font-bold text-3xl md:text-5xl text-secondary-foreground max-w-2xl mx-auto leading-tight">
+              {t('about.whyChooseUs')}
+            </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {missions.map((m, i) => (
               <div
                 key={m.title}
-                className="bg-card border border-border rounded-2xl p-6 text-center hover:shadow-lg hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${0.1 * (i + 1)}s` }}
+                className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 hover:-translate-y-2 transition-all duration-500 animate-fade-in overflow-hidden"
+                style={{ animationDelay: `${0.08 * (i + 1)}s` }}
               >
-                <div className="w-14 h-14 rounded-xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4">
-                  <m.icon className="w-7 h-7" />
+                {/* Corner gradient wash */}
+                <div className={`absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br ${m.tone} blur-2xl opacity-70 group-hover:opacity-100 transition-opacity`} />
+
+                <div className="relative">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${m.tone} ring-1 ${m.ring} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500`}>
+                    <m.icon className={`w-8 h-8 ${m.accent}`} />
+                  </div>
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="font-roboto font-black text-xs text-primary/40">
+                      0{i + 1}
+                    </span>
+                    <h3 className="font-cairo font-bold text-lg text-foreground">{m.title}</h3>
+                  </div>
+                  <p className="font-cairo text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
                 </div>
-                <h3 className="font-cairo font-bold text-lg text-foreground mb-2">{m.title}</h3>
-                <p className="font-cairo text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact */}
-      <section className="container py-16 md:py-24">
-        <h2 className="font-cairo font-bold text-3xl text-foreground text-center mb-12 animate-fade-in">{t('about.contactTitle')}</h2>
-        <div className="max-w-xl mx-auto space-y-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+      {/* ─────────── CONTACT ─────────── */}
+      <section className="container py-20 md:py-28">
+        <div className="text-center mb-14 animate-fade-in">
+          <div className="inline-block font-cairo text-xs font-bold uppercase tracking-[0.2em] text-primary bg-primary/10 rounded-full px-4 py-1.5 mb-4">
+            {t('about.contactTitle')}
+          </div>
+          <h2 className="font-cairo font-bold text-3xl md:text-5xl text-foreground leading-tight">
+            {t('about.contactTitle')}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
           {phone && (
-            <a href={`tel:${phone}`} className="flex items-center gap-4 bg-card border rounded-xl p-5 hover:border-primary/30 hover:shadow-md transition-all group">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Phone className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="font-cairo font-semibold text-foreground">{t('about.phone')}</p>
-                <p className="font-roboto text-muted-foreground" dir="ltr">{phone}</p>
+            <a
+              href={`tel:${phone}`}
+              className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+            >
+              <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center mb-4 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+                  <Phone className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.phone')}</p>
+                <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors" dir="ltr">{phone}</p>
               </div>
             </a>
           )}
+
           {email && (
-            <a href={`mailto:${email}`} className="flex items-center gap-4 bg-card border rounded-xl p-5 hover:border-primary/30 hover:shadow-md transition-all group">
-              <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
-                <Mail className="w-5 h-5 text-secondary" />
-              </div>
-              <div>
-                <p className="font-cairo font-semibold text-foreground">{t('about.email')}</p>
-                <p className="font-roboto text-muted-foreground" dir="ltr">{email}</p>
+            <a
+              href={`mailto:${email}`}
+              className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+              style={{ animationDelay: '0.1s' }}
+            >
+              <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-accent/30 to-accent/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center mb-4 shadow-lg shadow-accent/30 group-hover:scale-110 transition-transform">
+                  <Mail className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.email')}</p>
+                <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors break-all" dir="ltr">{email}</p>
               </div>
             </a>
           )}
-          <div className="flex items-center gap-4 bg-card border rounded-xl p-5">
-            <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <div>
-              <p className="font-cairo font-semibold text-foreground">{t('about.address')}</p>
+
+          <div
+            className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+            style={{ animationDelay: '0.2s' }}
+          >
+            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+            <div className="relative">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                <MapPin className="w-6 h-6 text-white" />
+              </div>
+              <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.address')}</p>
               <p className="font-cairo text-muted-foreground">{address}</p>
             </div>
           </div>
