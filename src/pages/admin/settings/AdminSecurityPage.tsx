@@ -15,6 +15,35 @@ export default function AdminSecurityPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
 
+  const [guestLimit, setGuestLimit] = useState<number>(2);
+  const [loadingLimit, setLoadingLimit] = useState(true);
+  const [savingLimit, setSavingLimit] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'guest_order_limit').maybeSingle();
+      const n = parseInt((data as any)?.value ?? '', 10);
+      if (!isNaN(n) && n > 0) setGuestLimit(n);
+      setLoadingLimit(false);
+    })();
+  }, []);
+
+  const saveGuestLimit = async () => {
+    if (!Number.isInteger(guestLimit) || guestLimit < 1 || guestLimit > 20) {
+      toast({ title: 'الرجاء إدخال رقم بين 1 و 20', variant: 'destructive' });
+      return;
+    }
+    setSavingLimit(true);
+    const { error } = await supabase.from('settings').upsert(
+      { key: 'guest_order_limit', value: String(guestLimit) },
+      { onConflict: 'key' }
+    );
+    setSavingLimit(false);
+    if (error) toast({ title: 'فشل الحفظ', description: error.message, variant: 'destructive' });
+    else toast({ title: 'تم الحفظ ✅' });
+  };
+
+
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="bg-card border rounded-lg p-6 space-y-4">
