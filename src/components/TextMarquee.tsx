@@ -52,6 +52,7 @@ export default function TextMarquee({
 
   return (
     <div
+      dir="ltr"
       className={`relative overflow-hidden py-3 sm:py-4 border-y border-border/40 bg-card/40 backdrop-blur-sm ${className}`}
       style={{
         maskImage:
