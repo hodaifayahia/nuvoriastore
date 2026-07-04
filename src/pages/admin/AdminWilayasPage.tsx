@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Search, MapPin, Building2, Package, Truck, Save, ChevronLeft, Upload, Loader2,
+  Search, MapPin, Building2, Package, Truck, Save, ChevronLeft, Upload, Loader2, Plus, Trash2,
 } from 'lucide-react';
+
 import { ALGERIA_WILAYAS } from '@/data/algeria-wilayas';
 import { useTranslation } from '@/i18n';
 
