@@ -663,11 +663,6 @@ export default function SingleProductPage() {
           )}
 
           <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 space-y-5 shadow-sm">
-            <div className="flex flex-wrap gap-2">
-              {(Array.isArray(product.category) ? product.category : [product.category]).map((c: string) => (
-                <Badge key={c} className="font-cairo bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1">{c}</Badge>
-              ))}
-            </div>
             <h1 className="font-cairo font-extrabold text-2xl md:text-3xl text-foreground leading-tight">{product.name}</h1>
 
             {product.short_description && (
