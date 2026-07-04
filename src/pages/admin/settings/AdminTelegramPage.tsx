@@ -46,18 +46,39 @@ export default function AdminTelegramPage() {
     }
   };
 
+  const reasonLabel = (r?: string) => {
+    switch (r) {
+      case 'disabled': return 'البوت غير مفعّل — قم بتفعيله أولاً وحفظ الإعدادات';
+      case 'no_config': return 'التوكن أو Chat ID غير مُعدّ. أضف Bot Token ومعرّف واحد على الأقل ثم احفظ';
+      case 'orders_disabled': return 'إشعارات الطلبات معطّلة';
+      case 'unknown_type': return 'نوع الطلب غير معروف';
+      case 'Unauthorized': return 'يجب تسجيل الدخول كمسؤول';
+      case 'Forbidden': return 'صلاحيات المسؤول مطلوبة';
+      default: return r || 'خطأ غير معروف';
+    }
+  };
+
   const handleTestNotification = async () => {
     setTestingSend(true);
     try {
       await saveFormFirst();
       const res = await supabase.functions.invoke('telegram-notify', { body: { type: 'test' } });
-      if (res.data?.ok) {
-        toast({ title: 'تم إرسال الرسالة التجريبية ✅' });
+      const data: any = res.data;
+      if (res.error) {
+        toast({ title: 'فشل الاتصال بتلغرام', description: res.error.message || 'تحقق من التوكن والإعدادات', variant: 'destructive' });
+      } else if (data?.ok) {
+        // Also check telegram API results (e.g. wrong chat_id returns 400)
+        const failed = Array.isArray(data.results) ? data.results.filter((r: any) => r && r.ok === false) : [];
+        if (failed.length > 0) {
+          toast({ title: 'فشل الإرسال', description: failed[0]?.description || 'تحقق من Chat ID والتوكن', variant: 'destructive' });
+        } else {
+          toast({ title: 'تم إرسال الرسالة التجريبية ✅' });
+        }
       } else {
-        toast({ title: 'فشل الإرسال', description: res.data?.reason || 'خطأ غير معروف', variant: 'destructive' });
+        toast({ title: 'فشل الإرسال', description: reasonLabel(data?.reason || data?.error), variant: 'destructive' });
       }
-    } catch {
-      toast({ title: 'خطأ في الإرسال', variant: 'destructive' });
+    } catch (e: any) {
+      toast({ title: 'خطأ في الإرسال', description: e?.message || 'حاول مجددًا', variant: 'destructive' });
     } finally {
       setTestingSend(false);
     }
@@ -68,17 +89,21 @@ export default function AdminTelegramPage() {
     try {
       await saveFormFirst();
       const res = await supabase.functions.invoke('telegram-set-webhook', { body: {} });
-      if (res.data?.ok) {
+      const data: any = res.data;
+      if (res.error) {
+        toast({ title: 'فشل ربط الويب هوك', description: res.error.message || 'تحقق من التوكن', variant: 'destructive' });
+      } else if (data?.ok) {
         toast({ title: 'تم ربط الويب هوك بنجاح ✅' });
       } else {
-        toast({ title: 'فشل ربط الويب هوك', description: res.data?.description || 'خطأ', variant: 'destructive' });
+        toast({ title: 'فشل ربط الويب هوك', description: data?.description || reasonLabel(data?.reason || data?.error), variant: 'destructive' });
       }
-    } catch {
-      toast({ title: 'خطأ في ربط الويب هوك', variant: 'destructive' });
+    } catch (e: any) {
+      toast({ title: 'خطأ في ربط الويب هوك', description: e?.message || 'حاول مجددًا', variant: 'destructive' });
     } finally {
       setSettingWebhook(false);
     }
   };
+
 
   if (isLoading) return null;
 
