@@ -1268,20 +1268,22 @@ export default function SingleProductPage() {
       </div>
 
       {/* Rich Product Details */}
-      {product.description && images.length > 1 && (
+      {product.description && (
         <section className="mt-20">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-primary to-primary/30" />
             <h2 className="font-cairo font-extrabold text-2xl text-foreground">{t('sp.productDetails')}</h2>
           </div>
-          <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base">{product.description}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {images.map((img, i) => (
-              <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
-                <img src={img} alt={`${product.name} - ${i + 1}`} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
-              </div>
-            ))}
-          </div>
+          <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap">{product.description}</p>
+          {images.length > 1 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {images.map((img, i) => (
+                <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
+                  <img src={img} alt={`${product.name} - ${i + 1}`} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
