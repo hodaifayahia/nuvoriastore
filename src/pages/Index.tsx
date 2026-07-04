@@ -34,30 +34,30 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const SHOWCASE = [
   {
     key: 'laptops',
-    title: 'Laptops',
-    desc: 'High-performance machines built for creators, coders & gamers.',
+    title: 'حواسيب محمولة',
+    desc: 'أجهزة عالية الأداء مصممة للمبدعين والمطورين واللاعبين.',
     icon: Laptop,
-    cta: 'Explore Laptops',
+    cta: 'استكشف الحواسيب',
     href: '/products?category=Laptops',
     aura: 'aura-teal',
     accent: 'hsl(180 88% 55%)',
   },
   {
     key: 'phones',
-    title: 'Smartphones',
-    desc: 'Flagship phones, cases and accessories engineered for everyday brilliance.',
+    title: 'هواتف ذكية',
+    desc: 'هواتف رائدة وأغطية وإكسسوارات مصممة لتألق يومي.',
     icon: Smartphone,
-    cta: 'Explore Phones',
+    cta: 'استكشف الهواتف',
     href: '/products?category=Phones',
     aura: 'aura-violet',
     accent: 'hsl(270 85% 65%)',
   },
   {
     key: 'gear',
-    title: 'Essential Gear',
-    desc: 'Headphones, keyboards, chargers — the gear that completes your setup.',
+    title: 'إكسسوارات أساسية',
+    desc: 'سماعات، لوحات مفاتيح، شواحن — كل ما يكمّل إعدادك.',
     icon: Headphones,
-    cta: 'Shop Gear',
+    cta: 'تسوق الإكسسوارات',
     href: '/products?category=Headphones',
     aura: 'aura-teal',
     accent: 'hsl(200 95% 55%)',
@@ -65,15 +65,16 @@ const SHOWCASE = [
 ];
 
 const FALLBACK_CATS = [
-  { name: 'Headphones', icon: Headphones },
-  { name: 'Keyboards',  icon: Keyboard },
-  { name: 'Mice',       icon: Mouse },
-  { name: 'Chargers',   icon: BatteryCharging },
-  { name: 'Cables',     icon: Cable },
-  { name: 'Gaming',     icon: Gamepad2 },
-  { name: 'Watches',    icon: Watch },
-  { name: 'Speakers',   icon: Speaker },
+  { name: 'سماعات', icon: Headphones },
+  { name: 'لوحات مفاتيح', icon: Keyboard },
+  { name: 'فأرات', icon: Mouse },
+  { name: 'شواحن', icon: BatteryCharging },
+  { name: 'كابلات', icon: Cable },
+  { name: 'ألعاب', icon: Gamepad2 },
+  { name: 'ساعات', icon: Watch },
+  { name: 'مكبرات صوت', icon: Speaker },
 ];
+
 
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
