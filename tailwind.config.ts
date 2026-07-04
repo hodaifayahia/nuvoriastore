@@ -133,6 +133,10 @@ export default {
           from: { opacity: "0", transform: "translateY(100%)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "brand-marquee": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-25%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -148,6 +152,7 @@ export default {
         "shake": "shake 0.5s ease-in-out",
         "check-pulse": "check-pulse 0.4s ease-out forwards",
         "slide-up": "slide-up 0.3s ease-out",
+        "brand-marquee": "brand-marquee 35s linear infinite",
       },
     },
   },
