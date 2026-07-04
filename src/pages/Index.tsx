@@ -162,7 +162,21 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 2000, stopOnInteraction: false })]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 4000, stopOnInteraction: false })]);
+  const [selectedSlide, setSelectedSlide] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedSlide(emblaApi.selectedScrollSnap());
+    setSlideCount(emblaApi.scrollSnapList().length);
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', () => { setSlideCount(emblaApi.scrollSnapList().length); onSelect(); });
+    return () => { emblaApi.off('select', onSelect); };
+  }, [emblaApi]);
+  const scrollPrev = () => emblaApi?.scrollPrev();
+  const scrollNext = () => emblaApi?.scrollNext();
+  const scrollTo = (i: number) => emblaApi?.scrollTo(i);
 
   useEffect(() => { setVisibleProductsCount(12); }, [allProducts?.length]);
 
