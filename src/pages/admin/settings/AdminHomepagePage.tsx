@@ -354,3 +354,98 @@ function LimitedEditionFields({
     </div>
   );
 }
+
+function HeroSlidesFields({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { toast } = useToast();
+  const [uploading, setUploading] = useState(false);
+  const slides: HeroSlide[] = useMemo(() => {
+    try { return JSON.parse(value || '[]'); } catch { return []; }
+  }, [value]);
+
+  const update = (next: HeroSlide[]) => onChange(JSON.stringify(next));
+
+  const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'الحد الأقصى 2MB', variant: 'destructive' });
+      return;
+    }
+    if (slides.length >= 5) {
+      toast({ title: 'الحد الأقصى 5 صور', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `hero-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('store').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from('store').getPublicUrl(path);
+      update([...slides, { url: data.publicUrl }]);
+    } catch {
+      toast({ title: 'فشل رفع الصورة', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const remove = (i: number) => update(slides.filter((_, idx) => idx !== i));
+  const setLink = (i: number, link: string) => {
+    const next = [...slides];
+    next[i] = { ...next[i], link };
+    update(next);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start gap-2">
+        <Sparkles className="w-4 h-4 text-primary mt-0.5" />
+        <p className="font-cairo text-sm text-muted-foreground">
+          صور القسم الرئيسي (السلايدر). يمكنك إضافة حتى 5 صور — الحد الأقصى 2MB لكل صورة. لا تنسَ الضغط على «حفظ» في الأعلى بعد التعديل.
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        {slides.map((slide, i) => (
+          <div key={i} className="flex items-center gap-3 p-3 border rounded-xl bg-muted/20">
+            <div className="w-20 h-20 rounded-lg overflow-hidden bg-background shrink-0 border">
+              <img src={slide.url} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <Label className="font-cairo text-[11px] text-muted-foreground">رابط اختياري عند الضغط</Label>
+              <Input
+                value={slide.link || ''}
+                onChange={e => setLink(i, e.target.value)}
+                className="font-roboto text-sm mt-1"
+                dir="ltr"
+                placeholder="/products"
+              />
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => remove(i)} className="shrink-0 text-destructive hover:text-destructive">
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
+        ))}
+        {slides.length === 0 && (
+          <p className="font-cairo text-xs text-muted-foreground text-center py-6 border border-dashed rounded-xl">
+            لا توجد صور بعد — سيتم استخدام الصور الافتراضية.
+          </p>
+        )}
+      </div>
+
+      {slides.length < 5 && (
+        <label className="inline-block cursor-pointer">
+          <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={onUpload} />
+          <Button asChild variant="outline" className="font-cairo gap-2" disabled={uploading}>
+            <span>
+              <Upload className="w-4 h-4" />
+              {uploading ? 'جاري الرفع...' : `إضافة صورة (${slides.length}/5)`}
+            </span>
+          </Button>
+        </label>
+      )}
+    </div>
+  );
+}
