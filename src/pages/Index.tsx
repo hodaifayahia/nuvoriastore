@@ -212,102 +212,38 @@ export default function IndexPage() {
       />
 
 
-      {/* ─────────── HERO with background carousel ─────────── */}
-      {showSection('hero') && (
-        <section className="relative px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-12 sm:pb-20 overflow-hidden">
-          {/* Background carousel — autoplay every 2s */}
-          {heroSlides && heroSlides.length > 0 && (
-            <div className="absolute inset-0 -z-10" ref={emblaRef}>
-              <div className="flex h-full">
-                {heroSlides.map((slide, i) => (
-                  <div key={i} className="flex-[0_0_100%] min-w-0 relative">
-                    <img
-                      src={slide.url}
-                      alt={slide.alt || `Slide ${i + 1}`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background/90" />
+      {/* ─────────── HERO CAROUSEL (banners only, autoplay 2s) ─────────── */}
+      {showSection('hero') && (() => {
+        const slides = heroSlides && heroSlides.length > 0 ? heroSlides : DEFAULT_HERO_SLIDES;
+        return (
+          <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-10">
+            <div className="max-w-7xl mx-auto overflow-hidden rounded-3xl glass-card neon-border" ref={emblaRef}>
+              <div className="flex">
+                {slides.map((slide, i) => (
+                  <div key={i} className="flex-[0_0_100%] min-w-0">
+                    {slide.link ? (
+                      <Link to={slide.link}>
+                        <img
+                          src={slide.url}
+                          alt={slide.alt || `Banner ${i + 1}`}
+                          className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover"
+                        />
+                      </Link>
+                    ) : (
+                      <img
+                        src={slide.url}
+                        alt={slide.alt || `Banner ${i + 1}`}
+                        className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
             </div>
-          )}
+          </section>
+        );
+      })()}
 
-          <div className="relative max-w-6xl mx-auto text-center">
-            <div className="pointer-events-none absolute inset-x-0 -top-10 mx-auto h-72 w-[80%] rounded-full blur-[120px] opacity-60"
-              style={{ background: 'radial-gradient(50% 50% at 50% 50%, hsl(180 88% 55% / 0.4), transparent 60%), radial-gradient(50% 50% at 70% 50%, hsl(270 85% 65% / 0.35), transparent 60%)' }}
-            />
-
-            <span className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] font-semibold text-foreground/80 glass-panel neon-border">
-              <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" />
-              {txt('hero_badge', 'مجموعة جديدة 2026')}
-            </span>
-
-            <h1 className="relative mt-6 font-display font-extrabold uppercase leading-[0.95] tracking-tight text-[2.5rem] sm:text-6xl lg:text-7xl xl:text-8xl">
-              {txt('hero_title1', 'منظومتك التقنية،')} <br />
-              <span className="text-gradient-neon">{txt('hero_title2', 'بأسلوبك.')}</span>
-            </h1>
-
-            <p className="relative mt-6 text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              {txt('hero_subtitle', 'حواسيب محمولة وهواتف ذكية وإكسسوارات مختارة — مصممة للأداء وللحياة اليومية.')}
-            </p>
-
-            <form onSubmit={handleSearch} className="relative mt-8 mx-auto flex items-center gap-2 max-w-xl p-1.5 rounded-2xl glass-panel neon-border">
-              <Search className="w-4 h-4 text-muted-foreground ms-3 shrink-0" />
-              <Input
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder={txt('hero_searchPh', 'ابحث عن حواسيب، هواتف، إكسسوارات...')}
-                className="flex-1 border-0 bg-transparent h-11 sm:h-12 text-sm text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0"
-              />
-              <Button type="submit" size="sm" className="btn-neon h-11 sm:h-12 min-h-[48px] px-5 rounded-xl border-0">
-                {txt('hero_searchBtn', 'بحث')}
-              </Button>
-            </form>
-
-            <div className="relative mt-7 flex flex-wrap justify-center gap-3">
-              <Link to="/products">
-                <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                  {txt('hero_shopNow', 'تسوق الآن')} <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/products?category=Laptops">
-                <Button size="lg" variant="outline" className="rounded-full min-h-[48px] glass-panel border-white/15 text-foreground hover:bg-white/10">
-                  {txt('hero_browseLaptops', 'تصفح الحواسيب')}
-                </Button>
-              </Link>
-            </div>
-
-            <div className="relative mt-10 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_original', 'منتجات أصلية')}</span>
-              <span className="inline-flex items-center gap-1.5"><Truck className="w-4 h-4 text-[hsl(var(--grad-violet))]" /> {txt('hero_wilayas', 'توصيل لـ 58 ولاية')}</span>
-              <span className="inline-flex items-center gap-1.5"><Shield className="w-4 h-4 text-[hsl(var(--grad-teal))]" /> {txt('hero_returns', 'إرجاع خلال 7 أيام')}</span>
-            </div>
-
-          </div>
-
-          {/* Stat strip */}
-          <div className="relative max-w-6xl mx-auto mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              { icon: Zap, label: txt('bento_fastHrs', '24 س'),  desc: txt('bento_fastDesc', 'توصيل سريع') },
-              { icon: Cpu, label: String(allProducts?.length ?? '+500'), desc: txt('bento_accessoriesAvail', 'منتج متوفر') },
-              { icon: Shield, label: '7 أيام', desc: txt('hero_returns', 'إرجاع خلال 7 أيام') },
-              { icon: BadgeCheck, label: '4.9★', desc: 'تقييم موثّق' },
-
-            ].map((s, i) => (
-              <div key={i} className="glass-card rounded-2xl p-5 flex items-center gap-4 hover:-translate-y-0.5 transition-transform">
-                <div className="w-11 h-11 rounded-xl bg-[hsl(var(--grad-teal)/0.15)] flex items-center justify-center shrink-0 border border-white/10">
-                  <s.icon className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
-                </div>
-                <div>
-                  <p className="font-display font-extrabold text-2xl tracking-tight">{s.label}</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
 
 
