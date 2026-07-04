@@ -36,6 +36,7 @@ import AdminReturnsSettingsPage from "./pages/admin/settings/AdminReturnsSetting
 import AdminFormSettingsPage from "./pages/admin/settings/AdminFormSettingsPage";
 
 import AdminHomepagePage from "./pages/admin/settings/AdminHomepagePage";
+import AdminFAQPage from "./pages/admin/settings/AdminFAQPage";
 import AdminSecurityPage from "./pages/admin/settings/AdminSecurityPage";
 import AdminLeadsPage from "./pages/admin/AdminLeadsPage";
 import AdminVariationsPage from "./pages/admin/AdminVariationsPage";
