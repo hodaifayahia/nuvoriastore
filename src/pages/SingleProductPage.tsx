@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { ShoppingCart, Minus, Plus, ChevronRight, ChevronLeft, ArrowRight, Star, Send, Loader2, Copy, Truck, CheckCircle, Upload, User, MapPin, CreditCard, Building2, Home, X, Tag, Shield, Zap, RotateCcw, Clock, Share2, Heart } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, ChevronRight, ChevronLeft, ArrowRight, Star, Send, Loader2, Copy, Truck, CheckCircle, Upload, User, MapPin, CreditCard, Building2, Home, X, Tag, Shield, ShieldCheck, Zap, RotateCcw, Clock, Share2, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -1308,6 +1308,41 @@ export default function SingleProductPage() {
           </div>
         </section>
       )}
+
+      {/* Warranty Policy Section */}
+      <section className="mt-20 mb-8">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-1 h-8 rounded-full bg-gradient-to-b from-amber-400 to-amber-400/30" />
+          <h2 className="font-cairo font-extrabold text-2xl text-foreground flex items-center gap-2">
+            <ShieldCheck className="w-6 h-6 text-amber-500" />
+            سياسة الضمان
+          </h2>
+        </div>
+        <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border/40">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6 text-amber-500" />
+            </div>
+            <p className="font-cairo font-bold text-base md:text-lg text-foreground">
+              ضمان لمدة 12 شهراً من تاريخ الشراء
+            </p>
+          </div>
+          <ul className="space-y-4 font-cairo text-sm md:text-base text-muted-foreground leading-relaxed">
+            <li className="flex gap-3">
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+              <span>يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+              <span>استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+              <span>بعد انقضاء فترة الاستبدال، يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.</span>
+            </li>
+          </ul>
+        </div>
+      </section>
 
       {/* Reviews Section */}
       <section className="mt-20 mb-8">
