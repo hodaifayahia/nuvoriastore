@@ -851,6 +851,7 @@ export default function IndexPage() {
             const trackItems = [...list, ...list, ...list];
             return (
               <div
+                dir="ltr"
                 className="relative overflow-hidden group"
                 style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
               >
