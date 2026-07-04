@@ -35,6 +35,15 @@ export default function ProductsPage() {
   const { items, subtotal } = useCart();
   const categoryScrollRef = useRef<HTMLDivElement>(null);
 
+  // Sync category & search from URL when they change (fixes navbar category clicks not filtering)
+  useEffect(() => {
+    const urlCategory = searchParams.get('category') || '';
+    const urlSearch = searchParams.get('search') || '';
+    setSelectedCategories(urlCategory ? [urlCategory] : []);
+    setSearch(urlSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   const { data: categoriesData } = useCategories();
   const sortOptions = [
     { value: 'newest', label: t('productsPage.sort.newest') },
