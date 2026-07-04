@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
-import { Facebook, Instagram, Send, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Send, Twitter, MessageCircle } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 
 export default function Footer() {
@@ -15,6 +15,7 @@ export default function Footer() {
       const { data } = await supabase.from('settings').select('*').in('key', [
         'store_name', 'footer_description',
         'facebook_url', 'instagram_url', 'telegram_url', 'twitter_url',
+        'tiktok_url', 'whatsapp_number',
         'copyright_text',
       ]);
       const map: Record<string, string> = {};
@@ -28,9 +29,21 @@ export default function Footer() {
     settings?.footer_description ||
     'متجر متخصص في الأجهزة الكهرومنزلية والإلكترونيات بأفضل الأسعار في الجزائر.';
 
+  const TikTokIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+    </svg>
+  );
+
+  const whatsappHref = settings?.whatsapp_number
+    ? `https://wa.me/${settings.whatsapp_number.replace(/\D/g, '')}`
+    : '';
+
   const socials = [
     { url: settings?.instagram_url, Icon: Instagram, label: 'Instagram' },
     { url: settings?.facebook_url, Icon: Facebook, label: 'Facebook' },
+    { url: settings?.tiktok_url, Icon: TikTokIcon, label: 'TikTok' },
+    { url: whatsappHref, Icon: MessageCircle, label: 'WhatsApp' },
     { url: settings?.twitter_url, Icon: Twitter, label: 'Twitter' },
     { url: settings?.telegram_url, Icon: Send, label: 'Telegram' },
   ].filter(s => s.url);
