@@ -152,7 +152,7 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 5000 })]);
+  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 2000, stopOnInteraction: false })]);
 
   useEffect(() => { setVisibleProductsCount(12); }, [allProducts?.length]);
 
