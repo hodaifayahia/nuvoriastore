@@ -376,18 +376,18 @@ export default function IndexPage() {
               </div>
 
               {/* Building bento: two tall towers + middle split, small-appliances base */}
-              <div className="grid grid-cols-4 md:grid-cols-12 auto-rows-[130px] sm:auto-rows-[160px] md:auto-rows-[180px] lg:auto-rows-[220px] gap-2.5 sm:gap-3 md:gap-4">
-                {/* Left tower — spans 2 rows */}
+              <div className="grid grid-cols-4 md:grid-cols-12 auto-rows-[140px] sm:auto-rows-[170px] md:auto-rows-[180px] lg:auto-rows-[220px] gap-2.5 sm:gap-3 md:gap-4">
+                {/* Left tower — tall on all screens */}
                 {c0 && <Tile cat={c0} size="lg" className="col-span-2 row-span-2 md:col-span-4 md:row-span-2" />}
 
-                {/* Middle top */}
+                {/* Top-right small */}
                 {c1 && <Tile cat={c1} size="md" className="col-span-2 md:col-span-4" />}
 
-                {/* Right tower — spans 2 rows (moves to right column on mobile) */}
-                {c3 && <Tile cat={c3} size="md" className="col-span-2 md:col-span-4 md:row-span-2" />}
-
-                {/* Middle bottom */}
+                {/* Bottom-right small (aligns beside left tower on mobile) */}
                 {c2 && <Tile cat={c2} size="md" className="col-span-2 md:col-span-4" />}
+
+                {/* Wide feature — full width on mobile, tall right tower on desktop */}
+                {c3 && <Tile cat={c3} size="lg" className="col-span-4 md:col-span-4 md:row-span-2 md:col-start-9 md:row-start-1" />}
 
                 {/* Base — full-width small appliances */}
                 {c4 && <Tile cat={c4} size="md" className="col-span-4 md:col-span-12" />}
