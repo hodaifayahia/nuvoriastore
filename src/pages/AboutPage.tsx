@@ -1,7 +1,7 @@
 import SEO from '@/components/SEO';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles, Quote, ArrowLeft, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { Store, Heart, Truck, Shield, Phone, Mail, MapPin, Star, Sparkles, Quote, ArrowLeft, MessageCircle, CheckCircle2, Facebook, Instagram, Twitter, Send, Youtube, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/i18n';
