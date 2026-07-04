@@ -110,7 +110,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
   return (
     <>
     <Link to={`/product/${id}`} className="group block animate-fade-in">
-      <div className="bg-card border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
+      <div className="bg-card rounded-3xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {allImages.length > 0 ? (
