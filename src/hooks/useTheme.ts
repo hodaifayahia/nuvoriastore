@@ -6,10 +6,7 @@ const STORAGE_KEY = 'akrem-theme';
 const listeners = new Set<(t: Theme) => void>();
 
 function getInitial(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-  if (stored === 'light' || stored === 'dark') return stored;
-  return 'dark';
+  return 'light';
 }
 
 function apply(theme: Theme) {
