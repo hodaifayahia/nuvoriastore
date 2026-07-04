@@ -825,6 +825,7 @@ export default function LandingPage() {
                 </div>
               ) : (
                 <>
+                  <orderGuard.HoneypotField />
                   {/* Variants */}
                   {renderVariants()}
 
