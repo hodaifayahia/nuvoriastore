@@ -18,12 +18,9 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 function getInitialLanguage(): Language {
-  try {
-    const saved = localStorage.getItem('site_language') || localStorage.getItem('admin_language');
-    if (saved && ['ar', 'fr', 'en'].includes(saved)) return saved as Language;
-  } catch {}
   return 'ar';
 }
+
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
