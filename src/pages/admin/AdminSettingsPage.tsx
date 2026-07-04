@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Store, CreditCard, Bot, RotateCcw, FormInput, Paintbrush, Shield, Facebook, LayoutTemplate } from 'lucide-react';
+import { Store, CreditCard, Bot, RotateCcw, FormInput, Paintbrush, Shield, Facebook, LayoutTemplate, HelpCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useTranslation } from '@/i18n';
 
@@ -11,6 +11,7 @@ const SETTINGS_CARDS = [
   { href: '/admin/settings/form', key: 'sidebar.form', descKey: 'settings.formDesc', icon: FormInput },
   
   { href: '/admin/settings/homepage', labelOverride: 'الصفحة الرئيسية', descOverride: 'إظهار/إخفاء الأقسام، تعديل النصوص، وإضافة قسم الإصدار المحدود', icon: LayoutTemplate },
+  { href: '/admin/settings/faq', labelOverride: 'الأسئلة الشائعة', descOverride: 'أضف، عدّل أو احذف الأسئلة التي تظهر في صفحة FAQ للعملاء', icon: HelpCircle },
   { href: '/admin/settings/security', key: 'settings.security', descKey: 'settings.securityDesc', icon: Shield },
   { href: '/admin/settings/pixels', key: 'pixels.title', descKey: 'pixels.description', icon: Facebook },
 ];

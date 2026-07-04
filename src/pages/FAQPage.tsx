@@ -27,13 +27,27 @@ export default function FAQPage() {
     },
   });
 
+  const { data: dbFaqs } = useQuery({
+    queryKey: ['public-faqs'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('faqs')
+        .select('question,answer')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      return data || [];
+    },
+  });
+
   const storeName = settings?.store_name || 'NuvoriaStore';
   const whatsappNumber = settings?.footer_phone || '';
 
-  const faqs = Array.from({ length: 10 }, (_, i) => ({
-    question: t(`faq.items.${i + 1}.question`),
-    answer: t(`faq.items.${i + 1}.answer`),
-  }));
+  const faqs = (dbFaqs && dbFaqs.length > 0)
+    ? dbFaqs
+    : Array.from({ length: 10 }, (_, i) => ({
+        question: t(`faq.items.${i + 1}.question`),
+        answer: t(`faq.items.${i + 1}.answer`),
+      }));
 
   return (
     <div className="min-h-screen bg-background">
