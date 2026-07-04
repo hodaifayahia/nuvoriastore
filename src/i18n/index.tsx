@@ -39,8 +39,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: string): string => {
-    return translations[language]?.[key] || translations.ar[key] || key;
-  }, [language]);
+    return translations.ar[key] || key;
+  }, []);
+
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, dir }}>
