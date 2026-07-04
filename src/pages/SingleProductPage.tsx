@@ -861,31 +861,9 @@ export default function SingleProductPage() {
 
           </div>
 
-          {/* Quantity + Add to Cart + Order Now CTA */}
-          {!outOfStock && (
-            <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 space-y-4 shadow-sm" ref={orderFormRef}>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-border/50 rounded-2xl bg-muted/30">
-                  <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.max(1, q - 1))} className="rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-colors"><Minus className="w-4 h-4" /></Button>
-                  <span className="w-12 text-center font-roboto font-bold text-lg">{qty}</span>
-                  <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors"><Plus className="w-4 h-4" /></Button>
-                </div>
-                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 flex-1 rounded-2xl h-11 border-primary/30 hover:bg-primary/5 hover:border-primary/50 transition-all">
-                  <ShoppingCart className="w-4 h-4" />
-                  {t('sp.addToCart')}
-                </Button>
-              </div>
-              {/* Total price display */}
-              <div className="flex justify-between items-center font-cairo text-sm bg-gradient-to-l from-primary/5 to-primary/10 border border-primary/10 rounded-2xl px-5 py-3.5">
-                <span className="text-muted-foreground font-medium">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
-                <span className="font-roboto font-extrabold text-primary text-xl">{formatPrice(effectivePrice * qty)}</span>
-              </div>
-            </div>
-          )}
-
           {/* ─── Inline Order Form ─── */}
           {!outOfStock && (
-            <div className="bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm shadow-primary/5">
+            <div ref={orderFormRef} className="bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm shadow-primary/5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-md shadow-primary/20">
                   <Truck className="w-5 h-5 text-primary-foreground" />
