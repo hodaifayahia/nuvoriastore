@@ -859,53 +859,11 @@ export default function SingleProductPage() {
               <p className="font-cairo text-muted-foreground leading-relaxed">{product.description}</p>
             )}
 
-            {/* Share button */}
-            <div className="flex items-center gap-2 pt-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={async () => {
-                  const url = `${window.location.origin}/product/${product.id}`;
-                  if (navigator.share) {
-                    try { await navigator.share({ title: product.name, text: t('sp.checkOut').replace('{name}', product.name), url }); } catch {}
-                  } else {
-                    await navigator.clipboard.writeText(url);
-                    toast({ title: t('sp.linkCopied') });
-                  }
-                }}
-                className="font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground hover:text-primary"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                {t('sp.shareProduct')}
-              </Button>
-            </div>
           </div>
-
-          {/* Quantity + Add to Cart + Order Now CTA */}
-          {!outOfStock && (
-            <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 space-y-4 shadow-sm" ref={orderFormRef}>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-border/50 rounded-2xl bg-muted/30">
-                  <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.max(1, q - 1))} className="rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-colors"><Minus className="w-4 h-4" /></Button>
-                  <span className="w-12 text-center font-roboto font-bold text-lg">{qty}</span>
-                  <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors"><Plus className="w-4 h-4" /></Button>
-                </div>
-                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 flex-1 rounded-2xl h-11 border-primary/30 hover:bg-primary/5 hover:border-primary/50 transition-all">
-                  <ShoppingCart className="w-4 h-4" />
-                  {t('sp.addToCart')}
-                </Button>
-              </div>
-              {/* Total price display */}
-              <div className="flex justify-between items-center font-cairo text-sm bg-gradient-to-l from-primary/5 to-primary/10 border border-primary/10 rounded-2xl px-5 py-3.5">
-                <span className="text-muted-foreground font-medium">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
-                <span className="font-roboto font-extrabold text-primary text-xl">{formatPrice(effectivePrice * qty)}</span>
-              </div>
-            </div>
-          )}
 
           {/* ─── Inline Order Form ─── */}
           {!outOfStock && (
-            <div className="bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm shadow-primary/5">
+            <div ref={orderFormRef} className="bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm shadow-primary/5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-md shadow-primary/20">
                   <Truck className="w-5 h-5 text-primary-foreground" />
@@ -923,17 +881,19 @@ export default function SingleProductPage() {
                   <User className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
                 </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
-                  <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
-                    placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
-                  {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
-                </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
-                  <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
-                    placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
-                  {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
+                    <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
+                      placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
+                    {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
+                  </div>
+                  <div>
+                    <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
+                    <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
+                      placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
+                    {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
+                  </div>
                 </div>
               </div>
 
@@ -946,32 +906,35 @@ export default function SingleProductPage() {
                   <MapPin className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.delivery')}</span>
                 </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
-                  <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
-                    <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
-                    <SelectContent>
-                      {wilayas?.map(w => (
-                        <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.orderWilayaId && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderWilayaId}</p>}
-                </div>
-
-                {orderWilayaId && baladiyat && baladiyat.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
-                    <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
-                      <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
+                    <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
+                    <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
+                      <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
                       <SelectContent>
-                        {baladiyat.map(b => (
-                          <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
+                        {wilayas?.map(w => (
+                          <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.orderWilayaId && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderWilayaId}</p>}
                   </div>
-                )}
+
+                  {orderWilayaId && baladiyat && baladiyat.length > 0 && (
+                    <div>
+                      <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
+                      <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
+                        <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
+                        <SelectContent>
+                          {baladiyat.map(b => (
+                            <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
 
                 {orderWilayaId && selectedWilaya && (
                   <div>
@@ -1228,8 +1191,12 @@ export default function SingleProductPage() {
 
               {/* Order Summary */}
               {orderWilayaId && orderDeliveryType && (
-                <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-1.5 text-sm font-cairo">
-                  <div className="flex justify-between">
+                <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-2 text-sm font-cairo">
+                  <div className="flex items-center gap-2 pb-2 border-b border-primary/20">
+                    <Tag className="w-4 h-4 text-primary" />
+                    <span className="font-cairo font-bold text-base text-foreground">ملخص الطلبية</span>
+                  </div>
+                  <div className="flex justify-between pt-1">
                     <span>{t('sp.productLine').replace('{n}', String(qty))}</span>
                     <span className="font-roboto font-bold">{formatPrice(itemSubtotal)}</span>
                   </div>
@@ -1251,31 +1218,50 @@ export default function SingleProductPage() {
                 </div>
               )}
 
-              <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                className="w-full font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25 animate-pulse hover:animate-none">
-                {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
-              </Button>
+              {/* Quantity + Buy Now + Add to Cart */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center border border-border/50 rounded-2xl bg-muted/30">
+                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.max(1, q - 1))} className="rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-colors"><Minus className="w-4 h-4" /></Button>
+                    <span className="w-12 text-center font-roboto font-bold text-lg">{qty}</span>
+                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors"><Plus className="w-4 h-4" /></Button>
+                  </div>
+                  <span className="font-cairo text-xs text-muted-foreground">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 rounded-xl h-14 border-primary/40 hover:bg-primary/5 hover:border-primary/60 transition-all">
+                    <ShoppingCart className="w-5 h-5" />
+                    {t('sp.addToCart')}
+                  </Button>
+                  <Button onClick={handleDirectOrder} disabled={submittingOrder}
+                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25">
+                    {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                    {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Rich Product Details */}
-      {product.description && images.length > 1 && (
+      {product.description && (
         <section className="mt-20">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-primary to-primary/30" />
             <h2 className="font-cairo font-extrabold text-2xl text-foreground">{t('sp.productDetails')}</h2>
           </div>
-          <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base">{product.description}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {images.map((img, i) => (
-              <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
-                <img src={img} alt={`${product.name} - ${i + 1}`} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
-              </div>
-            ))}
-          </div>
+          <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap">{product.description}</p>
+          {images.length > 1 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {images.map((img, i) => (
+                <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
+                  <img src={img} alt={`${product.name} - ${i + 1}`} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
