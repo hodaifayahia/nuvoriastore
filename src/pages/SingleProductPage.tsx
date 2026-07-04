@@ -889,6 +889,17 @@ export default function SingleProductPage() {
               <p className="font-cairo text-muted-foreground leading-relaxed">{product.description}</p>
             )}
 
+            {/* Warranty policy - shown on every product */}
+            <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-5 space-y-2" dir="rtl">
+              <h3 className="font-cairo font-bold text-base text-foreground">سياسة الضمان</h3>
+              <p className="font-cairo font-semibold text-sm text-primary">ضمان لمدة 12 شهراً من تاريخ الشراء</p>
+              <ul className="font-cairo text-sm text-muted-foreground leading-relaxed space-y-1.5 list-disc pr-5">
+                <li>يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.</li>
+                <li>استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.</li>
+                <li>بعد انقضاء فترة الاستبدال، يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.</li>
+              </ul>
+            </div>
+
             {/* Share button */}
             <div className="flex items-center gap-2 pt-1">
               <Button
