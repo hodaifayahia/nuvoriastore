@@ -334,6 +334,33 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+
+        {/* Social Media Row */}
+        {socials.length > 0 && (
+          <div className="max-w-5xl mx-auto mt-10 animate-fade-in">
+            <div className="text-center mb-5">
+              <p className="font-cairo font-bold text-foreground text-lg">تابعنا على وسائل التواصل</p>
+              <p className="font-cairo text-sm text-muted-foreground mt-1">ابق على اطلاع بآخر العروض والمنتجات الجديدة</p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {socials.map(({ url, Icon, label, color }) => (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={`group relative w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:scale-110 transition-all duration-300`}
+                >
+                  <Icon className="w-6 h-6 text-white" />
+                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] font-cairo font-bold px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {label}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );
