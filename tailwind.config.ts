@@ -152,6 +152,7 @@ export default {
         "shake": "shake 0.5s ease-in-out",
         "check-pulse": "check-pulse 0.4s ease-out forwards",
         "slide-up": "slide-up 0.3s ease-out",
+        "brand-marquee": "brand-marquee 35s linear infinite",
       },
     },
   },
