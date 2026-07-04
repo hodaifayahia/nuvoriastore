@@ -261,10 +261,11 @@ export default function IndexPage() {
           {/* Stat strip */}
           <div className="relative max-w-6xl mx-auto mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {[
-              { icon: Zap, label: txt('bento_fastHrs', '24h'),  desc: txt('bento_fastDesc', 'Express delivery') },
-              { icon: Cpu, label: String(allProducts?.length ?? '500+'), desc: txt('bento_accessoriesAvail', 'Products available') },
-              { icon: Shield, label: '7d', desc: txt('hero_returns', '7-day returns') },
-              { icon: BadgeCheck, label: '4.9★', desc: 'Verified rating' },
+              { icon: Zap, label: txt('bento_fastHrs', '24 س'),  desc: txt('bento_fastDesc', 'توصيل سريع') },
+              { icon: Cpu, label: String(allProducts?.length ?? '+500'), desc: txt('bento_accessoriesAvail', 'منتج متوفر') },
+              { icon: Shield, label: '7 أيام', desc: txt('hero_returns', 'إرجاع خلال 7 أيام') },
+              { icon: BadgeCheck, label: '4.9★', desc: 'تقييم موثّق' },
+
             ].map((s, i) => (
               <div key={i} className="glass-card rounded-2xl p-5 flex items-center gap-4 hover:-translate-y-0.5 transition-transform">
                 <div className="w-11 h-11 rounded-xl bg-[hsl(var(--grad-teal)/0.15)] flex items-center justify-center shrink-0 border border-white/10">
