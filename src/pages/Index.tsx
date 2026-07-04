@@ -9,7 +9,7 @@ import {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
   ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
-  ChevronRight, Star, Flame, Clock, Quote,
+  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
