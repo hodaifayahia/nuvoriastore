@@ -308,11 +308,12 @@ export default function IndexPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10 sm:mb-14">
               <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-3">
-                {txt('cat_kicker', 'Shop by category')}
+                {txt('cat_kicker', 'تسوق حسب الفئة')}
               </p>
               <h2 className="font-display font-extrabold uppercase text-3xl sm:text-5xl tracking-tight">
-                {txt('cat_title', 'Built for every setup')}
+                {txt('cat_title', 'مصمم لكل إعداد')}
               </h2>
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
