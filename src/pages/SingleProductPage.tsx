@@ -697,29 +697,6 @@ export default function SingleProductPage() {
               )}
             </div>
 
-            {/* Trust Signals */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3">
-              {[
-                { icon: Truck, label: t('product.freeDelivery'), color: 'text-primary', bg: 'bg-primary/10' },
-                { icon: Shield, label: t('product.securePayment'), color: 'text-emerald-600', bg: 'bg-emerald-500/10' },
-                { icon: Zap, label: t('product.fastShipping'), color: 'text-amber-500', bg: 'bg-amber-500/10' },
-                { icon: RotateCcw, label: t('product.returnGuarantee'), color: 'text-blue-500', bg: 'bg-blue-500/10' },
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/30 border border-border/30 hover:border-border/60 transition-colors group">
-                  <div className={`w-8 h-8 rounded-xl ${item.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <item.icon className={`w-4 h-4 ${item.color}`} />
-                  </div>
-                  <span className="font-cairo text-[11px] text-muted-foreground text-center leading-tight font-medium">{item.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {product.is_free_shipping && (
-              <div className="flex items-center gap-1.5 text-primary bg-primary/5 rounded-lg px-3 py-2">
-                <Truck className="w-4 h-4" />
-                <span className="font-cairo text-sm font-medium">{t('product.freeDelivery')}</span>
-              </div>
-            )}
 
             {/* Stock urgency */}
             {!outOfStock && effectiveStock > 0 && effectiveStock <= 5 && (
