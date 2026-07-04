@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Copy, Upload, CheckCircle, LogIn, Truck, Building2, Home, X } from 'lucide-react';
 import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/FormSettingsTab';
 import { useTranslation } from '@/i18n';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
@@ -24,6 +25,7 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const { trackEvent } = useFacebookPixel();
   const { t } = useTranslation();
+  const orderGuard = useOrderGuard();
 
   // Facebook Pixel: InitiateCheckout
   useEffect(() => {
@@ -260,6 +262,17 @@ export default function CheckoutPage() {
     const receiptRequiredMethods = ['baridimob', 'flexy', 'binance', 'vodafone', 'redotpay'];
     if (receiptRequiredMethods.includes(paymentMethod) && !receiptFile) {
       toast({ title: t('checkout.err.title'), description: t('checkout.err.attachReceipt'), variant: 'destructive' });
+      return;
+    }
+
+    const guard = await orderGuard.verify({ phone, userId: user?.id });
+    if (!guard.ok) {
+      toast({
+        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
+        description: guard.message,
+        variant: 'destructive',
+      });
+      if (guard.reason === 'guest_limit') navigate('/auth');
       return;
     }
 
