@@ -111,6 +111,17 @@ export default function AdminProductsPage() {
     },
   });
 
+  const toggleFeaturedMutation = useMutation({
+    mutationFn: async ({ id, is_featured }: { id: string; is_featured: boolean }) => {
+      const { error } = await supabase.from('products').update({ is_featured } as any).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ['admin-products'] });
+      toast({ title: vars.is_featured ? 'تمت إضافته إلى المميزة ⭐' : 'تمت إزالته من المميزة' });
+    },
+  });
+
   const duplicateMutation = useMutation({
     mutationFn: async (p: any) => {
       const { id, created_at, sku, ...rest } = p;
