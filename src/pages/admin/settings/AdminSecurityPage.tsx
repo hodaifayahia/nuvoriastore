@@ -103,7 +103,36 @@ export default function AdminSecurityPage() {
         </Button>
       </div>
 
+      <div className="bg-card border rounded-lg p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <Users className="w-5 h-5 text-primary" />
+          <h2 className="font-cairo font-bold text-xl">حد طلبات الزوار (بدون تسجيل)</h2>
+        </div>
+        <p className="text-sm text-muted-foreground font-cairo">
+          الحد الأقصى لعدد الطلبات المسموح بها لنفس رقم الهاتف قبل مطالبة الزائر بإنشاء حساب.
+        </p>
+        <div className="flex items-end gap-3">
+          <div className="w-40">
+            <Label className="font-cairo">عدد الطلبات المسموح بها</Label>
+            <Input
+              type="number"
+              min={1}
+              max={20}
+              value={guestLimit}
+              onChange={e => setGuestLimit(parseInt(e.target.value, 10) || 0)}
+              disabled={loadingLimit}
+              className="mt-1"
+              dir="ltr"
+            />
+          </div>
+          <Button onClick={saveGuestLimit} disabled={savingLimit || loadingLimit} className="font-cairo font-semibold">
+            {savingLimit ? 'جاري الحفظ...' : 'حفظ'}
+          </Button>
+        </div>
+      </div>
+
       <AdminUserManagement toast={toast} />
     </div>
   );
 }
+
