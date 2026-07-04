@@ -859,26 +859,6 @@ export default function SingleProductPage() {
               <p className="font-cairo text-muted-foreground leading-relaxed">{product.description}</p>
             )}
 
-            {/* Share button */}
-            <div className="flex items-center gap-2 pt-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={async () => {
-                  const url = `${window.location.origin}/product/${product.id}`;
-                  if (navigator.share) {
-                    try { await navigator.share({ title: product.name, text: t('sp.checkOut').replace('{name}', product.name), url }); } catch {}
-                  } else {
-                    await navigator.clipboard.writeText(url);
-                    toast({ title: t('sp.linkCopied') });
-                  }
-                }}
-                className="font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground hover:text-primary"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                {t('sp.shareProduct')}
-              </Button>
-            </div>
           </div>
 
           {/* Quantity + Add to Cart + Order Now CTA */}
