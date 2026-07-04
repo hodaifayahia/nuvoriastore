@@ -43,24 +43,35 @@ export default function FAQPage() {
         path="/faq"
       />
 
-      {/* Hero — matches AboutPage */}
-      <section className="relative bg-primary border-b border-primary/20">
-        <div className="container relative z-10 py-16 md:py-20 text-center">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 mb-6 animate-fade-in">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/90">
+        <div className="pointer-events-none absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+            backgroundSize: '24px 24px',
+            color: 'hsl(var(--primary-foreground))',
+          }}
+        />
+        <div className="container relative z-10 py-16 md:py-24 text-center">
+          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 mb-6 animate-fade-in shadow-lg shadow-primary-foreground/10">
             <Sparkles className="w-4 h-4" />
             {storeName}
           </div>
-          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex items-center justify-center mx-auto mb-6 animate-fade-in">
+          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 animate-fade-in shadow-xl shadow-primary/20">
             <HelpCircle className="w-10 h-10 text-primary-foreground" />
           </div>
-          <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-4 animate-fade-in drop-shadow-sm" style={{ animationDelay: '0.1s' }}>
             {t('faq.title')}
           </h1>
-          <p className="font-cairo text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="font-cairo text-lg md:text-xl text-primary-foreground/85 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {t('faq.subtitle')}
           </p>
         </div>
       </section>
+
 
       {/* FAQ Accordion */}
       <section className="container py-16 md:py-20">
