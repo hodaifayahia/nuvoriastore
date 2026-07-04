@@ -22,6 +22,9 @@ export default function AdminWilayasPage() {
   const [baladiyaSearch, setBaladiyaSearch] = useState('');
   const [priceOffice, setPriceOffice] = useState('');
   const [priceHome, setPriceHome] = useState('');
+  const [newWilayaName, setNewWilayaName] = useState('');
+  const [newBaladiyaName, setNewBaladiyaName] = useState('');
+
 
   const { data: wilayas = [] } = useQuery({
     queryKey: ['admin-wilayas'],
