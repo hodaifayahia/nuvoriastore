@@ -359,7 +359,7 @@ export default function CheckoutPage() {
             )}
             <div>
               <Label className="font-cairo">{t('checkout.phone')} *</Label>
-              <Input value={phone} onChange={e => handlePhoneChange(e.target.value)} placeholder={t('checkout.phonePlaceholder')} className={`font-roboto mt-1 ${errors.phone ? 'border-destructive' : ''}`} dir="ltr" />
+              <Input value={phone} onChange={e => handlePhoneChange(e.target.value.replace(/\D/g, '').slice(0, 10))} type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}" placeholder={t('checkout.phonePlaceholder')} className={`font-roboto mt-1 ${errors.phone ? 'border-destructive' : ''}`} dir="ltr" />
               {errors.phone && <p className="text-destructive text-xs font-cairo mt-1">{errors.phone}</p>}
             </div>
             {formConfig.wilaya?.visible !== false && !isDigitalOnly && (

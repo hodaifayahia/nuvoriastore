@@ -740,7 +740,7 @@ img{max-width:100%}
                     <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.35rem', color: '#cbd5e1' }}>{fl.phone} *</label>
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0.75rem', border: formErrors.phone ? '2px solid #ef4444' : '1px solid #334155', background: '#1e293b', overflow: 'hidden' }}>
                       <span style={{ padding: '0 0.75rem', display: 'flex', alignItems: 'center' }}><Phone style={{ width: '18px', height: '18px', color: '#94a3b8' }} /></span>
-                      <input type="tel" value={orderPhone} onChange={e => setOrderPhone(e.target.value)} placeholder={fl.phonePh} dir="ltr" style={{ flex: 1, padding: '0.85rem 0.75rem 0.85rem 0', border: 'none', background: 'transparent', color: '#fff', fontSize: '1rem', outline: 'none' }} />
+                      <input type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}" value={orderPhone} onChange={e => setOrderPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder={fl.phonePh} dir="ltr" style={{ flex: 1, padding: '0.85rem 0.75rem 0.85rem 0', border: 'none', background: 'transparent', color: '#fff', fontSize: '1rem', outline: 'none' }} />
                     </div>
                     {formErrors.phone && <p style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.25rem' }}>{formErrors.phone}</p>}
                   </div>

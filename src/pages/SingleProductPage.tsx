@@ -890,7 +890,8 @@ export default function SingleProductPage() {
                   </div>
                   <div>
                     <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
-                    <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
+                    <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value.replace(/\D/g, '').slice(0, 10)); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
+                      type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}"
                       placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
                     {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
                   </div>
