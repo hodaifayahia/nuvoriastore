@@ -442,7 +442,7 @@ export default function IndexPage() {
                 {(allProducts?.length || 0) > 8 && (
                   <div className="mt-10 flex justify-center">
                     <Link to="/products" className="btn-neon inline-flex items-center gap-2 px-7 py-3 rounded-full min-h-[48px] font-semibold">
-                      {txt('new_viewAll', 'View all products')} <ChevronRight className="w-4 h-4" />
+                      {txt('new_viewAll', 'عرض كل المنتجات')} <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
                 )}
@@ -461,13 +461,13 @@ export default function IndexPage() {
             <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2 flex items-center gap-2">
-                  <Flame className="w-3.5 h-3.5" /> {txt('deals_kicker', 'Limited time')}
+                  <Flame className="w-3.5 h-3.5" /> {txt('deals_kicker', 'لوقت محدود')}
                 </p>
-                <h2 className="font-display font-extrabold uppercase text-2xl sm:text-4xl tracking-tight">{txt('deals_title', 'Deals of the day')}</h2>
+                <h2 className="font-display font-extrabold uppercase text-2xl sm:text-4xl tracking-tight">{txt('deals_title', 'عروض اليوم')}</h2>
               </div>
               <div className="flex items-center gap-2 self-start sm:self-auto rounded-2xl glass-panel border border-white/10 px-3 py-2">
                 <Clock className="w-4 h-4 text-[hsl(var(--grad-teal))]" />
-                <span className="text-[11px] text-muted-foreground hidden sm:inline">{txt('deals_endsIn', 'Ends in')}</span>
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">{txt('deals_endsIn', 'ينتهي خلال')}</span>
                 {(['h', 'm', 's'] as const).map((k, i) => (
                   <div key={k} className="flex items-center gap-1">
                     <span className="font-display font-extrabold text-sm sm:text-base bg-white/5 text-[hsl(var(--grad-teal))] border border-white/10 rounded-lg px-2 py-1 tabular-nums min-w-[2.25rem] text-center">
@@ -508,7 +508,7 @@ export default function IndexPage() {
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-violet)/0.25)] blur-3xl" />
             <div className="relative p-6 sm:p-10 flex flex-col justify-center">
               <span className="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.3em] font-semibold border border-white/10 glass-panel mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" /> Limited Edition
+                <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" /> إصدار محدود
               </span>
               <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{hp?.limited.title}</h2>
               {hp?.limited.subtitle && (
@@ -517,7 +517,7 @@ export default function IndexPage() {
               <div className="mt-6">
                 <Link to={hp?.limited.link || '/products'}>
                   <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                    {hp?.limited.cta || 'Shop Now'} <ArrowRight className="w-4 h-4" />
+                    {hp?.limited.cta || 'تسوق الآن'} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
@@ -538,8 +538,8 @@ export default function IndexPage() {
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'Trusted brands')}</p>
-              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'Powered by the best')}</h2>
+              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'علامات موثوقة')}</p>
+              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'مدعوم من الأفضل')}</h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
               {(brandsData && brandsData.length > 0
@@ -572,8 +572,8 @@ export default function IndexPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-6">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2">{txt('tst_kicker', 'Voices')}</p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('tst_title', 'Trusted by enthusiasts')}</h2>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2">{txt('tst_kicker', 'آراء')}</p>
+                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('tst_title', 'موثوق من قِبل المهتمين')}</h2>
               </div>
               <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
                 <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
