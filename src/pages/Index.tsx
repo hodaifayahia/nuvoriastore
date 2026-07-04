@@ -28,6 +28,7 @@ import DigitalTemplate from '@/components/templates/DigitalTemplate';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
 import heroBanner3 from '@/assets/hero-banner-3.jpg';
+import bestPricesBanner from '@/assets/best-prices-banner.jpg.asset.json';
 
 const DEFAULT_HERO_SLIDES = [
   { url: heroBanner1, alt: 'تبريد وغسيل' },
