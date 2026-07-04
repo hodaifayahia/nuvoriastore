@@ -903,17 +903,19 @@ export default function SingleProductPage() {
                   <User className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
                 </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
-                  <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
-                    placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
-                  {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
-                </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
-                  <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
-                    placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
-                  {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
+                    <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
+                      placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
+                    {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
+                  </div>
+                  <div>
+                    <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
+                    <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
+                      placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
+                    {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
+                  </div>
                 </div>
               </div>
 
