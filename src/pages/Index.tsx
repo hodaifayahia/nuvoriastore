@@ -554,7 +554,7 @@ export default function IndexPage() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {featuredProducts.map(p => (
-                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden relative">
+                <div key={p.id} className="glass-card neon-border overflow-hidden relative">
                   <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[10px] font-bold shadow-lg">
                     <Star className="w-3 h-3 fill-current" /> مميز
                   </div>
@@ -600,7 +600,7 @@ export default function IndexPage() {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
                   {(allProducts?.slice(0, 8) || []).map((p) => (
-                    <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
+                    <div key={p.id} className="glass-card neon-border overflow-hidden">
                       <ProductCard
                         id={p.id}
                         name={p.name}
@@ -661,7 +661,7 @@ export default function IndexPage() {
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
                   {catProducts.map((p: any) => (
-                    <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
+                    <div key={p.id} className="glass-card neon-border overflow-hidden">
                       <ProductCard
                         id={p.id}
                         name={p.name}
@@ -732,7 +732,7 @@ export default function IndexPage() {
       {/* ─────────── LIMITED EDITION ─────────── */}
       {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto glass-card neon-border rounded-3xl overflow-hidden grid md:grid-cols-2 gap-0 relative">
+          <div className="max-w-6xl mx-auto glass-card neon-border overflow-hidden grid md:grid-cols-2 gap-0 relative">
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-teal)/0.25)] blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-violet)/0.25)] blur-3xl" />
             <div className="relative p-6 sm:p-10 flex flex-col justify-center">
@@ -827,7 +827,7 @@ export default function IndexPage() {
       {/* ─────────── WARRANTY POLICY ─────────── */}
       {showSection('trust_strip') && (
         <section className="px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="max-w-6xl mx-auto relative overflow-hidden rounded-3xl glass-card neon-border">
+          <div className="max-w-6xl mx-auto relative overflow-hidden glass-card neon-border">
             {/* Decorative gradient blobs */}
             <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-teal)/0.18)] blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-amber)/0.15)] blur-3xl" />
