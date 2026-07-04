@@ -185,8 +185,8 @@ export default function IndexPage() {
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden">
       <SEO
-        title="NuvoriaStore — Premium Tech Ecosystem"
-        description="Laptops, smartphones and essential gear. A premium tech ecosystem with fast delivery across Algeria."
+        title="نوفوريا ستور — منظومة تقنية متكاملة"
+        description="حواسيب محمولة وهواتف ذكية وإكسسوارات أساسية. منظومة تقنية راقية مع توصيل سريع عبر 58 ولاية."
         path="/"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -200,6 +200,7 @@ export default function IndexPage() {
           },
         }}
       />
+
 
       {/* ─────────── HERO ─────────── */}
       {showSection('hero') && (
