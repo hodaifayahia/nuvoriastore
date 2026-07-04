@@ -478,6 +478,16 @@ export default function AdminProductsPage() {
                         />
                       </td>
                       <td className="p-3">
+                        <button
+                          type="button"
+                          onClick={() => toggleFeaturedMutation.mutate({ id: p.id, is_featured: !(p as any).is_featured })}
+                          className="p-1.5 rounded-md hover:bg-amber-500/10 transition-colors"
+                          title={(p as any).is_featured ? 'إزالة من المميزة' : 'إضافة إلى المميزة'}
+                        >
+                          <Star className={`w-5 h-5 ${(p as any).is_featured ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/50'}`} />
+                        </button>
+                      </td>
+                      <td className="p-3">
                         <div className="flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => openEdit(p)} title="تعديل"><Pencil className="w-3.5 h-3.5" /></Button>
                           <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary/10 hover:text-secondary" onClick={() => duplicateMutation.mutate(p)} title="نسخ"><Copy className="w-3.5 h-3.5" /></Button>
