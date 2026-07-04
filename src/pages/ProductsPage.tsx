@@ -234,31 +234,45 @@ export default function ProductsPage() {
 
 
       {/* ─── Hero Header ─── */}
-      <section className="relative bg-primary border-b border-primary/20">
-        <div className="container relative z-10 py-12 md:py-16">
+      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/90">
+        {/* Decorative blobs */}
+        <div className="pointer-events-none absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+            backgroundSize: '24px 24px',
+            color: 'hsl(var(--primary-foreground))',
+          }}
+        />
+
+        <div className="container relative z-10 py-14 md:py-20">
           <AnimatedSection>
-            <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2">
+            <div className="text-center space-y-5">
+              <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 shadow-lg shadow-primary-foreground/10">
                 <Sparkles className="w-4 h-4" />
                 {t('productsPage.hero.badge')}
               </div>
-              <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight">
+              <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight drop-shadow-sm">
                 {t('productsPage.hero.title')}
               </h1>
-              <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
+              <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto">
                 {t('productsPage.hero.subtitle')}
               </p>
 
               {/* Search Bar in Hero */}
               <div className="max-w-xl mx-auto pt-4">
-                <div className="relative">
-                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <div className="relative group">
+                  <div className="absolute inset-0 rounded-2xl bg-primary-foreground/30 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
                   <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder={t('productsPage.searchPlaceholder')}
-                    className="w-full pr-12 pl-4 py-4 rounded-2xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 transition-all duration-300 text-right"
+                    className="relative w-full pr-12 pl-4 py-4 rounded-2xl bg-background/95 backdrop-blur-sm border border-primary-foreground/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/40 transition-all duration-300 text-right shadow-xl"
                   />
                 </div>
               </div>
@@ -266,6 +280,7 @@ export default function ProductsPage() {
           </AnimatedSection>
         </div>
       </section>
+
 
 
       {/* ─── Category Tabs ─── */}
