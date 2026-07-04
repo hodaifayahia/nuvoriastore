@@ -8,6 +8,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
+  Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
   ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
   ChevronRight, ChevronLeft, Star, Flame, Clock, Quote,
   type LucideIcon,
@@ -38,6 +39,7 @@ const DEFAULT_HERO_SLIDES = [
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
+  Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
 };
 
 // Showcase trio: Laptops / Smartphones / Essential Gear
@@ -199,6 +201,16 @@ export default function IndexPage() {
   if (storeTemplate === 'liquid')  return <LiquidTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
   if (storeTemplate === 'digital') return <DigitalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
 
+  const bentoCats = useMemo(() => {
+    return (categoriesData || [])
+      .filter((c: any) => c?.name)
+      .map((c: any) => ({
+        name: c.name as string,
+        image: c.image as string | undefined,
+        icon: (c.icon && ICON_MAP[c.icon]) || Tag,
+      }));
+  }, [categoriesData]);
+
   const extraCats = useMemo(() => {
     const fromDb = (categoriesData || [])
       .filter((c: any) => c?.name)
@@ -300,69 +312,92 @@ export default function IndexPage() {
 
 
 
-      {/* ─────────── CATEGORY SHOWCASE (3 columns) ─────────── */}
-      {showSection('categories') && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-10 sm:mb-14">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-3">
-                {txt('cat_kicker', 'تسوق حسب الفئة')}
-              </p>
-              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-5xl tracking-tight">
-                {txt('cat_title', 'مصمم لكل إعداد')}
-              </h2>
+      {/* ─────────── CATEGORY BENTO (building layout) ─────────── */}
+      {showSection('categories') && bentoCats.length > 0 && (() => {
+        const [c0, c1, c2, c3, c4] = [0, 1, 2, 3, 4].map((i) => bentoCats[i] || bentoCats[i % bentoCats.length]);
 
-            </div>
+        const Tile = ({
+          cat, className = '', size = 'md',
+        }: {
+          cat: typeof bentoCats[number];
+          className?: string;
+          size?: 'sm' | 'md' | 'lg';
+        }) => {
+          const Icon = cat.icon;
+          const titleSize = size === 'lg' ? 'text-3xl sm:text-4xl' : size === 'md' ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
+          return (
+            <Link
+              to={`/products?category=${encodeURIComponent(cat.name)}`}
+              className={`group relative overflow-hidden rounded-3xl border border-border/60 bg-card shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 ${className}`}
+            >
+              {cat.image ? (
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+              )}
+              {/* Overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-tr from-primary/40 via-transparent to-transparent" />
+              {/* Icon badge */}
+              <div className="absolute top-4 right-4 w-11 h-11 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg">
+                <Icon className="w-5 h-5" strokeWidth={2} />
+              </div>
+              {/* Content */}
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white">
+                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">فئة</p>
+                <h3 className={`font-display font-extrabold tracking-tight ${titleSize} drop-shadow-lg`}>
+                  {cat.name}
+                </h3>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                  تسوق الآن
+                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                </span>
+              </div>
+            </Link>
+          );
+        };
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-              {SHOWCASE.map((c) => {
-                const Icon = c.icon;
-                return (
-                  <Link
-                    key={c.key}
-                    to={c.href}
-                    className={`group relative glass-card neon-border rounded-3xl p-7 sm:p-8 flex flex-col items-center text-center gap-5 hover:-translate-y-2 transition-all duration-300 ${c.aura}`}
-                  >
-                    <div
-                      className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center border border-white/10"
-                      style={{
-                        background: `radial-gradient(circle at 30% 30%, ${c.accent}33, transparent 70%), linear-gradient(135deg, hsl(var(--card) / 0.8), hsl(var(--card) / 0.4))`,
-                        boxShadow: `0 0 40px -8px ${c.accent}55`,
-                      }}
-                    >
-                      <Icon className="w-14 h-14 sm:w-16 sm:h-16" style={{ color: c.accent }} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <h3 className="font-display font-extrabold uppercase text-xl sm:text-2xl tracking-tight">{c.title}</h3>
-                      <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-[28ch] mx-auto">{c.desc}</p>
-                    </div>
-                    <span className="mt-1 inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold border border-white/15 bg-white/[0.03] group-hover:bg-white/10 transition-colors">
-                      {c.cta} <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
+        return (
+          <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-10 sm:mb-14">
+                <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-3">
+                  {txt('cat_kicker', 'تسوق حسب الفئة')}
+                </p>
+                <h2 className="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">
+                  {txt('cat_title', 'مصمم لكل إعداد')}
+                </h2>
+                <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
+              </div>
 
-            {/* secondary category chips */}
-            <div className="mt-10 flex flex-wrap justify-center gap-2 sm:gap-3">
-              {extraCats.map((c) => {
-                const Icon = c.icon as LucideIcon;
-                return (
-                  <Link
-                    key={c.name}
-                    to={`/products?category=${encodeURIComponent(c.name)}`}
-                    className="inline-flex items-center gap-2 px-4 py-2 min-h-[40px] rounded-full glass-panel border border-white/10 text-sm hover:border-[hsl(var(--grad-teal))]/50 hover:text-[hsl(var(--grad-teal))] transition-colors"
-                  >
-                    <Icon className="w-4 h-4" />
-                    {c.name}
-                  </Link>
-                );
-              })}
+              {/* Building bento: two tall towers + middle split, small-appliances base */}
+              <div className="grid grid-cols-1 md:grid-cols-12 md:auto-rows-[180px] lg:auto-rows-[220px] gap-3 sm:gap-4">
+                {/* Left tower — spans 2 rows */}
+                {c0 && <Tile cat={c0} size="lg" className="md:col-span-4 md:row-span-2 min-h-[340px] md:min-h-0" />}
+
+                {/* Middle top */}
+                {c1 && <Tile cat={c1} size="md" className="md:col-span-4 min-h-[220px] md:min-h-0" />}
+
+                {/* Right tower — spans 2 rows */}
+                {c3 && <Tile cat={c3} size="lg" className="md:col-span-4 md:row-span-2 min-h-[340px] md:min-h-0" />}
+
+                {/* Middle bottom */}
+                {c2 && <Tile cat={c2} size="md" className="md:col-span-4 min-h-[220px] md:min-h-0" />}
+
+                {/* Base — full-width small appliances */}
+                {c4 && <Tile cat={c4} size="md" className="md:col-span-12 min-h-[200px] md:min-h-[180px]" />}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
+
+
 
       {/* ─────────── TRENDING ─────────── */}
       {showSection('trending') && trendingProducts.length > 0 && (
