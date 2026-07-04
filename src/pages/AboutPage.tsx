@@ -286,81 +286,86 @@ export default function AboutPage() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-          {phone && (
-            <a
-              href={`tel:${phone}`}
-              className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
-            >
-              <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center mb-4 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
-                  <Phone className="w-6 h-6 text-primary-foreground" />
+        <div className="max-w-5xl mx-auto space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {phone && (
+              <a
+                href={`tel:${phone}`}
+                className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+              >
+                <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center mb-4 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+                    <Phone className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.phone')}</p>
+                  <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors" dir="ltr">{phone}</p>
                 </div>
-                <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.phone')}</p>
-                <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors" dir="ltr">{phone}</p>
-              </div>
-            </a>
-          )}
+              </a>
+            )}
 
-          {email && (
-            <a
-              href={`mailto:${email}`}
-              className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
-              style={{ animationDelay: '0.1s' }}
-            >
-              <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-accent/30 to-accent/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center mb-4 shadow-lg shadow-accent/30 group-hover:scale-110 transition-transform">
-                  <Mail className="w-6 h-6 text-accent-foreground" />
+            {email && (
+              <a
+                href={`mailto:${email}`}
+                className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+                style={{ animationDelay: '0.1s' }}
+              >
+                <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-accent/30 to-accent/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center mb-4 shadow-lg shadow-accent/30 group-hover:scale-110 transition-transform">
+                    <Mail className="w-6 h-6 text-accent-foreground" />
+                  </div>
+                  <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.email')}</p>
+                  <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors break-all" dir="ltr">{email}</p>
                 </div>
-                <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.email')}</p>
-                <p className="font-roboto text-muted-foreground group-hover:text-primary transition-colors break-all" dir="ltr">{email}</p>
-              </div>
-            </a>
-          )}
+              </a>
+            )}
+          </div>
 
-          <div
-            className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
-            style={{ animationDelay: '0.2s' }}
-          >
-            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
-                <MapPin className="w-6 h-6 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+            <div
+              className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+              style={{ animationDelay: '0.2s' }}
+            >
+              <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.address')}</p>
+                <p className="font-cairo text-muted-foreground">{address}</p>
               </div>
-              <p className="font-cairo font-bold text-foreground text-lg mb-1">{t('about.address')}</p>
-              <p className="font-cairo text-muted-foreground">{address}</p>
             </div>
+
+            {socials.length > 0 && (
+              <div
+                className="group relative bg-card border border-border/60 rounded-3xl p-7 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden animate-fade-in"
+                style={{ animationDelay: '0.3s' }}
+              >
+                <div className="absolute -top-16 -left-16 w-40 h-40 rounded-full bg-gradient-to-br from-pink-500/20 to-purple-500/5 blur-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <p className="font-cairo font-bold text-foreground text-lg mb-1">تابعنا على وسائل التواصل</p>
+                  <p className="font-cairo text-sm text-muted-foreground mb-4">ابق على اطلاع بآخر العروض والمنتجات الجديدة</p>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {socials.map(({ url, Icon, label, color }) => (
+                      <a
+                        key={label}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        title={label}
+                        className={`group/s relative w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-md hover:shadow-xl hover:-translate-y-0.5 hover:scale-110 transition-all duration-300`}
+                      >
+                        <Icon className="w-5 h-5 text-white" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Social Media Row */}
-        {socials.length > 0 && (
-          <div className="max-w-5xl mx-auto mt-10 animate-fade-in">
-            <div className="text-center mb-5">
-              <p className="font-cairo font-bold text-foreground text-lg">تابعنا على وسائل التواصل</p>
-              <p className="font-cairo text-sm text-muted-foreground mt-1">ابق على اطلاع بآخر العروض والمنتجات الجديدة</p>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {socials.map(({ url, Icon, label, color }) => (
-                <a
-                  key={label}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className={`group relative w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:scale-110 transition-all duration-300`}
-                >
-                  <Icon className="w-6 h-6 text-white" />
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] font-cairo font-bold px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    {label}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
     </div>
   );
