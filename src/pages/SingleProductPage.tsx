@@ -1213,8 +1213,12 @@ export default function SingleProductPage() {
 
               {/* Order Summary */}
               {orderWilayaId && orderDeliveryType && (
-                <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-1.5 text-sm font-cairo">
-                  <div className="flex justify-between">
+                <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-2 text-sm font-cairo">
+                  <div className="flex items-center gap-2 pb-2 border-b border-primary/20">
+                    <Tag className="w-4 h-4 text-primary" />
+                    <span className="font-cairo font-bold text-base text-foreground">ملخص الطلبية</span>
+                  </div>
+                  <div className="flex justify-between pt-1">
                     <span>{t('sp.productLine').replace('{n}', String(qty))}</span>
                     <span className="font-roboto font-bold">{formatPrice(itemSubtotal)}</span>
                   </div>
@@ -1236,11 +1240,28 @@ export default function SingleProductPage() {
                 </div>
               )}
 
-              <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                className="w-full font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25 animate-pulse hover:animate-none">
-                {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
-              </Button>
+              {/* Quantity + Buy Now + Add to Cart */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center border border-border/50 rounded-2xl bg-muted/30">
+                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.max(1, q - 1))} className="rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-colors"><Minus className="w-4 h-4" /></Button>
+                    <span className="w-12 text-center font-roboto font-bold text-lg">{qty}</span>
+                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors"><Plus className="w-4 h-4" /></Button>
+                  </div>
+                  <span className="font-cairo text-xs text-muted-foreground">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 rounded-xl h-14 border-primary/40 hover:bg-primary/5 hover:border-primary/60 transition-all">
+                    <ShoppingCart className="w-5 h-5" />
+                    {t('sp.addToCart')}
+                  </Button>
+                  <Button onClick={handleDirectOrder} disabled={submittingOrder}
+                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25">
+                    {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                    {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
