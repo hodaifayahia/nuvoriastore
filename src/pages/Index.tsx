@@ -39,6 +39,7 @@ const DEFAULT_HERO_SLIDES = [
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
+  Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
 };
 
 // Showcase trio: Laptops / Smartphones / Essential Gear
