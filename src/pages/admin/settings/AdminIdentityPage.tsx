@@ -107,7 +107,7 @@ export default function AdminIdentityPage() {
             <Label className="font-cairo">اللون الثانوي</Label>
             <div className="flex items-center gap-2">
               <input type="color" value={secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="w-10 h-10 rounded-lg border cursor-pointer" />
-              <Input value={form.secondary_color ?? secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#3498db" />
+              <Input value={form.secondary_color ?? secondaryColor} onChange={e => setField('secondary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#0F2E7A" />
             </div>
           </div>
         </div>
