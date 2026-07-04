@@ -100,7 +100,7 @@ export default function AdminIdentityPage() {
             <Label className="font-cairo">اللون الأساسي</Label>
             <div className="flex items-center gap-2">
               <input type="color" value={primaryColor} onChange={e => setField('primary_color', e.target.value)} className="w-10 h-10 rounded-lg border cursor-pointer" />
-              <Input value={form.primary_color ?? primaryColor} onChange={e => setField('primary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#2ecc71" />
+              <Input value={form.primary_color ?? primaryColor} onChange={e => setField('primary_color', e.target.value)} className="font-roboto flex-1" dir="ltr" placeholder="#184ABF" />
             </div>
           </div>
           <div className="space-y-2">
