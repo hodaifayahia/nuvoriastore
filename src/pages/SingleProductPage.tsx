@@ -761,11 +761,9 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {outOfStock ? (
+            {outOfStock && (
               <Badge variant="destructive" className="font-cairo">{t('sp.outOfStockNow')}</Badge>
-            ) : effectiveStock > 5 ? (
-              <p className="font-cairo text-sm text-primary">{t('sp.inStock').replace('{n}', String(effectiveStock))}</p>
-            ) : null}
+            )}
 
             {/* NEW Variant Selector */}
             {hasNewVariants && (
