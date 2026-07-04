@@ -363,6 +363,7 @@ export default function CheckoutPage() {
           {/* Customer Info */}
           <div className="bg-card border rounded-lg p-6 space-y-4">
             <h2 className="font-cairo font-bold text-xl">{t('checkout.customerInfo')}</h2>
+            <orderGuard.HoneypotField />
             {formConfig.name?.visible !== false && (
               <div>
                 <Label className="font-cairo">{t('checkout.fullName')} {formConfig.name?.required !== false ? '*' : ''}</Label>
