@@ -68,7 +68,7 @@ import { useFacebookPixel } from "@/hooks/useFacebookPixel";
 import { LanguageProvider } from "@/i18n";
 import OfflineBanner from "@/components/OfflineBanner";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
-import AutoPageTranslator from "@/components/AutoPageTranslator";
+
 const queryClient = new QueryClient();
 
 function StoreThemeProvider({ children }: { children: React.ReactNode }) {
@@ -101,7 +101,7 @@ const App = () => (
         <Sonner />
         <OfflineBanner />
         <LanguageProvider>
-        <AutoPageTranslator />
+        
         <BrowserRouter>
           <Routes>
             {/* Public */}

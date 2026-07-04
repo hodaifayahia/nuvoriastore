@@ -224,38 +224,6 @@ export default function Navbar() {
 
 
 
-            {/* Language switcher */}
-            <div
-              className="relative"
-              onMouseEnter={handleLangEnter}
-              onMouseLeave={handleLangLeave}
-            >
-              <button
-                onClick={() => setLangOpen(o => !o)}
-                className="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:bg-muted transition-colors text-xs font-cairo font-semibold text-muted-foreground"
-                aria-label="Language"
-              >
-                <Globe className="w-4 h-4" />
-                <span>{currentLang.short}</span>
-                <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {langOpen && (
-                <div className="absolute top-full right-0 mt-1 w-36 bg-card border rounded-xl shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {LANGS.map(l => (
-                    <button
-                      key={l.code}
-                      onClick={() => { setLanguage(l.code); setLangOpen(false); }}
-                      className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm font-cairo transition-colors ${
-                        language === l.code ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                      }`}
-                    >
-                      <span>{l.label}</span>
-                      <span className="text-[10px] opacity-70">{l.short}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
 
             {!loading && (
               <Link
