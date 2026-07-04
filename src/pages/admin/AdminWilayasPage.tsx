@@ -359,6 +359,24 @@ export default function AdminWilayasPage() {
             <h3 className="font-cairo font-bold text-lg">البلديات</h3>
             <Building2 className="w-5 h-5 text-muted-foreground" />
           </div>
+          <div className="flex gap-2 mb-2">
+            <Input
+              value={newBaladiyaName}
+              onChange={e => setNewBaladiyaName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && newBaladiyaName.trim() && selectedId) addBaladiya.mutate(newBaladiyaName); }}
+              placeholder={selectedId ? 'اسم بلدية جديدة' : 'اختر ولاية أولاً'}
+              disabled={!selectedId}
+              className="font-cairo"
+            />
+            <Button
+              size="icon"
+              onClick={() => addBaladiya.mutate(newBaladiyaName)}
+              disabled={addBaladiya.isPending || !selectedId || !newBaladiyaName.trim()}
+              className="shrink-0"
+            >
+              {addBaladiya.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            </Button>
+          </div>
           <div className="relative mb-3">
             <Search className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={baladiyaSearch} onChange={e => setBaladiyaSearch(e.target.value)} placeholder="بحث..." className="pe-9 font-cairo" />
@@ -367,6 +385,13 @@ export default function AdminWilayasPage() {
             {selectedBaladiyat.map((b: any) => (
               <div key={b.id} className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border bg-background">
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { if (confirm(`حذف البلدية "${b.name}"؟`)) deleteBaladiya.mutate(b.id); }}
+                    className="p-1.5 rounded-lg text-destructive opacity-70 hover:opacity-100 hover:bg-destructive/10"
+                    title="حذف"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                   <Switch checked={!!b.is_active} onCheckedChange={(v) => toggleBaladiya.mutate({ id: b.id, val: v })} />
                   <span className="font-cairo text-xs text-muted-foreground">مكتب</span>
                 </div>
@@ -382,6 +407,7 @@ export default function AdminWilayasPage() {
               <p className="text-center text-sm text-muted-foreground font-cairo py-6">لا توجد بلديات</p>
             )}
           </div>
+
         </div>
       </div>
     </div>
