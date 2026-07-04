@@ -25,6 +25,7 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import TextMarquee from '@/components/TextMarquee';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
 import heroBanner3 from '@/assets/hero-banner-3.jpg';
@@ -444,7 +445,8 @@ export default function IndexPage() {
         );
       })()}
 
-
+      {/* ─────────── ANNOUNCEMENT TICKER (seamless infinite text marquee) ─────────── */}
+      {showSection('hero') && <TextMarquee />}
 
 
       {/* ─────────── CATEGORY BENTO (building layout) ─────────── */}
