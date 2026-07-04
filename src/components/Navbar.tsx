@@ -141,7 +141,7 @@ export default function Navbar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-cairo font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2 rounded-xl text-[12px] lg:text-sm font-cairo font-medium transition-all duration-200 ${
                     isActive
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
