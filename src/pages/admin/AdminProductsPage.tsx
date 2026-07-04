@@ -111,6 +111,17 @@ export default function AdminProductsPage() {
     },
   });
 
+  const toggleFeaturedMutation = useMutation({
+    mutationFn: async ({ id, is_featured }: { id: string; is_featured: boolean }) => {
+      const { error } = await supabase.from('products').update({ is_featured } as any).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ['admin-products'] });
+      toast({ title: vars.is_featured ? 'تمت إضافته إلى المميزة ⭐' : 'تمت إزالته من المميزة' });
+    },
+  });
+
   const duplicateMutation = useMutation({
     mutationFn: async (p: any) => {
       const { id, created_at, sku, ...rest } = p;
@@ -430,6 +441,7 @@ export default function AdminProductsPage() {
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.quantity')}</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.price')}</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.status')}</th>
+                  <th className="p-3 text-right font-cairo font-semibold">مميز</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.actions')}</th>
                 </tr>
               </thead>
@@ -464,6 +476,16 @@ export default function AdminProductsPage() {
                           onCheckedChange={(checked) => toggleStatusMutation.mutate({ id: p.id, is_active: checked })}
                           disabled={toggleStatusMutation.isPending}
                         />
+                      </td>
+                      <td className="p-3">
+                        <button
+                          type="button"
+                          onClick={() => toggleFeaturedMutation.mutate({ id: p.id, is_featured: !(p as any).is_featured })}
+                          className="p-1.5 rounded-md hover:bg-amber-500/10 transition-colors"
+                          title={(p as any).is_featured ? 'إزالة من المميزة' : 'إضافة إلى المميزة'}
+                        >
+                          <Star className={`w-5 h-5 ${(p as any).is_featured ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/50'}`} />
+                        </button>
                       </td>
                       <td className="p-3">
                         <div className="flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
@@ -507,7 +529,15 @@ export default function AdminProductsPage() {
                         عرض <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center">
+                      <button
+                        type="button"
+                        onClick={() => toggleFeaturedMutation.mutate({ id: p.id, is_featured: !(p as any).is_featured })}
+                        className="p-1.5 rounded-md hover:bg-amber-500/10"
+                        title="مميز"
+                      >
+                        <Star className={`w-4 h-4 ${(p as any).is_featured ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/50'}`} />
+                      </button>
                       <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => openEdit(p)}><Pencil className="w-3.5 h-3.5" /></Button>
                       <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => duplicateMutation.mutate(p)}><Copy className="w-3.5 h-3.5" /></Button>
                       <Button variant="outline" size="icon" className="h-8 w-8 text-destructive" onClick={() => setDeleteDialog(p.id)}><Trash2 className="w-3.5 h-3.5" /></Button>

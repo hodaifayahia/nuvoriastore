@@ -28,6 +28,7 @@ import DigitalTemplate from '@/components/templates/DigitalTemplate';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
 import heroBanner3 from '@/assets/hero-banner-3.jpg';
+import bestPricesBanner from '@/assets/best-prices-banner.jpg.asset.json';
 
 const DEFAULT_HERO_SLIDES = [
   { url: heroBanner1, alt: 'تبريد وغسيل' },
@@ -133,6 +134,10 @@ export default function IndexPage() {
   const txt = (key: string, fallback: string) => hp?.text?.[key] || fallback;
 
   const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
+  const featuredProducts = useMemo(
+    () => (allProducts || []).filter((p: any) => p.is_featured).slice(0, 8),
+    [allProducts],
+  );
   const trendingProducts = useMemo(
     () => [...(allProducts || [])].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 4),
     [allProducts],
@@ -399,22 +404,28 @@ export default function IndexPage() {
 
 
 
-      {/* ─────────── TRENDING ─────────── */}
-      {showSection('trending') && trendingProducts.length > 0 && (
+      {/* ─────────── FEATURED PRODUCTS (admin picks) ─────────── */}
+      {featuredProducts.length > 0 && (
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between mb-8">
+            <div className="flex items-end justify-between mb-8 gap-4">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('trend_kicker', 'الأكثر رواجاً')}
+                <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2 flex items-center gap-2">
+                  <Star className="w-3.5 h-3.5 fill-current" /> منتجات مميزة
                 </p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('trend_title', 'الأكثر تفضيلاً هذا الأسبوع')}</h2>
-
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">اختيارات المتجر</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">منتجات مختارة بعناية من طرف فريقنا خصيصاً لك.</p>
               </div>
+              <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                عرض الكل <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              {trendingProducts.map(p => (
-                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+              {featuredProducts.map(p => (
+                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden relative">
+                  <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[10px] font-bold shadow-lg">
+                    <Star className="w-3 h-3 fill-current" /> مميز
+                  </div>
                   <ProductCard
                     id={p.id}
                     name={p.name}
@@ -433,6 +444,7 @@ export default function IndexPage() {
           </div>
         </section>
       )}
+
 
       {/* ─────────── NEWEST ─────────── */}
       {showSection('newest') && (
@@ -484,6 +496,105 @@ export default function IndexPage() {
           </div>
         </section>
       )}
+
+      {/* ─────────── PRODUCTS BY CATEGORY (first two seeded cats) ─────────── */}
+      {bentoCats.slice(0, 2).map((cat, idx) => {
+        const catProducts = (allProducts || [])
+          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name))
+          .slice(0, 4);
+        if (catProducts.length === 0) return null;
+        const CatIcon = cat.icon;
+        const accent = idx === 0 ? 'from-primary/20 to-transparent' : 'from-amber-400/20 to-transparent';
+        return (
+          <section key={cat.name} className="px-4 sm:px-6 lg:px-8 pb-16">
+            <div className="max-w-6xl mx-auto">
+              <div className={`relative rounded-3xl border border-border/60 bg-gradient-to-br ${accent} p-5 sm:p-8 overflow-hidden`}>
+                <div className="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-primary/10 blur-3xl" />
+                <div className="relative flex items-end justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-background/80 backdrop-blur border border-border/60 flex items-center justify-center shadow-sm">
+                      <CatIcon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-1">فئة</p>
+                      <h2 className="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">{cat.name}</h2>
+                    </div>
+                  </div>
+                  <Link
+                    to={`/products?category=${encodeURIComponent(cat.name)}`}
+                    className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                  >
+                    عرض الكل <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+                  {catProducts.map((p: any) => (
+                    <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
+                      <ProductCard
+                        id={p.id}
+                        name={p.name}
+                        price={Number(p.price)}
+                        oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                        image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
+                        images={p.images || []}
+                        mainImageIndex={p.main_image_index ?? 0}
+                        category={p.category || []}
+                        stock={p.stock ?? 0}
+                        shippingPrice={Number(p.shipping_price) || 0}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="sm:hidden mt-5 flex justify-center">
+                  <Link
+                    to={`/products?category=${encodeURIComponent(cat.name)}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
+                  >
+                    عرض كل منتجات {cat.name} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* ─────────── BEST PRICES BANNER ─────────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border/60 min-h-[260px] sm:min-h-[340px]">
+            <img
+              src={bestPricesBanner.url}
+              alt="أفضل الأسعار في الجزائر"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Gradient overlay — stronger on right for RTL text */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
+            <div className="relative h-full flex items-center justify-end p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
+              <div className="max-w-md text-right text-white">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
+                  <BadgeCheck className="w-3.5 h-3.5" /> ضمان أفضل سعر
+                </div>
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight drop-shadow-lg">
+                  أفضل الأسعار<br />في الجزائر
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed">
+                  أجهزة كهرومنزلية أصلية بأسعار لا تُقاوم، مع توصيل سريع إلى 58 ولاية.
+                </p>
+                <Link
+                  to="/products"
+                  className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#0a1e3a] font-bold text-sm shadow-xl hover:scale-105 transition-transform"
+                >
+                  تسوق الآن <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
 
       {/* ─────────── DEALS OF THE DAY ─────────── */}
       {showSection('deals') && dealsProducts.length > 0 && (
