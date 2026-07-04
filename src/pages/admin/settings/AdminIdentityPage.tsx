@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Upload, X, ImageIcon, Plus, Palette, Megaphone, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Save, Upload, X, ImageIcon, Plus, Palette, Megaphone, SlidersHorizontal, Trash2, MessageCircle } from 'lucide-react';
 import { useAdminSettings } from '@/hooks/useAdminSettings';
 
 export default function AdminIdentityPage() {
@@ -219,13 +219,48 @@ export default function AdminIdentityPage() {
               <Label className="font-cairo">تيك توك</Label>
               <Input value={mergedSettings.tiktok_url || ''} onChange={e => setField('tiktok_url', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="https://tiktok.com/@..." />
             </div>
-            <div>
-              <Label className="font-cairo">واتساب (رقم الهاتف)</Label>
-              <Input value={mergedSettings.whatsapp_number || ''} onChange={e => setField('whatsapp_number', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="213555000000" />
-            </div>
           </div>
         </div>
       </div>
+
+      {/* WhatsApp Floating Button */}
+      <div className="bg-card border rounded-lg p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="w-5 h-5 text-[#25D366]" />
+          <h2 className="font-cairo font-bold text-xl">زر واتساب العائم</h2>
+        </div>
+        <p className="font-cairo text-sm text-muted-foreground">
+          يظهر كزر عائم على يسار الشاشة في جميع صفحات المتجر لتواصل الزبائن معك مباشرة.
+        </p>
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={mergedSettings.whatsapp_enabled === 'true'}
+            onCheckedChange={v => setField('whatsapp_enabled', String(v))}
+          />
+          <Label className="font-cairo">تفعيل زر واتساب</Label>
+        </div>
+        <div>
+          <Label className="font-cairo">رقم واتساب (مع رمز الدولة، بدون +)</Label>
+          <Input
+            value={mergedSettings.whatsapp_number || ''}
+            onChange={e => setField('whatsapp_number', e.target.value)}
+            className="font-roboto mt-1"
+            dir="ltr"
+            placeholder="213555000000"
+          />
+        </div>
+        <div>
+          <Label className="font-cairo">رسالة افتراضية (اختياري)</Label>
+          <Input
+            value={mergedSettings.whatsapp_message || ''}
+            onChange={e => setField('whatsapp_message', e.target.value)}
+            className="font-cairo mt-1"
+            placeholder="مرحبًا، أود الاستفسار عن..."
+          />
+        </div>
+      </div>
+
+
 
       {/* Facebook Pixel */}
       <div className="bg-card border rounded-lg p-6 space-y-4">
