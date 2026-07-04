@@ -4,9 +4,11 @@ import { supabase } from '@/integrations/supabase/client';
 const MIN_FORM_TIME_MS = 3000;
 export const GUEST_ORDER_LIMIT = 2;
 
-export type OrderGuardResult =
-  | { ok: true }
-  | { ok: false; reason: 'bot' | 'too_fast' | 'guest_limit'; message: string };
+export type OrderGuardResult = {
+  ok: boolean;
+  reason?: 'bot' | 'too_fast' | 'guest_limit';
+  message?: string;
+};
 
 export function useOrderGuard() {
   const loadedAt = useRef<number>(Date.now());
