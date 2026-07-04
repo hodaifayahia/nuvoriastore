@@ -714,18 +714,21 @@ export default function IndexPage() {
                 </Link>
               );
             };
+            // Repeat the list inside each track so the track is always wider than the viewport,
+            // guaranteeing a seamless loop with no visible gap when the animation wraps.
+            const trackItems = [...list, ...list, ...list];
             return (
               <div
                 className="relative overflow-hidden group"
                 style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
               >
-                <div className="flex w-max animate-brand-marquee group-hover:[animation-play-state:paused]">
-                  {/* Two identical tracks sharing the same internal gap so translating -50% lands exactly on a duplicate frame */}
-                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6" aria-hidden="false">
-                    {list.map((b, i) => renderCard(b, i))}
+                <div className="flex w-max animate-brand-marquee group-hover:[animation-play-state:paused]" style={{ animationTimingFunction: 'linear' }}>
+                  {/* Two identical tracks side-by-side. Translating the parent -50% lands on the exact start of the duplicate → zero-gap loop. */}
+                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0">
+                    {trackItems.map((b, i) => renderCard(b, i))}
                   </div>
-                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6" aria-hidden="true">
-                    {list.map((b, i) => renderCard(b, i + list.length))}
+                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0" aria-hidden="true">
+                    {trackItems.map((b, i) => renderCard(b, i + trackItems.length))}
                   </div>
                 </div>
               </div>
