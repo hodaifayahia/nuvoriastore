@@ -692,36 +692,41 @@ export default function IndexPage() {
               ? brandsData
               : [{name:'Samsung'},{name:'LG'},{name:'Bosch'},{name:'Condor'},{name:'Brandt'}]
             );
-            // Duplicate the list for seamless infinite scroll
-            const loop = [...list, ...list, ...list, ...list];
+            const renderCard = (brand: any, i: number) => {
+              const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
+              return (
+                <Link
+                  key={`${brand.name}-${i}`}
+                  to={`/products?brand=${encodeURIComponent(brand.name)}`}
+                  className="shrink-0 w-40 sm:w-52 h-24 sm:h-28 rounded-2xl overflow-hidden bg-white border border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] flex items-center justify-center hover:-translate-y-1 hover:shadow-[0_18px_45px_-15px_hsl(var(--grad-teal)/0.55)] transition-all duration-300"
+                  aria-label={brand.name}
+                >
+                  {img ? (
+                    <img
+                      src={img}
+                      alt={brand.name}
+                      loading="lazy"
+                      className="max-h-16 sm:max-h-20 max-w-[80%] object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                    />
+                  ) : (
+                    <span className="font-display font-extrabold text-lg uppercase tracking-tight text-neutral-800">{brand.name}</span>
+                  )}
+                </Link>
+              );
+            };
             return (
               <div
                 className="relative overflow-hidden group"
                 style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
               >
-                <div className="flex gap-4 sm:gap-6 w-max animate-brand-marquee group-hover:[animation-play-state:paused]">
-                  {loop.map((brand, i) => {
-                    const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
-                    return (
-                      <Link
-                        key={`${brand.name}-${i}`}
-                        to={`/products?brand=${encodeURIComponent(brand.name)}`}
-                        className="shrink-0 w-40 sm:w-52 h-24 sm:h-28 rounded-2xl overflow-hidden bg-white border border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] flex items-center justify-center hover:-translate-y-1 hover:shadow-[0_18px_45px_-15px_hsl(var(--grad-teal)/0.55)] transition-all duration-300"
-                        aria-label={brand.name}
-                      >
-                        {img ? (
-                          <img
-                            src={img}
-                            alt={brand.name}
-                            loading="lazy"
-                            className="max-h-16 sm:max-h-20 max-w-[80%] object-contain grayscale hover:grayscale-0 transition-all duration-500"
-                          />
-                        ) : (
-                          <span className="font-display font-extrabold text-lg uppercase tracking-tight text-neutral-800">{brand.name}</span>
-                        )}
-                      </Link>
-                    );
-                  })}
+                <div className="flex w-max animate-brand-marquee group-hover:[animation-play-state:paused]">
+                  {/* Two identical tracks sharing the same internal gap so translating -50% lands exactly on a duplicate frame */}
+                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6" aria-hidden="false">
+                    {list.map((b, i) => renderCard(b, i))}
+                  </div>
+                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6" aria-hidden="true">
+                    {list.map((b, i) => renderCard(b, i + list.length))}
+                  </div>
                 </div>
               </div>
             );
