@@ -34,7 +34,7 @@ export default function AboutPage() {
 
   const stats = [
     { value: '1000+', label: 'عميل سعيد' },
-    { value: '58',    label: 'ولاية مغطاة' },
+    { value: '69',    label: 'ولاية مغطاة' },
     { value: '24/7',  label: 'دعم فوري' },
     { value: '100%',  label: 'منتجات أصلية' },
   ];
