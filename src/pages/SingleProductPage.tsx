@@ -894,6 +894,7 @@ export default function SingleProductPage() {
                   <User className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
                 </div>
+                <orderGuard.HoneypotField />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
