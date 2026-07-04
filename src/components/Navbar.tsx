@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, Sun, Moon, HelpCircle, type LucideIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, Sun, Moon, HelpCircle, Facebook, Instagram, MessageCircle, type LucideIcon } from 'lucide-react';
 import { useTranslation, type Language } from '@/i18n';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -85,6 +85,27 @@ export default function Navbar() {
     enabled: !!user,
     staleTime: 5 * 60 * 1000,
   });
+
+  const { data: socials } = useQuery({
+    queryKey: ['navbar-socials'],
+    queryFn: async () => {
+      const { data } = await supabase.from('settings').select('key,value').in('key', [
+        'facebook_url', 'instagram_url', 'tiktok_url', 'whatsapp_number',
+      ]);
+      const map: Record<string, string> = {};
+      data?.forEach((s: any) => { if (s.value) map[s.key] = String(s.value); });
+      const whatsappRaw = map.whatsapp_number || '';
+      const whatsappHref = whatsappRaw ? `https://wa.me/${whatsappRaw.replace(/\D/g, '')}` : '';
+      return {
+        facebook: map.facebook_url || '',
+        instagram: map.instagram_url || '',
+        tiktok: map.tiktok_url || '',
+        whatsapp: whatsappHref,
+      };
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
 
   // Brand name is fixed across all languages
   const displayName = 'NuvoriaStore';
@@ -220,6 +241,40 @@ export default function Navbar() {
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
+
+            {/* Social media icons - desktop only */}
+            {(socials?.facebook || socials?.instagram || socials?.tiktok || socials?.whatsapp) && (
+              <div className="hidden lg:flex items-center gap-0.5 mx-1 pl-1 border-l border-border/60">
+                {socials?.facebook && (
+                  <a href={socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                     className="p-2 rounded-xl text-muted-foreground hover:text-[#1877F2] hover:bg-muted transition-colors">
+                    <Facebook className="w-4 h-4" />
+                  </a>
+                )}
+                {socials?.instagram && (
+                  <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                     className="p-2 rounded-xl text-muted-foreground hover:text-[#E4405F] hover:bg-muted transition-colors">
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                )}
+                {socials?.tiktok && (
+                  <a href={socials.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                     className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+                    </svg>
+                  </a>
+                )}
+                {socials?.whatsapp && (
+                  <a href={socials.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                     className="p-2 rounded-xl text-muted-foreground hover:text-[#25D366] hover:bg-muted transition-colors">
+                    <MessageCircle className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+            )}
+
+
 
 
 
@@ -363,6 +418,43 @@ export default function Navbar() {
                 </Link>
               )}
             </nav>
+
+            {/* Social media - mobile */}
+            {(socials?.facebook || socials?.instagram || socials?.tiktok || socials?.whatsapp) && (
+              <div className="pt-4 mt-2 border-t border-border">
+                <p className="font-cairo text-xs font-semibold text-muted-foreground mb-3 px-3">
+                  {t('nav.followUs') || 'تابعنا'}
+                </p>
+                <div className="flex items-center gap-2 px-3">
+                  {socials?.facebook && (
+                    <a href={socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#1877F2] hover:border-[#1877F2] transition-colors">
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socials?.instagram && (
+                    <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#E4405F] hover:border-[#E4405F] transition-colors">
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socials?.tiktok && (
+                    <a href={socials.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors">
+                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+                      </svg>
+                    </a>
+                  )}
+                  {socials?.whatsapp && (
+                    <a href={socials.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                       className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-muted-foreground hover:text-[#25D366] hover:border-[#25D366] transition-colors">
+                      <MessageCircle className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
