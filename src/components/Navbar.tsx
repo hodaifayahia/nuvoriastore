@@ -51,6 +51,7 @@ const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
   { to: '/products', key: 'nav.products', icon: Package },
   { to: '/track', key: 'nav.track', icon: MapPin },
   { to: '/about', key: 'nav.about', icon: Info },
+  { to: '/faq', key: 'nav.faq', icon: HelpCircle },
 ];
 
 export default function Navbar() {
