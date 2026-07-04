@@ -9,7 +9,7 @@ import {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
   ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
-  ChevronRight, Star, Flame, Clock, Quote,
+  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -162,7 +162,21 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 2000, stopOnInteraction: false })]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 4000, stopOnInteraction: false })]);
+  const [selectedSlide, setSelectedSlide] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedSlide(emblaApi.selectedScrollSnap());
+    setSlideCount(emblaApi.scrollSnapList().length);
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', () => { setSlideCount(emblaApi.scrollSnapList().length); onSelect(); });
+    return () => { emblaApi.off('select', onSelect); };
+  }, [emblaApi]);
+  const scrollPrev = () => emblaApi?.scrollPrev();
+  const scrollNext = () => emblaApi?.scrollNext();
+  const scrollTo = (i: number) => emblaApi?.scrollTo(i);
 
   useEffect(() => { setVisibleProductsCount(12); }, [allProducts?.length]);
 
@@ -215,28 +229,67 @@ export default function IndexPage() {
       {/* ─────────── HERO CAROUSEL (banners only, autoplay 2s) ─────────── */}
       {showSection('hero') && (() => {
         const slides = heroSlides && heroSlides.length > 0 ? heroSlides : DEFAULT_HERO_SLIDES;
+        const count = slideCount || slides.length;
         return (
-          <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-10">
-            <div className="max-w-7xl mx-auto overflow-hidden rounded-3xl glass-card neon-border" ref={emblaRef}>
-              <div className="flex">
-                {slides.map((slide, i) => (
-                  <div key={i} className="flex-[0_0_100%] min-w-0">
-                    {slide.link ? (
-                      <Link to={slide.link}>
+          <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12">
+            <div className="relative max-w-7xl mx-auto group">
+              <div className="overflow-hidden rounded-3xl glass-card neon-border shadow-2xl" ref={emblaRef}>
+                <div className="flex">
+                  {slides.map((slide, i) => (
+                    <div key={i} className="flex-[0_0_100%] min-w-0 relative">
+                      {slide.link ? (
+                        <Link to={slide.link}>
+                          <img
+                            src={slide.url}
+                            alt={slide.alt || `Banner ${i + 1}`}
+                            className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover transition-transform duration-700 ease-out hover:scale-[1.02]"
+                          />
+                        </Link>
+                      ) : (
                         <img
                           src={slide.url}
                           alt={slide.alt || `Banner ${i + 1}`}
-                          className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover"
+                          className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover transition-transform duration-700 ease-out hover:scale-[1.02]"
                         />
-                      </Link>
-                    ) : (
-                      <img
-                        src={slide.url}
-                        alt={slide.alt || `Banner ${i + 1}`}
-                        className="w-full h-[280px] sm:h-[420px] lg:h-[520px] object-cover"
-                      />
-                    )}
-                  </div>
+                      )}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Prev / Next buttons */}
+              <button
+                type="button"
+                onClick={scrollPrev}
+                aria-label="السابق"
+                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-background/70 backdrop-blur-md border border-border/60 text-foreground shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+              <button
+                type="button"
+                onClick={scrollNext}
+                aria-label="التالي"
+                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-background/70 backdrop-blur-md border border-border/60 text-foreground shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              {/* Dots */}
+              <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-2 rounded-full bg-background/50 backdrop-blur-md border border-border/40">
+                {Array.from({ length: count }).map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => scrollTo(i)}
+                    aria-label={`الشريحة ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      selectedSlide === i
+                        ? 'w-8 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.6)]'
+                        : 'w-2 bg-foreground/30 hover:bg-foreground/60'
+                    }`}
+                  />
                 ))}
               </div>
             </div>
