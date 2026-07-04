@@ -663,11 +663,6 @@ export default function SingleProductPage() {
           )}
 
           <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 space-y-5 shadow-sm">
-            <div className="flex flex-wrap gap-2">
-              {(Array.isArray(product.category) ? product.category : [product.category]).map((c: string) => (
-                <Badge key={c} className="font-cairo bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1">{c}</Badge>
-              ))}
-            </div>
             <h1 className="font-cairo font-extrabold text-2xl md:text-3xl text-foreground leading-tight">{product.name}</h1>
 
             {product.short_description && (
@@ -697,29 +692,6 @@ export default function SingleProductPage() {
               )}
             </div>
 
-            {/* Trust Signals */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3">
-              {[
-                { icon: Truck, label: t('product.freeDelivery'), color: 'text-primary', bg: 'bg-primary/10' },
-                { icon: Shield, label: t('product.securePayment'), color: 'text-emerald-600', bg: 'bg-emerald-500/10' },
-                { icon: Zap, label: t('product.fastShipping'), color: 'text-amber-500', bg: 'bg-amber-500/10' },
-                { icon: RotateCcw, label: t('product.returnGuarantee'), color: 'text-blue-500', bg: 'bg-blue-500/10' },
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/30 border border-border/30 hover:border-border/60 transition-colors group">
-                  <div className={`w-8 h-8 rounded-xl ${item.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <item.icon className={`w-4 h-4 ${item.color}`} />
-                  </div>
-                  <span className="font-cairo text-[11px] text-muted-foreground text-center leading-tight font-medium">{item.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {product.is_free_shipping && (
-              <div className="flex items-center gap-1.5 text-primary bg-primary/5 rounded-lg px-3 py-2">
-                <Truck className="w-4 h-4" />
-                <span className="font-cairo text-sm font-medium">{t('product.freeDelivery')}</span>
-              </div>
-            )}
 
             {/* Stock urgency */}
             {!outOfStock && effectiveStock > 0 && effectiveStock <= 5 && (
@@ -761,11 +733,9 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {outOfStock ? (
+            {outOfStock && (
               <Badge variant="destructive" className="font-cairo">{t('sp.outOfStockNow')}</Badge>
-            ) : effectiveStock > 5 ? (
-              <p className="font-cairo text-sm text-primary">{t('sp.inStock').replace('{n}', String(effectiveStock))}</p>
-            ) : null}
+            )}
 
             {/* NEW Variant Selector */}
             {hasNewVariants && (
