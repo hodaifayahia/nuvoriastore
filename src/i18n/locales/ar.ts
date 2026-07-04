@@ -1380,6 +1380,7 @@ export const ar: Record<string, string> = {
   'nav.products': 'المنتجات',
   'nav.track': 'تتبع الطلب',
   'nav.about': 'من نحن',
+  'nav.faq': 'الأسئلة الشائعة',
   'nav.categories': 'التصنيفات',
   'nav.all': 'الكل',
   'nav.search': 'بحث',
