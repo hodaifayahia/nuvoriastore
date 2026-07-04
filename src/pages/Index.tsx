@@ -407,13 +407,14 @@ export default function IndexPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'New arrivals')}</p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'Just landed')}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'Fresh drops from the brands you love.')}</p>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'وصل حديثاً')}</p>
+                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'جديدنا')}</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'إصدارات جديدة من أفضل العلامات.')}</p>
               </div>
               <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {txt('new_allProducts', 'View all')} <ChevronRight className="w-4 h-4" />
+                {txt('new_allProducts', 'عرض الكل')} <ChevronRight className="w-4 h-4" />
               </Link>
+
             </div>
 
             {isLoading ? (
