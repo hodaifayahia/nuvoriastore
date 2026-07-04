@@ -728,33 +728,6 @@ export default function IndexPage() {
 
 
 
-      {/* ─────────── DEALS OF THE DAY ─────────── */}
-      {showSection('deals') && dealsProducts.length > 0 && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto glass-card neon-border rounded-3xl p-5 sm:p-8 relative overflow-hidden">
-            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-violet)/0.25)] blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-teal)/0.25)] blur-3xl" />
-            <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              {dealsProducts.map(p => (
-                <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
-                  <ProductCard
-                    id={p.id}
-                    name={p.name}
-                    price={Number(p.price)}
-                    oldPrice={p.old_price ? Number(p.old_price) : undefined}
-                    image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
-                    images={p.images || []}
-                    mainImageIndex={p.main_image_index ?? 0}
-                    category={p.category || []}
-                    stock={p.stock ?? 0}
-                    shippingPrice={Number(p.shipping_price) || 0}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ─────────── LIMITED EDITION ─────────── */}
       {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
