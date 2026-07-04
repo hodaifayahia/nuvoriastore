@@ -147,7 +147,7 @@ export default function Navbar() {
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
-                  <link.icon className="w-4 h-4" />
+                  <link.icon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   {t(link.key)}
                 </Link>
               );
