@@ -27,18 +27,22 @@ export default function TextMarquee({
   duration = '35s',
   className = '',
 }: Props) {
+  // Repeat phrases inside each track so it is always wider than any viewport,
+  // guaranteeing a seamless loop with no visible gap on wrap.
+  const trackPhrases = [...phrases, ...phrases, ...phrases];
+
   const Track = ({ ariaHidden = false }: { ariaHidden?: boolean }) => (
     <div
-      className="flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12 shrink-0"
+      className="flex items-center gap-6 sm:gap-10 pr-6 sm:pr-10 shrink-0"
       aria-hidden={ariaHidden || undefined}
     >
-      {phrases.map((phrase, i) => (
-        <div key={i} className="flex items-center gap-8 sm:gap-12 shrink-0">
-          <span className="font-display font-extrabold uppercase tracking-tight text-2xl sm:text-4xl md:text-5xl whitespace-nowrap">
+      {trackPhrases.map((phrase, i) => (
+        <div key={i} className="flex items-center gap-6 sm:gap-10 shrink-0">
+          <span className="font-display font-extrabold uppercase tracking-tight text-base sm:text-xl md:text-2xl whitespace-nowrap">
             {phrase}
           </span>
           <Sparkles
-            className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 opacity-80"
+            className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80"
             style={{ color: 'hsl(var(--primary))' }}
           />
         </div>
@@ -48,7 +52,7 @@ export default function TextMarquee({
 
   return (
     <div
-      className={`relative overflow-hidden py-4 sm:py-6 border-y border-border/40 bg-card/40 backdrop-blur-sm ${className}`}
+      className={`relative overflow-hidden py-3 sm:py-4 border-y border-border/40 bg-card/40 backdrop-blur-sm ${className}`}
       style={{
         maskImage:
           'linear-gradient(to right, transparent, black 6%, black 94%, transparent)',
