@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -198,18 +198,13 @@ function FaqDialog({
   const [answer, setAnswer] = useState('');
   const [isActive, setIsActive] = useState(true);
 
-  // sync when opening
-  useState(() => {});
-  const key = faq?.id || 'new';
-  // reset when key changes
-  if ((window as any).__faqKey !== key + String(open)) {
-    (window as any).__faqKey = key + String(open);
+  useEffect(() => {
     if (open) {
       setQuestion(faq?.question || '');
       setAnswer(faq?.answer || '');
       setIsActive(faq?.is_active ?? true);
     }
-  }
+  }, [open, faq]);
 
   const submit = () => {
     if (!question.trim() || !answer.trim()) return;
