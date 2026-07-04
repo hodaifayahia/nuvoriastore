@@ -86,6 +86,27 @@ export default function Navbar() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: socials } = useQuery({
+    queryKey: ['navbar-socials'],
+    queryFn: async () => {
+      const { data } = await supabase.from('settings').select('key,value').in('key', [
+        'facebook_url', 'instagram_url', 'tiktok_url', 'whatsapp_number',
+      ]);
+      const map: Record<string, string> = {};
+      data?.forEach((s: any) => { if (s.value) map[s.key] = String(s.value); });
+      const whatsappRaw = map.whatsapp_number || '';
+      const whatsappHref = whatsappRaw ? `https://wa.me/${whatsappRaw.replace(/\D/g, '')}` : '';
+      return {
+        facebook: map.facebook_url || '',
+        instagram: map.instagram_url || '',
+        tiktok: map.tiktok_url || '',
+        whatsapp: whatsappHref,
+      };
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+
   // Brand name is fixed across all languages
   const displayName = 'NuvoriaStore';
 
