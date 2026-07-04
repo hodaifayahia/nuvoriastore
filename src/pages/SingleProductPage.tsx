@@ -928,32 +928,35 @@ export default function SingleProductPage() {
                   <MapPin className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.delivery')}</span>
                 </div>
-                <div>
-                  <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
-                  <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
-                    <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
-                    <SelectContent>
-                      {wilayas?.map(w => (
-                        <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.orderWilayaId && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderWilayaId}</p>}
-                </div>
-
-                {orderWilayaId && baladiyat && baladiyat.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
-                    <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
-                      <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
+                    <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
+                    <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
+                      <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
                       <SelectContent>
-                        {baladiyat.map(b => (
-                          <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
+                        {wilayas?.map(w => (
+                          <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.orderWilayaId && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderWilayaId}</p>}
                   </div>
-                )}
+
+                  {orderWilayaId && baladiyat && baladiyat.length > 0 && (
+                    <div>
+                      <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
+                      <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
+                        <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
+                        <SelectContent>
+                          {baladiyat.map(b => (
+                            <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
 
                 {orderWilayaId && selectedWilaya && (
                   <div>
