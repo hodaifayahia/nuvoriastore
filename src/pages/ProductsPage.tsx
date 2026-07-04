@@ -487,7 +487,7 @@ export default function ProductsPage() {
               </Button>
             </Link>
             <Link to="/checkout">
-              <Button className="font-cairo font-semibold text-sm gap-2 rounded-xl h-11 shrink-0 shadow-lg shadow-primary/25 bg-gradient-to-r from-primary to-primary/80 hover:from-violet-500 hover:to-blue-500">
+              <Button className="font-cairo font-semibold text-sm gap-2 rounded-xl h-11 shrink-0 shadow-lg shadow-primary/25 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
                 <Zap className="w-4 h-4" />
                 {t('productsPage.cart.checkout')}
               </Button>
