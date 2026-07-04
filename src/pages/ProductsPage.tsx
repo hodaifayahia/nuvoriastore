@@ -1,5 +1,5 @@
 import SEO from '@/components/SEO';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,6 +34,15 @@ export default function ProductsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { items, subtotal } = useCart();
   const categoryScrollRef = useRef<HTMLDivElement>(null);
+
+  // Sync category & search from URL when they change (fixes navbar category clicks not filtering)
+  useEffect(() => {
+    const urlCategory = searchParams.get('category') || '';
+    const urlSearch = searchParams.get('search') || '';
+    setSelectedCategories(urlCategory ? [urlCategory] : []);
+    setSearch(urlSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const { data: categoriesData } = useCategories();
   const sortOptions = [
@@ -225,31 +234,45 @@ export default function ProductsPage() {
 
 
       {/* ─── Hero Header ─── */}
-      <section className="relative bg-primary border-b border-primary/20">
-        <div className="container relative z-10 py-12 md:py-16">
+      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/90">
+        {/* Decorative blobs */}
+        <div className="pointer-events-none absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+            backgroundSize: '24px 24px',
+            color: 'hsl(var(--primary-foreground))',
+          }}
+        />
+
+        <div className="container relative z-10 py-14 md:py-20">
           <AnimatedSection>
-            <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2">
+            <div className="text-center space-y-5">
+              <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 shadow-lg shadow-primary-foreground/10">
                 <Sparkles className="w-4 h-4" />
                 {t('productsPage.hero.badge')}
               </div>
-              <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight">
+              <h1 className="font-cairo font-black text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight drop-shadow-sm">
                 {t('productsPage.hero.title')}
               </h1>
-              <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
+              <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto">
                 {t('productsPage.hero.subtitle')}
               </p>
 
               {/* Search Bar in Hero */}
               <div className="max-w-xl mx-auto pt-4">
-                <div className="relative">
-                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <div className="relative group">
+                  <div className="absolute inset-0 rounded-2xl bg-primary-foreground/30 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
                   <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder={t('productsPage.searchPlaceholder')}
-                    className="w-full pr-12 pl-4 py-4 rounded-2xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 transition-all duration-300 text-right"
+                    className="relative w-full pr-12 pl-4 py-4 rounded-2xl bg-background/95 backdrop-blur-sm border border-primary-foreground/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/40 transition-all duration-300 text-right shadow-xl"
                   />
                 </div>
               </div>
@@ -257,6 +280,7 @@ export default function ProductsPage() {
           </AnimatedSection>
         </div>
       </section>
+
 
 
       {/* ─── Category Tabs ─── */}
@@ -288,7 +312,7 @@ export default function ProductsPage() {
                   onClick={() => setSelectedCategories([])}
                   className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                     selectedCategories.length === 0
-                      ? 'bg-primary text-primary-foreground shadow-md'
+                      ? 'bg-gradient-to-r from-primary to-primary/85 text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                       : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                   }`}
                 >
@@ -300,7 +324,7 @@ export default function ProductsPage() {
                     onClick={() => selectSingleCategory(cat)}
                     className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                       selectedCategories.includes(cat)
-                        ? 'bg-primary text-primary-foreground shadow-md'
+                        ? 'bg-gradient-to-r from-primary to-primary/85 text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                         : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                     }`}
                   >
@@ -325,11 +349,11 @@ export default function ProductsPage() {
             {/* Mobile filter trigger */}
             <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="lg:hidden font-cairo gap-2 rounded-xl border-violet-500/20 hover:border-violet-500/40">
+                <Button variant="outline" size="sm" className="lg:hidden font-cairo gap-2 rounded-xl border-primary/20 hover:border-primary/40">
                   <SlidersHorizontal className="w-4 h-4" />
                   {t('productsPage.filter')}
                   {activeFilterCount > 0 && (
-                    <Badge className="font-roboto text-[10px] h-5 w-5 p-0 flex items-center justify-center bg-violet-600">{activeFilterCount}</Badge>
+                    <Badge className="font-roboto text-[10px] h-5 w-5 p-0 flex items-center justify-center bg-primary">{activeFilterCount}</Badge>
                   )}
                 </Button>
               </SheetTrigger>
@@ -363,7 +387,7 @@ export default function ProductsPage() {
         {activeFilterCount > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
             {selectedCategories.map(cat => (
-              <Badge key={cat} variant="secondary" className="font-cairo gap-1.5 cursor-pointer hover:bg-destructive/10 rounded-full px-4 py-1.5 transition-colors bg-violet-500/10 text-violet-400 border border-violet-500/20" onClick={() => toggleCategory(cat)}>
+              <Badge key={cat} variant="secondary" className="font-cairo gap-1.5 cursor-pointer hover:bg-destructive/10 rounded-full px-4 py-1.5 transition-colors bg-primary/10 text-primary border border-primary/20" onClick={() => toggleCategory(cat)}>
                 {cat}
                 <X className="w-3 h-3" />
               </Badge>
@@ -386,7 +410,7 @@ export default function ProductsPage() {
                 <X className="w-3 h-3" />
               </Badge>
             )}
-            <button onClick={clearFilters} className="text-sm text-violet-400 hover:text-violet-300 font-semibold transition-colors">
+            <button onClick={clearFilters} className="text-sm text-primary hover:text-primary/80 font-semibold transition-colors">
               {t('productsPage.clearAll')}
             </button>
           </div>
@@ -397,8 +421,8 @@ export default function ProductsPage() {
           <aside className="hidden lg:block w-72 shrink-0">
             <div className="sticky top-24 bg-card/90 backdrop-blur-xl border border-border/50 rounded-3xl p-6 shadow-sm">
               <h2 className="font-cairo font-bold text-lg mb-6 flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-600/20 to-blue-600/20 flex items-center justify-center border border-violet-500/20">
-                  <SlidersHorizontal className="w-4 h-4 text-violet-400" />
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20">
+                  <SlidersHorizontal className="w-4 h-4 text-primary" />
                 </div>
                 {t('productsPage.filters.title')}
               </h2>
@@ -434,7 +458,7 @@ export default function ProductsPage() {
                 <ShoppingBag className="w-16 h-16 text-muted-foreground/20 mx-auto mb-5" />
                 <p className="font-cairo text-foreground text-xl font-bold mb-2">{t('productsPage.empty.title')}</p>
                 <p className="font-cairo text-muted-foreground text-sm">{t('productsPage.empty.description')}</p>
-                <Button variant="outline" onClick={clearFilters} className="font-cairo mt-6 rounded-xl gap-2 border-violet-500/20 hover:border-violet-500/40">
+                <Button variant="outline" onClick={clearFilters} className="font-cairo mt-6 rounded-xl gap-2 border-primary/20 hover:border-primary/40">
                   <X className="w-4 h-4" />
                   {t('productsPage.clearFilters')}
                 </Button>
@@ -449,21 +473,21 @@ export default function ProductsPage() {
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-border/50 shadow-[0_-8px_30px_rgba(0,0,0,0.15)]">
           <div className="container flex items-center gap-3 py-4">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-violet-500/25">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shrink-0 shadow-lg shadow-primary/25">
                 <ShoppingBag className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
                 <p className="font-cairo font-bold text-sm">{items.length} {t('productsPage.cart.itemsInCart')}</p>
-                <p className="font-roboto font-bold text-violet-400 text-sm">{formatPrice(subtotal)}</p>
+                <p className="font-roboto font-bold text-primary text-sm">{formatPrice(subtotal)}</p>
               </div>
             </div>
             <Link to="/cart">
-              <Button variant="outline" className="font-cairo text-sm rounded-xl h-11 shrink-0 border-violet-500/20 hover:border-violet-500/40">
+              <Button variant="outline" className="font-cairo text-sm rounded-xl h-11 shrink-0 border-primary/20 hover:border-primary/40">
                 {t('productsPage.cart.viewCart')}
               </Button>
             </Link>
             <Link to="/checkout">
-              <Button className="font-cairo font-semibold text-sm gap-2 rounded-xl h-11 shrink-0 shadow-lg shadow-violet-500/25 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500">
+              <Button className="font-cairo font-semibold text-sm gap-2 rounded-xl h-11 shrink-0 shadow-lg shadow-primary/25 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
                 <Zap className="w-4 h-4" />
                 {t('productsPage.cart.checkout')}
               </Button>

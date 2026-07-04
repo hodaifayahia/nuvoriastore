@@ -49,34 +49,48 @@ export default function TrackOrderPage() {
         path="/track"
       />
       {/* ─── Hero ─── */}
-      <section className="relative bg-primary border-b border-primary/20">
-        <div className="container relative z-10 py-12 md:py-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2">
+      <section className="relative overflow-hidden border-b border-primary/20 bg-gradient-to-br from-primary via-primary to-primary/90">
+        <div className="pointer-events-none absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+            backgroundSize: '24px 24px',
+            color: 'hsl(var(--primary-foreground))',
+          }}
+        />
+        <div className="container relative z-10 py-14 md:py-20">
+          <div className="text-center space-y-5 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary bg-primary-foreground rounded-full px-5 py-2 shadow-lg shadow-primary-foreground/10">
               <Sparkles className="w-4 h-4" />
               {t('trackOrder.title')}
             </div>
-            <h1 className="font-cairo font-black text-4xl md:text-5xl text-primary-foreground leading-tight">
+            <div className="w-16 h-16 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mx-auto shadow-xl shadow-primary/20">
+              <Package className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <h1 className="font-cairo font-black text-4xl md:text-5xl text-primary-foreground leading-tight drop-shadow-sm">
               {t('trackOrder.title')}
             </h1>
-            <p className="text-primary-foreground/80 text-lg">
+            <p className="text-primary-foreground/85 text-base md:text-lg">
               {t('trackOrder.inputPlaceholder')}
             </p>
 
             {/* Search */}
             <div className="max-w-xl mx-auto pt-4 flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <div className="relative flex-1 group">
+                <div className="absolute inset-0 rounded-2xl bg-primary-foreground/30 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
                 <Input
                   value={orderNumber}
                   onChange={e => setOrderNumber(e.target.value)}
                   placeholder={t('trackOrder.inputPlaceholder')}
-                  className="font-roboto h-14 pr-12 rounded-2xl bg-background border-border text-foreground text-right"
+                  className="relative font-roboto h-14 pr-12 rounded-2xl bg-background/95 backdrop-blur-sm border-primary-foreground/10 text-foreground text-right shadow-xl"
                   dir="ltr"
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                 />
               </div>
-              <Button onClick={handleSearch} disabled={loading} className="font-cairo h-14 px-6 rounded-2xl shrink-0 gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+              <Button onClick={handleSearch} disabled={loading} className="font-cairo h-14 px-6 rounded-2xl shrink-0 gap-2 bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg">
                 <Search className="w-4 h-4" />
                 {t('trackOrder.search')}
               </Button>
@@ -84,6 +98,7 @@ export default function TrackOrderPage() {
           </div>
         </div>
       </section>
+
 
       <div className="container max-w-2xl py-10">
         {order && (
