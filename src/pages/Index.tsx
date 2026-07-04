@@ -299,9 +299,7 @@ export default function IndexPage() {
         </section>
       )}
 
-          </div>
-        </section>
-      )}
+
 
       {/* ─────────── CATEGORY SHOWCASE (3 columns) ─────────── */}
       {showSection('categories') && (
