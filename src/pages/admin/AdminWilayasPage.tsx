@@ -124,7 +124,71 @@ export default function AdminWilayasPage() {
     },
   });
 
-  // Find wilaya index in original list (01..58)
+  const addWilaya = useMutation({
+    mutationFn: async (name: string) => {
+      const n = name.trim();
+      if (!n) throw new Error('empty');
+      const { data, error } = await supabase.from('wilayas').insert({
+        name: n, shipping_price: 0, shipping_price_home: 0, is_active: true,
+      }).select('id').single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      setNewWilayaName('');
+      if (data?.id) setSelectedId(data.id);
+      toast({ title: 'تمت إضافة الولاية ✅' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الإضافة', description: e.message, variant: 'destructive' }),
+  });
+
+  const deleteWilaya = useMutation({
+    mutationFn: async (id: string) => {
+      await supabase.from('baladiyat').delete().eq('wilaya_id', id);
+      const { error } = await supabase.from('wilayas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_d, id) => {
+      qc.invalidateQueries({ queryKey: ['admin-wilayas'] });
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      if (selectedId === id) setSelectedId(null);
+      toast({ title: 'تم حذف الولاية' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الحذف', description: e.message, variant: 'destructive' }),
+  });
+
+  const addBaladiya = useMutation({
+    mutationFn: async (name: string) => {
+      if (!selectedId) throw new Error('no wilaya');
+      const n = name.trim();
+      if (!n) throw new Error('empty');
+      const { error } = await supabase.from('baladiyat').insert({
+        name: n, wilaya_id: selectedId, is_active: true,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      setNewBaladiyaName('');
+      toast({ title: 'تمت إضافة البلدية ✅' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الإضافة', description: e.message, variant: 'destructive' }),
+  });
+
+  const deleteBaladiya = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('baladiyat').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-baladiyat'] });
+      toast({ title: 'تم حذف البلدية' });
+    },
+    onError: (e: any) => toast({ title: 'فشل الحذف', description: e.message, variant: 'destructive' }),
+  });
+
+
   const wilayaIndex = (id: string) => {
     const i = wilayas.findIndex(w => w.id === id);
     return String(i + 1).padStart(2, '0');
