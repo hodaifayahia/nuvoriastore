@@ -529,7 +529,15 @@ export default function AdminProductsPage() {
                         عرض <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center">
+                      <button
+                        type="button"
+                        onClick={() => toggleFeaturedMutation.mutate({ id: p.id, is_featured: !(p as any).is_featured })}
+                        className="p-1.5 rounded-md hover:bg-amber-500/10"
+                        title="مميز"
+                      >
+                        <Star className={`w-4 h-4 ${(p as any).is_featured ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/50'}`} />
+                      </button>
                       <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => openEdit(p)}><Pencil className="w-3.5 h-3.5" /></Button>
                       <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => duplicateMutation.mutate(p)}><Copy className="w-3.5 h-3.5" /></Button>
                       <Button variant="outline" size="icon" className="h-8 w-8 text-destructive" onClick={() => setDeleteDialog(p.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
