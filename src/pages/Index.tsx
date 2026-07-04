@@ -10,7 +10,7 @@ import {
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
   Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
   ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
-  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote,
+  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote, RefreshCw, Wrench,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
