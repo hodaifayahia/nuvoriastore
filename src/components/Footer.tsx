@@ -2,17 +2,8 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Send, Heart } from 'lucide-react';
+import { Facebook, Instagram, Send, Twitter } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-3 mb-5">
-      <h3 className="font-cairo font-bold text-base text-foreground">{children}</h3>
-      <span className="h-[3px] w-10 rounded-full bg-primary" />
-    </div>
-  );
-}
 
 export default function Footer() {
   const { data: logoUrl } = useStoreLogo();
@@ -22,8 +13,9 @@ export default function Footer() {
     queryKey: ['footer-settings'],
     queryFn: async () => {
       const { data } = await supabase.from('settings').select('*').in('key', [
-        'store_name', 'footer_description', 'footer_phone', 'footer_email', 'footer_address',
-        'facebook_url', 'instagram_url', 'telegram_url', 'tiktok_url', 'copyright_text',
+        'store_name', 'footer_description',
+        'facebook_url', 'instagram_url', 'telegram_url', 'twitter_url',
+        'copyright_text',
       ]);
       const map: Record<string, string> = {};
       data?.forEach(s => { map[s.key] = s.value || ''; });
@@ -32,136 +24,120 @@ export default function Footer() {
   });
 
   const storeName = 'NuvoriaStore';
-  const description = settings?.footer_description || '';
-  const phone = settings?.footer_phone;
-  const email = settings?.footer_email;
-  const address = settings?.footer_address || 'Algeria';
-  const facebookUrl = settings?.facebook_url;
-  const instagramUrl = settings?.instagram_url;
-  const telegramUrl = settings?.telegram_url;
+  const description =
+    settings?.footer_description ||
+    'متجر متخصص في الأجهزة الكهرومنزلية والإلكترونيات بأفضل الأسعار في الجزائر.';
 
-  const shopLinks = [
-    { to: '/', key: 'nav.home' },
-    { to: '/products', key: 'nav.products' },
-    { to: '/cart', key: 'nav.cart' },
-    { to: '/wishlist', key: 'nav.wishlist' },
+  const socials = [
+    { url: settings?.instagram_url, Icon: Instagram, label: 'Instagram' },
+    { url: settings?.facebook_url, Icon: Facebook, label: 'Facebook' },
+    { url: settings?.twitter_url, Icon: Twitter, label: 'Twitter' },
+    { url: settings?.telegram_url, Icon: Send, label: 'Telegram' },
+  ].filter(s => s.url);
+
+  const columns: { title: string; links: { to: string; label: string }[] }[] = [
+    {
+      title: 'المتجر',
+      links: [
+        { to: '/', label: 'الرئيسية' },
+        { to: '/products', label: 'المنتجات' },
+        { to: '/cart', label: 'السلة' },
+        { to: '/wishlist', label: 'المفضلة' },
+      ],
+    },
+    {
+      title: 'الشركة',
+      links: [
+        { to: '/about', label: 'من نحن' },
+        { to: '/track', label: 'تتبع الطلب' },
+        { to: '/contact', label: 'اتصل بنا' },
+        { to: '/faq', label: 'الأسئلة الشائعة' },
+      ],
+    },
+    {
+      title: 'موارد',
+      links: [
+        { to: '/auth', label: 'حسابي' },
+        { to: '/returns', label: 'الإرجاع والاستبدال' },
+        { to: '/warranty', label: 'الضمان' },
+        { to: '/privacy', label: 'الخصوصية' },
+      ],
+    },
   ];
-
-  const helpLinks = [
-    { to: '/about', key: 'nav.about' },
-    { to: '/track', key: 'nav.track' },
-    { to: '/auth', key: 'nav.account' },
-  ];
-
-  const IconChip = ({ children }: { children: React.ReactNode }) => (
-    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-      {children}
-    </div>
-  );
 
   return (
-    <footer className="bg-card text-foreground border-t border-border mt-auto">
-      <div className="container py-10 md:py-14">
-        {/* Brand block */}
-        <div className="flex items-start justify-between gap-4 pb-8 border-b border-border">
-          <div className="flex-1 min-w-0">
-            <h2 className="font-cairo font-bold text-2xl text-primary">{storeName}</h2>
-            <p className="font-cairo text-sm text-muted-foreground mt-2 leading-relaxed max-w-md">{description}</p>
-            <div className="flex items-center gap-2 mt-4">
-              {facebookUrl && (
-                <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"
-                  className="w-9 h-9 rounded-xl border border-border bg-background flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
-                  <Facebook className="w-4 h-4" />
-                </a>
+    <footer className="bg-background text-foreground border-t border-border/50 mt-auto">
+      <div className="container py-14 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+          {/* Brand block */}
+          <div className="md:col-span-5 lg:col-span-6">
+            <div className="flex items-center gap-3">
+              {logoUrl ? (
+                <img src={logoUrl} alt={storeName} className="w-9 h-9 rounded-lg object-cover" />
+              ) : (
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-primary/60" />
               )}
-              {instagramUrl && (
-                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-                  className="w-9 h-9 rounded-xl border border-border bg-background flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
-                  <Instagram className="w-4 h-4" />
-                </a>
-              )}
-              {telegramUrl && (
-                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" aria-label="Telegram"
-                  className="w-9 h-9 rounded-xl border border-border bg-background flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
-                  <Send className="w-4 h-4" />
-                </a>
-              )}
+              <h2 className="font-display font-bold text-xl tracking-tight">{storeName}</h2>
             </div>
+
+            <p className="mt-5 text-sm text-muted-foreground leading-relaxed max-w-sm">
+              {description}
+            </p>
+
+            {socials.length > 0 && (
+              <div className="mt-6 flex items-center gap-4">
+                {socials.map(({ url, Icon, label }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="text-muted-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    <Icon className="w-5 h-5" strokeWidth={1.75} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
-          {logoUrl && (
-            <div className="w-14 h-14 rounded-full bg-background border border-border overflow-hidden shrink-0 flex items-center justify-center">
-              <img src={logoUrl} alt={storeName} className="w-full h-full object-cover" />
+
+          {/* Link columns */}
+          {columns.map(col => (
+            <div key={col.title} className="md:col-span-2">
+              <h3 className="font-display font-semibold text-sm text-foreground mb-5">
+                {col.title}
+              </h3>
+              <ul className="space-y-4">
+                {col.links.map(link => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
+          ))}
         </div>
 
-        {/* Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 py-8 border-b border-border">
-          <div>
-            <SectionHeading>{t('footer.quickLinks')}</SectionHeading>
-            <nav className="flex flex-col gap-3">
-              {shopLinks.map(l => (
-                <Link key={l.to} to={l.to} className="font-cairo text-sm text-muted-foreground hover:text-primary transition-colors">
-                  {t(l.key)}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div>
-            <SectionHeading>{t('footer.help') || 'مساعدة وحساب'}</SectionHeading>
-            <nav className="flex flex-col gap-3">
-              {helpLinks.map(l => (
-                <Link key={l.to} to={l.to} className="font-cairo text-sm text-muted-foreground hover:text-primary transition-colors">
-                  {t(l.key)}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div>
-            <SectionHeading>{t('footer.contactUs')}</SectionHeading>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <IconChip><MapPin className="w-4 h-4" /></IconChip>
-                <span className="font-cairo text-sm text-muted-foreground">{address}</span>
-              </div>
-              {phone && (
-                <a href={`tel:${phone}`} className="flex items-center gap-3 group">
-                  <IconChip><Phone className="w-4 h-4" /></IconChip>
-                  <span className="font-roboto text-sm text-muted-foreground group-hover:text-primary transition-colors" dir="ltr">{phone}</span>
-                </a>
-              )}
-              {email && (
-                <a href={`mailto:${email}`} className="flex items-center gap-3 group">
-                  <IconChip><Mail className="w-4 h-4" /></IconChip>
-                  <span className="font-roboto text-sm text-muted-foreground group-hover:text-primary transition-colors" dir="ltr">{email}</span>
-                </a>
-              )}
-              <div className="flex items-center gap-3">
-                <IconChip><Clock className="w-4 h-4" /></IconChip>
-                <span className="font-cairo text-sm text-muted-foreground">{t('footer.always') || 'الطلب متاح على مدار الساعة'}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Follow card */}
-        {(telegramUrl || facebookUrl || instagramUrl) && (
-          <div className="my-8 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/[0.03] p-5 text-center">
-            <p className="font-cairo font-bold text-primary mb-1">{t('footer.follow.title') || 'لمتابعة الجديد والعروض'}</p>
-            <p className="font-cairo text-sm text-muted-foreground">{t('footer.follow.desc') || 'تابعنا على منصاتنا لتصلك آخر العروض والمنتجات.'}</p>
-          </div>
-        )}
-
-        {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6">
-          <p className="font-cairo text-xs text-muted-foreground">
-            {settings?.copyright_text || `© ${new Date().getFullYear()} ${storeName} — ${t('footer.rightsReserved')}`}
+        {/* Divider + bottom row */}
+        <div className="mt-14 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            {settings?.copyright_text ||
+              `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved') || 'جميع الحقوق محفوظة.'}`}
           </p>
-          <p className="font-cairo text-[11px] text-muted-foreground flex items-center gap-1">
-            {t('footer.madeWith')} <Heart className="w-3 h-3 text-destructive fill-destructive" /> {t('footer.inAlgeria')}
-          </p>
+          <div className="flex items-center gap-6">
+            <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              الشروط والأحكام
+            </Link>
+            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              سياسة الخصوصية
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
