@@ -91,7 +91,9 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <ScrollToTop />
+      <WhatsAppFloat />
     </div>
+
   );
 }
 
