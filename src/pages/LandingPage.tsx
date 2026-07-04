@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatPrice } from '@/lib/format';
 import { useFacebookPixel } from '@/hooks/useFacebookPixel';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 interface LandingContent {
   headline: string;
@@ -48,6 +49,7 @@ const formLabels: Record<string, Record<string, string>> = {
 export default function LandingPage() {
   const { id } = useParams<{ id: string }>();
   const { trackEvent } = useFacebookPixel();
+  const orderGuard = useOrderGuard();
 
   // Form state
   const [orderName, setOrderName] = useState('');
@@ -263,6 +265,16 @@ export default function LandingPage() {
       return;
     }
     setFormErrors({});
+
+    const guard = await orderGuard.verify({ phone: orderPhone, userId: null });
+    if (!guard.ok) {
+      setFormErrors({ phone: guard.message || 'تعذر إرسال الطلب' });
+      if (guard.reason === 'guest_limit') {
+        window.location.href = '/auth';
+      }
+      return;
+    }
+
     setOrderSubmitting(true);
     try {
       const shippingCost = selectedWilaya
@@ -813,6 +825,7 @@ export default function LandingPage() {
                 </div>
               ) : (
                 <>
+                  <orderGuard.HoneypotField />
                   {/* Variants */}
                   {renderVariants()}
 

@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Copy, Upload, CheckCircle, LogIn, Truck, Building2, Home, X } from 'lucide-react';
 import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/FormSettingsTab';
 import { useTranslation } from '@/i18n';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
@@ -24,6 +25,7 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const { trackEvent } = useFacebookPixel();
   const { t } = useTranslation();
+  const orderGuard = useOrderGuard();
 
   // Facebook Pixel: InitiateCheckout
   useEffect(() => {
@@ -263,6 +265,17 @@ export default function CheckoutPage() {
       return;
     }
 
+    const guard = await orderGuard.verify({ phone, userId: user?.id });
+    if (!guard.ok) {
+      toast({
+        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
+        description: guard.message,
+        variant: 'destructive',
+      });
+      if (guard.reason === 'guest_limit') navigate('/auth');
+      return;
+    }
+
     setSubmitting(true);
     try {
       let receiptUrl = '';
@@ -350,6 +363,7 @@ export default function CheckoutPage() {
           {/* Customer Info */}
           <div className="bg-card border rounded-lg p-6 space-y-4">
             <h2 className="font-cairo font-bold text-xl">{t('checkout.customerInfo')}</h2>
+            <orderGuard.HoneypotField />
             {formConfig.name?.visible !== false && (
               <div>
                 <Label className="font-cairo">{t('checkout.fullName')} {formConfig.name?.required !== false ? '*' : ''}</Label>

@@ -19,6 +19,7 @@ import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 import { useTranslation } from '@/i18n';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 function StarRating({ value, onChange, readonly = false }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
   return (
@@ -97,6 +98,7 @@ export default function SingleProductPage() {
   const { addItem: addRecentlyViewed } = useRecentlyViewed();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const orderGuard = useOrderGuard();
   const { t } = useTranslation();
   const qc = useQueryClient();
   const [qty, setQty] = useState(1);
@@ -542,6 +544,17 @@ export default function SingleProductPage() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
+    const guard = await orderGuard.verify({ phone: orderPhone, userId: user?.id });
+    if (!guard.ok) {
+      toast({
+        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
+        description: guard.message,
+        variant: 'destructive',
+      });
+      if (guard.reason === 'guest_limit') navigate('/auth');
+      return;
+    }
+
     setSubmittingOrder(true);
     try {
       let receiptUrl = '';
@@ -881,6 +894,7 @@ export default function SingleProductPage() {
                   <User className="w-4 h-4 text-primary" />
                   <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
                 </div>
+                <orderGuard.HoneypotField />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
