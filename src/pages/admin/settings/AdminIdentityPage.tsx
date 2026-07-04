@@ -204,9 +204,26 @@ export default function AdminIdentityPage() {
           <Label className="font-cairo">العنوان</Label>
           <Input value={mergedSettings.footer_address || ''} onChange={e => setField('footer_address', e.target.value)} className="font-cairo mt-1" placeholder="الجزائر العاصمة، الجزائر" />
         </div>
-        <div>
-          <Label className="font-cairo">رابط صفحة فيسبوك</Label>
-          <Input value={mergedSettings.facebook_url || ''} onChange={e => setField('facebook_url', e.target.value)} className="font-roboto mt-1" dir="ltr" />
+        <div className="pt-2">
+          <h3 className="font-cairo font-bold text-base mb-3">روابط التواصل الاجتماعي</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="font-cairo">فيسبوك</Label>
+              <Input value={mergedSettings.facebook_url || ''} onChange={e => setField('facebook_url', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="https://facebook.com/..." />
+            </div>
+            <div>
+              <Label className="font-cairo">إنستغرام</Label>
+              <Input value={mergedSettings.instagram_url || ''} onChange={e => setField('instagram_url', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="https://instagram.com/..." />
+            </div>
+            <div>
+              <Label className="font-cairo">تيك توك</Label>
+              <Input value={mergedSettings.tiktok_url || ''} onChange={e => setField('tiktok_url', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="https://tiktok.com/@..." />
+            </div>
+            <div>
+              <Label className="font-cairo">واتساب (رقم الهاتف)</Label>
+              <Input value={mergedSettings.whatsapp_number || ''} onChange={e => setField('whatsapp_number', e.target.value)} className="font-roboto mt-1" dir="ltr" placeholder="213555000000" />
+            </div>
+          </div>
         </div>
       </div>
 
