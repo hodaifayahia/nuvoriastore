@@ -376,21 +376,21 @@ export default function IndexPage() {
               </div>
 
               {/* Building bento: two tall towers + middle split, small-appliances base */}
-              <div className="grid grid-cols-1 md:grid-cols-12 md:auto-rows-[180px] lg:auto-rows-[220px] gap-3 sm:gap-4">
+              <div className="grid grid-cols-4 md:grid-cols-12 auto-rows-[130px] sm:auto-rows-[160px] md:auto-rows-[180px] lg:auto-rows-[220px] gap-2.5 sm:gap-3 md:gap-4">
                 {/* Left tower — spans 2 rows */}
-                {c0 && <Tile cat={c0} size="lg" className="md:col-span-4 md:row-span-2 min-h-[340px] md:min-h-0" />}
+                {c0 && <Tile cat={c0} size="lg" className="col-span-2 row-span-2 md:col-span-4 md:row-span-2" />}
 
                 {/* Middle top */}
-                {c1 && <Tile cat={c1} size="md" className="md:col-span-4 min-h-[220px] md:min-h-0" />}
+                {c1 && <Tile cat={c1} size="md" className="col-span-2 md:col-span-4" />}
 
-                {/* Right tower — spans 2 rows */}
-                {c3 && <Tile cat={c3} size="lg" className="md:col-span-4 md:row-span-2 min-h-[340px] md:min-h-0" />}
+                {/* Right tower — spans 2 rows (moves to right column on mobile) */}
+                {c3 && <Tile cat={c3} size="md" className="col-span-2 md:col-span-4 md:row-span-2" />}
 
                 {/* Middle bottom */}
-                {c2 && <Tile cat={c2} size="md" className="md:col-span-4 min-h-[220px] md:min-h-0" />}
+                {c2 && <Tile cat={c2} size="md" className="col-span-2 md:col-span-4" />}
 
                 {/* Base — full-width small appliances */}
-                {c4 && <Tile cat={c4} size="md" className="md:col-span-12 min-h-[200px] md:min-h-[180px]" />}
+                {c4 && <Tile cat={c4} size="md" className="col-span-4 md:col-span-12" />}
               </div>
             </div>
           </section>
