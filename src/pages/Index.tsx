@@ -711,26 +711,85 @@ export default function IndexPage() {
       )}
 
 
-      {/* ─────────── TRUST STRIP ─────────── */}
+      {/* ─────────── WARRANTY POLICY ─────────── */}
       {showSection('trust_strip') && (
         <section className="px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="max-w-6xl mx-auto glass-card neon-border rounded-3xl p-5 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { icon: Truck,      label: txt('ts_delivery',  t('idx.trust.delivery')),  desc: txt('ts_deliveryDesc', t('idx.trust.deliveryDesc')) },
-              { icon: Shield,     label: txt('ts_returns',   t('idx.trust.returns')),   desc: txt('ts_returnsDesc',  t('idx.trust.returnsDesc')) },
-              { icon: BadgeCheck, label: txt('ts_original',  t('idx.trust.original')),  desc: txt('ts_originalDesc', t('idx.trust.originalDesc')) },
-              { icon: Headphones, label: txt('ts_support',   t('idx.trust.support')),   desc: txt('ts_supportDesc',  t('idx.trust.supportDesc')) },
-            ].map(item => (
-              <div key={item.label} className="flex items-center gap-3 p-3 rounded-2xl glass-panel border border-white/10">
-                <div className="w-12 h-12 rounded-2xl bg-[hsl(var(--grad-teal)/0.15)] border border-white/10 flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
+          <div className="max-w-6xl mx-auto relative overflow-hidden rounded-3xl glass-card neon-border">
+            {/* Decorative gradient blobs */}
+            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-teal)/0.18)] blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-amber)/0.15)] blur-3xl" />
+
+            <div className="relative p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Header column */}
+              <div className="lg:col-span-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--grad-teal)/0.12)] border border-[hsl(var(--grad-teal)/0.3)] text-[hsl(var(--grad-teal))] text-xs font-semibold mb-4">
+                  <Shield className="w-3.5 h-3.5" />
+                  حماية موثوقة
                 </div>
-                <div className="min-w-0">
-                  <p className="font-display font-semibold text-sm leading-tight">{item.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1 leading-tight">{item.desc}</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight mb-3">
+                  سياسة الضمان
+                </h2>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="font-display text-5xl sm:text-6xl font-black bg-gradient-to-br from-[hsl(var(--grad-teal))] to-[hsl(var(--grad-amber))] bg-clip-text text-transparent">
+                    12
+                  </span>
+                  <span className="text-lg font-semibold text-muted-foreground">
+                    شهراً من تاريخ الشراء
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.
+                </p>
+              </div>
+
+              {/* Terms column */}
+              <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  {
+                    icon: RefreshCw,
+                    tag: 'الأيام السبعة الأولى',
+                    title: 'استبدال كامل للجهاز',
+                    desc: 'استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.',
+                    color: 'grad-teal',
+                  },
+                  {
+                    icon: Wrench,
+                    tag: 'بعد فترة الاستبدال',
+                    title: 'إصلاح وقطع غيار',
+                    desc: 'يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.',
+                    color: 'grad-amber',
+                  },
+                ].map((it) => (
+                  <div
+                    key={it.title}
+                    className="group relative p-5 rounded-2xl glass-panel border border-white/10 hover:border-white/25 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className={`w-12 h-12 rounded-2xl bg-[hsl(var(--${it.color})/0.15)] border border-[hsl(var(--${it.color})/0.3)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                      <it.icon className={`w-5 h-5 text-[hsl(var(--${it.color}))]`} />
+                    </div>
+                    <p className={`text-[10px] font-bold tracking-wider uppercase text-[hsl(var(--${it.color}))] mb-1`}>
+                      {it.tag}
+                    </p>
+                    <h3 className="font-display font-bold text-base mb-2 leading-tight">
+                      {it.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {it.desc}
+                    </p>
+                  </div>
+                ))}
+
+                {/* Full-width coverage bar */}
+                <div className="sm:col-span-2 flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[hsl(var(--grad-teal)/0.1)] to-[hsl(var(--grad-amber)/0.1)] border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-background/50 border border-white/10 flex items-center justify-center shrink-0">
+                    <BadgeCheck className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
+                  </div>
+                  <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">
+                    الضمان يشمل عيوب التصنيع فقط، ولا يغطي الأعطال الناتجة عن سوء الاستخدام أو الحوادث.
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </section>
       )}
