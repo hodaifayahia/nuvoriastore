@@ -544,6 +544,17 @@ export default function SingleProductPage() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
+    const guard = await orderGuard.verify({ phone: orderPhone, userId: user?.id });
+    if (!guard.ok) {
+      toast({
+        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
+        description: guard.message,
+        variant: 'destructive',
+      });
+      if (guard.reason === 'guest_limit') navigate('/auth');
+      return;
+    }
+
     setSubmittingOrder(true);
     try {
       let receiptUrl = '';
