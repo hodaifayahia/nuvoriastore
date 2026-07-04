@@ -312,7 +312,7 @@ export default function ProductsPage() {
                   onClick={() => setSelectedCategories([])}
                   className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                     selectedCategories.length === 0
-                      ? 'bg-primary text-primary-foreground shadow-md'
+                      ? 'bg-gradient-to-r from-primary to-primary/85 text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                       : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                   }`}
                 >
@@ -324,7 +324,7 @@ export default function ProductsPage() {
                     onClick={() => selectSingleCategory(cat)}
                     className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                       selectedCategories.includes(cat)
-                        ? 'bg-primary text-primary-foreground shadow-md'
+                        ? 'bg-gradient-to-r from-primary to-primary/85 text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                         : 'bg-muted hover:bg-muted/80 text-foreground border border-border'
                     }`}
                   >
