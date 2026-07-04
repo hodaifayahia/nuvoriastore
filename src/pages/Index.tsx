@@ -24,6 +24,16 @@ import MinimalTemplate from '@/components/templates/MinimalTemplate';
 import BoldTemplate from '@/components/templates/BoldTemplate';
 import LiquidTemplate from '@/components/templates/LiquidTemplate';
 import DigitalTemplate from '@/components/templates/DigitalTemplate';
+import heroBanner1 from '@/assets/hero-banner-1.jpg';
+import heroBanner2 from '@/assets/hero-banner-2.jpg';
+import heroBanner3 from '@/assets/hero-banner-3.jpg';
+
+const DEFAULT_HERO_SLIDES = [
+  { url: heroBanner1, alt: 'تبريد وغسيل' },
+  { url: heroBanner2, alt: 'طبخ' },
+  { url: heroBanner3, alt: 'تكييف وأجهزة صغيرة' },
+];
+
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
