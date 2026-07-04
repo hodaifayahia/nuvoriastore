@@ -925,6 +925,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_active: boolean | null
+          is_featured: boolean
           is_free_shipping: boolean | null
           main_image_index: number | null
           name: string
@@ -948,6 +949,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_active?: boolean | null
+          is_featured?: boolean
           is_free_shipping?: boolean | null
           main_image_index?: number | null
           name: string
@@ -971,6 +973,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_active?: boolean | null
+          is_featured?: boolean
           is_free_shipping?: boolean | null
           main_image_index?: number | null
           name?: string
