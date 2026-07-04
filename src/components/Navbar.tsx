@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, Sun, Moon, type LucideIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Package, MapPin, User, LogIn, Info, Search, Shirt, Watch, Footprints, Smartphone, Home as HomeIcon, Grid3X3, ChevronDown, Heart, LayoutDashboard, Headphones, Keyboard, Mouse, Laptop, Cable, BatteryCharging, Gamepad2, Globe, Sun, Moon, HelpCircle, type LucideIcon } from 'lucide-react';
 import { useTranslation, type Language } from '@/i18n';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -51,6 +51,7 @@ const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
   { to: '/products', key: 'nav.products', icon: Package },
   { to: '/track', key: 'nav.track', icon: MapPin },
   { to: '/about', key: 'nav.about', icon: Info },
+  { to: '/faq', key: 'nav.faq', icon: HelpCircle },
 ];
 
 export default function Navbar() {

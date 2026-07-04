@@ -1371,6 +1371,7 @@ export const fr: Record<string, string> = {
   'nav.products': 'Produits',
   'nav.track': 'Suivi de commande',
   'nav.about': 'À propos',
+  'nav.faq': 'FAQ',
   'nav.categories': 'Catégories',
   'nav.all': 'Tout',
   'nav.search': 'Rechercher',
