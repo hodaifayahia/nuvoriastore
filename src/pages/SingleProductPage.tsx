@@ -19,6 +19,7 @@ import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 import { useTranslation } from '@/i18n';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 function StarRating({ value, onChange, readonly = false }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
   return (
@@ -97,6 +98,7 @@ export default function SingleProductPage() {
   const { addItem: addRecentlyViewed } = useRecentlyViewed();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const orderGuard = useOrderGuard();
   const { t } = useTranslation();
   const qc = useQueryClient();
   const [qty, setQty] = useState(1);
