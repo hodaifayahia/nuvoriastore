@@ -441,6 +441,7 @@ export default function AdminProductsPage() {
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.quantity')}</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.price')}</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.status')}</th>
+                  <th className="p-3 text-right font-cairo font-semibold">مميز</th>
                   <th className="p-3 text-right font-cairo font-semibold">{t('common.actions')}</th>
                 </tr>
               </thead>
