@@ -20,8 +20,8 @@ export default function AdminIdentityPage() {
 
   const currentLogo = mergedSettings.store_logo;
   const currentFavicon = mergedSettings.store_favicon;
-  const primaryColor = mergedSettings.primary_color || '#2ecc71';
-  const secondaryColor = mergedSettings.secondary_color || '#3498db';
+  const primaryColor = mergedSettings.primary_color || '#184ABF';
+  const secondaryColor = mergedSettings.secondary_color || '#0F2E7A';
 
   return (
     <div className="space-y-6 max-w-3xl">
