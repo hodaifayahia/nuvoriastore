@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatPrice } from '@/lib/format';
 import { useFacebookPixel } from '@/hooks/useFacebookPixel';
+import { useOrderGuard } from '@/lib/orderGuard';
 
 interface LandingContent {
   headline: string;
