@@ -679,34 +679,53 @@ export default function IndexPage() {
 
       {/* ─────────── BRANDS ─────────── */}
       {showSection('brands') && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto">
+        <section className="pb-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
               <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'علامات موثوقة')}</p>
               <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'مدعوم من الأفضل')}</h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-              {(brandsData && brandsData.length > 0
-                ? brandsData
-                : [{name:'Apple'},{name:'Samsung'},{name:'Dell'},{name:'HP'},{name:'Lenovo'},{name:'ASUS'},{name:'Logitech'},{name:'Sony'},{name:'JBL'},{name:'Anker'},{name:'Razer'},{name:'Bose'}]
-              ).slice(0, 12).map(brand => {
-                const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
-                return (
-                  <Link
-                    key={brand.name}
-                    to={`/products?brand=${encodeURIComponent(brand.name)}`}
-                    className="group relative aspect-square rounded-2xl overflow-hidden glass-card neon-border flex items-center justify-center hover:-translate-y-1 transition-all duration-300"
-                  >
-                    {img ? (
-                      <img src={img} alt={brand.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
-                    ) : null}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/30 to-transparent" />
-                    <span className="relative font-display font-extrabold text-sm sm:text-base uppercase tracking-tight">{brand.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
           </div>
+
+          {(() => {
+            const list = (brandsData && brandsData.length > 0
+              ? brandsData
+              : [{name:'Samsung'},{name:'LG'},{name:'Bosch'},{name:'Condor'},{name:'Brandt'}]
+            );
+            // Duplicate the list for seamless infinite scroll
+            const loop = [...list, ...list, ...list, ...list];
+            return (
+              <div
+                className="relative overflow-hidden group"
+                style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
+              >
+                <div className="flex gap-4 sm:gap-6 w-max animate-brand-marquee group-hover:[animation-play-state:paused]">
+                  {loop.map((brand, i) => {
+                    const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
+                    return (
+                      <Link
+                        key={`${brand.name}-${i}`}
+                        to={`/products?brand=${encodeURIComponent(brand.name)}`}
+                        className="shrink-0 w-40 sm:w-52 h-24 sm:h-28 rounded-2xl overflow-hidden bg-white border border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] flex items-center justify-center hover:-translate-y-1 hover:shadow-[0_18px_45px_-15px_hsl(var(--grad-teal)/0.55)] transition-all duration-300"
+                        aria-label={brand.name}
+                      >
+                        {img ? (
+                          <img
+                            src={img}
+                            alt={brand.name}
+                            loading="lazy"
+                            className="max-h-16 sm:max-h-20 max-w-[80%] object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                          />
+                        ) : (
+                          <span className="font-display font-extrabold text-lg uppercase tracking-tight text-neutral-800">{brand.name}</span>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </section>
       )}
 
