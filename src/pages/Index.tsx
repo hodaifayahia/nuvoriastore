@@ -152,7 +152,7 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 5000 })]);
+  const [emblaRef] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 2000, stopOnInteraction: false })]);
 
   useEffect(() => { setVisibleProductsCount(12); }, [allProducts?.length]);
 
@@ -202,9 +202,27 @@ export default function IndexPage() {
       />
 
 
-      {/* ─────────── HERO ─────────── */}
+      {/* ─────────── HERO with background carousel ─────────── */}
       {showSection('hero') && (
-        <section className="relative px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-12 sm:pb-20">
+        <section className="relative px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-12 sm:pb-20 overflow-hidden">
+          {/* Background carousel — autoplay every 2s */}
+          {heroSlides && heroSlides.length > 0 && (
+            <div className="absolute inset-0 -z-10" ref={emblaRef}>
+              <div className="flex h-full">
+                {heroSlides.map((slide, i) => (
+                  <div key={i} className="flex-[0_0_100%] min-w-0 relative">
+                    <img
+                      src={slide.url}
+                      alt={slide.alt || `Slide ${i + 1}`}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background/90" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="relative max-w-6xl mx-auto text-center">
             <div className="pointer-events-none absolute inset-x-0 -top-10 mx-auto h-72 w-[80%] rounded-full blur-[120px] opacity-60"
               style={{ background: 'radial-gradient(50% 50% at 50% 50%, hsl(180 88% 55% / 0.4), transparent 60%), radial-gradient(50% 50% at 70% 50%, hsl(270 85% 65% / 0.35), transparent 60%)' }}
@@ -281,26 +299,7 @@ export default function IndexPage() {
         </section>
       )}
 
-      {/* ─────────── HERO SLIDES (optional) ─────────── */}
-      {heroSlides && heroSlides.length > 0 && (
-        <section className="relative px-4 sm:px-6 lg:px-8 pb-12" ref={emblaRef}>
-          <div className="max-w-6xl mx-auto overflow-hidden rounded-3xl glass-card neon-border">
-            <div className="flex">
-              {heroSlides.map((slide, i) => (
-                <div key={i} className="flex-[0_0_100%] min-w-0">
-                  {slide.link ? (
-                    <Link to={slide.link}>
-                      <img src={slide.url} alt={slide.alt || `Slide ${i + 1}`} className="w-full h-[260px] sm:h-[360px] lg:h-[440px] object-cover" />
-                    </Link>
-                  ) : (
-                    <img src={slide.url} alt={slide.alt || `Slide ${i + 1}`} className="w-full h-[260px] sm:h-[360px] lg:h-[440px] object-cover" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+
 
       {/* ─────────── CATEGORY SHOWCASE (3 columns) ─────────── */}
       {showSection('categories') && (
