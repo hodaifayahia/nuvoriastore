@@ -599,47 +599,6 @@ export default function IndexPage() {
         </section>
       )}
 
-      {/* ─────────── TESTIMONIALS ─────────── */}
-      {showSection('testimonials') && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-violet))] font-semibold mb-2">{txt('tst_kicker', 'آراء')}</p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('tst_title', 'موثوق من قِبل المهتمين')}</h2>
-              </div>
-              <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
-                <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
-                <span className="ms-2">{txt('tst_ratingSuffix', '4.9 / 5')}</span>
-              </div>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
-              {[
-                { name: t('idx.testimonials.t1.name'), city: t('idx.testimonials.t1.city'), text: t('idx.testimonials.t1.text'), rating: 5 },
-                { name: t('idx.testimonials.t2.name'), city: t('idx.testimonials.t2.city'), text: t('idx.testimonials.t2.text'), rating: 5 },
-                { name: t('idx.testimonials.t3.name'), city: t('idx.testimonials.t3.city'), text: t('idx.testimonials.t3.text'), rating: 5 },
-              ].map(ts => (
-                <div key={ts.name} className="glass-card neon-border rounded-2xl p-6 relative">
-                  <Quote className="absolute top-4 right-4 w-8 h-8 text-[hsl(var(--grad-teal)/0.25)]" />
-                  <div className="flex mb-3">
-                    {[...Array(ts.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                  </div>
-                  <p className="text-sm text-foreground/85 leading-relaxed mb-4">"{ts.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full btn-neon flex items-center justify-center font-display font-bold text-sm">
-                      {ts.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-display font-semibold text-sm">{ts.name}</p>
-                      <p className="text-xs text-muted-foreground">{ts.city}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ─────────── TRUST STRIP ─────────── */}
       {showSection('trust_strip') && (
