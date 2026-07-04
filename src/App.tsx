@@ -101,7 +101,7 @@ const App = () => (
         <Sonner />
         <OfflineBanner />
         <LanguageProvider>
-        <AutoPageTranslator />
+        
         <BrowserRouter>
           <Routes>
             {/* Public */}
