@@ -64,16 +64,23 @@ export function useOrderGuard() {
     if (!opts.userId) {
       const phone = (opts.phone || '').trim();
       if (phone) {
+        let limit = GUEST_ORDER_LIMIT;
+        const { data: setting } = await supabase
+          .from('settings').select('value').eq('key', 'guest_order_limit').maybeSingle();
+        const parsed = parseInt((setting as any)?.value ?? '', 10);
+        if (!isNaN(parsed) && parsed > 0) limit = parsed;
+
         const { data, error } = await supabase.rpc('count_guest_orders_for_phone', { p_phone: phone });
-        if (!error && typeof data === 'number' && data >= GUEST_ORDER_LIMIT) {
+        if (!error && typeof data === 'number' && data >= limit) {
           return {
             ok: false,
             reason: 'guest_limit',
-            message: `لقد وصلت للحد الأقصى (${GUEST_ORDER_LIMIT}) من الطلبات كزائر. الرجاء إنشاء حساب بالبريد الإلكتروني للمتابعة.`,
+            message: `لقد وصلت للحد الأقصى (${limit}) من الطلبات كزائر. الرجاء إنشاء حساب بالبريد الإلكتروني للمتابعة.`,
           };
         }
       }
     }
+
     return { ok: true };
   };
 
