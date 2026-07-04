@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    /* === NuvoriaStore — Light Airy Glass (default) === */
-    --background: 220 40% 98%;             /* soft near-white */
+    /* === NuvoriaStore — unified with admin dashboard palette === */
+    --background: 220 40% 98%;
     --foreground: 224 40% 14%;
 
-    --card: 0 0% 100%;                     /* glass surface base */
+    --card: 0 0% 100%;
     --card-foreground: 224 40% 14%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 224 40% 14%;
 
-    --primary: 180 78% 42%;                /* softer teal */
+    --primary: 222 78% 42%;                /* navy blue (admin primary) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 270 70% 62%;              /* soft violet */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 25% 94%;
+    --secondary-foreground: 224 40% 14%;
 
     --muted: 220 25% 94%;
     --muted-foreground: 224 15% 40%;
 
-    --accent: 270 70% 62%;
+    --accent: 222 78% 42%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 55%;
@@ -33,51 +33,51 @@
 
     --border: 220 20% 88%;
     --input: 220 25% 96%;
-    --ring: 180 78% 42%;
+    --ring: 222 78% 42%;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 220 40% 99%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 224 40% 14%;
-    --sidebar-primary: 180 78% 42%;
+    --sidebar-primary: 222 78% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 25% 94%;
     --sidebar-accent-foreground: 224 40% 14%;
     --sidebar-border: 220 20% 88%;
-    --sidebar-ring: 180 78% 42%;
+    --sidebar-ring: 222 78% 42%;
 
     --success: 152 65% 42%;
     --warning: 38 92% 52%;
-    --info: 180 78% 42%;
+    --info: 222 78% 42%;
 
-    /* Brand gradient tokens */
-    --grad-teal: 180 78% 55%;
-    --grad-violet: 270 70% 68%;
+    /* Brand gradient tokens — navy family */
+    --grad-teal: 222 78% 42%;
+    --grad-violet: 222 54% 22%;
   }
 
   .light,
   .dark {
-    /* Force single light palette — dark mode disabled */
     --background: 220 40% 98%;
     --foreground: 224 40% 14%;
     --card: 0 0% 100%;
     --card-foreground: 224 40% 14%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 40% 14%;
-    --primary: 180 78% 42%;
+    --primary: 222 78% 42%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 270 70% 62%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 25% 94%;
+    --secondary-foreground: 224 40% 14%;
     --muted: 220 25% 94%;
     --muted-foreground: 224 15% 40%;
-    --accent: 270 70% 62%;
+    --accent: 222 78% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 20% 88%;
     --input: 220 25% 96%;
-    --ring: 180 78% 42%;
+    --ring: 222 78% 42%;
   }
+
 }
 
 @layer base {
