@@ -608,6 +608,11 @@ export default function AdminLandingGeneratorPage() {
                       style={{ fontFamily: "'Playfair Display', serif", color: p.primary }}>02</div>
                     <div className="absolute -top-2 right-6 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest"
                       style={{ background: p.primary, color: ctaText }}>بعد</div>
+                    {images.after && (
+                      <div className="relative rounded-2xl overflow-hidden mb-5 aspect-video shadow-lg">
+                        <img src={images.after} alt="after" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-4"
                         style={{ background: hexWithAlpha(p.accent, 0.3) }}>✨</div>
