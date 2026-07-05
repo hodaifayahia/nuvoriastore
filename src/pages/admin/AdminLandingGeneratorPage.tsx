@@ -421,6 +421,15 @@ export default function AdminLandingGeneratorPage() {
             {/* HERO */}
             <section className="relative overflow-hidden"
               style={{ background: `radial-gradient(ellipse at top right, ${hexWithAlpha(p.accent, 0.18)}, transparent 55%), radial-gradient(ellipse at bottom left, ${hexWithAlpha(p.primary, 0.12)}, transparent 55%), ${p.light}` }}>
+              {/* AI-generated hero background */}
+              {images.hero && (
+                <>
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ backgroundImage: `url(${images.hero})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.25 }} />
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: `linear-gradient(180deg, ${hexWithAlpha(p.light, 0.7)} 0%, ${hexWithAlpha(p.light, 0.95)} 100%)` }} />
+                </>
+              )}
               {/* decorative orbs */}
               <div className="pointer-events-none absolute -top-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-30"
                 style={{ background: p.accent }} />
