@@ -309,7 +309,31 @@ export default function AdminLandingGeneratorPage() {
           </p>
         </div>
         {content && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              disabled={imagesLoading || !image}
+              onClick={() => {
+                if (!image) return;
+                setImagesLoading(true);
+                supabase.functions
+                  .invoke('generate-landing-images', {
+                    body: { productName, description: description || '', referenceImage: image },
+                  })
+                  .then((r) => {
+                    if (r.error) throw r.error;
+                    const d = r.data || {};
+                    setImages({ hero: d.hero || null, lifestyle: d.lifestyle || null, before: d.before || null, after: d.after || null });
+                    toast.success('تم تحديث الصور 📸');
+                  })
+                  .catch(() => toast.error('فشل توليد الصور'))
+                  .finally(() => setImagesLoading(false));
+              }}
+              className="gap-2"
+            >
+              {imagesLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {imagesLoading ? 'يتم إنشاء الصور...' : 'إعادة توليد الصور'}
+            </Button>
             <Button variant="outline" onClick={handleExportHTML} className="gap-2">
               <Download className="w-4 h-4" /> تصدير HTML
             </Button>
