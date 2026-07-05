@@ -15,6 +15,13 @@ interface Palette {
   soft: string;
 }
 
+interface GeneratedImages {
+  hero: string | null;
+  lifestyle: string | null;
+  before: string | null;
+  after: string | null;
+}
+
 interface Content {
   headline: string;
   subheadline: string;
@@ -165,8 +172,10 @@ export default function AdminLandingGeneratorPage() {
   const [price, setPrice] = useState<string>('');
   const [oldPrice, setOldPrice] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [palette, setPalette] = useState<Palette | null>(null);
   const [content, setContent] = useState<Content | null>(null);
+  const [images, setImages] = useState<GeneratedImages>({ hero: null, lifestyle: null, before: null, after: null });
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -221,7 +230,32 @@ export default function AdminLandingGeneratorPage() {
         faq: ai?.faq?.length ? ai.faq : base.faq,
       };
       setContent(merged);
-      toast.success('تم توليد صفحة الهبوط الفاخرة ✨');
+      toast.success('تم توليد المحتوى ✨ — جاري إنشاء الصور...');
+
+      // Kick off AI photo generation in parallel (doesn't block content)
+      setImagesLoading(true);
+      supabase.functions
+        .invoke('generate-landing-images', {
+          body: { productName, description: description || '', referenceImage: image },
+        })
+        .then((imgRes) => {
+          if (imgRes.error) throw imgRes.error;
+          const d = imgRes.data || {};
+          setImages({
+            hero: d.hero || null,
+            lifestyle: d.lifestyle || null,
+            before: d.before || null,
+            after: d.after || null,
+          });
+          const count = [d.hero, d.lifestyle, d.before, d.after].filter(Boolean).length;
+          if (count > 0) toast.success(`تم إنشاء ${count} صورة احترافية 📸`);
+          else toast.warning('تعذّر توليد الصور — الصفحة جاهزة بدون صور إضافية');
+        })
+        .catch((e) => {
+          console.warn('image gen failed', e);
+          toast.warning('تعذّر توليد الصور الإضافية');
+        })
+        .finally(() => setImagesLoading(false));
     } catch (err: any) {
       console.warn('AI generation failed, using defaults:', err);
       setContent(DEFAULT_CONTENT(productName));
@@ -243,6 +277,7 @@ export default function AdminLandingGeneratorPage() {
 
   const reset = () => {
     setImage(null); setContent(null); setPalette(null);
+    setImages({ hero: null, lifestyle: null, before: null, after: null });
     setProductName(''); setDescription(''); setPrice(''); setOldPrice('');
   };
 
@@ -274,7 +309,31 @@ export default function AdminLandingGeneratorPage() {
           </p>
         </div>
         {content && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              disabled={imagesLoading || !image}
+              onClick={() => {
+                if (!image) return;
+                setImagesLoading(true);
+                supabase.functions
+                  .invoke('generate-landing-images', {
+                    body: { productName, description: description || '', referenceImage: image },
+                  })
+                  .then((r) => {
+                    if (r.error) throw r.error;
+                    const d = r.data || {};
+                    setImages({ hero: d.hero || null, lifestyle: d.lifestyle || null, before: d.before || null, after: d.after || null });
+                    toast.success('تم تحديث الصور 📸');
+                  })
+                  .catch(() => toast.error('فشل توليد الصور'))
+                  .finally(() => setImagesLoading(false));
+              }}
+              className="gap-2"
+            >
+              {imagesLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {imagesLoading ? 'يتم إنشاء الصور...' : 'إعادة توليد الصور'}
+            </Button>
             <Button variant="outline" onClick={handleExportHTML} className="gap-2">
               <Download className="w-4 h-4" /> تصدير HTML
             </Button>
@@ -362,6 +421,15 @@ export default function AdminLandingGeneratorPage() {
             {/* HERO */}
             <section className="relative overflow-hidden"
               style={{ background: `radial-gradient(ellipse at top right, ${hexWithAlpha(p.accent, 0.18)}, transparent 55%), radial-gradient(ellipse at bottom left, ${hexWithAlpha(p.primary, 0.12)}, transparent 55%), ${p.light}` }}>
+              {/* AI-generated hero background */}
+              {images.hero && (
+                <>
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ backgroundImage: `url(${images.hero})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.25 }} />
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: `linear-gradient(180deg, ${hexWithAlpha(p.light, 0.7)} 0%, ${hexWithAlpha(p.light, 0.95)} 100%)` }} />
+                </>
+              )}
               {/* decorative orbs */}
               <div className="pointer-events-none absolute -top-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-30"
                 style={{ background: p.accent }} />
@@ -519,6 +587,11 @@ export default function AdminLandingGeneratorPage() {
                       style={{ fontFamily: "'Playfair Display', serif" }}>01</div>
                     <div className="absolute -top-2 right-6 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest"
                       style={{ background: '#e5e5e5', color: '#666' }}>قبل</div>
+                    {images.before && (
+                      <div className="relative rounded-2xl overflow-hidden mb-5 aspect-video">
+                        <img src={images.before} alt="before" className="w-full h-full object-cover grayscale-[40%]" />
+                      </div>
+                    )}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-2xl mb-4">😞</div>
                       <Editable
@@ -535,6 +608,11 @@ export default function AdminLandingGeneratorPage() {
                       style={{ fontFamily: "'Playfair Display', serif", color: p.primary }}>02</div>
                     <div className="absolute -top-2 right-6 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest"
                       style={{ background: p.primary, color: ctaText }}>بعد</div>
+                    {images.after && (
+                      <div className="relative rounded-2xl overflow-hidden mb-5 aspect-video shadow-lg">
+                        <img src={images.after} alt="after" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-4"
                         style={{ background: hexWithAlpha(p.accent, 0.3) }}>✨</div>
@@ -610,6 +688,34 @@ export default function AdminLandingGeneratorPage() {
                 </div>
               </div>
             </section>
+
+            {/* LIFESTYLE SHOWCASE (AI-generated) */}
+            {images.lifestyle && (
+              <section style={{ background: p.light }}>
+                <div className="max-w-6xl mx-auto px-6 py-16">
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
+                    <img src={images.lifestyle} alt="lifestyle" className="w-full aspect-[21/9] object-cover" />
+                    <div className="absolute inset-0"
+                      style={{ background: `linear-gradient(90deg, ${hexWithAlpha(p.dark, 0.75)} 0%, transparent 60%)` }} />
+                    <div className="absolute inset-0 flex items-center px-8 md:px-16">
+                      <div className="max-w-md text-white space-y-4">
+                        <div className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-widest font-bold"
+                          style={{ background: hexWithAlpha(p.accent, 0.9), color: accentText }}>
+                          نمط حياة راقٍ
+                        </div>
+                        <h3 className="text-3xl md:text-5xl"
+                          style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
+                          ليس منتجاً — بل توقيع
+                        </h3>
+                        <p className="font-cairo text-white/80 text-lg">
+                          صُمّم ليعيش بجانبك في أرقى اللحظات.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* INGREDIENTS / MECHANISM */}
             <section style={{ background: p.light }}>
