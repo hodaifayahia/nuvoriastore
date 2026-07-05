@@ -277,6 +277,7 @@ export default function AdminLandingGeneratorPage() {
 
   const reset = () => {
     setImage(null); setContent(null); setPalette(null);
+    setImages({ hero: null, lifestyle: null, before: null, after: null });
     setProductName(''); setDescription(''); setPrice(''); setOldPrice('');
   };
 
