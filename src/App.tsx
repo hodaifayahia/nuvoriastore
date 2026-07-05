@@ -148,6 +148,8 @@ const App = () => (
             <Route path="/admin/costs" element={<LanguageProvider><AdminLayout><AdminCostsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/costs/:productId" element={<LanguageProvider><AdminLayout><AdminCostDetailPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/landing" element={<LanguageProvider><AdminLayout><AdminLandingPagePage /></AdminLayout></LanguageProvider>} />
+            <Route path="/admin/landing-generator" element={<LanguageProvider><AdminLayout><AdminLandingGeneratorPage /></AdminLayout></LanguageProvider>} />
+
             <Route path="/admin/suppliers" element={<LanguageProvider><AdminLayout><AdminSuppliersPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/suppliers/:id" element={<LanguageProvider><AdminLayout><AdminSupplierDetailPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/suppliers/:id/transactions/new" element={<LanguageProvider><AdminLayout><AdminSupplierTransactionCreatePage /></AdminLayout></LanguageProvider>} />
