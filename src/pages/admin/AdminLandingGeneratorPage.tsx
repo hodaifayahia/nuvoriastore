@@ -587,6 +587,11 @@ export default function AdminLandingGeneratorPage() {
                       style={{ fontFamily: "'Playfair Display', serif" }}>01</div>
                     <div className="absolute -top-2 right-6 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest"
                       style={{ background: '#e5e5e5', color: '#666' }}>قبل</div>
+                    {images.before && (
+                      <div className="relative rounded-2xl overflow-hidden mb-5 aspect-video">
+                        <img src={images.before} alt="before" className="w-full h-full object-cover grayscale-[40%]" />
+                      </div>
+                    )}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-2xl mb-4">😞</div>
                       <Editable
