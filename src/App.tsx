@@ -49,6 +49,7 @@ import AdminReturnsPage from "./pages/admin/AdminReturnsPage";
 import AdminCostsPage from "./pages/admin/AdminCostsPage";
 import AdminCostDetailPage from "./pages/admin/AdminCostDetailPage";
 import AdminLandingPagePage from "./pages/admin/AdminLandingPagePage";
+import AdminLandingGeneratorPage from "./pages/admin/AdminLandingGeneratorPage";
 import AdminSuppliersPage from "./pages/admin/AdminSuppliersPage";
 import AdminSupplierDetailPage from "./pages/admin/AdminSupplierDetailPage";
 import AdminSupplierTransactionCreatePage from "./pages/admin/AdminSupplierTransactionCreatePage";
