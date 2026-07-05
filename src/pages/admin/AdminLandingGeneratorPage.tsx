@@ -172,8 +172,10 @@ export default function AdminLandingGeneratorPage() {
   const [price, setPrice] = useState<string>('');
   const [oldPrice, setOldPrice] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [palette, setPalette] = useState<Palette | null>(null);
   const [content, setContent] = useState<Content | null>(null);
+  const [images, setImages] = useState<GeneratedImages>({ hero: null, lifestyle: null, before: null, after: null });
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
