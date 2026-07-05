@@ -1143,7 +1143,6 @@ export const ar: Record<string, string> = {
   'sidebar.management': 'الإدارة',
   'sidebar.marketing': 'التسويق',
   'sidebar.landingGenerator': 'مولّد صفحات الهبوط',
-  'sidebar.marketing': 'التسويق',
   'sidebar.searchSidebar': 'بحث في القائمة...',
   'sidebar.collapse': 'طيّ',
   'sidebar.expand': 'توسيع',
