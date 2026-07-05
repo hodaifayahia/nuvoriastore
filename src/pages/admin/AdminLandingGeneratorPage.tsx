@@ -230,7 +230,32 @@ export default function AdminLandingGeneratorPage() {
         faq: ai?.faq?.length ? ai.faq : base.faq,
       };
       setContent(merged);
-      toast.success('تم توليد صفحة الهبوط الفاخرة ✨');
+      toast.success('تم توليد المحتوى ✨ — جاري إنشاء الصور...');
+
+      // Kick off AI photo generation in parallel (doesn't block content)
+      setImagesLoading(true);
+      supabase.functions
+        .invoke('generate-landing-images', {
+          body: { productName, description: description || '', referenceImage: image },
+        })
+        .then((imgRes) => {
+          if (imgRes.error) throw imgRes.error;
+          const d = imgRes.data || {};
+          setImages({
+            hero: d.hero || null,
+            lifestyle: d.lifestyle || null,
+            before: d.before || null,
+            after: d.after || null,
+          });
+          const count = [d.hero, d.lifestyle, d.before, d.after].filter(Boolean).length;
+          if (count > 0) toast.success(`تم إنشاء ${count} صورة احترافية 📸`);
+          else toast.warning('تعذّر توليد الصور — الصفحة جاهزة بدون صور إضافية');
+        })
+        .catch((e) => {
+          console.warn('image gen failed', e);
+          toast.warning('تعذّر توليد الصور الإضافية');
+        })
+        .finally(() => setImagesLoading(false));
     } catch (err: any) {
       console.warn('AI generation failed, using defaults:', err);
       setContent(DEFAULT_CONTENT(productName));
