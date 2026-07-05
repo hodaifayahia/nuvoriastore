@@ -15,6 +15,13 @@ interface Palette {
   soft: string;
 }
 
+interface GeneratedImages {
+  hero: string | null;
+  lifestyle: string | null;
+  before: string | null;
+  after: string | null;
+}
+
 interface Content {
   headline: string;
   subheadline: string;
