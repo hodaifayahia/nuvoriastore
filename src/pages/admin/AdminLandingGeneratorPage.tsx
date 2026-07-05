@@ -689,6 +689,34 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
+            {/* LIFESTYLE SHOWCASE (AI-generated) */}
+            {images.lifestyle && (
+              <section style={{ background: p.light }}>
+                <div className="max-w-6xl mx-auto px-6 py-16">
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
+                    <img src={images.lifestyle} alt="lifestyle" className="w-full aspect-[21/9] object-cover" />
+                    <div className="absolute inset-0"
+                      style={{ background: `linear-gradient(90deg, ${hexWithAlpha(p.dark, 0.75)} 0%, transparent 60%)` }} />
+                    <div className="absolute inset-0 flex items-center px-8 md:px-16">
+                      <div className="max-w-md text-white space-y-4">
+                        <div className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-widest font-bold"
+                          style={{ background: hexWithAlpha(p.accent, 0.9), color: accentText }}>
+                          نمط حياة راقٍ
+                        </div>
+                        <h3 className="text-3xl md:text-5xl"
+                          style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
+                          ليس منتجاً — بل توقيع
+                        </h3>
+                        <p className="font-cairo text-white/80 text-lg">
+                          صُمّم ليعيش بجانبك في أرقى اللحظات.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
             {/* INGREDIENTS / MECHANISM */}
             <section style={{ background: p.light }}>
               <div className="max-w-6xl mx-auto px-6 py-20">
