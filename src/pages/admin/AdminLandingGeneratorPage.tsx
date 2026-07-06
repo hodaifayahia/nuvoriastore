@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 
 type Tone = 'Premium' | 'Playful' | 'Clinical' | 'Bold';
 
+interface Palette {
+  bg?: string; surface?: string; accent?: string; accent2?: string; ink?: string; onAccent?: string;
+}
 interface Content {
   productName: string;
   productDescription: string;
@@ -18,9 +21,9 @@ interface Content {
   tagline: string;
   ctaText: string;
   hypeWords: string[];
-  benefits: { title: string; icon?: string }[];
+  palette?: Palette;
+  benefits: { title: string; icon?: string; imagePrompt?: string }[];
   testimonials: { name: string; quote: string; city: string }[];
-  howItWorks: { title: string }[];
   trustBadges: string[];
 }
 interface Images {
@@ -31,13 +34,16 @@ interface Images {
   before: string | null;
   after: string | null;
   packaging: string | null;
+  benefit0: string | null;
+  benefit1: string | null;
+  benefit2: string | null;
 }
 
-const TONE_THEMES: Record<Tone, { from: string; to: string; accent: string; ink: string }> = {
-  Premium:  { from: '#0b0b12', to: '#1a1330', accent: '#d4a24a', ink: '#0b0b12' },
-  Playful:  { from: '#fff1f2', to: '#fce7f3', accent: '#e11d74', ink: '#3b0764' },
-  Clinical: { from: '#eff6ff', to: '#ecfeff', accent: '#0369a1', ink: '#0c4a6e' },
-  Bold:     { from: '#0a0a0a', to: '#450a0a', accent: '#ef4444', ink: '#0a0a0a' },
+const TONE_FALLBACK: Record<Tone, Palette> = {
+  Premium:  { bg: '#0b0b12', surface: '#1a1330', accent: '#d4a24a', accent2: '#8b6b2f', ink: '#ffffff', onAccent: '#0b0b12' },
+  Playful:  { bg: '#fff1f2', surface: '#fce7f3', accent: '#e11d74', accent2: '#f472b6', ink: '#3b0764', onAccent: '#ffffff' },
+  Clinical: { bg: '#eff6ff', surface: '#ecfeff', accent: '#0369a1', accent2: '#38bdf8', ink: '#0c4a6e', onAccent: '#ffffff' },
+  Bold:     { bg: '#0a0a0a', surface: '#450a0a', accent: '#ef4444', accent2: '#f97316', ink: '#ffffff', onAccent: '#0a0a0a' },
 };
 
 const ICONS: Record<string, any> = { zap: Zap, shield: Shield, heart: Heart, flame: Flame, award: Award };
