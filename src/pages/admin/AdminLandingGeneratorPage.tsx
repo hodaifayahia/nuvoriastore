@@ -89,9 +89,8 @@ function Editable({ value, onChange, className, as: Tag = 'span' as any }: any) 
 }
 
 export default function AdminLandingGeneratorPage() {
-  const [productName, setProductName] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [targetAudience, setTargetAudience] = useState('');
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [price, setPrice] = useState('');
   const [tone, setTone] = useState<Tone>('Premium');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
@@ -99,10 +98,10 @@ export default function AdminLandingGeneratorPage() {
   const [prompts, setPrompts] = useState<any>(null);
   const [regenLoading, setRegenLoading] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  const productName = (content as any)?.productName || 'Product';
 
   useEffect(() => { ensurePlayfair(); }, []);
 
-  // Ensure a Supabase session exists (anonymous) so pages are saved to the user.
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getSession();
@@ -115,10 +114,22 @@ export default function AdminLandingGeneratorPage() {
 
   const theme = TONE_THEMES[tone];
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error('Image too large (max 8MB)');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setUploadedImage(reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
-    if (!productName.trim()) {
-      toast.error('Product name is required');
+    if (!uploadedImage) {
+      toast.error('Please upload a product photo');
       return;
     }
     setLoading(true);
@@ -127,9 +138,8 @@ export default function AdminLandingGeneratorPage() {
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
         body: {
-          productName: productName.trim(),
-          productDescription: productDescription.trim(),
-          targetAudience: targetAudience.trim() || 'general consumers',
+          referenceImage: uploadedImage,
+          price: price.trim(),
           tone,
           mode: 'full',
         },
@@ -149,6 +159,10 @@ export default function AdminLandingGeneratorPage() {
   }
 
   async function regenerateImage(section: keyof Images) {
+    if (section === 'hero') {
+      toast.info('Hero uses your uploaded photo — upload a new one to change it');
+      return;
+    }
     if (!prompts?.[section]) return;
     setRegenLoading(section);
     try {
@@ -169,10 +183,7 @@ export default function AdminLandingGeneratorPage() {
     setRegenLoading('text');
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
-        body: {
-          productName, productDescription, targetAudience: targetAudience || 'general consumers', tone,
-          mode: 'text',
-        },
+        body: { referenceImage: uploadedImage, price, tone, mode: 'text' },
       });
       if (error) throw error;
       if (data?.content) setContent(data.content);
@@ -183,6 +194,7 @@ export default function AdminLandingGeneratorPage() {
       setRegenLoading(null);
     }
   }
+
 
   function updateContent(patch: Partial<Content>) {
     setContent((c) => (c ? { ...c, ...patch } : c));
