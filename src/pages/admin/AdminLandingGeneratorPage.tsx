@@ -395,3 +395,100 @@ export default function AdminLandingGeneratorPage() {
     </div>
   );
 }
+
+function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productName, pageId, ctaText }: {
+  accent: string; onAccent: string; bg: string; surface: string; ink: string;
+  price?: string; productName?: string; pageId: string | null; ctaText?: string;
+}) {
+  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya: '', address: '', quantity: 1 });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.customer_name.trim() || !form.phone.trim()) { toast.error('يرجى إدخال الاسم ورقم الهاتف'); return; }
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from('launchpage_orders').insert({
+        page_id: pageId, product_name: productName, price,
+        customer_name: form.customer_name.trim(), phone: form.phone.trim(),
+        wilaya: form.wilaya.trim() || null, address: form.address.trim() || null,
+        quantity: Number(form.quantity) || 1,
+      });
+      if (error) throw error;
+      setDone(true);
+      toast.success('تم استلام طلبك — سنتصل بك قريباً');
+    } catch (err: any) { toast.error(err.message || 'فشل الإرسال'); }
+    finally { setSubmitting(false); }
+  }
+
+  return (
+    <section id="order-form" className="py-24 px-6 sm:px-14" style={{ background: bg, color: ink }}>
+      <div className="max-w-2xl mx-auto">
+        <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: accent }}>اطلب الآن</div>
+        <h2 className="text-4xl sm:text-5xl font-black text-center mb-3" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+          أكمل طلبك خلال دقيقة
+        </h2>
+        <p className="text-center opacity-70 mb-10" style={{ color: ink }}>الدفع عند الاستلام — شحن سريع لكل ولايات الجزائر</p>
+
+        {done ? (
+          <div className="rounded-3xl p-10 text-center shadow-xl" style={{ background: surface }}>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: accent, color: onAccent }}>
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-black mb-2" style={{ color: ink }}>تم استلام طلبك ✓</h3>
+            <p className="opacity-70" style={{ color: ink }}>سيتصل بك فريقنا خلال ساعات لتأكيد التوصيل.</p>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4" style={{ background: surface }}>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الاسم الكامل *</label>
+                <input required value={form.customer_name} onChange={e => setForm({ ...form, customer_name: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>رقم الهاتف *</label>
+                <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} placeholder="05XX XX XX XX" />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية</label>
+                <input value={form.wilaya} onChange={e => setForm({ ...form, wilaya: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الكمية</label>
+                <input type="number" min={1} value={form.quantity} onChange={e => setForm({ ...form, quantity: Number(e.target.value) })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>العنوان</label>
+                <textarea rows={2} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl outline-none border-2 resize-none"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+            </div>
+
+            {price && (
+              <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
+                <div className="font-bold" style={{ color: ink }}>المجموع</div>
+                <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>
+              </div>
+            )}
+
+            <button type="submit" disabled={submitting}
+              className="w-full h-14 rounded-xl font-black text-lg shadow-xl hover:scale-[1.02] transition disabled:opacity-60"
+              style={{ background: accent, color: onAccent }}>
+              {submitting ? 'جارٍ الإرسال…' : `${ctaText || 'اطلب الآن'} ←`}
+            </button>
+          </form>
+        )}
+      </div>
+    </section>
+  );
+}
