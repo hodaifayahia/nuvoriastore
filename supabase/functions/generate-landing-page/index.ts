@@ -110,13 +110,17 @@ Deno.serve(async (req) => {
     };
     const style = toneStyle[tone] ?? toneStyle.Premium;
 
+    // STRICT: any visible text/labels/signage inside images MUST be in Arabic script only.
+    // Absolutely no English, Latin letters, Roman numerals, or any non-Arabic characters.
+    const ARABIC_ONLY = `CRITICAL LANGUAGE RULE: If ANY text, label, sign, packaging copy, writing, watermark, sticker, or typography is visible anywhere in the image, it MUST be written EXCLUSIVELY in Arabic script (العربية). ABSOLUTELY FORBIDDEN: English words, Latin alphabet letters (a-z, A-Z), Roman numerals, Cyrillic, Chinese, or any non-Arabic characters. Prefer minimal or no text at all. Any packaging or labels must show only Arabic calligraphy/typography. Numbers, if any, must be Arabic-Indic digits (٠١٢٣٤٥٦٧٨٩).`;
+
     const prompts = {
-      lifestyle: `Cinematic aspirational lifestyle photograph featuring ${productName}. ${productDescription}. A person elegantly using or holding the product in a premium modern setting. ${style}. Ultra sharp, 8k, photorealistic. Absolutely NO text, NO logos, NO writing anywhere in the image.`,
-      detail: `Extreme macro close-up detail shot of ${productName}. ${productDescription}. Dramatic lighting revealing texture and craftsmanship. ${style}. 8k photorealistic. NO text.`,
-      inUse: `Dynamic action photograph of ${productName} being used in the perfect moment. ${productDescription}. Motion, energy, real-world context. ${style}. Photorealistic, 8k. NO text.`,
-      before: `Documentary photograph illustrating the frustrating PROBLEM before ${productName}. Muted desaturated tones, moody lighting, unmet need. Photorealistic. NO text.`,
-      after: `Bright joyful RESULT photograph after using ${productName}. Vibrant warm lighting, confident glowing subject, premium lifestyle. Photorealistic. NO text.`,
-      packaging: `Elegant flat-lay of ${productName} with its premium packaging, accessories, or key ingredients arranged beautifully. Top-down view, minimal composition. ${style}. NO text.`,
+      lifestyle: `Cinematic aspirational lifestyle photograph featuring ${productName}. ${productDescription}. A person elegantly using or holding the product in a premium modern setting. ${style}. Ultra sharp, 8k, photorealistic. ${ARABIC_ONLY}`,
+      detail: `Extreme macro close-up detail shot of ${productName}. ${productDescription}. Dramatic lighting revealing texture and craftsmanship. ${style}. 8k photorealistic. ${ARABIC_ONLY}`,
+      inUse: `Dynamic action photograph of ${productName} being used in the perfect moment. ${productDescription}. Motion, energy, real-world context. ${style}. Photorealistic, 8k. ${ARABIC_ONLY}`,
+      before: `Documentary photograph illustrating the frustrating PROBLEM before ${productName}. Muted desaturated tones, moody lighting, unmet need. Photorealistic. ${ARABIC_ONLY}`,
+      after: `Bright joyful RESULT photograph after using ${productName}. Vibrant warm lighting, confident glowing subject, premium lifestyle. Photorealistic. ${ARABIC_ONLY}`,
+      packaging: `Elegant flat-lay of ${productName} with its premium packaging (labels in Arabic only), accessories, or key ingredients arranged beautifully. Top-down view, minimal composition. ${style}. ${ARABIC_ONLY}`,
     };
 
     const [lifestyle, detail, inUse, before, after, packaging] = await Promise.all([
