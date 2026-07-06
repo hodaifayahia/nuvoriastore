@@ -496,6 +496,53 @@ export type Database = {
           },
         ]
       }
+      launchpage_orders: {
+        Row: {
+          address: string | null
+          created_at: string
+          customer_name: string
+          id: string
+          page_id: string | null
+          phone: string
+          price: string | null
+          product_name: string | null
+          quantity: number
+          wilaya: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          customer_name: string
+          id?: string
+          page_id?: string | null
+          phone: string
+          price?: string | null
+          product_name?: string | null
+          quantity?: number
+          wilaya?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          customer_name?: string
+          id?: string
+          page_id?: string | null
+          phone?: string
+          price?: string | null
+          product_name?: string | null
+          quantity?: number
+          wilaya?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launchpage_orders_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "launchpage_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       launchpage_pages: {
         Row: {
           content_json: Json
