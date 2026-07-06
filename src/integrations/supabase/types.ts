@@ -496,6 +496,45 @@ export type Database = {
           },
         ]
       }
+      launchpage_pages: {
+        Row: {
+          content_json: Json
+          created_at: string
+          id: string
+          image_urls: Json
+          product_description: string | null
+          product_name: string
+          target_audience: string | null
+          tone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_json?: Json
+          created_at?: string
+          id?: string
+          image_urls?: Json
+          product_description?: string | null
+          product_name: string
+          target_audience?: string | null
+          tone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_json?: Json
+          created_at?: string
+          id?: string
+          image_urls?: Json
+          product_description?: string | null
+          product_name?: string
+          target_audience?: string | null
+          tone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string
