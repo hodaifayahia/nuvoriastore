@@ -240,13 +240,13 @@ export default function AdminLandingGeneratorPage() {
         {loading && <SkeletonPage />}
 
         {content && (
-          <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: '#fff' }}>
-            {/* ============ HERO — image dominant ============ */}
-            <section className="relative min-h-[85vh] flex items-end overflow-hidden" style={{ background: `linear-gradient(135deg, ${theme.from}, ${theme.to})` }}>
+          <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: bg, color: ink }}>
+            {/* ============ HERO ============ */}
+            <section className="relative min-h-[85vh] flex items-end overflow-hidden" style={{ background: `linear-gradient(135deg, ${bg}, ${surface})` }}>
               {images.hero && (
-                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-70" />
               )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${theme.from}dd 70%, ${theme.from} 100%)` }} />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${bg}dd 70%, ${bg} 100%)` }} />
               <div className="absolute top-8 right-8 flex gap-2">
                 {content.hypeWords?.slice(0, 3).map((w, i) => (
                   <span key={i} className="px-3 py-1 rounded-full text-xs font-black tracking-widest backdrop-blur border" style={{ color: ink, borderColor: `${ink}30`, background: `${ink}10` }}>{w}</span>
@@ -254,7 +254,7 @@ export default function AdminLandingGeneratorPage() {
               </div>
               <div className="relative z-10 w-full px-6 sm:px-14 pb-16 sm:pb-24">
                 <div className="max-w-4xl">
-                  <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: theme.accent, color: '#fff' }}>
+                  <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: accent, color: onAccent }}>
                     <Flame className="w-3.5 h-3.5" /> جديد
                   </div>
                   <h1 className="text-5xl sm:text-7xl md:text-8xl font-black leading-[1.05] mb-4" style={{ color: ink }}>
@@ -262,9 +262,9 @@ export default function AdminLandingGeneratorPage() {
                   </h1>
                   <p className="text-xl sm:text-2xl font-medium mb-8 opacity-80" style={{ color: ink }}>{content.tagline}</p>
                   <div className="flex flex-wrap items-center gap-5">
-                    <button className="px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
+                    <a href="#order-form" className="px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
                       {content.ctaText} ←
-                    </button>
+                    </a>
                     {price && (
                       <div style={{ color: ink }}>
                         <div className="text-3xl sm:text-5xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>{price}</div>
@@ -277,8 +277,8 @@ export default function AdminLandingGeneratorPage() {
             </section>
 
             {/* ============ HYPE STRIP ============ */}
-            <section className="py-6 overflow-hidden" style={{ background: theme.accent }}>
-              <div className="flex gap-12 justify-center flex-wrap px-6" style={{ color: '#fff' }}>
+            <section className="py-6 overflow-hidden" style={{ background: accent }}>
+              <div className="flex gap-12 justify-center flex-wrap px-6" style={{ color: onAccent }}>
                 {content.trustBadges?.slice(0, 4).map((b, i) => (
                   <div key={i} className="flex items-center gap-2 font-black uppercase tracking-widest text-sm">
                     <Truck className="w-4 h-4" /> {b}
@@ -287,74 +287,68 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ IMAGE GRID — lifestyle + detail ============ */}
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-1 bg-black">
+            {/* ============ IMAGE GRID ============ */}
+            <section className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ background: ink }}>
               <ImageWithRegen src={images.lifestyle} section="lifestyle" className="aspect-square md:aspect-auto md:row-span-2" />
               <ImageWithRegen src={images.detail} section="detail" className="aspect-square" />
               <ImageWithRegen src={images.inUse} section="inUse" className="aspect-square md:col-span-2 md:row-span-2" />
               <ImageWithRegen src={images.packaging} section="packaging" className="aspect-square" />
             </section>
 
-            {/* ============ BENEFITS — icon only, minimal words ============ */}
-            <section className="py-24 px-6 sm:px-14 text-center" style={{ background: '#fafafa' }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: theme.accent }}>لماذا هذا المنتج</div>
-              <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+            {/* ============ BENEFITS — with generated image per benefit ============ */}
+            <section className="py-24 px-6 sm:px-14 text-center" style={{ background: surface, color: ink }}>
+              <div className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: accent }}>لماذا هذا المنتج</div>
+              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
                 {content.benefits?.slice(0, 3).map((b, i) => {
                   const Icon = ICONS[b.icon || 'zap'] || Zap;
+                  const img = (images as any)[`benefit${i}`] as string | null;
+                  const key = `benefit${i}` as keyof Images;
                   return (
-                    <div key={i} className="group">
-                      <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 transition" style={{ background: `${theme.accent}15`, color: theme.accent }}>
-                        <Icon className="w-9 h-9" strokeWidth={2.5} />
+                    <div key={i} className="group rounded-3xl overflow-hidden shadow-xl" style={{ background: bg }}>
+                      <div className="relative aspect-square overflow-hidden">
+                        <ImageWithRegen src={img} section={key} className="absolute inset-0" />
+                        <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl flex items-center justify-center backdrop-blur" style={{ background: `${accent}dd`, color: onAccent }}>
+                          <Icon className="w-6 h-6" strokeWidth={2.5} />
+                        </div>
                       </div>
-                      <div className="font-black text-lg sm:text-xl">{b.title}</div>
+                      <div className="p-6">
+                        <div className="font-black text-xl sm:text-2xl" style={{ color: ink }}>{b.title}</div>
+                      </div>
                     </div>
                   );
                 })}
               </div>
             </section>
 
-            {/* ============ BEFORE / AFTER — split-screen ============ */}
+            {/* ============ BEFORE / AFTER ============ */}
             <section className="grid md:grid-cols-2">
               <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
                 <ImageWithRegen src={images.before} section="before" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm bg-slate-800 text-white uppercase tracking-widest">قبل</div>
+                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: ink, color: bg }}>قبل</div>
               </div>
               <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
                 <ImageWithRegen src={images.after} section="after" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm text-white uppercase tracking-widest" style={{ background: theme.accent }}>بعد</div>
+                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: accent, color: onAccent }}>بعد</div>
               </div>
             </section>
 
-            {/* ============ HOW IT WORKS — 3 huge numbers ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: theme.from, color: '#fff' }}>
-              <div className="text-xs font-black tracking-[0.3em] text-center mb-16 opacity-70">كيف يعمل</div>
-              <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-                {content.howItWorks?.slice(0, 3).map((s, i) => (
-                  <div key={i} className="text-center">
-                    <div className="text-8xl font-black mb-4 opacity-20" style={{ fontFamily: "'Playfair Display', serif", color: theme.accent }}>0{i + 1}</div>
-                    <div className="text-2xl font-black">{s.title}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* ============ TESTIMONIALS — image-forward cards ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: '#fafafa' }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: theme.accent }}>آراء العملاء</div>
+            {/* ============ TESTIMONIALS ============ */}
+            <section className="py-24 px-6 sm:px-14" style={{ background: surface, color: ink }}>
+              <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: accent }}>آراء العملاء</div>
               <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-10">
                 {content.testimonials?.slice(0, 3).map((t, i) => (
-                  <div key={i} className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition">
-                    <div className="flex mb-3" style={{ color: theme.accent }}>
+                  <div key={i} className="rounded-3xl p-6 shadow-lg hover:shadow-2xl transition" style={{ background: bg }}>
+                    <div className="flex mb-3" style={{ color: accent }}>
                       {[0,1,2,3,4].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
                     </div>
-                    <p className="text-lg font-medium mb-6 leading-relaxed">«{t.quote}»</p>
-                    <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                      <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-black" style={{ background: theme.accent }}>
+                    <p className="text-lg font-medium mb-6 leading-relaxed" style={{ color: ink }}>«{t.quote}»</p>
+                    <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: `${ink}15` }}>
+                      <div className="w-11 h-11 rounded-full flex items-center justify-center font-black" style={{ background: accent, color: onAccent }}>
                         {t.name?.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-black">{t.name}</div>
-                        <div className="text-xs text-slate-500">{t.city}</div>
+                        <div className="font-black" style={{ color: ink }}>{t.name}</div>
+                        <div className="text-xs opacity-60" style={{ color: ink }}>{t.city}</div>
                       </div>
                     </div>
                   </div>
@@ -362,21 +356,27 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ FINAL CTA — full image ============ */}
-            <section className="relative min-h-[75vh] flex items-center justify-center text-center overflow-hidden" style={{ background: theme.from }}>
+            {/* ============ ORDER FORM ============ */}
+            <OrderFormSection
+              accent={accent} onAccent={onAccent} bg={bg} surface={surface} ink={ink}
+              price={price} productName={content.productName} pageId={pageId} ctaText={content.ctaText}
+            />
+
+            {/* ============ FINAL CTA ============ */}
+            <section className="relative min-h-[60vh] flex items-center justify-center text-center overflow-hidden" style={{ background: bg }}>
               {images.packaging && (
                 <img src={images.packaging} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
               )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.from}cc, ${theme.from})` }} />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${bg}cc, ${bg})` }} />
               <div className="relative z-10 px-6 max-w-3xl">
-                <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: theme.accent, color: '#fff' }}>
+                <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: accent, color: onAccent }}>
                   <Flame className="w-3.5 h-3.5" /> عرض محدود
                 </div>
                 <h2 className="text-5xl sm:text-7xl font-black mb-6" style={{ color: ink }}>{content.headline}</h2>
-                {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: theme.accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
-                <button className="px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
+                {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
+                <a href="#order-form" className="inline-block px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
                   {content.ctaText} ←
-                </button>
+                </a>
               </div>
             </section>
           </div>
