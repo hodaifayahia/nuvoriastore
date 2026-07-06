@@ -328,10 +328,18 @@ export default function AdminLandingGeneratorPage() {
                     onChange={(v: string) => updateContent({ subheadline: v })}
                     className="text-lg sm:text-xl opacity-90 mb-8 block leading-relaxed"
                   />
-                  <button className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold shadow-2xl transition hover:scale-105" style={{ background: theme.accent, color: '#fff' }}>
-                    <Editable value={content.ctaText} onChange={(v: string) => updateContent({ ctaText: v })} className="inline" />
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold shadow-2xl transition hover:scale-105" style={{ background: theme.accent, color: '#fff' }}>
+                      <Editable value={content.ctaText} onChange={(v: string) => updateContent({ ctaText: v })} className="inline" />
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    {price && (
+                      <div className="text-3xl sm:text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {price}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex items-center gap-4 mt-8 text-sm opacity-80">
                     <div className="flex">{[0,1,2,3,4].map((i) => <Star key={i} className="w-4 h-4 fill-current" />)}</div>
                     <span>4.9 · 2,100+ reviews</span>
