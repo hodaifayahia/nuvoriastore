@@ -467,9 +467,11 @@ export default function AdminLandingGeneratorPage() {
             <section className="px-6 sm:px-14 py-20 text-center text-white" style={{ background: `linear-gradient(135deg, ${theme.from}, ${theme.to})` }}>
               <h2 className="text-3xl sm:text-5xl font-bold mb-4 max-w-2xl mx-auto" style={{ fontFamily: "'Playfair Display', serif" }}>Ready to transform?</h2>
               <p className="opacity-80 mb-8 max-w-xl mx-auto">Join thousands who made the switch. Risk-free 30-day guarantee.</p>
+              {price && <div className="text-4xl font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>{price}</div>}
               <button className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl font-semibold shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
                 {content.ctaText} <ArrowRight className="w-4 h-4" />
               </button>
+
             </section>
           </div>
         )}
