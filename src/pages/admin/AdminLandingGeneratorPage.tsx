@@ -76,9 +76,11 @@ export default function AdminLandingGeneratorPage() {
   const [tone, setTone] = useState<Tone>('Premium');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
-  const [images, setImages] = useState<Images>({ hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null });
+  const emptyImages: Images = { hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null, benefit0: null, benefit1: null, benefit2: null };
+  const [images, setImages] = useState<Images>(emptyImages);
   const [prompts, setPrompts] = useState<any>(null);
   const [regen, setRegen] = useState<string | null>(null);
+  const [pageId, setPageId] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureFonts(); }, []);
@@ -89,9 +91,19 @@ export default function AdminLandingGeneratorPage() {
     })();
   }, []);
 
-  const theme = TONE_THEMES[tone];
-  const isDark = tone === 'Premium' || tone === 'Bold';
-  const ink = isDark ? '#ffffff' : theme.ink;
+  const palette: Palette = { ...TONE_FALLBACK[tone], ...(content?.palette || {}) };
+  const isDark = (() => {
+    const hex = (palette.bg || '#ffffff').replace('#','');
+    if (hex.length < 6) return false;
+    const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+    return (0.299*r + 0.587*g + 0.114*b) < 140;
+  })();
+  const ink = palette.ink || (isDark ? '#ffffff' : '#0b0b12');
+  const accent = palette.accent || '#d4a24a';
+  const accent2 = palette.accent2 || accent;
+  const bg = palette.bg || '#ffffff';
+  const surface = palette.surface || bg;
+  const onAccent = palette.onAccent || '#ffffff';
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
