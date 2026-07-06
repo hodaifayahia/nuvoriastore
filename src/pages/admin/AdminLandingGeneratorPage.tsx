@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 
 type Tone = 'Premium' | 'Playful' | 'Clinical' | 'Bold';
 
+interface Palette {
+  bg?: string; surface?: string; accent?: string; accent2?: string; ink?: string; onAccent?: string;
+}
 interface Content {
   productName: string;
   productDescription: string;
@@ -18,9 +21,9 @@ interface Content {
   tagline: string;
   ctaText: string;
   hypeWords: string[];
-  benefits: { title: string; icon?: string }[];
+  palette?: Palette;
+  benefits: { title: string; icon?: string; imagePrompt?: string }[];
   testimonials: { name: string; quote: string; city: string }[];
-  howItWorks: { title: string }[];
   trustBadges: string[];
 }
 interface Images {
@@ -31,13 +34,16 @@ interface Images {
   before: string | null;
   after: string | null;
   packaging: string | null;
+  benefit0: string | null;
+  benefit1: string | null;
+  benefit2: string | null;
 }
 
-const TONE_THEMES: Record<Tone, { from: string; to: string; accent: string; ink: string }> = {
-  Premium:  { from: '#0b0b12', to: '#1a1330', accent: '#d4a24a', ink: '#0b0b12' },
-  Playful:  { from: '#fff1f2', to: '#fce7f3', accent: '#e11d74', ink: '#3b0764' },
-  Clinical: { from: '#eff6ff', to: '#ecfeff', accent: '#0369a1', ink: '#0c4a6e' },
-  Bold:     { from: '#0a0a0a', to: '#450a0a', accent: '#ef4444', ink: '#0a0a0a' },
+const TONE_FALLBACK: Record<Tone, Palette> = {
+  Premium:  { bg: '#0b0b12', surface: '#1a1330', accent: '#d4a24a', accent2: '#8b6b2f', ink: '#ffffff', onAccent: '#0b0b12' },
+  Playful:  { bg: '#fff1f2', surface: '#fce7f3', accent: '#e11d74', accent2: '#f472b6', ink: '#3b0764', onAccent: '#ffffff' },
+  Clinical: { bg: '#eff6ff', surface: '#ecfeff', accent: '#0369a1', accent2: '#38bdf8', ink: '#0c4a6e', onAccent: '#ffffff' },
+  Bold:     { bg: '#0a0a0a', surface: '#450a0a', accent: '#ef4444', accent2: '#f97316', ink: '#ffffff', onAccent: '#0a0a0a' },
 };
 
 const ICONS: Record<string, any> = { zap: Zap, shield: Shield, heart: Heart, flame: Flame, award: Award };
@@ -70,9 +76,11 @@ export default function AdminLandingGeneratorPage() {
   const [tone, setTone] = useState<Tone>('Premium');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
-  const [images, setImages] = useState<Images>({ hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null });
+  const emptyImages: Images = { hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null, benefit0: null, benefit1: null, benefit2: null };
+  const [images, setImages] = useState<Images>(emptyImages);
   const [prompts, setPrompts] = useState<any>(null);
   const [regen, setRegen] = useState<string | null>(null);
+  const [pageId, setPageId] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureFonts(); }, []);
@@ -83,9 +91,19 @@ export default function AdminLandingGeneratorPage() {
     })();
   }, []);
 
-  const theme = TONE_THEMES[tone];
-  const isDark = tone === 'Premium' || tone === 'Bold';
-  const ink = isDark ? '#ffffff' : theme.ink;
+  const palette: Palette = { ...TONE_FALLBACK[tone], ...(content?.palette || {}) };
+  const isDark = (() => {
+    const hex = (palette.bg || '#ffffff').replace('#','');
+    if (hex.length < 6) return false;
+    const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+    return (0.299*r + 0.587*g + 0.114*b) < 140;
+  })();
+  const ink = palette.ink || (isDark ? '#ffffff' : '#0b0b12');
+  const accent = palette.accent || '#d4a24a';
+  const accent2 = palette.accent2 || accent;
+  const bg = palette.bg || '#ffffff';
+  const surface = palette.surface || bg;
+  const onAccent = palette.onAccent || '#ffffff';
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -100,14 +118,15 @@ export default function AdminLandingGeneratorPage() {
     e.preventDefault();
     if (!uploadedImage) { toast.error('يرجى رفع صورة المنتج'); return; }
     setLoading(true); setContent(null);
-    setImages({ hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null });
+    setImages(emptyImages);
+    setPageId(null);
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
         body: { referenceImage: uploadedImage, price: price.trim(), tone, mode: 'full' },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      setContent(data.content); setImages(data.images); setPrompts(data.prompts);
+      setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
       toast.success('تم إنشاء صفحة الهبوط');
     } catch (err: any) { toast.error(err.message || 'فشل الإنشاء'); }
     finally { setLoading(false); }
@@ -221,13 +240,13 @@ export default function AdminLandingGeneratorPage() {
         {loading && <SkeletonPage />}
 
         {content && (
-          <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: '#fff' }}>
-            {/* ============ HERO — image dominant ============ */}
-            <section className="relative min-h-[85vh] flex items-end overflow-hidden" style={{ background: `linear-gradient(135deg, ${theme.from}, ${theme.to})` }}>
+          <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: bg, color: ink }}>
+            {/* ============ HERO ============ */}
+            <section className="relative min-h-[85vh] flex items-end overflow-hidden" style={{ background: `linear-gradient(135deg, ${bg}, ${surface})` }}>
               {images.hero && (
-                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-70" />
               )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${theme.from}dd 70%, ${theme.from} 100%)` }} />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${bg}dd 70%, ${bg} 100%)` }} />
               <div className="absolute top-8 right-8 flex gap-2">
                 {content.hypeWords?.slice(0, 3).map((w, i) => (
                   <span key={i} className="px-3 py-1 rounded-full text-xs font-black tracking-widest backdrop-blur border" style={{ color: ink, borderColor: `${ink}30`, background: `${ink}10` }}>{w}</span>
@@ -235,7 +254,7 @@ export default function AdminLandingGeneratorPage() {
               </div>
               <div className="relative z-10 w-full px-6 sm:px-14 pb-16 sm:pb-24">
                 <div className="max-w-4xl">
-                  <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: theme.accent, color: '#fff' }}>
+                  <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: accent, color: onAccent }}>
                     <Flame className="w-3.5 h-3.5" /> جديد
                   </div>
                   <h1 className="text-5xl sm:text-7xl md:text-8xl font-black leading-[1.05] mb-4" style={{ color: ink }}>
@@ -243,9 +262,9 @@ export default function AdminLandingGeneratorPage() {
                   </h1>
                   <p className="text-xl sm:text-2xl font-medium mb-8 opacity-80" style={{ color: ink }}>{content.tagline}</p>
                   <div className="flex flex-wrap items-center gap-5">
-                    <button className="px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
+                    <a href="#order-form" className="px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
                       {content.ctaText} ←
-                    </button>
+                    </a>
                     {price && (
                       <div style={{ color: ink }}>
                         <div className="text-3xl sm:text-5xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>{price}</div>
@@ -258,8 +277,8 @@ export default function AdminLandingGeneratorPage() {
             </section>
 
             {/* ============ HYPE STRIP ============ */}
-            <section className="py-6 overflow-hidden" style={{ background: theme.accent }}>
-              <div className="flex gap-12 justify-center flex-wrap px-6" style={{ color: '#fff' }}>
+            <section className="py-6 overflow-hidden" style={{ background: accent }}>
+              <div className="flex gap-12 justify-center flex-wrap px-6" style={{ color: onAccent }}>
                 {content.trustBadges?.slice(0, 4).map((b, i) => (
                   <div key={i} className="flex items-center gap-2 font-black uppercase tracking-widest text-sm">
                     <Truck className="w-4 h-4" /> {b}
@@ -268,74 +287,68 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ IMAGE GRID — lifestyle + detail ============ */}
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-1 bg-black">
+            {/* ============ IMAGE GRID ============ */}
+            <section className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ background: ink }}>
               <ImageWithRegen src={images.lifestyle} section="lifestyle" className="aspect-square md:aspect-auto md:row-span-2" />
               <ImageWithRegen src={images.detail} section="detail" className="aspect-square" />
               <ImageWithRegen src={images.inUse} section="inUse" className="aspect-square md:col-span-2 md:row-span-2" />
               <ImageWithRegen src={images.packaging} section="packaging" className="aspect-square" />
             </section>
 
-            {/* ============ BENEFITS — icon only, minimal words ============ */}
-            <section className="py-24 px-6 sm:px-14 text-center" style={{ background: '#fafafa' }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: theme.accent }}>لماذا هذا المنتج</div>
-              <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+            {/* ============ BENEFITS — with generated image per benefit ============ */}
+            <section className="py-24 px-6 sm:px-14 text-center" style={{ background: surface, color: ink }}>
+              <div className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: accent }}>لماذا هذا المنتج</div>
+              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
                 {content.benefits?.slice(0, 3).map((b, i) => {
                   const Icon = ICONS[b.icon || 'zap'] || Zap;
+                  const img = (images as any)[`benefit${i}`] as string | null;
+                  const key = `benefit${i}` as keyof Images;
                   return (
-                    <div key={i} className="group">
-                      <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 transition" style={{ background: `${theme.accent}15`, color: theme.accent }}>
-                        <Icon className="w-9 h-9" strokeWidth={2.5} />
+                    <div key={i} className="group rounded-3xl overflow-hidden shadow-xl" style={{ background: bg }}>
+                      <div className="relative aspect-square overflow-hidden">
+                        <ImageWithRegen src={img} section={key} className="absolute inset-0" />
+                        <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl flex items-center justify-center backdrop-blur" style={{ background: `${accent}dd`, color: onAccent }}>
+                          <Icon className="w-6 h-6" strokeWidth={2.5} />
+                        </div>
                       </div>
-                      <div className="font-black text-lg sm:text-xl">{b.title}</div>
+                      <div className="p-6">
+                        <div className="font-black text-xl sm:text-2xl" style={{ color: ink }}>{b.title}</div>
+                      </div>
                     </div>
                   );
                 })}
               </div>
             </section>
 
-            {/* ============ BEFORE / AFTER — split-screen ============ */}
+            {/* ============ BEFORE / AFTER ============ */}
             <section className="grid md:grid-cols-2">
               <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
                 <ImageWithRegen src={images.before} section="before" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm bg-slate-800 text-white uppercase tracking-widest">قبل</div>
+                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: ink, color: bg }}>قبل</div>
               </div>
               <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
                 <ImageWithRegen src={images.after} section="after" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm text-white uppercase tracking-widest" style={{ background: theme.accent }}>بعد</div>
+                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: accent, color: onAccent }}>بعد</div>
               </div>
             </section>
 
-            {/* ============ HOW IT WORKS — 3 huge numbers ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: theme.from, color: '#fff' }}>
-              <div className="text-xs font-black tracking-[0.3em] text-center mb-16 opacity-70">كيف يعمل</div>
-              <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-                {content.howItWorks?.slice(0, 3).map((s, i) => (
-                  <div key={i} className="text-center">
-                    <div className="text-8xl font-black mb-4 opacity-20" style={{ fontFamily: "'Playfair Display', serif", color: theme.accent }}>0{i + 1}</div>
-                    <div className="text-2xl font-black">{s.title}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* ============ TESTIMONIALS — image-forward cards ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: '#fafafa' }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: theme.accent }}>آراء العملاء</div>
+            {/* ============ TESTIMONIALS ============ */}
+            <section className="py-24 px-6 sm:px-14" style={{ background: surface, color: ink }}>
+              <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: accent }}>آراء العملاء</div>
               <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-10">
                 {content.testimonials?.slice(0, 3).map((t, i) => (
-                  <div key={i} className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition">
-                    <div className="flex mb-3" style={{ color: theme.accent }}>
+                  <div key={i} className="rounded-3xl p-6 shadow-lg hover:shadow-2xl transition" style={{ background: bg }}>
+                    <div className="flex mb-3" style={{ color: accent }}>
                       {[0,1,2,3,4].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
                     </div>
-                    <p className="text-lg font-medium mb-6 leading-relaxed">«{t.quote}»</p>
-                    <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                      <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-black" style={{ background: theme.accent }}>
+                    <p className="text-lg font-medium mb-6 leading-relaxed" style={{ color: ink }}>«{t.quote}»</p>
+                    <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: `${ink}15` }}>
+                      <div className="w-11 h-11 rounded-full flex items-center justify-center font-black" style={{ background: accent, color: onAccent }}>
                         {t.name?.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-black">{t.name}</div>
-                        <div className="text-xs text-slate-500">{t.city}</div>
+                        <div className="font-black" style={{ color: ink }}>{t.name}</div>
+                        <div className="text-xs opacity-60" style={{ color: ink }}>{t.city}</div>
                       </div>
                     </div>
                   </div>
@@ -343,21 +356,27 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ FINAL CTA — full image ============ */}
-            <section className="relative min-h-[75vh] flex items-center justify-center text-center overflow-hidden" style={{ background: theme.from }}>
+            {/* ============ ORDER FORM ============ */}
+            <OrderFormSection
+              accent={accent} onAccent={onAccent} bg={bg} surface={surface} ink={ink}
+              price={price} productName={content.productName} pageId={pageId} ctaText={content.ctaText}
+            />
+
+            {/* ============ FINAL CTA ============ */}
+            <section className="relative min-h-[60vh] flex items-center justify-center text-center overflow-hidden" style={{ background: bg }}>
               {images.packaging && (
                 <img src={images.packaging} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
               )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.from}cc, ${theme.from})` }} />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${bg}cc, ${bg})` }} />
               <div className="relative z-10 px-6 max-w-3xl">
-                <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: theme.accent, color: '#fff' }}>
+                <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: accent, color: onAccent }}>
                   <Flame className="w-3.5 h-3.5" /> عرض محدود
                 </div>
                 <h2 className="text-5xl sm:text-7xl font-black mb-6" style={{ color: ink }}>{content.headline}</h2>
-                {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: theme.accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
-                <button className="px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
+                {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
+                <a href="#order-form" className="inline-block px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
                   {content.ctaText} ←
-                </button>
+                </a>
               </div>
             </section>
           </div>
@@ -374,5 +393,102 @@ export default function AdminLandingGeneratorPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productName, pageId, ctaText }: {
+  accent: string; onAccent: string; bg: string; surface: string; ink: string;
+  price?: string; productName?: string; pageId: string | null; ctaText?: string;
+}) {
+  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya: '', address: '', quantity: 1 });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.customer_name.trim() || !form.phone.trim()) { toast.error('يرجى إدخال الاسم ورقم الهاتف'); return; }
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from('launchpage_orders').insert({
+        page_id: pageId, product_name: productName, price,
+        customer_name: form.customer_name.trim(), phone: form.phone.trim(),
+        wilaya: form.wilaya.trim() || null, address: form.address.trim() || null,
+        quantity: Number(form.quantity) || 1,
+      });
+      if (error) throw error;
+      setDone(true);
+      toast.success('تم استلام طلبك — سنتصل بك قريباً');
+    } catch (err: any) { toast.error(err.message || 'فشل الإرسال'); }
+    finally { setSubmitting(false); }
+  }
+
+  return (
+    <section id="order-form" className="py-24 px-6 sm:px-14" style={{ background: bg, color: ink }}>
+      <div className="max-w-2xl mx-auto">
+        <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: accent }}>اطلب الآن</div>
+        <h2 className="text-4xl sm:text-5xl font-black text-center mb-3" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+          أكمل طلبك خلال دقيقة
+        </h2>
+        <p className="text-center opacity-70 mb-10" style={{ color: ink }}>الدفع عند الاستلام — شحن سريع لكل ولايات الجزائر</p>
+
+        {done ? (
+          <div className="rounded-3xl p-10 text-center shadow-xl" style={{ background: surface }}>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: accent, color: onAccent }}>
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-black mb-2" style={{ color: ink }}>تم استلام طلبك ✓</h3>
+            <p className="opacity-70" style={{ color: ink }}>سيتصل بك فريقنا خلال ساعات لتأكيد التوصيل.</p>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4" style={{ background: surface }}>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الاسم الكامل *</label>
+                <input required value={form.customer_name} onChange={e => setForm({ ...form, customer_name: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>رقم الهاتف *</label>
+                <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} placeholder="05XX XX XX XX" />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية</label>
+                <input value={form.wilaya} onChange={e => setForm({ ...form, wilaya: e.target.value })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الكمية</label>
+                <input type="number" min={1} value={form.quantity} onChange={e => setForm({ ...form, quantity: Number(e.target.value) })}
+                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>العنوان</label>
+                <textarea rows={2} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl outline-none border-2 resize-none"
+                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+              </div>
+            </div>
+
+            {price && (
+              <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
+                <div className="font-bold" style={{ color: ink }}>المجموع</div>
+                <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>
+              </div>
+            )}
+
+            <button type="submit" disabled={submitting}
+              className="w-full h-14 rounded-xl font-black text-lg shadow-xl hover:scale-[1.02] transition disabled:opacity-60"
+              style={{ background: accent, color: onAccent }}>
+              {submitting ? 'جارٍ الإرسال…' : `${ctaText || 'اطلب الآن'} ←`}
+            </button>
+          </form>
+        )}
+      </div>
+    </section>
   );
 }
