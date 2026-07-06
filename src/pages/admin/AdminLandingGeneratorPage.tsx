@@ -252,18 +252,32 @@ export default function AdminLandingGeneratorPage() {
 
         {/* Input form */}
         <Card className="p-6 sm:p-8 mb-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 bg-white/80 backdrop-blur">
-          <form onSubmit={handleGenerate} className="grid md:grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <Label htmlFor="pn">Product Name *</Label>
-              <Input id="pn" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Nuvora Sleep Serum" className="rounded-xl h-11" />
+          <form onSubmit={handleGenerate} className="grid md:grid-cols-3 gap-5">
+            <div className="md:col-span-3 space-y-2">
+              <Label>Product Photo *</Label>
+              <label className="relative flex items-center justify-center h-56 rounded-2xl border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-slate-50 cursor-pointer overflow-hidden transition group">
+                {uploadedImage ? (
+                  <>
+                    <img src={uploadedImage} alt="uploaded" className="w-full h-full object-contain" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-sm font-medium transition">
+                      Click to replace
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mx-auto mb-3 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <p className="font-medium text-slate-700">Upload a product photo</p>
+                    <p className="text-xs text-slate-500 mt-1">PNG or JPG, up to 8MB</p>
+                  </div>
+                )}
+                <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} />
+              </label>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ta">Target Audience</Label>
-              <Input id="ta" value={targetAudience} onChange={(e) => setTargetAudience(e.target.value)} placeholder="e.g. busy professionals over 30" className="rounded-xl h-11" />
-            </div>
-            <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="pd">Product Description</Label>
-              <Textarea id="pd" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} rows={3} placeholder="Describe what it is, key ingredients or features, and the main benefit." className="rounded-xl resize-none" />
+              <Label htmlFor="price">Price</Label>
+              <Input id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. $49" className="rounded-xl h-11" />
             </div>
             <div className="space-y-2">
               <Label>Tone</Label>
@@ -278,11 +292,12 @@ export default function AdminLandingGeneratorPage() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button type="submit" disabled={loading} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-base shadow-lg shadow-indigo-500/30">
-                {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Generating…</> : <><Sparkles className="w-4 h-4 mr-2" />Generate Landing Page</>}
+              <Button type="submit" disabled={loading || !uploadedImage} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-base shadow-lg shadow-indigo-500/30">
+                {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Generating…</> : <><Sparkles className="w-4 h-4 mr-2" />Generate</>}
               </Button>
             </div>
           </form>
+
         </Card>
 
         {/* Preview */}
