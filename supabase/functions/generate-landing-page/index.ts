@@ -11,18 +11,19 @@ const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-async function generateText(payload: {
-  productName: string;
-  productDescription: string;
-  targetAudience: string;
+async function generateText(opts: {
+  referenceImage?: string;
+  price?: string;
   tone: string;
 }) {
-  const system = `You are a world-class DTC copywriter. Write persuasive, benefit-driven landing page copy.
+  const system = `You are a world-class DTC copywriter. Analyze the product image and write persuasive, benefit-driven landing page copy.
 Return ONLY valid JSON matching this exact schema:
 {
+  "productName": "string (short, catchy — infer from the image)",
+  "productDescription": "string (1 sentence describing what the product is)",
   "headline": "string (max 12 words)",
   "subheadline": "string (max 25 words)",
-  "ctaText": "string (max 4 words)",
+  "ctaText": "string (max 4 words, e.g. 'Buy Now' or 'Get Yours')",
   "benefits": [{"title":"string","description":"string"}, {...}, {...}],
   "before": "string (2-3 sentences describing the painful 'before' state)",
   "after": "string (2-3 sentences describing the delightful 'after' state)",
@@ -39,12 +40,12 @@ Return ONLY valid JSON matching this exact schema:
   "trustBadges": ["string","string","string","string"]
 }`;
 
-  const user = `Product: ${payload.productName}
-Description: ${payload.productDescription}
-Target audience: ${payload.targetAudience}
-Tone: ${payload.tone}
+  const userText = `Analyze the attached product photo and write conversion-focused landing page copy in the "${opts.tone}" tone.${opts.price ? ` The product is priced at ${opts.price}.` : ""} Infer the product name, category, and key features from the image itself.`;
 
-Write conversion-focused copy in the "${payload.tone}" tone for this audience.`;
+  const content: any[] = [{ type: "text", text: userText }];
+  if (opts.referenceImage) {
+    content.push({ type: "image_url", image_url: { url: opts.referenceImage } });
+  }
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
@@ -56,7 +57,7 @@ Write conversion-focused copy in the "${payload.tone}" tone for this audience.`;
       model: "openai/gpt-5",
       messages: [
         { role: "system", content: system },
-        { role: "user", content: user },
+        { role: "user", content },
       ],
       response_format: { type: "json_object" },
     }),
@@ -104,7 +105,6 @@ async function generateImage(prompt: string): Promise<string | null> {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
-    // Optional auth — allow anonymous sessions.
     const authHeader = req.headers.get("Authorization");
     let userId: string | null = null;
     if (authHeader?.startsWith("Bearer ")) {
@@ -118,16 +118,14 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const {
-      productName,
-      productDescription = "",
-      targetAudience = "general consumers",
+      referenceImage,
+      price = "",
       tone = "Premium",
-      mode = "full", // full | text | image
-      section, // for image regen: 'hero'|'before'|'after'|'mechanism'
+      mode = "full",
+      section,
       imagePrompt,
     } = body ?? {};
 
-    // Partial regen: single image
     if (mode === "image" && imagePrompt) {
       const url = await generateImage(imagePrompt);
       return new Response(JSON.stringify({ image: url, section }), {
@@ -135,25 +133,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Partial regen: text only
     if (mode === "text") {
-      const content = await generateText({
-        productName,
-        productDescription,
-        targetAudience,
-        tone,
-      });
+      const content = await generateText({ referenceImage, price, tone });
       return new Response(JSON.stringify({ content }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    if (!productName) {
-      return new Response(JSON.stringify({ error: "productName required" }), {
+    if (!referenceImage) {
+      return new Response(JSON.stringify({ error: "referenceImage is required — upload a product photo" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Step 1: analyze image + generate copy
+    const content = await generateText({ referenceImage, price, tone });
+    const productName = content.productName || "the product";
+    const productDescription = content.productDescription || "";
 
     const toneStyle: Record<string, string> = {
       Premium: "luxury editorial photography, soft gradient studio backdrop, cinematic lighting, ultra-premium DTC brand aesthetic",
@@ -164,23 +161,20 @@ Deno.serve(async (req) => {
     const style = toneStyle[tone] ?? toneStyle.Premium;
 
     const prompts = {
-      hero: `Editorial hero product photograph of "${productName}". ${productDescription}. ${style}. Ultra sharp, 8k, photorealistic, centered subject with generous negative space.`,
-      before: `Documentary-style photograph illustrating the PROBLEM before using "${productName}". Muted desaturated tones, dull moody lighting, showing frustration or an unmet need. No text. Photorealistic.`,
-      after: `Bright joyful transformation photograph showing the RESULT after using "${productName}". Vibrant warm lighting, confident glowing subject, premium lifestyle setting. No text. Photorealistic.`,
-      mechanism: `Elegant flat-lay showing the key ingredients or mechanism of "${productName}". ${productDescription}. Clean minimal composition, top-down view, ${style}. No text.`,
+      before: `Documentary-style photograph illustrating the PROBLEM before using ${productName}. ${productDescription}. Muted desaturated tones, dull moody lighting, showing frustration or an unmet need. No text. Photorealistic.`,
+      after: `Bright joyful transformation photograph showing the RESULT after using ${productName}. ${productDescription}. Vibrant warm lighting, confident glowing subject, premium lifestyle setting. No text. Photorealistic.`,
+      mechanism: `Elegant flat-lay showing the key ingredients or mechanism of ${productName}. ${productDescription}. Clean minimal composition, top-down view, ${style}. No text.`,
     };
 
-    const [content, hero, before, after, mechanism] = await Promise.all([
-      generateText({ productName, productDescription, targetAudience, tone }),
-      generateImage(prompts.hero),
+    // Step 2: use uploaded photo as hero, generate the rest
+    const [before, after, mechanism] = await Promise.all([
       generateImage(prompts.before),
       generateImage(prompts.after),
       generateImage(prompts.mechanism),
     ]);
 
-    const images = { hero, before, after, mechanism };
+    const images = { hero: referenceImage, before, after, mechanism };
 
-    // Persist if authenticated
     let pageId: string | null = null;
     if (userId) {
       const admin = createClient(
@@ -193,7 +187,7 @@ Deno.serve(async (req) => {
           user_id: userId,
           product_name: productName,
           product_description: productDescription,
-          target_audience: targetAudience,
+          target_audience: price,
           tone,
           content_json: content,
           image_urls: images,
@@ -205,7 +199,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ id: pageId, content, images, prompts }),
+      JSON.stringify({ id: pageId, content, images, prompts, price }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {

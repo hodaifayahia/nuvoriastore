@@ -89,9 +89,8 @@ function Editable({ value, onChange, className, as: Tag = 'span' as any }: any) 
 }
 
 export default function AdminLandingGeneratorPage() {
-  const [productName, setProductName] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [targetAudience, setTargetAudience] = useState('');
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [price, setPrice] = useState('');
   const [tone, setTone] = useState<Tone>('Premium');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
@@ -99,10 +98,10 @@ export default function AdminLandingGeneratorPage() {
   const [prompts, setPrompts] = useState<any>(null);
   const [regenLoading, setRegenLoading] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  const productName = (content as any)?.productName || 'Product';
 
   useEffect(() => { ensurePlayfair(); }, []);
 
-  // Ensure a Supabase session exists (anonymous) so pages are saved to the user.
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getSession();
@@ -115,10 +114,22 @@ export default function AdminLandingGeneratorPage() {
 
   const theme = TONE_THEMES[tone];
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error('Image too large (max 8MB)');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setUploadedImage(reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
-    if (!productName.trim()) {
-      toast.error('Product name is required');
+    if (!uploadedImage) {
+      toast.error('Please upload a product photo');
       return;
     }
     setLoading(true);
@@ -127,9 +138,8 @@ export default function AdminLandingGeneratorPage() {
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
         body: {
-          productName: productName.trim(),
-          productDescription: productDescription.trim(),
-          targetAudience: targetAudience.trim() || 'general consumers',
+          referenceImage: uploadedImage,
+          price: price.trim(),
           tone,
           mode: 'full',
         },
@@ -149,6 +159,10 @@ export default function AdminLandingGeneratorPage() {
   }
 
   async function regenerateImage(section: keyof Images) {
+    if (section === 'hero') {
+      toast.info('Hero uses your uploaded photo — upload a new one to change it');
+      return;
+    }
     if (!prompts?.[section]) return;
     setRegenLoading(section);
     try {
@@ -169,10 +183,7 @@ export default function AdminLandingGeneratorPage() {
     setRegenLoading('text');
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
-        body: {
-          productName, productDescription, targetAudience: targetAudience || 'general consumers', tone,
-          mode: 'text',
-        },
+        body: { referenceImage: uploadedImage, price, tone, mode: 'text' },
       });
       if (error) throw error;
       if (data?.content) setContent(data.content);
@@ -183,6 +194,7 @@ export default function AdminLandingGeneratorPage() {
       setRegenLoading(null);
     }
   }
+
 
   function updateContent(patch: Partial<Content>) {
     setContent((c) => (c ? { ...c, ...patch } : c));
@@ -240,18 +252,32 @@ export default function AdminLandingGeneratorPage() {
 
         {/* Input form */}
         <Card className="p-6 sm:p-8 mb-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 bg-white/80 backdrop-blur">
-          <form onSubmit={handleGenerate} className="grid md:grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <Label htmlFor="pn">Product Name *</Label>
-              <Input id="pn" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Nuvora Sleep Serum" className="rounded-xl h-11" />
+          <form onSubmit={handleGenerate} className="grid md:grid-cols-3 gap-5">
+            <div className="md:col-span-3 space-y-2">
+              <Label>Product Photo *</Label>
+              <label className="relative flex items-center justify-center h-56 rounded-2xl border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-slate-50 cursor-pointer overflow-hidden transition group">
+                {uploadedImage ? (
+                  <>
+                    <img src={uploadedImage} alt="uploaded" className="w-full h-full object-contain" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-sm font-medium transition">
+                      Click to replace
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mx-auto mb-3 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <p className="font-medium text-slate-700">Upload a product photo</p>
+                    <p className="text-xs text-slate-500 mt-1">PNG or JPG, up to 8MB</p>
+                  </div>
+                )}
+                <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} />
+              </label>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ta">Target Audience</Label>
-              <Input id="ta" value={targetAudience} onChange={(e) => setTargetAudience(e.target.value)} placeholder="e.g. busy professionals over 30" className="rounded-xl h-11" />
-            </div>
-            <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="pd">Product Description</Label>
-              <Textarea id="pd" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} rows={3} placeholder="Describe what it is, key ingredients or features, and the main benefit." className="rounded-xl resize-none" />
+              <Label htmlFor="price">Price</Label>
+              <Input id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. $49" className="rounded-xl h-11" />
             </div>
             <div className="space-y-2">
               <Label>Tone</Label>
@@ -266,11 +292,12 @@ export default function AdminLandingGeneratorPage() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button type="submit" disabled={loading} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-base shadow-lg shadow-indigo-500/30">
-                {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Generating…</> : <><Sparkles className="w-4 h-4 mr-2" />Generate Landing Page</>}
+              <Button type="submit" disabled={loading || !uploadedImage} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-base shadow-lg shadow-indigo-500/30">
+                {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Generating…</> : <><Sparkles className="w-4 h-4 mr-2" />Generate</>}
               </Button>
             </div>
           </form>
+
         </Card>
 
         {/* Preview */}
@@ -301,10 +328,18 @@ export default function AdminLandingGeneratorPage() {
                     onChange={(v: string) => updateContent({ subheadline: v })}
                     className="text-lg sm:text-xl opacity-90 mb-8 block leading-relaxed"
                   />
-                  <button className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold shadow-2xl transition hover:scale-105" style={{ background: theme.accent, color: '#fff' }}>
-                    <Editable value={content.ctaText} onChange={(v: string) => updateContent({ ctaText: v })} className="inline" />
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold shadow-2xl transition hover:scale-105" style={{ background: theme.accent, color: '#fff' }}>
+                      <Editable value={content.ctaText} onChange={(v: string) => updateContent({ ctaText: v })} className="inline" />
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    {price && (
+                      <div className="text-3xl sm:text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {price}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex items-center gap-4 mt-8 text-sm opacity-80">
                     <div className="flex">{[0,1,2,3,4].map((i) => <Star key={i} className="w-4 h-4 fill-current" />)}</div>
                     <span>4.9 · 2,100+ reviews</span>
@@ -432,9 +467,11 @@ export default function AdminLandingGeneratorPage() {
             <section className="px-6 sm:px-14 py-20 text-center text-white" style={{ background: `linear-gradient(135deg, ${theme.from}, ${theme.to})` }}>
               <h2 className="text-3xl sm:text-5xl font-bold mb-4 max-w-2xl mx-auto" style={{ fontFamily: "'Playfair Display', serif" }}>Ready to transform?</h2>
               <p className="opacity-80 mb-8 max-w-xl mx-auto">Join thousands who made the switch. Risk-free 30-day guarantee.</p>
+              {price && <div className="text-4xl font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>{price}</div>}
               <button className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl font-semibold shadow-2xl hover:scale-105 transition" style={{ background: theme.accent, color: '#fff' }}>
                 {content.ctaText} <ArrowRight className="w-4 h-4" />
               </button>
+
             </section>
           </div>
         )}
