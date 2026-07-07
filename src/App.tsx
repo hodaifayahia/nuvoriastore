@@ -63,6 +63,7 @@ import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import LandingPage from "./pages/LandingPage";
+import PublicGeneratedLandingPage from "./pages/PublicGeneratedLandingPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotFound from "./pages/NotFound";
 import ConfirmerLayout from "./components/ConfirmerLayout";
@@ -127,6 +128,7 @@ const App = () => (
             <Route path="/categories" element={<PublicLayout><CategoriesPage /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><WishlistPage /></PublicLayout>} />
             <Route path="/lp/:id" element={<LandingPage />} />
+            <Route path="/g/:id" element={<PublicGeneratedLandingPage />} />
 
             {/* Admin */}
             <Route path="/akrem-control/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />

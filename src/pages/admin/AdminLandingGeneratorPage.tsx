@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sparkles, Download, RefreshCw, Star, ArrowLeft, Zap, Shield, Heart, Rocket, Loader2, Flame, Award, Truck } from 'lucide-react';
 import { toast } from 'sonner';
+import GeneratedLandingView from '@/components/landing/GeneratedLandingView';
 
 type Tone = 'Premium' | 'Playful' | 'Clinical' | 'Bold';
 
@@ -146,14 +147,15 @@ export default function AdminLandingGeneratorPage() {
       if (data?.error) throw new Error(data.error);
       setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
 
-      // Persist a landing_pages row linked to the product so orders can reference it.
+      // Persist a landing_pages row linked to the product so it has a public URL and orders can reference it.
       try {
+        const contentWithMedia = { ...data.content, _images: data.images, _price: price.trim(), _tone: tone };
         const genImgs = Object.values(data.images || {}).filter((v: any) => typeof v === 'string') as string[];
         const { data: lp, error: lpErr } = await supabase.from('landing_pages').insert({
           product_id: productId,
           title: data.content?.productName || selectedProduct?.name || 'صفحة هبوط',
           language: 'ar',
-          content: data.content,
+          content: contentWithMedia,
           selected_image: uploadedImage,
           generated_images: genImgs,
         }).select('id').single();
@@ -174,7 +176,18 @@ export default function AdminLandingGeneratorPage() {
         body: { mode: 'image', section, imagePrompt: prompts[section] },
       });
       if (error) throw error;
-      if (data?.image) setImages(s => ({ ...s, [section]: data.image }));
+      if (data?.image) {
+        const newImages = { ...images, [section]: data.image };
+        setImages(newImages);
+        // Keep the persisted landing page in sync so the public link shows the latest images.
+        if (landingPageId && content) {
+          try {
+            await supabase.from('landing_pages').update({
+              content: { ...content, _images: newImages, _price: price, _tone: tone } as any,
+            }).eq('id', landingPageId);
+          } catch (e) { console.error('landing_pages sync failed', e); }
+        }
+      }
     } catch (err: any) { toast.error(err.message); }
     finally { setRegen(null); }
   }
@@ -283,277 +296,45 @@ export default function AdminLandingGeneratorPage() {
         {loading && <SkeletonPage />}
 
         {content && (
-          <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: bg, color: ink }}>
-            {/* ============ TOP PROMO BANNER ============ */}
-            <section className="py-2.5 px-4 text-center text-xs sm:text-sm font-black tracking-wide" style={{ background: ink, color: bg }}>
-              <span className="inline-flex items-center gap-2">
-                <Flame className="w-3.5 h-3.5" style={{ color: accent }} />
-                {content.trustBadges?.[0] || 'شحن مجاني'} • {content.trustBadges?.[1] || 'ضمان الجودة'} • {content.trustBadges?.[2] || 'الدفع عند الاستلام'}
-                <Flame className="w-3.5 h-3.5" style={{ color: accent }} />
-              </span>
-            </section>
-
-            {/* ============ HERO — split ============ */}
-            <section className="relative grid md:grid-cols-2 min-h-[85vh]" style={{ background: `linear-gradient(135deg, ${surface}, ${bg})` }}>
-              <div className="relative order-2 md:order-1 flex flex-col justify-center px-6 sm:px-14 py-14" style={{ background: `radial-gradient(circle at 20% 20%, ${accent}22, transparent 60%)` }}>
-                <div className="inline-flex self-start items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black" style={{ background: accent, color: onAccent }}>
-                  <Flame className="w-3.5 h-3.5" /> {content.hypeWords?.[0] || 'جديد'}
-                </div>
-                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black leading-[1.05] mb-5" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                  {content.headline}
-                </h1>
-                <p className="text-lg sm:text-xl font-medium mb-8 opacity-80 max-w-md" style={{ color: ink }}>{content.tagline}</p>
-                <div className="flex flex-wrap items-center gap-5">
-                  <a href="#order-form" className="px-9 py-4 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
-                    {content.ctaText} ←
-                  </a>
-                  {price && (
-                    <div style={{ color: ink }}>
-                      <div className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif", color: accent }}>{price}</div>
-                      <div className="text-xs opacity-70">شامل التوصيل</div>
+          <>
+            {landingPageId && (
+              <Card className="p-4 sm:p-5 mb-6 rounded-2xl border border-emerald-200 bg-emerald-50/70">
+                <div className="flex flex-wrap items-center gap-3 justify-between">
+                  <div className="flex-1 min-w-[240px]">
+                    <div className="text-xs font-bold text-emerald-700 mb-1">🔗 رابط صفحة الهبوط العلني — استخدمه في Facebook Ads / Pixel</div>
+                    <div className="font-mono text-sm bg-white border border-emerald-200 rounded-lg px-3 py-2 truncate" dir="ltr">
+                      {`${window.location.origin}/g/${landingPageId}`}
                     </div>
-                  )}
-                </div>
-              </div>
-              <div className="relative order-1 md:order-2 min-h-[50vh] md:min-h-full overflow-hidden">
-                {images.hero && <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />}
-                <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, transparent 40%, ${surface}88 100%)` }} />
-              </div>
-            </section>
-
-            {/* ============ ICON BENEFITS STRIP ============ */}
-            <section className="py-8 px-6" style={{ background: accent, color: onAccent }}>
-              <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                {(content.trustBadges || []).slice(0, 4).map((b, i) => {
-                  const Icon = [Truck, Shield, Award, Heart][i] || Truck;
-                  return (
-                    <div key={i} className="flex flex-col items-center gap-2">
-                      <Icon className="w-7 h-7" strokeWidth={2.5} />
-                      <div className="font-black text-sm sm:text-base">{b}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* ============ TRANSFORMATION (before / after) ============ */}
-            <section className="py-20 px-6 sm:px-14" style={{ background: bg }}>
-              <div className="text-center mb-10">
-                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>التحول الحقيقي</div>
-                <h2 className="text-4xl sm:text-5xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                  شاهد الفرق بنفسك
-                </h2>
-              </div>
-              <div className="relative max-w-5xl mx-auto grid grid-cols-2 rounded-3xl overflow-hidden shadow-2xl">
-                <div className="relative aspect-[3/4]">
-                  <ImageWithRegen src={images.before} section="before" className="absolute inset-0" />
-                  <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${ink}cc)` }} />
-                  <div className="absolute bottom-6 right-6 left-6 flex items-center justify-between">
-                    <span className="px-4 py-2 rounded-full font-black text-sm tracking-widest" style={{ background: ink, color: bg }}>قبل</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button type="button" variant="outline" onClick={() => {
+                      const url = `${window.location.origin}/g/${landingPageId}`;
+                      navigator.clipboard.writeText(url).then(() => toast.success('تم نسخ الرابط'));
+                    }} className="rounded-xl">نسخ الرابط</Button>
+                    <a href={`/g/${landingPageId}`} target="_blank" rel="noopener noreferrer">
+                      <Button type="button" className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">فتح الصفحة ↗</Button>
+                    </a>
                   </div>
                 </div>
-                <div className="relative aspect-[3/4]">
-                  <ImageWithRegen src={images.after} section="after" className="absolute inset-0" />
-                  <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${accent}cc)` }} />
-                  <div className="absolute bottom-6 right-6 left-6 flex items-center justify-between">
-                    <span className="px-4 py-2 rounded-full font-black text-sm tracking-widest" style={{ background: accent, color: onAccent }}>بعد</span>
-                  </div>
-                </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center font-black text-xl shadow-2xl" style={{ background: bg, color: accent }}>
-                  <ArrowLeft className="w-6 h-6" />
-                </div>
-              </div>
-            </section>
-
-            {/* ============ BENEFITS — editorial split, 2 items, no boxes ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: surface, color: ink }}>
-              <div className="max-w-6xl mx-auto mb-16 text-center">
-                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>لماذا هذا المنتج</div>
-                <h2 className="text-4xl sm:text-6xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>مميزات تصنع الفرق</h2>
-                <div className="mx-auto mt-6 h-px w-24" style={{ background: accent }} />
-              </div>
-              <div className="max-w-6xl mx-auto space-y-24">
-                {content.benefits?.slice(0, 2).map((b, i) => {
-                  const Icon = ICONS[b.icon || 'zap'] || Zap;
-                  const img = (images as any)[`benefit${i}`] as string | null;
-                  const key = `benefit${i}` as keyof Images;
-                  const reverse = i % 2 === 1;
-                  return (
-                    <div key={i} className={`grid md:grid-cols-12 gap-8 md:gap-16 items-center ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}>
-                      <div className="md:col-span-7 relative">
-                        <div className="absolute -top-6 -right-4 md:-right-8 text-[10rem] md:text-[14rem] font-black leading-none opacity-[0.06] select-none" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                          {String(i + 1).padStart(2, '0')}
-                        </div>
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-tr-[6rem] rounded-bl-[6rem]">
-                          <ImageWithRegen src={img} section={key} className="absolute inset-0" />
-                        </div>
-                      </div>
-                      <div className="md:col-span-5 relative">
-                        <div className="flex items-center gap-3 mb-5">
-                          <span className="w-12 h-px" style={{ background: accent }} />
-                          <Icon className="w-5 h-5" strokeWidth={2.5} style={{ color: accent }} />
-                          <span className="text-xs font-black tracking-[0.25em]" style={{ color: accent }}>0{i + 1}</span>
-                        </div>
-                        <h3 className="text-4xl sm:text-5xl font-black leading-tight mb-4" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                          {b.title}
-                        </h3>
-                        <p className="text-lg opacity-70 leading-relaxed" style={{ color: ink }}>
-                          {content.hypeWords?.[i] || content.tagline}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* ============ FEATURED TESTIMONIAL — EDITORIAL ============ */}
-            <section className="py-24 px-6 sm:px-14 relative overflow-hidden" style={{ background: bg, color: ink }}>
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${accent}66, transparent)` }} />
-              {(() => {
-                const portraits = [images.lifestyle, images.inUse, images.after, images.benefit0].filter(Boolean) as string[];
-                const items = content.testimonials || [];
-                const hero = items[0];
-                const second = items[1];
-                const heroImg = portraits[0] || images.hero;
-                const secondImg = portraits[1] || images.detail;
-                return (
-                  <div className="max-w-6xl mx-auto">
-                    {/* Header */}
-                    <div className="flex items-end justify-between mb-16 flex-wrap gap-6">
-                      <div>
-                        <div className="text-[11px] font-black tracking-[0.4em] mb-4" style={{ color: accent }}>— شهادات حقيقية</div>
-                        <h2 className="text-5xl sm:text-6xl font-black leading-[0.95]" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                          آلاف العملاء<br/>
-                          <span style={{ color: accent, fontStyle: 'italic' }}>الراضين.</span>
-                        </h2>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-6xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>4.9</div>
-                        <div>
-                          <div className="flex mb-1" style={{ color: accent }}>
-                            {[0,1,2,3,4].map(s => <Star key={s} className="w-5 h-5 fill-current" />)}
-                          </div>
-                          <div className="text-xs font-bold opacity-70">من +٢٠٠٠ تقييم</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Featured big quote */}
-                    {hero && (
-                      <div className="grid md:grid-cols-12 gap-10 items-center mb-16">
-                        <div className="md:col-span-5 relative">
-                          <div className="relative aspect-[4/5] rounded-tl-[5rem] rounded-br-[5rem] overflow-hidden shadow-2xl">
-                            {heroImg && <img src={heroImg} alt="" className="w-full h-full object-cover" />}
-                            <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${ink}55)` }} />
-                          </div>
-                          <div className="absolute -top-8 -right-6 text-[10rem] leading-none font-black select-none opacity-90" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>”</div>
-                        </div>
-                        <div className="md:col-span-7">
-                          <p className="text-2xl sm:text-3xl font-medium leading-[1.5] mb-8" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                            {hero.quote}
-                          </p>
-                          <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg" style={{ border: `2px solid ${accent}` }}>
-                              {heroImg && <img src={heroImg} alt="" className="w-full h-full object-cover" />}
-                            </div>
-                            <div>
-                              <div className="text-base font-black" style={{ color: ink }}>{hero.name}</div>
-                              <div className="text-xs font-bold opacity-60 tracking-wider">{hero.city}</div>
-                            </div>
-                            <div className="mx-4 h-8 w-px" style={{ background: `${ink}30` }} />
-                            <div className="flex" style={{ color: accent }}>
-                              {[0,1,2,3,4].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Secondary supporting testimonial */}
-                    {second && (
-                      <div className="grid md:grid-cols-12 gap-8 items-center pt-10 border-t" style={{ borderColor: `${ink}15` }}>
-                        <div className="md:col-span-7 md:order-1 order-2">
-                          <div className="text-xs font-black tracking-[0.3em] mb-3 opacity-60">تجربة أخرى</div>
-                          <p className="text-lg sm:text-xl font-medium leading-relaxed opacity-90" style={{ color: ink }}>
-                            «{second.quote}»
-                          </p>
-                          <div className="mt-4 text-sm">
-                            <span className="font-black" style={{ color: accent }}>{second.name}</span>
-                            <span className="opacity-60 font-bold"> — {second.city}</span>
-                          </div>
-                        </div>
-                        <div className="md:col-span-5 md:order-2 order-1">
-                          <div className="aspect-[16/10] rounded-3xl overflow-hidden shadow-xl">
-                            {secondImg && <img src={secondImg} alt="" className="w-full h-full object-cover" />}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </section>
-
-            {/* ============ INGREDIENTS / BACKGROUND SHOWCASE ============ */}
-            <section className="relative py-24 px-6 sm:px-14 overflow-hidden" style={{ background: surface }}>
-              {images.packaging && (
-                <img src={images.packaging} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
-              )}
-              <div className="absolute inset-0" style={{
-                backgroundImage: `radial-gradient(circle at 30% 30%, ${accent}33, transparent 50%), radial-gradient(circle at 70% 70%, ${accent2}33, transparent 50%)`,
-              }} />
-              <div className="relative z-10 max-w-5xl mx-auto text-center">
-                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>المكونات الطبيعية</div>
-                <h2 className="text-4xl sm:text-6xl font-black mb-4" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
-                  {content.productName}
-                </h2>
-                <p className="text-lg opacity-80 max-w-2xl mx-auto mb-12" style={{ color: ink }}>{content.productDescription}</p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[images.detail, images.lifestyle, images.inUse, images.packaging].map((img, i) => img && (
-                    <div key={i} className="aspect-square rounded-2xl overflow-hidden shadow-2xl border-4" style={{ borderColor: `${accent}55` }}>
-                      <img src={img} alt="" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-12 flex flex-wrap justify-center gap-3">
-                  {content.hypeWords?.map((w, i) => (
-                    <span key={i} className="px-5 py-2 rounded-full text-sm font-black" style={{ background: `${ink}10`, color: ink, border: `1.5px solid ${accent}` }}>
-                      {w}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* ============ ORDER FORM ============ */}
-            <OrderFormSection
-              accent={accent} onAccent={onAccent} bg={bg} surface={surface} ink={ink}
-              price={price} ctaText={content.ctaText}
-              productId={productId} productName={selectedProduct?.name || content.productName}
-              productPrice={Number(selectedProduct?.price) || Number(price.replace(/[^\d.]/g, '')) || 0}
-              landingPageId={landingPageId}
-              variants={variants || []}
-            />
-
-            {/* ============ FINAL CTA ============ */}
-            <section className="relative min-h-[60vh] flex items-center justify-center text-center overflow-hidden" style={{ background: bg }}>
-              {images.hero && (
-                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-              )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${bg}cc, ${bg})` }} />
-              <div className="relative z-10 px-6 max-w-3xl">
-                <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: accent, color: onAccent }}>
-                  <Flame className="w-3.5 h-3.5" /> عرض محدود
-                </div>
-                <h2 className="text-5xl sm:text-7xl font-black mb-6" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>{content.headline}</h2>
-                {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
-                <a href="#order-form" className="inline-block px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
-                  {content.ctaText} ←
-                </a>
-              </div>
-            </section>
-          </div>
+              </Card>
+            )}
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
+              <GeneratedLandingView
+                content={content as any}
+                images={images as any}
+                price={price}
+                tone={tone}
+                productId={productId}
+                productName={selectedProduct?.name || content.productName}
+                productPrice={Number(selectedProduct?.price) || Number(price.replace(/[^\d.]/g, '')) || 0}
+                variants={variants || []}
+                landingPageId={landingPageId}
+                onRegenerateImage={(s) => regenerateImage(s as keyof Images)}
+                regenSection={regen}
+                previewRef={previewRef}
+              />
+            </div>
+          </>
         )}
 
         {!loading && !content && (
