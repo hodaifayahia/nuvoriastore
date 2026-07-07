@@ -146,14 +146,15 @@ export default function AdminLandingGeneratorPage() {
       if (data?.error) throw new Error(data.error);
       setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
 
-      // Persist a landing_pages row linked to the product so orders can reference it.
+      // Persist a landing_pages row linked to the product so it has a public URL and orders can reference it.
       try {
+        const contentWithMedia = { ...data.content, _images: data.images, _price: price.trim(), _tone: tone };
         const genImgs = Object.values(data.images || {}).filter((v: any) => typeof v === 'string') as string[];
         const { data: lp, error: lpErr } = await supabase.from('landing_pages').insert({
           product_id: productId,
           title: data.content?.productName || selectedProduct?.name || 'صفحة هبوط',
           language: 'ar',
-          content: data.content,
+          content: contentWithMedia,
           selected_image: uploadedImage,
           generated_images: genImgs,
         }).select('id').single();
