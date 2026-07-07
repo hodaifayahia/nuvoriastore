@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sparkles, Download, RefreshCw, Star, ArrowLeft, Zap, Shield, Heart, Rocket, Loader2, Flame, Award, Truck } from 'lucide-react';
 import { toast } from 'sonner';
+import GeneratedLandingView from '@/components/landing/GeneratedLandingView';
 
 type Tone = 'Premium' | 'Playful' | 'Clinical' | 'Bold';
 
