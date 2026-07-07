@@ -364,39 +364,92 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ TESTIMONIAL MOSAIC ============ */}
-            <section className="py-20 px-6 sm:px-14" style={{ background: bg, color: ink }}>
-              <div className="text-center mb-12">
-                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>آراء العملاء</div>
-                <h2 className="text-4xl sm:text-5xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>آلاف العملاء الراضين</h2>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-6xl mx-auto">
-                {(() => {
-                  const portraits = [images.lifestyle, images.inUse, images.detail, images.after, images.benefit0, images.benefit1].filter(Boolean) as string[];
-                  const items = content.testimonials?.slice(0, 3) || [];
-                  const tiles = Array.from({ length: 6 }).map((_, i) => ({
-                    img: portraits[i % Math.max(portraits.length, 1)] || images.hero,
-                    t: items[i % Math.max(items.length, 1)],
-                  }));
-                  return tiles.map((tile, i) => (
-                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden group shadow-lg">
-                      {tile.img && <img src={tile.img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />}
-                      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 40%, ${ink}ee)` }} />
-                      <div className="absolute bottom-0 right-0 left-0 p-4" style={{ color: bg }}>
-                        <div className="flex mb-1.5" style={{ color: accent }}>
-                          {[0,1,2,3,4].map(s => <Star key={s} className="w-3 h-3 fill-current" />)}
+            {/* ============ FEATURED TESTIMONIAL — EDITORIAL ============ */}
+            <section className="py-24 px-6 sm:px-14 relative overflow-hidden" style={{ background: bg, color: ink }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${accent}66, transparent)` }} />
+              {(() => {
+                const portraits = [images.lifestyle, images.inUse, images.after, images.benefit0].filter(Boolean) as string[];
+                const items = content.testimonials || [];
+                const hero = items[0];
+                const second = items[1];
+                const heroImg = portraits[0] || images.hero;
+                const secondImg = portraits[1] || images.detail;
+                return (
+                  <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-end justify-between mb-16 flex-wrap gap-6">
+                      <div>
+                        <div className="text-[11px] font-black tracking-[0.4em] mb-4" style={{ color: accent }}>— شهادات حقيقية</div>
+                        <h2 className="text-5xl sm:text-6xl font-black leading-[0.95]" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                          آلاف العملاء<br/>
+                          <span style={{ color: accent, fontStyle: 'italic' }}>الراضين.</span>
+                        </h2>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-6xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>4.9</div>
+                        <div>
+                          <div className="flex mb-1" style={{ color: accent }}>
+                            {[0,1,2,3,4].map(s => <Star key={s} className="w-5 h-5 fill-current" />)}
+                          </div>
+                          <div className="text-xs font-bold opacity-70">من +٢٠٠٠ تقييم</div>
                         </div>
-                        {tile.t && (
-                          <>
-                            <p className="text-xs sm:text-sm font-medium leading-snug mb-1.5 line-clamp-2">«{tile.t.quote}»</p>
-                            <div className="text-[10px] font-black opacity-90">— {tile.t.name} • {tile.t.city}</div>
-                          </>
-                        )}
                       </div>
                     </div>
-                  ));
-                })()}
-              </div>
+
+                    {/* Featured big quote */}
+                    {hero && (
+                      <div className="grid md:grid-cols-12 gap-10 items-center mb-16">
+                        <div className="md:col-span-5 relative">
+                          <div className="relative aspect-[4/5] rounded-tl-[5rem] rounded-br-[5rem] overflow-hidden shadow-2xl">
+                            {heroImg && <img src={heroImg} alt="" className="w-full h-full object-cover" />}
+                            <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${ink}55)` }} />
+                          </div>
+                          <div className="absolute -top-8 -right-6 text-[10rem] leading-none font-black select-none opacity-90" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>”</div>
+                        </div>
+                        <div className="md:col-span-7">
+                          <p className="text-2xl sm:text-3xl font-medium leading-[1.5] mb-8" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                            {hero.quote}
+                          </p>
+                          <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg" style={{ border: `2px solid ${accent}` }}>
+                              {heroImg && <img src={heroImg} alt="" className="w-full h-full object-cover" />}
+                            </div>
+                            <div>
+                              <div className="text-base font-black" style={{ color: ink }}>{hero.name}</div>
+                              <div className="text-xs font-bold opacity-60 tracking-wider">{hero.city}</div>
+                            </div>
+                            <div className="mx-4 h-8 w-px" style={{ background: `${ink}30` }} />
+                            <div className="flex" style={{ color: accent }}>
+                              {[0,1,2,3,4].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Secondary supporting testimonial */}
+                    {second && (
+                      <div className="grid md:grid-cols-12 gap-8 items-center pt-10 border-t" style={{ borderColor: `${ink}15` }}>
+                        <div className="md:col-span-7 md:order-1 order-2">
+                          <div className="text-xs font-black tracking-[0.3em] mb-3 opacity-60">تجربة أخرى</div>
+                          <p className="text-lg sm:text-xl font-medium leading-relaxed opacity-90" style={{ color: ink }}>
+                            «{second.quote}»
+                          </p>
+                          <div className="mt-4 text-sm">
+                            <span className="font-black" style={{ color: accent }}>{second.name}</span>
+                            <span className="opacity-60 font-bold"> — {second.city}</span>
+                          </div>
+                        </div>
+                        <div className="md:col-span-5 md:order-2 order-1">
+                          <div className="aspect-[16/10] rounded-3xl overflow-hidden shadow-xl">
+                            {secondImg && <img src={secondImg} alt="" className="w-full h-full object-cover" />}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </section>
 
             {/* ============ INGREDIENTS / BACKGROUND SHOWCASE ============ */}
