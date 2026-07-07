@@ -127,6 +127,7 @@ const App = () => (
             <Route path="/categories" element={<PublicLayout><CategoriesPage /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><WishlistPage /></PublicLayout>} />
             <Route path="/lp/:id" element={<LandingPage />} />
+            <Route path="/g/:id" element={<PublicGeneratedLandingPage />} />
 
             {/* Admin */}
             <Route path="/akrem-control/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />
