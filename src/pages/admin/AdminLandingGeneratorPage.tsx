@@ -75,6 +75,7 @@ export default function AdminLandingGeneratorPage() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [price, setPrice] = useState('');
   const [tone, setTone] = useState<Tone>('Premium');
+  const [productId, setProductId] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
   const emptyImages: Images = { hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null, benefit0: null, benefit1: null, benefit2: null };
@@ -82,15 +83,29 @@ export default function AdminLandingGeneratorPage() {
   const [prompts, setPrompts] = useState<any>(null);
   const [regen, setRegen] = useState<string | null>(null);
   const [pageId, setPageId] = useState<string | null>(null);
+  const [landingPageId, setLandingPageId] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureFonts(); }, []);
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) await supabase.auth.signInAnonymously();
-    })();
-  }, []);
+
+  const { data: products } = useQuery({
+    queryKey: ['lp-products'],
+    queryFn: async () => {
+      const { data } = await supabase.from('products').select('id, name, price').order('name');
+      return data || [];
+    },
+  });
+
+  const { data: variants } = useQuery({
+    queryKey: ['lp-variants', productId],
+    queryFn: async () => {
+      const { data } = await supabase.from('product_variants').select('*').eq('product_id', productId).eq('is_active', true);
+      return data || [];
+    },
+    enabled: !!productId,
+  });
+
+  const selectedProduct = products?.find(p => p.id === productId);
 
   const palette: Palette = { ...TONE_FALLBACK[tone], ...(content?.palette || {}) };
   const isDark = (() => {
