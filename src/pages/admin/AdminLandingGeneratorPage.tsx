@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -74,6 +75,7 @@ export default function AdminLandingGeneratorPage() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [price, setPrice] = useState('');
   const [tone, setTone] = useState<Tone>('Premium');
+  const [productId, setProductId] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
   const emptyImages: Images = { hero: null, lifestyle: null, detail: null, inUse: null, before: null, after: null, packaging: null, benefit0: null, benefit1: null, benefit2: null };
@@ -81,15 +83,29 @@ export default function AdminLandingGeneratorPage() {
   const [prompts, setPrompts] = useState<any>(null);
   const [regen, setRegen] = useState<string | null>(null);
   const [pageId, setPageId] = useState<string | null>(null);
+  const [landingPageId, setLandingPageId] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureFonts(); }, []);
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) await supabase.auth.signInAnonymously();
-    })();
-  }, []);
+
+  const { data: products } = useQuery({
+    queryKey: ['lp-products'],
+    queryFn: async () => {
+      const { data } = await supabase.from('products').select('id, name, price').order('name');
+      return data || [];
+    },
+  });
+
+  const { data: variants } = useQuery({
+    queryKey: ['lp-variants', productId],
+    queryFn: async () => {
+      const { data } = await supabase.from('product_variants').select('*').eq('product_id', productId).eq('is_active', true);
+      return data || [];
+    },
+    enabled: !!productId,
+  });
+
+  const selectedProduct = products?.find(p => p.id === productId);
 
   const palette: Palette = { ...TONE_FALLBACK[tone], ...(content?.palette || {}) };
   const isDark = (() => {
@@ -114,12 +130,14 @@ export default function AdminLandingGeneratorPage() {
     reader.readAsDataURL(f);
   }
 
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
+    if (!productId) { toast.error('يرجى اختيار المنتج'); return; }
     if (!uploadedImage) { toast.error('يرجى رفع صورة المنتج'); return; }
     setLoading(true); setContent(null);
     setImages(emptyImages);
-    setPageId(null);
+    setPageId(null); setLandingPageId(null);
     try {
       const { data, error } = await supabase.functions.invoke('generate-landing-page', {
         body: { referenceImage: uploadedImage, price: price.trim(), tone, mode: 'full' },
@@ -127,6 +145,21 @@ export default function AdminLandingGeneratorPage() {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
+
+      // Persist a landing_pages row linked to the product so orders can reference it.
+      try {
+        const genImgs = Object.values(data.images || {}).filter((v: any) => typeof v === 'string') as string[];
+        const { data: lp, error: lpErr } = await supabase.from('landing_pages').insert({
+          product_id: productId,
+          title: data.content?.productName || selectedProduct?.name || 'صفحة هبوط',
+          language: 'ar',
+          content: data.content,
+          selected_image: uploadedImage,
+          generated_images: genImgs,
+        }).select('id').single();
+        if (!lpErr && lp) setLandingPageId(lp.id);
+      } catch (e) { console.error('landing_pages save failed', e); }
+
       toast.success('تم إنشاء صفحة الهبوط');
     } catch (err: any) { toast.error(err.message || 'فشل الإنشاء'); }
     finally { setLoading(false); }
@@ -194,6 +227,16 @@ export default function AdminLandingGeneratorPage() {
         <Card className="p-6 sm:p-8 mb-10 rounded-3xl shadow-xl border border-slate-100 bg-white/80 backdrop-blur">
           <form onSubmit={handleGenerate} className="grid md:grid-cols-3 gap-5">
             <div className="md:col-span-3 space-y-2">
+              <Label>المنتج *</Label>
+              <Select value={productId} onValueChange={(v) => { setProductId(v); const p = products?.find(x => x.id === v); if (p && !price) setPrice(String(p.price)); }}>
+                <SelectTrigger className="rounded-xl h-11"><SelectValue placeholder="اختر منتجاً من متجرك" /></SelectTrigger>
+                <SelectContent>
+                  {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-slate-500">الطلبات الواردة من هذه الصفحة ستُربط بهذا المنتج وتظهر في قائمة الطلبات بشارة 🚀</p>
+            </div>
+            <div className="md:col-span-3 space-y-2">
               <Label>صورة المنتج *</Label>
               <label className="relative flex items-center justify-center h-56 rounded-2xl border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-slate-50 cursor-pointer overflow-hidden group">
                 {uploadedImage ? (
@@ -230,7 +273,7 @@ export default function AdminLandingGeneratorPage() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button type="submit" disabled={loading || !uploadedImage} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30">
+              <Button type="submit" disabled={loading || !uploadedImage || !productId} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30">
                 {loading ? <><Loader2 className="w-4 h-4 ml-2 animate-spin" />جارٍ الإنشاء…</> : <><Sparkles className="w-4 h-4 ml-2" />إنشاء</>}
               </Button>
             </div>
@@ -486,7 +529,11 @@ export default function AdminLandingGeneratorPage() {
             {/* ============ ORDER FORM ============ */}
             <OrderFormSection
               accent={accent} onAccent={onAccent} bg={bg} surface={surface} ink={ink}
-              price={price} productName={content.productName} pageId={pageId} ctaText={content.ctaText}
+              price={price} ctaText={content.ctaText}
+              productId={productId} productName={selectedProduct?.name || content.productName}
+              productPrice={Number(selectedProduct?.price) || Number(price.replace(/[^\d.]/g, '')) || 0}
+              landingPageId={landingPageId}
+              variants={variants || []}
             />
 
             {/* ============ FINAL CTA ============ */}
@@ -523,31 +570,74 @@ export default function AdminLandingGeneratorPage() {
   );
 }
 
-function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productName, pageId, ctaText }: {
+function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, productId, productName, productPrice, landingPageId, variants }: {
   accent: string; onAccent: string; bg: string; surface: string; ink: string;
-  price?: string; productName?: string; pageId: string | null; ctaText?: string;
+  price?: string; ctaText?: string;
+  productId: string; productName?: string; productPrice: number;
+  landingPageId: string | null;
+  variants: any[];
 }) {
-  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya: '', address: '', quantity: 1 });
+  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya_id: '', baladiya: '', quantity: 1, variant_id: '' });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  const { data: wilayas } = useQuery({
+    queryKey: ['lp-wilayas'],
+    queryFn: async () => {
+      const { data } = await supabase.from('wilayas').select('id, name, shipping_price, shipping_price_home').eq('is_active', true).order('name');
+      return data || [];
+    },
+  });
+  const { data: baladiyat } = useQuery({
+    queryKey: ['lp-baladiyat', form.wilaya_id],
+    queryFn: async () => {
+      const { data } = await supabase.from('baladiyat').select('id, name').eq('wilaya_id', form.wilaya_id).eq('is_active', true).order('name');
+      return data || [];
+    },
+    enabled: !!form.wilaya_id,
+  });
+
+  const selectedVariant = variants.find(v => v.id === form.variant_id);
+  const unitPrice = selectedVariant ? Number(selectedVariant.price) : productPrice;
+  const total = unitPrice * (Number(form.quantity) || 1);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.customer_name.trim() || !form.phone.trim()) { toast.error('يرجى إدخال الاسم ورقم الهاتف'); return; }
+    if (!form.customer_name.trim() || form.phone.trim().length < 8) { toast.error('يرجى إدخال الاسم ورقم هاتف صحيح'); return; }
+    if (!productId) { toast.error('لم يتم اختيار المنتج'); return; }
+    if (variants.length > 0 && !form.variant_id) { toast.error('يرجى اختيار المتغير'); return; }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('launchpage_orders').insert({
-        page_id: pageId, product_name: productName, price,
-        customer_name: form.customer_name.trim(), phone: form.phone.trim(),
-        wilaya: form.wilaya.trim() || null, address: form.address.trim() || null,
-        quantity: Number(form.quantity) || 1,
-      });
+      const qty = Math.max(1, Number(form.quantity) || 1);
+      const { data: order, error } = await supabase.from('orders').insert({
+        customer_name: form.customer_name.trim(),
+        customer_phone: form.phone.trim(),
+        wilaya_id: form.wilaya_id || null,
+        baladiya: form.baladiya || null,
+        total_amount: total,
+        subtotal: total,
+        status: 'جديد',
+        landing_page_id: landingPageId,
+      } as any).select('id').single();
       if (error) throw error;
+
+      const { error: itemErr } = await supabase.from('order_items').insert({
+        order_id: order.id,
+        product_id: productId,
+        variant_id: form.variant_id || null,
+        quantity: qty,
+        unit_price: unitPrice,
+      });
+      if (itemErr) throw itemErr;
+
       setDone(true);
       toast.success('تم استلام طلبك — سنتصل بك قريباً');
     } catch (err: any) { toast.error(err.message || 'فشل الإرسال'); }
     finally { setSubmitting(false); }
   }
+
+  const inputCls = 'w-full h-12 px-4 rounded-xl outline-none border-2';
+  const inputStyle = { background: bg, color: ink, borderColor: `${ink}20` } as React.CSSProperties;
 
   return (
     <section id="order-form" className="py-24 px-6 sm:px-14" style={{ background: bg, color: ink }}>
@@ -568,45 +658,65 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productNa
           </div>
         ) : (
           <form onSubmit={submit} className="rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4" style={{ background: surface }}>
+            {productName && (
+              <div className="text-sm font-bold p-3 rounded-xl mb-2" style={{ background: `${accent}15`, color: ink }}>
+                🛍️ المنتج: <span style={{ color: accent }}>{productName}</span>
+              </div>
+            )}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الاسم الكامل *</label>
                 <input required value={form.customer_name} onChange={e => setForm({ ...form, customer_name: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                  className={inputCls} style={inputStyle} />
               </div>
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>رقم الهاتف *</label>
                 <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} placeholder="05XX XX XX XX" />
+                  className={inputCls} style={inputStyle} placeholder="05XX XX XX XX" />
               </div>
               <div>
-                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية</label>
-                <input value={form.wilaya} onChange={e => setForm({ ...form, wilaya: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية *</label>
+                <select required value={form.wilaya_id} onChange={e => setForm({ ...form, wilaya_id: e.target.value, baladiya: '' })}
+                  className={inputCls} style={inputStyle}>
+                  <option value="">اختر الولاية</option>
+                  {wilayas?.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+                </select>
               </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>البلدية</label>
+                <select value={form.baladiya} onChange={e => setForm({ ...form, baladiya: e.target.value })}
+                  disabled={!form.wilaya_id || !baladiyat?.length}
+                  className={inputCls} style={inputStyle}>
+                  <option value="">{form.wilaya_id ? 'اختر البلدية' : 'اختر الولاية أولاً'}</option>
+                  {baladiyat?.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                </select>
+              </div>
+              {variants.length > 0 && (
+                <div className="sm:col-span-2">
+                  <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>المتغير *</label>
+                  <select required value={form.variant_id} onChange={e => setForm({ ...form, variant_id: e.target.value })}
+                    className={inputCls} style={inputStyle}>
+                    <option value="">اختر الخيار</option>
+                    {variants.map(v => {
+                      const label = Object.values(v.option_values || {}).join(' / ') || v.sku || 'متغير';
+                      return <option key={v.id} value={v.id}>{label} — {Number(v.price)} دج</option>;
+                    })}
+                  </select>
+                </div>
+              )}
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الكمية</label>
                 <input type="number" min={1} value={form.quantity} onChange={e => setForm({ ...form, quantity: Number(e.target.value) })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>العنوان</label>
-                <textarea rows={2} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl outline-none border-2 resize-none"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                  className={inputCls} style={inputStyle} />
               </div>
             </div>
 
-            {price && (
-              <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
-                <div className="font-bold" style={{ color: ink }}>المجموع</div>
-                <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>
+            <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
+              <div className="font-bold" style={{ color: ink }}>المجموع</div>
+              <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>
+                {total > 0 ? `${total} دج` : (price || '—')}
               </div>
-            )}
+            </div>
 
             <button type="submit" disabled={submitting}
               className="w-full h-14 rounded-xl font-black text-lg shadow-xl hover:scale-[1.02] transition disabled:opacity-60"
