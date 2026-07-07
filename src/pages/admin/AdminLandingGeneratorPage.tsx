@@ -148,6 +148,40 @@ export default function AdminLandingGeneratorPage() {
     finally { setLoading(false); }
   }
 
+  async function handleGenerate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!productId) { toast.error('يرجى اختيار المنتج'); return; }
+    if (!uploadedImage) { toast.error('يرجى رفع صورة المنتج'); return; }
+    setLoading(true); setContent(null);
+    setImages(emptyImages);
+    setPageId(null); setLandingPageId(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-landing-page', {
+        body: { referenceImage: uploadedImage, price: price.trim(), tone, mode: 'full' },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
+
+      // Persist a landing_pages row linked to the product so orders can reference it.
+      try {
+        const genImgs = Object.values(data.images || {}).filter((v: any) => typeof v === 'string') as string[];
+        const { data: lp, error: lpErr } = await supabase.from('landing_pages').insert({
+          product_id: productId,
+          title: data.content?.productName || selectedProduct?.name || 'صفحة هبوط',
+          language: 'ar',
+          content: data.content,
+          selected_image: uploadedImage,
+          generated_images: genImgs,
+        }).select('id').single();
+        if (!lpErr && lp) setLandingPageId(lp.id);
+      } catch (e) { console.error('landing_pages save failed', e); }
+
+      toast.success('تم إنشاء صفحة الهبوط');
+    } catch (err: any) { toast.error(err.message || 'فشل الإنشاء'); }
+    finally { setLoading(false); }
+  }
+
   async function regenerateImage(section: keyof Images) {
     if (section === 'hero') { toast.info('الصورة الرئيسية من رفعك — ارفع صورة جديدة لتغييرها'); return; }
     if (!prompts?.[section]) return;
