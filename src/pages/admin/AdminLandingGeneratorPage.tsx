@@ -322,25 +322,41 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ BENEFITS — image per benefit ============ */}
-            <section className="py-20 px-6 sm:px-14 text-center" style={{ background: surface, color: ink }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>لماذا هذا المنتج</div>
-              <h2 className="text-4xl sm:text-5xl font-black mb-12" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>مميزات تصنع الفرق</h2>
-              <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                {content.benefits?.slice(0, 3).map((b, i) => {
+            {/* ============ BENEFITS — editorial split, 2 items, no boxes ============ */}
+            <section className="py-24 px-6 sm:px-14" style={{ background: surface, color: ink }}>
+              <div className="max-w-6xl mx-auto mb-16 text-center">
+                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>لماذا هذا المنتج</div>
+                <h2 className="text-4xl sm:text-6xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>مميزات تصنع الفرق</h2>
+                <div className="mx-auto mt-6 h-px w-24" style={{ background: accent }} />
+              </div>
+              <div className="max-w-6xl mx-auto space-y-24">
+                {content.benefits?.slice(0, 2).map((b, i) => {
                   const Icon = ICONS[b.icon || 'zap'] || Zap;
                   const img = (images as any)[`benefit${i}`] as string | null;
                   const key = `benefit${i}` as keyof Images;
+                  const reverse = i % 2 === 1;
                   return (
-                    <div key={i} className="group rounded-3xl overflow-hidden shadow-xl" style={{ background: bg }}>
-                      <div className="relative aspect-square overflow-hidden">
-                        <ImageWithRegen src={img} section={key} className="absolute inset-0" />
-                        <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl flex items-center justify-center backdrop-blur" style={{ background: `${accent}dd`, color: onAccent }}>
-                          <Icon className="w-6 h-6" strokeWidth={2.5} />
+                    <div key={i} className={`grid md:grid-cols-12 gap-8 md:gap-16 items-center ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}>
+                      <div className="md:col-span-7 relative">
+                        <div className="absolute -top-6 -right-4 md:-right-8 text-[10rem] md:text-[14rem] font-black leading-none opacity-[0.06] select-none" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-tr-[6rem] rounded-bl-[6rem]">
+                          <ImageWithRegen src={img} section={key} className="absolute inset-0" />
                         </div>
                       </div>
-                      <div className="p-6">
-                        <div className="font-black text-xl sm:text-2xl" style={{ color: ink }}>{b.title}</div>
+                      <div className="md:col-span-5 relative">
+                        <div className="flex items-center gap-3 mb-5">
+                          <span className="w-12 h-px" style={{ background: accent }} />
+                          <Icon className="w-5 h-5" strokeWidth={2.5} style={{ color: accent }} />
+                          <span className="text-xs font-black tracking-[0.25em]" style={{ color: accent }}>0{i + 1}</span>
+                        </div>
+                        <h3 className="text-4xl sm:text-5xl font-black leading-tight mb-4" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                          {b.title}
+                        </h3>
+                        <p className="text-lg opacity-70 leading-relaxed" style={{ color: ink }}>
+                          {content.hypeWords?.[i] || content.tagline}
+                        </p>
                       </div>
                     </div>
                   );
