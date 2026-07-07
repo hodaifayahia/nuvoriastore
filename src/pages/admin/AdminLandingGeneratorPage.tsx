@@ -241,64 +241,92 @@ export default function AdminLandingGeneratorPage() {
 
         {content && (
           <div ref={previewRef} dir="rtl" className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100" style={{ background: bg, color: ink }}>
-            {/* ============ HERO ============ */}
-            <section className="relative min-h-[85vh] flex items-end overflow-hidden" style={{ background: `linear-gradient(135deg, ${bg}, ${surface})` }}>
-              {images.hero && (
-                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-              )}
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${bg}dd 70%, ${bg} 100%)` }} />
-              <div className="absolute top-8 right-8 flex gap-2">
-                {content.hypeWords?.slice(0, 3).map((w, i) => (
-                  <span key={i} className="px-3 py-1 rounded-full text-xs font-black tracking-widest backdrop-blur border" style={{ color: ink, borderColor: `${ink}30`, background: `${ink}10` }}>{w}</span>
-                ))}
+            {/* ============ TOP PROMO BANNER ============ */}
+            <section className="py-2.5 px-4 text-center text-xs sm:text-sm font-black tracking-wide" style={{ background: ink, color: bg }}>
+              <span className="inline-flex items-center gap-2">
+                <Flame className="w-3.5 h-3.5" style={{ color: accent }} />
+                {content.trustBadges?.[0] || 'شحن مجاني'} • {content.trustBadges?.[1] || 'ضمان الجودة'} • {content.trustBadges?.[2] || 'الدفع عند الاستلام'}
+                <Flame className="w-3.5 h-3.5" style={{ color: accent }} />
+              </span>
+            </section>
+
+            {/* ============ HERO — split ============ */}
+            <section className="relative grid md:grid-cols-2 min-h-[85vh]" style={{ background: `linear-gradient(135deg, ${surface}, ${bg})` }}>
+              <div className="relative order-2 md:order-1 flex flex-col justify-center px-6 sm:px-14 py-14" style={{ background: `radial-gradient(circle at 20% 20%, ${accent}22, transparent 60%)` }}>
+                <div className="inline-flex self-start items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black" style={{ background: accent, color: onAccent }}>
+                  <Flame className="w-3.5 h-3.5" /> {content.hypeWords?.[0] || 'جديد'}
+                </div>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black leading-[1.05] mb-5" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                  {content.headline}
+                </h1>
+                <p className="text-lg sm:text-xl font-medium mb-8 opacity-80 max-w-md" style={{ color: ink }}>{content.tagline}</p>
+                <div className="flex flex-wrap items-center gap-5">
+                  <a href="#order-form" className="px-9 py-4 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
+                    {content.ctaText} ←
+                  </a>
+                  {price && (
+                    <div style={{ color: ink }}>
+                      <div className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif", color: accent }}>{price}</div>
+                      <div className="text-xs opacity-70">شامل التوصيل</div>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="relative z-10 w-full px-6 sm:px-14 pb-16 sm:pb-24">
-                <div className="max-w-4xl">
-                  <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: accent, color: onAccent }}>
-                    <Flame className="w-3.5 h-3.5" /> جديد
+              <div className="relative order-1 md:order-2 min-h-[50vh] md:min-h-full overflow-hidden">
+                {images.hero && <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+                <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, transparent 40%, ${surface}88 100%)` }} />
+              </div>
+            </section>
+
+            {/* ============ ICON BENEFITS STRIP ============ */}
+            <section className="py-8 px-6" style={{ background: accent, color: onAccent }}>
+              <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                {(content.trustBadges || []).slice(0, 4).map((b, i) => {
+                  const Icon = [Truck, Shield, Award, Heart][i] || Truck;
+                  return (
+                    <div key={i} className="flex flex-col items-center gap-2">
+                      <Icon className="w-7 h-7" strokeWidth={2.5} />
+                      <div className="font-black text-sm sm:text-base">{b}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* ============ TRANSFORMATION (before / after) ============ */}
+            <section className="py-20 px-6 sm:px-14" style={{ background: bg }}>
+              <div className="text-center mb-10">
+                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>التحول الحقيقي</div>
+                <h2 className="text-4xl sm:text-5xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                  شاهد الفرق بنفسك
+                </h2>
+              </div>
+              <div className="relative max-w-5xl mx-auto grid grid-cols-2 rounded-3xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-[3/4]">
+                  <ImageWithRegen src={images.before} section="before" className="absolute inset-0" />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${ink}cc)` }} />
+                  <div className="absolute bottom-6 right-6 left-6 flex items-center justify-between">
+                    <span className="px-4 py-2 rounded-full font-black text-sm tracking-widest" style={{ background: ink, color: bg }}>قبل</span>
                   </div>
-                  <h1 className="text-5xl sm:text-7xl md:text-8xl font-black leading-[1.05] mb-4" style={{ color: ink }}>
-                    {content.headline}
-                  </h1>
-                  <p className="text-xl sm:text-2xl font-medium mb-8 opacity-80" style={{ color: ink }}>{content.tagline}</p>
-                  <div className="flex flex-wrap items-center gap-5">
-                    <a href="#order-form" className="px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
-                      {content.ctaText} ←
-                    </a>
-                    {price && (
-                      <div style={{ color: ink }}>
-                        <div className="text-3xl sm:text-5xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>{price}</div>
-                        <div className="text-xs opacity-70">شامل التوصيل</div>
-                      </div>
-                    )}
+                </div>
+                <div className="relative aspect-[3/4]">
+                  <ImageWithRegen src={images.after} section="after" className="absolute inset-0" />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, ${accent}cc)` }} />
+                  <div className="absolute bottom-6 right-6 left-6 flex items-center justify-between">
+                    <span className="px-4 py-2 rounded-full font-black text-sm tracking-widest" style={{ background: accent, color: onAccent }}>بعد</span>
                   </div>
+                </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center font-black text-xl shadow-2xl" style={{ background: bg, color: accent }}>
+                  <ArrowLeft className="w-6 h-6" />
                 </div>
               </div>
             </section>
 
-            {/* ============ HYPE STRIP ============ */}
-            <section className="py-6 overflow-hidden" style={{ background: accent }}>
-              <div className="flex gap-12 justify-center flex-wrap px-6" style={{ color: onAccent }}>
-                {content.trustBadges?.slice(0, 4).map((b, i) => (
-                  <div key={i} className="flex items-center gap-2 font-black uppercase tracking-widest text-sm">
-                    <Truck className="w-4 h-4" /> {b}
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* ============ IMAGE GRID ============ */}
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ background: ink }}>
-              <ImageWithRegen src={images.lifestyle} section="lifestyle" className="aspect-square md:aspect-auto md:row-span-2" />
-              <ImageWithRegen src={images.detail} section="detail" className="aspect-square" />
-              <ImageWithRegen src={images.inUse} section="inUse" className="aspect-square md:col-span-2 md:row-span-2" />
-              <ImageWithRegen src={images.packaging} section="packaging" className="aspect-square" />
-            </section>
-
-            {/* ============ BENEFITS — with generated image per benefit ============ */}
-            <section className="py-24 px-6 sm:px-14 text-center" style={{ background: surface, color: ink }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: accent }}>لماذا هذا المنتج</div>
-              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
+            {/* ============ BENEFITS — image per benefit ============ */}
+            <section className="py-20 px-6 sm:px-14 text-center" style={{ background: surface, color: ink }}>
+              <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>لماذا هذا المنتج</div>
+              <h2 className="text-4xl sm:text-5xl font-black mb-12" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>مميزات تصنع الفرق</h2>
+              <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 {content.benefits?.slice(0, 3).map((b, i) => {
                   const Icon = ICONS[b.icon || 'zap'] || Zap;
                   const img = (images as any)[`benefit${i}`] as string | null;
@@ -320,39 +348,69 @@ export default function AdminLandingGeneratorPage() {
               </div>
             </section>
 
-            {/* ============ BEFORE / AFTER ============ */}
-            <section className="grid md:grid-cols-2">
-              <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
-                <ImageWithRegen src={images.before} section="before" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: ink, color: bg }}>قبل</div>
+            {/* ============ TESTIMONIAL MOSAIC ============ */}
+            <section className="py-20 px-6 sm:px-14" style={{ background: bg, color: ink }}>
+              <div className="text-center mb-12">
+                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>آراء العملاء</div>
+                <h2 className="text-4xl sm:text-5xl font-black" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>آلاف العملاء الراضين</h2>
               </div>
-              <div className="relative aspect-square md:aspect-auto min-h-[60vh]">
-                <ImageWithRegen src={images.after} section="after" className="absolute inset-0" />
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full font-black text-sm uppercase tracking-widest" style={{ background: accent, color: onAccent }}>بعد</div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-6xl mx-auto">
+                {(() => {
+                  const portraits = [images.lifestyle, images.inUse, images.detail, images.after, images.benefit0, images.benefit1].filter(Boolean) as string[];
+                  const items = content.testimonials?.slice(0, 3) || [];
+                  const tiles = Array.from({ length: 6 }).map((_, i) => ({
+                    img: portraits[i % Math.max(portraits.length, 1)] || images.hero,
+                    t: items[i % Math.max(items.length, 1)],
+                  }));
+                  return tiles.map((tile, i) => (
+                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden group shadow-lg">
+                      {tile.img && <img src={tile.img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />}
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 40%, ${ink}ee)` }} />
+                      <div className="absolute bottom-0 right-0 left-0 p-4" style={{ color: bg }}>
+                        <div className="flex mb-1.5" style={{ color: accent }}>
+                          {[0,1,2,3,4].map(s => <Star key={s} className="w-3 h-3 fill-current" />)}
+                        </div>
+                        {tile.t && (
+                          <>
+                            <p className="text-xs sm:text-sm font-medium leading-snug mb-1.5 line-clamp-2">«{tile.t.quote}»</p>
+                            <div className="text-[10px] font-black opacity-90">— {tile.t.name} • {tile.t.city}</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ));
+                })()}
               </div>
             </section>
 
-            {/* ============ TESTIMONIALS ============ */}
-            <section className="py-24 px-6 sm:px-14" style={{ background: surface, color: ink }}>
-              <div className="text-xs font-black tracking-[0.3em] mb-4 text-center" style={{ color: accent }}>آراء العملاء</div>
-              <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-10">
-                {content.testimonials?.slice(0, 3).map((t, i) => (
-                  <div key={i} className="rounded-3xl p-6 shadow-lg hover:shadow-2xl transition" style={{ background: bg }}>
-                    <div className="flex mb-3" style={{ color: accent }}>
-                      {[0,1,2,3,4].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
+            {/* ============ INGREDIENTS / BACKGROUND SHOWCASE ============ */}
+            <section className="relative py-24 px-6 sm:px-14 overflow-hidden" style={{ background: surface }}>
+              {images.packaging && (
+                <img src={images.packaging} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+              )}
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 30% 30%, ${accent}33, transparent 50%), radial-gradient(circle at 70% 70%, ${accent2}33, transparent 50%)`,
+              }} />
+              <div className="relative z-10 max-w-5xl mx-auto text-center">
+                <div className="text-xs font-black tracking-[0.3em] mb-3" style={{ color: accent }}>المكونات الطبيعية</div>
+                <h2 className="text-4xl sm:text-6xl font-black mb-4" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>
+                  {content.productName}
+                </h2>
+                <p className="text-lg opacity-80 max-w-2xl mx-auto mb-12" style={{ color: ink }}>{content.productDescription}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[images.detail, images.lifestyle, images.inUse, images.packaging].map((img, i) => img && (
+                    <div key={i} className="aspect-square rounded-2xl overflow-hidden shadow-2xl border-4" style={{ borderColor: `${accent}55` }}>
+                      <img src={img} alt="" className="w-full h-full object-cover" />
                     </div>
-                    <p className="text-lg font-medium mb-6 leading-relaxed" style={{ color: ink }}>«{t.quote}»</p>
-                    <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: `${ink}15` }}>
-                      <div className="w-11 h-11 rounded-full flex items-center justify-center font-black" style={{ background: accent, color: onAccent }}>
-                        {t.name?.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-black" style={{ color: ink }}>{t.name}</div>
-                        <div className="text-xs opacity-60" style={{ color: ink }}>{t.city}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div className="mt-12 flex flex-wrap justify-center gap-3">
+                  {content.hypeWords?.map((w, i) => (
+                    <span key={i} className="px-5 py-2 rounded-full text-sm font-black" style={{ background: `${ink}10`, color: ink, border: `1.5px solid ${accent}` }}>
+                      {w}
+                    </span>
+                  ))}
+                </div>
               </div>
             </section>
 
@@ -364,15 +422,15 @@ export default function AdminLandingGeneratorPage() {
 
             {/* ============ FINAL CTA ============ */}
             <section className="relative min-h-[60vh] flex items-center justify-center text-center overflow-hidden" style={{ background: bg }}>
-              {images.packaging && (
-                <img src={images.packaging} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+              {images.hero && (
+                <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
               )}
               <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${bg}cc, ${bg})` }} />
               <div className="relative z-10 px-6 max-w-3xl">
                 <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-black tracking-widest" style={{ background: accent, color: onAccent }}>
                   <Flame className="w-3.5 h-3.5" /> عرض محدود
                 </div>
-                <h2 className="text-5xl sm:text-7xl font-black mb-6" style={{ color: ink }}>{content.headline}</h2>
+                <h2 className="text-5xl sm:text-7xl font-black mb-6" style={{ color: ink, fontFamily: "'Playfair Display', serif" }}>{content.headline}</h2>
                 {price && <div className="text-5xl sm:text-6xl font-black mb-8" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>}
                 <a href="#order-form" className="inline-block px-12 py-5 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition" style={{ background: accent, color: onAccent }}>
                   {content.ctaText} ←
