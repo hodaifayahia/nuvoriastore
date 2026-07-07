@@ -227,6 +227,16 @@ export default function AdminLandingGeneratorPage() {
         <Card className="p-6 sm:p-8 mb-10 rounded-3xl shadow-xl border border-slate-100 bg-white/80 backdrop-blur">
           <form onSubmit={handleGenerate} className="grid md:grid-cols-3 gap-5">
             <div className="md:col-span-3 space-y-2">
+              <Label>المنتج *</Label>
+              <Select value={productId} onValueChange={(v) => { setProductId(v); const p = products?.find(x => x.id === v); if (p && !price) setPrice(String(p.price)); }}>
+                <SelectTrigger className="rounded-xl h-11"><SelectValue placeholder="اختر منتجاً من متجرك" /></SelectTrigger>
+                <SelectContent>
+                  {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-slate-500">الطلبات الواردة من هذه الصفحة ستُربط بهذا المنتج وتظهر في قائمة الطلبات بشارة 🚀</p>
+            </div>
+            <div className="md:col-span-3 space-y-2">
               <Label>صورة المنتج *</Label>
               <label className="relative flex items-center justify-center h-56 rounded-2xl border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-slate-50 cursor-pointer overflow-hidden group">
                 {uploadedImage ? (
@@ -263,7 +273,7 @@ export default function AdminLandingGeneratorPage() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button type="submit" disabled={loading || !uploadedImage} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30">
+              <Button type="submit" disabled={loading || !uploadedImage || !productId} className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30">
                 {loading ? <><Loader2 className="w-4 h-4 ml-2 animate-spin" />جارٍ الإنشاء…</> : <><Sparkles className="w-4 h-4 ml-2" />إنشاء</>}
               </Button>
             </div>
