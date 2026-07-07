@@ -130,23 +130,6 @@ export default function AdminLandingGeneratorPage() {
     reader.readAsDataURL(f);
   }
 
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault();
-    if (!uploadedImage) { toast.error('يرجى رفع صورة المنتج'); return; }
-    setLoading(true); setContent(null);
-    setImages(emptyImages);
-    setPageId(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-landing-page', {
-        body: { referenceImage: uploadedImage, price: price.trim(), tone, mode: 'full' },
-      });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      setContent(data.content); setImages(data.images); setPrompts(data.prompts); setPageId(data.id || null);
-      toast.success('تم إنشاء صفحة الهبوط');
-    } catch (err: any) { toast.error(err.message || 'فشل الإنشاء'); }
-    finally { setLoading(false); }
-  }
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
