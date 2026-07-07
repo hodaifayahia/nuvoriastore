@@ -609,7 +609,7 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
     setSubmitting(true);
     try {
       const qty = Math.max(1, Number(form.quantity) || 1);
-      const { data: order, error } = await supabase.from('orders').insert([{
+      const { data: order, error } = await supabase.from('orders').insert({
         customer_name: form.customer_name.trim(),
         customer_phone: form.phone.trim(),
         wilaya_id: form.wilaya_id || null,
@@ -618,7 +618,7 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
         subtotal: total,
         status: 'جديد',
         landing_page_id: landingPageId,
-      }]).select('id').single();
+      } as any).select('id').single();
       if (error) throw error;
 
       const { error: itemErr } = await supabase.from('order_items').insert({
