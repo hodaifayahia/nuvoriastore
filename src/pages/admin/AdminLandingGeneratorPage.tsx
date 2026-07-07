@@ -529,7 +529,11 @@ export default function AdminLandingGeneratorPage() {
             {/* ============ ORDER FORM ============ */}
             <OrderFormSection
               accent={accent} onAccent={onAccent} bg={bg} surface={surface} ink={ink}
-              price={price} productName={content.productName} pageId={pageId} ctaText={content.ctaText}
+              price={price} ctaText={content.ctaText}
+              productId={productId} productName={selectedProduct?.name || content.productName}
+              productPrice={Number(selectedProduct?.price) || Number(price.replace(/[^\d.]/g, '')) || 0}
+              landingPageId={landingPageId}
+              variants={variants || []}
             />
 
             {/* ============ FINAL CTA ============ */}
