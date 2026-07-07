@@ -176,7 +176,18 @@ export default function AdminLandingGeneratorPage() {
         body: { mode: 'image', section, imagePrompt: prompts[section] },
       });
       if (error) throw error;
-      if (data?.image) setImages(s => ({ ...s, [section]: data.image }));
+      if (data?.image) {
+        const newImages = { ...images, [section]: data.image };
+        setImages(newImages);
+        // Keep the persisted landing page in sync so the public link shows the latest images.
+        if (landingPageId && content) {
+          try {
+            await supabase.from('landing_pages').update({
+              content: { ...content, _images: newImages, _price: price, _tone: tone },
+            }).eq('id', landingPageId);
+          } catch (e) { console.error('landing_pages sync failed', e); }
+        }
+      }
     } catch (err: any) { toast.error(err.message); }
     finally { setRegen(null); }
   }
