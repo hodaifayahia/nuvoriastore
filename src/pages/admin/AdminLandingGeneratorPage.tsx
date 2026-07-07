@@ -183,7 +183,7 @@ export default function AdminLandingGeneratorPage() {
         if (landingPageId && content) {
           try {
             await supabase.from('landing_pages').update({
-              content: { ...content, _images: newImages, _price: price, _tone: tone },
+              content: { ...content, _images: newImages, _price: price, _tone: tone } as any,
             }).eq('id', landingPageId);
           } catch (e) { console.error('landing_pages sync failed', e); }
         }
