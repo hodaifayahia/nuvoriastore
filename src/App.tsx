@@ -63,6 +63,7 @@ import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import LandingPage from "./pages/LandingPage";
+import PublicGeneratedLandingPage from "./pages/PublicGeneratedLandingPage";
 import WishlistPage from "./pages/WishlistPage";
 import NotFound from "./pages/NotFound";
 import ConfirmerLayout from "./components/ConfirmerLayout";
