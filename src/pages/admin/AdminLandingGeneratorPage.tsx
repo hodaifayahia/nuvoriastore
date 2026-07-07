@@ -570,31 +570,74 @@ export default function AdminLandingGeneratorPage() {
   );
 }
 
-function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productName, pageId, ctaText }: {
+function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, productId, productName, productPrice, landingPageId, variants }: {
   accent: string; onAccent: string; bg: string; surface: string; ink: string;
-  price?: string; productName?: string; pageId: string | null; ctaText?: string;
+  price?: string; ctaText?: string;
+  productId: string; productName?: string; productPrice: number;
+  landingPageId: string | null;
+  variants: any[];
 }) {
-  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya: '', address: '', quantity: 1 });
+  const [form, setForm] = useState({ customer_name: '', phone: '', wilaya_id: '', baladiya: '', quantity: 1, variant_id: '' });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  const { data: wilayas } = useQuery({
+    queryKey: ['lp-wilayas'],
+    queryFn: async () => {
+      const { data } = await supabase.from('wilayas').select('id, name, shipping_price, shipping_price_home').eq('is_active', true).order('name');
+      return data || [];
+    },
+  });
+  const { data: baladiyat } = useQuery({
+    queryKey: ['lp-baladiyat', form.wilaya_id],
+    queryFn: async () => {
+      const { data } = await supabase.from('baladiyat').select('id, name').eq('wilaya_id', form.wilaya_id).eq('is_active', true).order('name');
+      return data || [];
+    },
+    enabled: !!form.wilaya_id,
+  });
+
+  const selectedVariant = variants.find(v => v.id === form.variant_id);
+  const unitPrice = selectedVariant ? Number(selectedVariant.price) : productPrice;
+  const total = unitPrice * (Number(form.quantity) || 1);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.customer_name.trim() || !form.phone.trim()) { toast.error('يرجى إدخال الاسم ورقم الهاتف'); return; }
+    if (!form.customer_name.trim() || form.phone.trim().length < 8) { toast.error('يرجى إدخال الاسم ورقم هاتف صحيح'); return; }
+    if (!productId) { toast.error('لم يتم اختيار المنتج'); return; }
+    if (variants.length > 0 && !form.variant_id) { toast.error('يرجى اختيار المتغير'); return; }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('launchpage_orders').insert({
-        page_id: pageId, product_name: productName, price,
-        customer_name: form.customer_name.trim(), phone: form.phone.trim(),
-        wilaya: form.wilaya.trim() || null, address: form.address.trim() || null,
-        quantity: Number(form.quantity) || 1,
-      });
+      const qty = Math.max(1, Number(form.quantity) || 1);
+      const { data: order, error } = await supabase.from('orders').insert({
+        customer_name: form.customer_name.trim(),
+        customer_phone: form.phone.trim(),
+        wilaya_id: form.wilaya_id || null,
+        baladiya: form.baladiya || null,
+        total_amount: total,
+        subtotal: total,
+        status: 'جديد',
+        landing_page_id: landingPageId,
+      }).select('id').single();
       if (error) throw error;
+
+      const { error: itemErr } = await supabase.from('order_items').insert({
+        order_id: order.id,
+        product_id: productId,
+        variant_id: form.variant_id || null,
+        quantity: qty,
+        unit_price: unitPrice,
+      });
+      if (itemErr) throw itemErr;
+
       setDone(true);
       toast.success('تم استلام طلبك — سنتصل بك قريباً');
     } catch (err: any) { toast.error(err.message || 'فشل الإرسال'); }
     finally { setSubmitting(false); }
   }
+
+  const inputCls = 'w-full h-12 px-4 rounded-xl outline-none border-2';
+  const inputStyle = { background: bg, color: ink, borderColor: `${ink}20` } as React.CSSProperties;
 
   return (
     <section id="order-form" className="py-24 px-6 sm:px-14" style={{ background: bg, color: ink }}>
@@ -615,45 +658,65 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, productNa
           </div>
         ) : (
           <form onSubmit={submit} className="rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4" style={{ background: surface }}>
+            {productName && (
+              <div className="text-sm font-bold p-3 rounded-xl mb-2" style={{ background: `${accent}15`, color: ink }}>
+                🛍️ المنتج: <span style={{ color: accent }}>{productName}</span>
+              </div>
+            )}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الاسم الكامل *</label>
                 <input required value={form.customer_name} onChange={e => setForm({ ...form, customer_name: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                  className={inputCls} style={inputStyle} />
               </div>
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>رقم الهاتف *</label>
                 <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} placeholder="05XX XX XX XX" />
+                  className={inputCls} style={inputStyle} placeholder="05XX XX XX XX" />
               </div>
               <div>
-                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية</label>
-                <input value={form.wilaya} onChange={e => setForm({ ...form, wilaya: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الولاية *</label>
+                <select required value={form.wilaya_id} onChange={e => setForm({ ...form, wilaya_id: e.target.value, baladiya: '' })}
+                  className={inputCls} style={inputStyle}>
+                  <option value="">اختر الولاية</option>
+                  {wilayas?.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+                </select>
               </div>
+              <div>
+                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>البلدية</label>
+                <select value={form.baladiya} onChange={e => setForm({ ...form, baladiya: e.target.value })}
+                  disabled={!form.wilaya_id || !baladiyat?.length}
+                  className={inputCls} style={inputStyle}>
+                  <option value="">{form.wilaya_id ? 'اختر البلدية' : 'اختر الولاية أولاً'}</option>
+                  {baladiyat?.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                </select>
+              </div>
+              {variants.length > 0 && (
+                <div className="sm:col-span-2">
+                  <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>المتغير *</label>
+                  <select required value={form.variant_id} onChange={e => setForm({ ...form, variant_id: e.target.value })}
+                    className={inputCls} style={inputStyle}>
+                    <option value="">اختر الخيار</option>
+                    {variants.map(v => {
+                      const label = Object.values(v.option_values || {}).join(' / ') || v.sku || 'متغير';
+                      return <option key={v.id} value={v.id}>{label} — {Number(v.price)} دج</option>;
+                    })}
+                  </select>
+                </div>
+              )}
               <div>
                 <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>الكمية</label>
                 <input type="number" min={1} value={form.quantity} onChange={e => setForm({ ...form, quantity: Number(e.target.value) })}
-                  className="w-full h-12 px-4 rounded-xl outline-none border-2"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="text-xs font-bold opacity-70 mb-1 block" style={{ color: ink }}>العنوان</label>
-                <textarea rows={2} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl outline-none border-2 resize-none"
-                  style={{ background: bg, color: ink, borderColor: `${ink}20` }} />
+                  className={inputCls} style={inputStyle} />
               </div>
             </div>
 
-            {price && (
-              <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
-                <div className="font-bold" style={{ color: ink }}>المجموع</div>
-                <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>{price}</div>
+            <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: `${accent}15` }}>
+              <div className="font-bold" style={{ color: ink }}>المجموع</div>
+              <div className="text-2xl font-black" style={{ color: accent, fontFamily: "'Playfair Display', serif" }}>
+                {total > 0 ? `${total} دج` : (price || '—')}
               </div>
-            )}
+            </div>
 
             <button type="submit" disabled={submitting}
               className="w-full h-14 rounded-xl font-black text-lg shadow-xl hover:scale-[1.02] transition disabled:opacity-60"
