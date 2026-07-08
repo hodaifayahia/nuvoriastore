@@ -487,12 +487,12 @@ export default function IndexPage() {
               </div>
               {/* Content */}
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">فئة</p>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'فئة')}</p>
                 <h3 className={`font-display font-extrabold tracking-tight ${titleSize} drop-shadow-lg`}>
                   {cat.name}
                 </h3>
                 <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                  تسوق الآن
+                  {txt('cat_shop_now', 'تسوق الآن')}
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                 </span>
               </div>
