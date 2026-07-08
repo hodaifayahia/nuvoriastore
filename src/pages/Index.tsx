@@ -353,7 +353,7 @@ export default function IndexPage() {
                         </Link>
                         <Link
                           to="/wishlist"
-                          aria-label="إضافة للمفضلة"
+                          aria-label={txt('hero_wishlist_alt', 'إضافة للمفضلة')}
                           className="p-3.5 sm:p-4 border-2 border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors text-slate-900"
                         >
                           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
