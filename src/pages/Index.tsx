@@ -840,21 +840,21 @@ export default function IndexPage() {
               <div className="lg:col-span-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--grad-teal)/0.12)] border border-[hsl(var(--grad-teal)/0.3)] text-[hsl(var(--grad-teal))] text-xs font-semibold mb-4">
                   <Shield className="w-3.5 h-3.5" />
-                  حماية موثوقة
+                  {txt('ts_tag', 'حماية موثوقة')}
                 </div>
                 <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight mb-3">
-                  سياسة الضمان
+                  {txt('ts_title', 'سياسة الضمان')}
                 </h2>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="font-display text-5xl sm:text-6xl font-black bg-gradient-to-br from-[hsl(var(--grad-teal))] to-[hsl(var(--grad-amber))] bg-clip-text text-transparent">
-                    12
+                    {txt('ts_months', '12')}
                   </span>
                   <span className="text-lg font-semibold text-muted-foreground">
-                    شهراً من تاريخ الشراء
+                    {txt('ts_months_suffix', 'شهراً من تاريخ الشراء')}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.
+                  {txt('ts_desc', 'يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.')}
                 </p>
               </div>
 
@@ -863,16 +863,16 @@ export default function IndexPage() {
                 {[
                   {
                     icon: RefreshCw,
-                    tag: 'الأيام السبعة الأولى',
-                    title: 'استبدال كامل للجهاز',
-                    desc: 'استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.',
+                    tag: txt('ts_card1_tag', 'الأيام السبعة الأولى'),
+                    title: txt('ts_card1_title', 'استبدال كامل للجهاز'),
+                    desc: txt('ts_card1_desc', 'استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.'),
                     color: 'grad-teal',
                   },
                   {
                     icon: Wrench,
-                    tag: 'بعد فترة الاستبدال',
-                    title: 'إصلاح وقطع غيار',
-                    desc: 'يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.',
+                    tag: txt('ts_card2_tag', 'بعد فترة الاستبدال'),
+                    title: txt('ts_card2_title', 'إصلاح وقطع غيار'),
+                    desc: txt('ts_card2_desc', 'يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.'),
                     color: 'grad-amber',
                   },
                 ].map((it) => (
@@ -901,7 +901,7 @@ export default function IndexPage() {
                     <BadgeCheck className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
                   </div>
                   <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">
-                    الضمان يشمل عيوب التصنيع فقط، ولا يغطي الأعطال الناتجة عن سوء الاستخدام أو الحوادث.
+                    {txt('ts_coverage', 'الضمان يشمل عيوب التصنيع فقط، ولا يغطي الأعطال الناتجة عن سوء الاستخدام أو الحوادث.')}
                   </p>
                 </div>
               </div>
