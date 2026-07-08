@@ -131,7 +131,8 @@ export default function IndexPage() {
   });
 
   const { data: hp } = useHomepageSettings();
-  const showSection = (s: 'hero'|'categories'|'trending'|'newest'|'deals'|'limited'|'brands'|'testimonials'|'trusted'|'trust_strip') => hp?.show?.[s] ?? (s !== 'limited');
+  const showSection = (s: 'hero'|'categories'|'featured'|'newest'|'best_prices'|'limited'|'brands'|'trust_strip') =>
+    hp?.show?.[s] ?? (s !== 'limited');
   const txt = (key: string, fallback: string) => hp?.text?.[key] || fallback;
 
   const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
