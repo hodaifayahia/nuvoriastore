@@ -297,7 +297,7 @@ export default function IndexPage() {
                         {activeBadge}
                       </span>
                       <span className="px-4 py-1.5 bg-slate-100 text-slate-600 text-[11px] font-bold rounded-full">
-                        حصري في NuvoriaStore
+                        {txt('hero_exclusive_badge', 'حصري في NuvoriaStore')}
                       </span>
                     </div>
 
