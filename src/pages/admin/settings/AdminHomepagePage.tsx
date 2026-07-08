@@ -16,16 +16,14 @@ import {
 } from '@/hooks/useHomepageSettings';
 
 const SECTION_LABEL_AR: Record<HpSection, string> = {
-  hero: 'القسم الرئيسي (Hero)',
-  categories: 'الفئات',
-  trending: 'المنتجات الرائجة',
-  newest: 'جديد في المتجر',
-  deals: 'تخفيضات لفترة محدودة',
+  hero: 'القسم الرئيسي (السلايدر + شارات)',
+  categories: 'شبكة الفئات (Bento)',
+  featured: 'اختيارات المتجر (منتجات مميزة)',
+  newest: 'جديدنا',
+  best_prices: 'بانر "أفضل الأسعار"',
   limited: 'إصدار محدود (Limited Edition)',
   brands: 'العلامات التجارية',
-  testimonials: 'آراء العملاء',
-  trusted: 'تقنيتك الموثوقة في الجزائر',
-  trust_strip: 'شريط الضمانات',
+  trust_strip: 'سياسة الضمان',
 };
 
 const ALL_KEYS = [
