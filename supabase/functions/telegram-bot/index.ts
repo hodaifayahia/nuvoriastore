@@ -292,8 +292,9 @@ async function handleOrderDetail(supabase: ReturnType<typeof createClient>, toke
     msg += `\n\n🧾 <a href="${order.payment_receipt_url}">عرض إيصال الدفع</a>`;
   }
 
-  const statuses = ["قيد التحضير", "تم الشحن", "تم التسليم", "ملغي"];
-  const statusEmoji: Record<string, string> = { "قيد التحضير": "📦", "تم الشحن": "🚚", "تم التسليم": "✔️", "ملغي": "❌" };
+  const statuses = ["جديد", "مؤكد", "قيد التحضير", "تم الشحن", "تم التسليم", "ملغي"];
+  const statusEmoji: Record<string, string> = { "جديد": "🆕", "مؤكد": "✅", "قيد التحضير": "📦", "تم الشحن": "🚚", "تم التسليم": "✔️", "ملغي": "❌" };
+  msg += `\n\n<b>🔄 غيّر الحالة:</b>`;
   const statusButtons = statuses
     .filter((st) => st !== order.status)
     .map((st) => ({ text: `${statusEmoji[st]} ${st}`, callback_data: `order_status:${order.id}:${st}` }));
