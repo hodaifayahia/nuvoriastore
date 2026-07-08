@@ -693,39 +693,41 @@ export default function IndexPage() {
       })}
 
       {/* ─────────── BEST PRICES BANNER ─────────── */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border/60 min-h-[260px] sm:min-h-[340px]">
-            <img
-              src={bestPricesBanner.url}
-              alt="أفضل الأسعار في الجزائر"
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            {/* Gradient overlay — stronger on right for RTL text */}
-            <div className="absolute inset-0 bg-gradient-to-l from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
-            <div className="relative h-full flex items-center justify-end p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
-              <div className="max-w-md text-right text-white">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
-                  <BadgeCheck className="w-3.5 h-3.5" /> ضمان أفضل سعر
+      {showSection('best_prices') && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border/60 min-h-[260px] sm:min-h-[340px]">
+              <img
+                src={bestPricesBanner.url}
+                alt={`${txt('bp_title_line1', 'أفضل الأسعار')} ${txt('bp_title_line2', 'في الجزائر')}`}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Gradient overlay — stronger on right for RTL text */}
+              <div className="absolute inset-0 bg-gradient-to-l from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
+              <div className="relative h-full flex items-center justify-end p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
+                <div className="max-w-md text-right text-white">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
+                    <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'ضمان أفضل سعر')}
+                  </div>
+                  <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight drop-shadow-lg">
+                    {txt('bp_title_line1', 'أفضل الأسعار')}<br />{txt('bp_title_line2', 'في الجزائر')}
+                  </h2>
+                  <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed">
+                    {txt('bp_desc', 'أجهزة كهرومنزلية أصلية بأسعار لا تُقاوم، مع توصيل سريع إلى 58 ولاية.')}
+                  </p>
+                  <Link
+                    to="/products"
+                    className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#0a1e3a] font-bold text-sm shadow-xl hover:scale-105 transition-transform"
+                  >
+                    {txt('bp_cta', 'تسوق الآن')} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                  </Link>
                 </div>
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight drop-shadow-lg">
-                  أفضل الأسعار<br />في الجزائر
-                </h2>
-                <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed">
-                  أجهزة كهرومنزلية أصلية بأسعار لا تُقاوم، مع توصيل سريع إلى 58 ولاية.
-                </p>
-                <Link
-                  to="/products"
-                  className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#0a1e3a] font-bold text-sm shadow-xl hover:scale-105 transition-transform"
-                >
-                  تسوق الآن <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                </Link>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
 
