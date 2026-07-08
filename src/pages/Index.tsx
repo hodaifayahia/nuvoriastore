@@ -389,8 +389,8 @@ export default function IndexPage() {
                           <Zap className="w-5 h-5" />
                         </div>
                         <div className="text-right">
-                          <div className="text-[10px] sm:text-xs text-slate-400">توفير الطاقة</div>
-                          <div className="text-xs sm:text-sm font-bold text-slate-800">فئة +++A</div>
+                          <div className="text-[10px] sm:text-xs text-slate-400">{txt('hero_energy_label', 'توفير الطاقة')}</div>
+                          <div className="text-xs sm:text-sm font-bold text-slate-800">{txt('hero_energy_value', 'فئة +++A')}</div>
                         </div>
                       </div>
 
@@ -410,9 +410,9 @@ export default function IndexPage() {
                       <div className="absolute -bottom-5 -left-3 sm:-bottom-6 sm:-left-4 z-20 bg-slate-900 p-4 sm:p-5 rounded-3xl shadow-2xl flex flex-col gap-1 text-white animate-fade-in"
                            style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
                         <div className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'hsl(var(--primary) / 0.9)' }}>
-                          المميزات التقنية
+                          {txt('hero_features_label', 'المميزات التقنية')}
                         </div>
-                        <div className="text-sm sm:text-base font-bold">التحكم عبر التطبيق</div>
+                        <div className="text-sm sm:text-base font-bold">{txt('hero_features_value', 'التحكم عبر التطبيق')}</div>
                         <div className="flex gap-1 mt-1" dir="ltr">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary))' }} />
                           <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary) / 0.5)' }} />
