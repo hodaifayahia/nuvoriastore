@@ -1345,7 +1345,7 @@ export default function SingleProductPage() {
                     {t('sp.addToCart')}
                   </Button>
                   <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/30">
+                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
                     {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                     {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
                   </Button>
