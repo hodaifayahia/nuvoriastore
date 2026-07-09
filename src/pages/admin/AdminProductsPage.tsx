@@ -1246,35 +1246,6 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         )}
       </div>
 
-      {/* Product Type Selector */}
-      <div className="bg-card border rounded-xl p-5 space-y-4">
-        <h3 className="font-cairo font-semibold text-base flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Package className="w-4 h-4 text-primary" />
-          </div>
-          نوع المنتج
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => setProductType('physical')}
-            className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${productType === 'physical' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}
-          >
-            <Package className={`w-6 h-6 ${productType === 'physical' ? 'text-primary' : 'text-muted-foreground'}`} />
-            <span className="font-cairo font-semibold text-sm">منتج مادي</span>
-            <span className="font-cairo text-xs text-muted-foreground">يتطلب شحن وتوصيل</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setProductType('digital')}
-            className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${productType === 'digital' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}
-          >
-            <Layers className={`w-6 h-6 ${productType === 'digital' ? 'text-primary' : 'text-muted-foreground'}`} />
-            <span className="font-cairo font-semibold text-sm">منتج رقمي</span>
-            <span className="font-cairo text-xs text-muted-foreground">تسليم فوري بدون شحن</span>
-          </button>
-        </div>
-      </div>
 
       {/* Product Details */}
       <div className="bg-card border rounded-xl p-5 space-y-4">
@@ -1295,17 +1266,6 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
               <Label className="font-cairo">رمز المنتج (SKU)</Label>
               <Input value={sku} onChange={e => setSku(e.target.value)} className="font-roboto mt-1.5 h-11" placeholder="مثال: FW01" />
             </div>
-          </div>
-          <div>
-            <Label className="font-cairo">رابط المنتج (Slug)</Label>
-            <Input
-              value={slug}
-              onChange={e => setSlug(e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))}
-              className="font-roboto mt-1.5 h-11 text-left"
-              dir="ltr"
-              placeholder="product-name"
-            />
-            <p className="font-cairo text-xs text-muted-foreground mt-1">/product/{slug || 'your-slug'} — حروف لاتينية وأرقام وشرطات فقط</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
