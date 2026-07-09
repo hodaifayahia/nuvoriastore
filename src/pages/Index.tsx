@@ -447,6 +447,8 @@ export default function IndexPage() {
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
+                          width={800}
+                          height={800}
                           loading="eager"
                           fetchPriority="high"
                           decoding="async"
@@ -520,7 +522,10 @@ export default function IndexPage() {
                 <img
                   src={cat.image}
                   alt={cat.name}
+                  width={600}
+                  height={600}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                 />
               ) : (
