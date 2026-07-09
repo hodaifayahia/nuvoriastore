@@ -733,6 +733,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
 
   // New fields
   const [oldPrice, setOldPrice] = useState(product?.old_price ? String(product.old_price) : '');
+  const [priceText, setPriceText] = useState<string>((product as any)?.price_text || '');
   const [shortDescription, setShortDescription] = useState(product?.short_description || '');
   const [isFreeShipping, setIsFreeShipping] = useState(product?.is_free_shipping ?? false);
   const [slug, setSlug] = useState(product?.slug || '');
@@ -1039,6 +1040,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         main_image_index: mainImageIndex,
         sku: sku.trim() || null,
         old_price: oldPrice ? Number(oldPrice) : null,
+        price_text: priceText.trim() || null,
         short_description: shortDescription.trim() || null,
         is_free_shipping: productType === 'digital' ? true : isFreeShipping,
         slug: slug.trim() || null,
@@ -1382,6 +1384,20 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
                 <p className="font-cairo text-xs text-destructive mt-1">⚠ السعر القديم يجب أن يكون أكبر من السعر الحالي</p>
               )}
             </div>
+          </div>
+          <div>
+            <Label className="font-cairo">السعر بالكلمات (سنتيم)</Label>
+            <Input
+              type="text"
+              value={priceText}
+              onChange={e => setPriceText(e.target.value)}
+              className="font-cairo mt-1.5 h-11"
+              placeholder="مثال: مليون سنتيم"
+              dir="rtl"
+            />
+            <p className="font-cairo text-[11px] text-muted-foreground mt-1">
+              يظهر تحت السعر للعملاء (مثال: 10000 دج = مليون سنتيم)
+            </p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {optionGroups.length === 0 && productType !== 'digital' && (

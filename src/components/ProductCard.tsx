@@ -17,6 +17,7 @@ interface ProductCardProps {
   name: string;
   price: number;
   oldPrice?: number;
+  priceText?: string | null;
   image: string;
   images?: string[];
   mainImageIndex?: number;
@@ -25,7 +26,7 @@ interface ProductCardProps {
   shippingPrice?: number;
 }
 
-export default function ProductCard({ id, name, price, oldPrice, image, images, mainImageIndex, category, stock, shippingPrice }: ProductCardProps) {
+export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, shippingPrice }: ProductCardProps) {
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
@@ -198,7 +199,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
 
           {/* Hover add-to-cart overlay (desktop only) */}
           <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo text-xs gap-1.5 rounded-xl h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30">
+            <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo font-bold text-xs gap-1.5 rounded-xl h-9 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30">
               <ShoppingCart className="w-3.5 h-3.5" />
               {t('pc.addToCart')}
             </Button>
@@ -236,13 +237,20 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
 
           <div className="space-y-2.5 pt-0.5">
             <div className="flex items-center justify-between">
-              <div className="flex items-baseline gap-2">
-                <span className="font-roboto font-extrabold text-primary text-lg tracking-tight">
-                  {formatPrice(price)}
-                </span>
-                {oldPrice && oldPrice > price && (
-                  <span className="font-roboto text-[11px] text-muted-foreground/60 line-through decoration-destructive/40">
-                    {formatPrice(oldPrice)}
+              <div className="flex flex-col items-start gap-0.5">
+                <div className="flex items-baseline gap-2">
+                  <span className="font-roboto font-extrabold text-primary text-lg tracking-tight">
+                    {formatPrice(price)}
+                  </span>
+                  {oldPrice && oldPrice > price && (
+                    <span className="font-roboto text-[11px] text-muted-foreground/60 line-through decoration-destructive/40">
+                      {formatPrice(oldPrice)}
+                    </span>
+                  )}
+                </div>
+                {priceText && (
+                  <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight">
+                    {priceText}
                   </span>
                 )}
               </div>
@@ -256,7 +264,7 @@ export default function ProductCard({ id, name, price, oldPrice, image, images, 
               <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
                 <ShoppingCart className="w-3.5 h-3.5 text-foreground" />
               </Button>
-              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo text-[11px] gap-1 rounded-lg h-8 flex-1 shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo font-bold text-[11px] gap-1 rounded-lg h-8 flex-1 shadow-sm hover:shadow-md hover:shadow-emerald-500/30 transition-all duration-300 bg-emerald-500 hover:bg-emerald-600 text-white">
                 <Zap className="w-3 h-3" />
                 {t('pc.orderNow')}
               </Button>

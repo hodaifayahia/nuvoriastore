@@ -1049,6 +1049,7 @@ export type Database = {
           offer_title: string | null
           old_price: number | null
           price: number
+          price_text: string | null
           product_type: string
           shipping_price: number | null
           short_description: string | null
@@ -1073,6 +1074,7 @@ export type Database = {
           offer_title?: string | null
           old_price?: number | null
           price: number
+          price_text?: string | null
           product_type?: string
           shipping_price?: number | null
           short_description?: string | null
@@ -1097,6 +1099,7 @@ export type Database = {
           offer_title?: string | null
           old_price?: number | null
           price?: number
+          price_text?: string | null
           product_type?: string
           shipping_price?: number | null
           short_description?: string | null

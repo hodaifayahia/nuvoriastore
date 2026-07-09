@@ -590,6 +590,7 @@ export default function IndexPage() {
                     name={p.name}
                     price={Number(p.price)}
                     oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                    priceText={(p as any).price_text}
                     image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
                     images={p.images || []}
                     mainImageIndex={p.main_image_index ?? 0}
@@ -633,6 +634,7 @@ export default function IndexPage() {
                         name={p.name}
                         price={Number(p.price)}
                         oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                    priceText={(p as any).price_text}
                         image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
                         images={p.images || []}
                         mainImageIndex={p.main_image_index ?? 0}
@@ -704,6 +706,7 @@ export default function IndexPage() {
                         name={p.name}
                         price={Number(p.price)}
                         oldPrice={p.old_price ? Number(p.old_price) : undefined}
+                    priceText={(p as any).price_text}
                         image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
                         images={p.images || []}
                         mainImageIndex={p.main_image_index ?? 0}
