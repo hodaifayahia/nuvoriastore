@@ -365,7 +365,7 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
   const { data: wilayas } = useQuery({
     queryKey: ['lp-wilayas'],
     queryFn: async () => {
-      const { data } = await supabase.from('wilayas').select('id, name, shipping_price, shipping_price_home').eq('is_active', true).order('name');
+      const { data } = await supabase.from('wilayas').select('id, name, shipping_price, shipping_price_home').eq('is_active', true).order('code', { ascending: true, nullsFirst: false });
       return data || [];
     },
   });

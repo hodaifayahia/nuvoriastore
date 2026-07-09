@@ -84,7 +84,7 @@ export default function AdminOrdersPage() {
   const { data: wilayas } = useQuery({
     queryKey: ['wilayas-list'],
     queryFn: async () => {
-      const { data } = await supabase.from('wilayas').select('name').order('name');
+      const { data } = await supabase.from('wilayas').select('name, code').order('code', { ascending: true, nullsFirst: false });
       return data?.map(w => w.name) || [];
     },
   });

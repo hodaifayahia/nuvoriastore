@@ -1776,6 +1776,7 @@ export type Database = {
       }
       wilayas: {
         Row: {
+          code: number | null
           id: string
           is_active: boolean | null
           name: string
@@ -1783,6 +1784,7 @@ export type Database = {
           shipping_price_home: number
         }
         Insert: {
+          code?: number | null
           id?: string
           is_active?: boolean | null
           name: string
@@ -1790,6 +1792,7 @@ export type Database = {
           shipping_price_home?: number
         }
         Update: {
+          code?: number | null
           id?: string
           is_active?: boolean | null
           name?: string

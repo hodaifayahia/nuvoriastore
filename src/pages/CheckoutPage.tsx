@@ -130,7 +130,7 @@ export default function CheckoutPage() {
   const { data: wilayas } = useQuery({
     queryKey: ['wilayas'],
     queryFn: async () => {
-      const { data } = await supabase.from('wilayas').select('*').eq('is_active', true).order('name');
+      const { data } = await supabase.from('wilayas').select('*').eq('is_active', true).order('code', { ascending: true, nullsFirst: false });
       return data || [];
     },
   });
