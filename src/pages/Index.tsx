@@ -626,7 +626,7 @@ export default function IndexPage() {
             ) : (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-                  {(allProducts?.slice(0, 8) || []).map((p) => (
+                  {(allProducts?.slice(0, 4) || []).map((p) => (
                     <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
                       <ProductCard
                         id={p.id}
@@ -643,7 +643,7 @@ export default function IndexPage() {
                     </div>
                   ))}
                 </div>
-                {(allProducts?.length || 0) > 8 && (
+                {(allProducts?.length || 0) > 4 && (
                   <div className="mt-10 flex justify-center">
                     <Link to="/products" className="btn-neon inline-flex items-center gap-2 px-7 py-3 rounded-full min-h-[48px] font-semibold">
                       {txt('new_viewAll', 'عرض كل المنتجات')} <ChevronRight className="w-4 h-4" />
