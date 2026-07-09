@@ -200,7 +200,7 @@ const App = () => (
         </LanguageProvider>
       </TooltipProvider>
       </StoreThemeProvider>
-      </WishlistProvider>
+      
     </CartProvider>
   </QueryClientProvider>
 );
