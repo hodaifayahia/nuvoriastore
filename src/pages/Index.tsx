@@ -247,7 +247,30 @@ export default function IndexPage() {
 
       {/* ─────────── HERO CAROUSEL (banners only, autoplay 2s) ─────────── */}
       {showSection('hero') && (() => {
-        const slides = (heroSlides && heroSlides.length > 0 ? heroSlides : DEFAULT_HERO_SLIDES) as any[];
+        // Build product-based slides from featured (or newest) products with real photos
+        const productPool = (featuredProducts.length > 0 ? featuredProducts : (allProducts || []).slice(0, 6));
+        const productSlides = productPool
+          .map((p: any) => {
+            const img = p.images?.[p.main_image_index ?? 0] || p.images?.[0];
+            if (!img) return null;
+            return {
+              url: img,
+              alt: p.name,
+              title: p.name,
+              subtitle: p.short_description || p.description || '',
+              price: p.price ? `${p.price} د.ج` : '',
+              oldPrice: p.old_price ? `${p.old_price} د.ج` : '',
+              link: `/product/${p.id}`,
+              badge: p.is_featured ? 'مميّز' : 'وصل حديثاً',
+              cta: 'اشترِ الآن',
+            };
+          })
+          .filter(Boolean) as any[];
+
+        const customSlides = (heroSlides && heroSlides.length > 0 ? heroSlides : []) as any[];
+        const slides = customSlides.length > 0
+          ? customSlides
+          : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
         const activeTitle: string = active.title || active.alt || 'تجربة ذكية لكل ركن في منزلك';
@@ -397,12 +420,12 @@ export default function IndexPage() {
                       {/* Product image */}
                       <Link
                         to={activeCtaHref}
-                        className="block w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 border-4 border-white rotate-3 hover:rotate-0 transition-transform duration-500 bg-slate-100"
+                        className="group/img relative flex items-center justify-center w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 border-4 border-white bg-gradient-to-br from-slate-50 to-white hover:scale-[1.02] transition-transform duration-500"
                       >
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
-                          className="w-full h-full object-cover"
+                          className="max-w-[85%] max-h-[85%] w-auto h-auto object-contain mx-auto my-auto drop-shadow-2xl"
                         />
                       </Link>
 
