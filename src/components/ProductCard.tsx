@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice } from '@/lib/format';
+import { optimizeImage, optimizedSrcSet } from '@/lib/image';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -116,10 +117,13 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {allImages.length > 0 ? (
             <img
-              src={allImages[currentIndex]}
+              src={optimizeImage(allImages[currentIndex], 400)}
+              srcSet={optimizedSrcSet(allImages[currentIndex], 400)}
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px"
               alt={name}
-              className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/10">
