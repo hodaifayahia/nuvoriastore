@@ -231,13 +231,16 @@ export default function IndexPage() {
   }
 
   const bentoCats = useMemo(() => {
-    return (categoriesData || [])
+    const list = (categoriesData || [])
       .filter((c: any) => c?.name)
       .map((c: any) => ({
         name: c.name as string,
         image: c.image as string | undefined,
         icon: (c.icon && ICON_MAP[c.icon]) || Tag,
       }));
+    // eslint-disable-next-line no-console
+    if (typeof window !== 'undefined') console.log('[home] bentoCats', list.length, 'categoriesData', categoriesData);
+    return list;
   }, [categoriesData]);
 
   const extraCats = useMemo(() => {
