@@ -245,7 +245,7 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             </div>
 
             <div className="flex items-center gap-1.5 w-full">
-              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
+              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="hidden sm:flex font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 items-center justify-center">
                 <ShoppingCart className="w-3.5 h-3.5 text-foreground" />
               </Button>
               <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo font-bold text-[11px] gap-1 rounded-lg h-8 flex-1 shadow-sm hover:shadow-md hover:shadow-emerald-500/30 transition-all duration-300 bg-emerald-500 hover:bg-emerald-600 text-white">
