@@ -247,7 +247,30 @@ export default function IndexPage() {
 
       {/* ─────────── HERO CAROUSEL (banners only, autoplay 2s) ─────────── */}
       {showSection('hero') && (() => {
-        const slides = (heroSlides && heroSlides.length > 0 ? heroSlides : DEFAULT_HERO_SLIDES) as any[];
+        // Build product-based slides from featured (or newest) products with real photos
+        const productPool = (featuredProducts.length > 0 ? featuredProducts : (allProducts || []).slice(0, 6));
+        const productSlides = productPool
+          .map((p: any) => {
+            const img = p.images?.[p.main_image_index ?? 0] || p.images?.[0];
+            if (!img) return null;
+            return {
+              url: img,
+              alt: p.name,
+              title: p.name,
+              subtitle: p.short_description || p.description || '',
+              price: p.price ? `${p.price} د.ج` : '',
+              oldPrice: p.old_price ? `${p.old_price} د.ج` : '',
+              link: `/product/${p.id}`,
+              badge: p.is_featured ? 'مميّز' : 'وصل حديثاً',
+              cta: 'اشترِ الآن',
+            };
+          })
+          .filter(Boolean) as any[];
+
+        const customSlides = (heroSlides && heroSlides.length > 0 ? heroSlides : []) as any[];
+        const slides = customSlides.length > 0
+          ? customSlides
+          : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
         const activeTitle: string = active.title || active.alt || 'تجربة ذكية لكل ركن في منزلك';
