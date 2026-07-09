@@ -305,14 +305,6 @@ export default function Navbar() {
                 );
               })}
               <Link
-                to="/wishlist"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
-              >
-                <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : ''}`} />
-                {t('nav.wishlist')} {wishlistCount > 0 && `(${wishlistCount})`}
-              </Link>
-              <Link
                 to={user ? '/dashboard' : '/auth'}
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
