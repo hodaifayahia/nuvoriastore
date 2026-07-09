@@ -111,8 +111,8 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
 
   return (
     <>
-    <Link to={`/product/${id}`} className="group block animate-fade-in">
-      <div className="bg-card rounded-3xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
+    <Link to={`/product/${id}`} className="group block animate-fade-in h-full">
+      <div className="bg-card rounded-3xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300 h-full flex flex-col">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           <ProductImage
