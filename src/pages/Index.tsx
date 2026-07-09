@@ -656,10 +656,13 @@ export default function IndexPage() {
         </section>
       )}
 
-      {/* ─────────── PRODUCTS BY CATEGORY (first two seeded cats) ─────────── */}
-      {bentoCats.slice(0, 2).map((cat, idx) => {
-        const catProducts = (allProducts || [])
-          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name))
+      {/* ─────────── PRODUCTS BY CATEGORY (all categories, randomized picks) ─────────── */}
+      {bentoCats.map((cat, idx) => {
+        const pool = (allProducts || [])
+          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name));
+        // Shuffle so each visit shows different products from the category
+        const catProducts = [...pool]
+          .sort(() => Math.random() - 0.5)
           .slice(0, 4);
         if (catProducts.length === 0) return null;
         const CatIcon = cat.icon;
