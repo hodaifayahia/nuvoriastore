@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice } from '@/lib/format';
+import { optimizeImage, optimizedSrcSet } from '@/lib/image';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
