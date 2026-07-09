@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, X, Star, ChevronRight, ChevronLeft, Zap, Share2, Heart, ExternalLink } from 'lucide-react';
+import { ShoppingCart, X, Star, ChevronRight, ChevronLeft, Zap, Share2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from '@/lib/format';
 import { useTranslation } from '@/i18n';
