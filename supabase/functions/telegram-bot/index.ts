@@ -272,7 +272,12 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
     .range(from, to);
 
   if (!orders || orders.length === 0) {
-    await editMessage(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", backToMainKeyboard());
+    await editMessage(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", {
+      inline_keyboard: [
+        [{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }],
+        [{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }],
+      ],
+    });
     return;
   }
 
