@@ -131,6 +131,40 @@ export default function SingleProductPage() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponLoading, setCouponLoading] = useState(false);
+  const [guestLimitOpen, setGuestLimitOpen] = useState(false);
+
+  const draftKey = `sp_order_draft:${id}`;
+
+  // Restore form draft after returning from sign-in
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const raw = sessionStorage.getItem(draftKey);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.orderName) setOrderName(d.orderName);
+      if (d.orderPhone) setOrderPhone(d.orderPhone);
+      if (d.orderWilayaId) setOrderWilayaId(d.orderWilayaId);
+      if (d.orderBaladiya) setOrderBaladiya(d.orderBaladiya);
+      if (d.orderDeliveryType) setOrderDeliveryType(d.orderDeliveryType);
+      if (d.orderAddress) setOrderAddress(d.orderAddress);
+      if (d.paymentMethod) setPaymentMethod(d.paymentMethod);
+      if (d.couponCode) setCouponCode(d.couponCode);
+      sessionStorage.removeItem(draftKey);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const saveDraftAndSignIn = () => {
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify({
+        orderName, orderPhone, orderWilayaId, orderBaladiya,
+        orderDeliveryType, orderAddress, paymentMethod, couponCode,
+      }));
+    } catch {}
+    setGuestLimitOpen(false);
+    navigate(`/auth?redirect=${encodeURIComponent(`/product/${id}`)}`);
+  };
 
   // Touch swipe for images
   const [touchStart, setTouchStart] = useState<number | null>(null);
