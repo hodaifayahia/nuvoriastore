@@ -664,6 +664,7 @@ export default function SingleProductPage() {
 
   return (
     <div className="container py-6 md:py-10">
+      <GuestLimitDialog open={guestLimitOpen} onOpenChange={setGuestLimitOpen} onSignIn={saveDraftAndSignIn} />
       <SEO
         title={`${product.name} — NuvoriaStore`}
         description={(product.description || product.name).toString().slice(0, 160)}
