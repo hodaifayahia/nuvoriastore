@@ -753,17 +753,24 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            <div className="flex items-baseline gap-3 bg-gradient-to-l from-primary/5 to-transparent rounded-2xl p-4 -mx-2">
-              <p className="font-roboto font-extrabold text-3xl md:text-4xl text-primary">
-                {formatPrice(effectivePrice)}
-              </p>
-              {product.old_price && Number(product.old_price) > effectivePrice && (
-                <>
-                  <span className="font-roboto text-lg text-muted-foreground/50 line-through decoration-destructive/40">{formatPrice(Number(product.old_price))}</span>
-                  <Badge className="bg-gradient-to-l from-red-500 to-red-600 text-white border-0 font-cairo text-xs rounded-full px-3 shadow-sm shadow-red-500/20">
-                    -{Math.round((1 - effectivePrice / Number(product.old_price)) * 100)}%
-                  </Badge>
-                </>
+            <div className="flex flex-col gap-1 bg-gradient-to-l from-primary/5 to-transparent rounded-2xl p-4 -mx-2">
+              <div className="flex items-baseline gap-3">
+                <p className="font-roboto font-extrabold text-3xl md:text-4xl text-primary">
+                  {formatPrice(effectivePrice)}
+                </p>
+                {product.old_price && Number(product.old_price) > effectivePrice && (
+                  <>
+                    <span className="font-roboto text-lg text-muted-foreground/50 line-through decoration-destructive/40">{formatPrice(Number(product.old_price))}</span>
+                    <Badge className="bg-gradient-to-l from-red-500 to-red-600 text-white border-0 font-cairo text-xs rounded-full px-3 shadow-sm shadow-red-500/20">
+                      -{Math.round((1 - effectivePrice / Number(product.old_price)) * 100)}%
+                    </Badge>
+                  </>
+                )}
+              </div>
+              {(product as any).price_text && (
+                <p className="font-cairo text-sm text-muted-foreground font-medium">
+                  {(product as any).price_text}
+                </p>
               )}
             </div>
 
@@ -1324,7 +1331,7 @@ export default function SingleProductPage() {
                     {t('sp.addToCart')}
                   </Button>
                   <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/25">
+                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/30">
                     {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                     {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
                   </Button>
