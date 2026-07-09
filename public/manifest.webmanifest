@@ -2,7 +2,7 @@
   "name": "NuvoriaStore Admin",
   "short_name": "Nuvoria Admin",
   "description": "NuvoriaStore admin dashboard — manage products, orders and store settings.",
-  "start_url": "/akrem-control/login?source=pwa",
+  "start_url": "/nuvoria-store/login?source=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

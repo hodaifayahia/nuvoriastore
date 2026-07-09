@@ -150,7 +150,7 @@ const App = () => (
             <Route path="/g/:id" element={<PublicGeneratedLandingPage />} />
 
             {/* Admin */}
-            <Route path="/akrem-control/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />
+            <Route path="/nuvoria-store/login" element={<LanguageProvider><AdminLoginPage /></LanguageProvider>} />
             <Route path="/admin" element={<LanguageProvider><AdminLayout><AdminDashboardPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/products" element={<LanguageProvider><AdminLayout><AdminProductsPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/orders" element={<LanguageProvider><AdminLayout><AdminOrdersPage /></AdminLayout></LanguageProvider>} />
