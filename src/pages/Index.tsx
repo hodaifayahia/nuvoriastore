@@ -666,7 +666,14 @@ export default function IndexPage() {
           .slice(0, 4);
         if (catProducts.length === 0) return null;
         const CatIcon = cat.icon;
-        const accent = idx === 0 ? 'from-primary/20 to-transparent' : 'from-amber-400/20 to-transparent';
+        const accents = [
+          'from-primary/20 to-transparent',
+          'from-amber-400/20 to-transparent',
+          'from-emerald-400/20 to-transparent',
+          'from-fuchsia-400/20 to-transparent',
+          'from-sky-400/20 to-transparent',
+        ];
+        const accent = accents[idx % accents.length];
         return (
           <section key={cat.name} className="px-4 sm:px-6 lg:px-8 pb-16">
             <div className="max-w-6xl mx-auto">
