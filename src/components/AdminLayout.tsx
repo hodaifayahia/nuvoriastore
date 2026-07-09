@@ -257,7 +257,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/akrem-control/login');
+        navigate('/nuvoria-store/login');
       } else {
         checkAdmin(session.user.id).finally(() => setLoading(false));
       }
@@ -266,7 +266,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setLoading(false);
-        navigate('/akrem-control/login');
+        navigate('/nuvoria-store/login');
       } else {
         checkAdmin(session.user.id).finally(() => setLoading(false));
       }
@@ -276,7 +276,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/akrem-control/login');
+    navigate('/nuvoria-store/login');
   };
 
   const clearNotifications = () => setNotifications([]);
