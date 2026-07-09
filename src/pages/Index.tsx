@@ -501,6 +501,11 @@ export default function IndexPage() {
 
 
       {/* ─────────── CATEGORY BENTO (building layout) ─────────── */}
+      {showSection('categories') && bentoCats.length === 0 && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24" aria-hidden="true">
+          <div className="max-w-7xl mx-auto min-h-[560px] sm:min-h-[720px] md:min-h-[760px] lg:min-h-[900px]" />
+        </section>
+      )}
       {showSection('categories') && bentoCats.length > 0 && (() => {
         const [c0, c1, c2, c3, c4] = [0, 1, 2, 3, 4].map((i) => bentoCats[i] || bentoCats[i % bentoCats.length]);
 
@@ -591,7 +596,12 @@ export default function IndexPage() {
 
 
       {/* ─────────── FEATURED PRODUCTS (admin picks) ─────────── */}
-      {showSection('featured') && featuredProducts.length > 0 && (
+      {showSection('featured') && isLoading && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16" aria-hidden="true">
+          <div className="max-w-6xl mx-auto min-h-[520px]" />
+        </section>
+      )}
+      {showSection('featured') && !isLoading && featuredProducts.length > 0 && (
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-8 gap-4">
