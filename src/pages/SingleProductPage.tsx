@@ -173,16 +173,30 @@ export default function SingleProductPage() {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [id]);
 
-  // Sticky bar IntersectionObserver
+  // Sticky bar: show on scroll, hide when order form is visible
   useEffect(() => {
     const el = orderFormRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyBar(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    let formVisible = false;
+    const updateFromScroll = () => {
+      const scrolled = window.scrollY > 300;
+      setShowStickyBar(scrolled && !formVisible);
+    };
+    const observer = el
+      ? new IntersectionObserver(
+          ([entry]) => {
+            formVisible = entry.isIntersecting;
+            updateFromScroll();
+          },
+          { threshold: 0.1 }
+        )
+      : null;
+    if (el && observer) observer.observe(el);
+    window.addEventListener('scroll', updateFromScroll, { passive: true });
+    updateFromScroll();
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('scroll', updateFromScroll);
+    };
   }, []);
 
   const handleReceiptFile = (file: File | null) => {
