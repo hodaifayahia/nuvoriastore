@@ -78,7 +78,9 @@ Deno.serve(async (req) => {
       } else if (data.startsWith("order_status:")) {
         const parts = data.split(":");
         const orderId = parts[1];
-        const status = parts.slice(2).join(":");
+        const code = parts[2];
+        const statusMap: Record<string, string> = { n: "جديد", c: "مؤكد", p: "قيد التحضير", s: "تم الشحن", d: "تم التسليم", x: "ملغي" };
+        const status = statusMap[code] || code;
         await handleOrderStatusUpdate(supabase, botToken, chatId, orderId, status, messageId);
       } else if (data.startsWith("product_detail:")) {
         const productId = data.split(":")[1];
