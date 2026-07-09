@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-const MIN_FORM_TIME_MS = 3000;
+const MIN_FORM_TIME_MS = 0;
 export const GUEST_ORDER_LIMIT = 2;
 
 export type OrderGuardResult = {
