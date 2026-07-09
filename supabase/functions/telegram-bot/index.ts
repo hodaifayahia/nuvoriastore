@@ -295,6 +295,7 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
   if (page < totalPages - 1) navRow.push({ text: "التالي ➡️", callback_data: `orders_page:${page + 1}` });
   if (navRow.length > 0) buttons.push(navRow);
 
+  buttons.push([{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }]);
   buttons.push([{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }]);
 
   await editMessage(token, chatId, messageId, msg, { inline_keyboard: buttons });
