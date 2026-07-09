@@ -265,23 +265,6 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
       </div>
     </Link>
 
-    {/* Quick View Modal */}
-    {quickViewOpen && (
-      <QuickViewModal
-        product={{
-          id,
-          name,
-          price,
-          old_price: oldPrice,
-          images: allImages,
-          category,
-          stock,
-          shipping_price: shippingPrice,
-        }}
-        reviewStats={reviewStats ?? undefined}
-        onClose={() => setQuickViewOpen(false)}
-      />
-    )}
     </>
   );
 }
