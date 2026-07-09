@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -19,11 +19,15 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
+  const redirectTo = searchParams.get('redirect');
+  const postLoginTarget = redirectTo && redirectTo.startsWith('/') ? redirectTo : '/dashboard';
+
   useEffect(() => {
-    if (!authLoading && user) navigate('/dashboard');
-  }, [user, authLoading, navigate]);
+    if (!authLoading && user) navigate(postLoginTarget, { replace: true });
+  }, [user, authLoading, navigate, postLoginTarget]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -37,9 +41,10 @@ export default function AuthPage() {
       toast({ title: t('auth.error.loginFailed'), description: error.message, variant: 'destructive' });
     } else {
       toast({ title: t('auth.welcome') });
-      navigate('/dashboard');
+      navigate(postLoginTarget, { replace: true });
     }
   };
+
 
   const handleSignup = async () => {
     if (!email || !password) {
