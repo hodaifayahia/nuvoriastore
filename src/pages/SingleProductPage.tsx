@@ -20,6 +20,7 @@ import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 import { useTranslation } from '@/i18n';
 import { useOrderGuard } from '@/lib/orderGuard';
+import GuestLimitDialog from '@/components/GuestLimitDialog';
 
 function StarRating({ value, onChange, readonly = false }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
   return (
@@ -130,6 +131,40 @@ export default function SingleProductPage() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponLoading, setCouponLoading] = useState(false);
+  const [guestLimitOpen, setGuestLimitOpen] = useState(false);
+
+  const draftKey = `sp_order_draft:${id}`;
+
+  // Restore form draft after returning from sign-in
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const raw = sessionStorage.getItem(draftKey);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.orderName) setOrderName(d.orderName);
+      if (d.orderPhone) setOrderPhone(d.orderPhone);
+      if (d.orderWilayaId) setOrderWilayaId(d.orderWilayaId);
+      if (d.orderBaladiya) setOrderBaladiya(d.orderBaladiya);
+      if (d.orderDeliveryType) setOrderDeliveryType(d.orderDeliveryType);
+      if (d.orderAddress) setOrderAddress(d.orderAddress);
+      if (d.paymentMethod) setPaymentMethod(d.paymentMethod);
+      if (d.couponCode) setCouponCode(d.couponCode);
+      sessionStorage.removeItem(draftKey);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const saveDraftAndSignIn = () => {
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify({
+        orderName, orderPhone, orderWilayaId, orderBaladiya,
+        orderDeliveryType, orderAddress, paymentMethod, couponCode,
+      }));
+    } catch {}
+    setGuestLimitOpen(false);
+    navigate(`/auth?redirect=${encodeURIComponent(`/product/${id}`)}`);
+  };
 
   // Touch swipe for images
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -555,14 +590,14 @@ export default function SingleProductPage() {
 
     const guard = await orderGuard.verify({ phone: normalizedPhone, userId: user?.id });
     if (!guard.ok) {
-      toast({
-        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
-        description: guard.message,
-        variant: 'destructive',
-      });
-      if (guard.reason === 'guest_limit') navigate('/auth');
+      if (guard.reason === 'guest_limit') {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: 'تعذر إرسال الطلب', description: guard.message, variant: 'destructive' });
+      }
       return;
     }
+
 
     setSubmittingOrder(true);
     try {
@@ -613,12 +648,8 @@ export default function SingleProductPage() {
         toast({ title: t('sp.error'), description: t('sp.invalidPhone'), variant: 'destructive' });
         orderFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (message.includes('guest_order_limit_reached')) {
-        toast({
-          title: 'يرجى إنشاء حساب',
-          description: 'لقد وصلت للحد الأقصى (2) من الطلبات كزائر. الرجاء تسجيل الدخول للمتابعة.',
-          variant: 'destructive',
-        });
-        navigate('/auth');
+        setGuestLimitOpen(true);
+
       } else {
         toast({ title: t('sp.error'), description: t('sp.orderError'), variant: 'destructive' });
       }
@@ -633,6 +664,7 @@ export default function SingleProductPage() {
 
   return (
     <div className="container py-6 md:py-10">
+      <GuestLimitDialog open={guestLimitOpen} onOpenChange={setGuestLimitOpen} onSignIn={saveDraftAndSignIn} />
       <SEO
         title={`${product.name} — NuvoriaStore`}
         description={(product.description || product.name).toString().slice(0, 160)}

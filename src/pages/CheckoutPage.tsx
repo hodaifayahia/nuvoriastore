@@ -17,6 +17,7 @@ import { Copy, Upload, CheckCircle, LogIn, Truck, Building2, Home, X } from 'luc
 import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/FormSettingsTab';
 import { useTranslation } from '@/i18n';
 import { useOrderGuard } from '@/lib/orderGuard';
+import GuestLimitDialog from '@/components/GuestLimitDialog';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
@@ -55,6 +56,38 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [abandonedSaved, setAbandonedSaved] = useState(false);
+  const [guestLimitOpen, setGuestLimitOpen] = useState(false);
+
+  const DRAFT_KEY = 'checkout_draft';
+
+  // Restore draft (e.g., after returning from sign-in)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.name) setName(d.name);
+      if (d.phone) setPhone(d.phone);
+      if (d.wilayaId) setWilayaId(d.wilayaId);
+      if (d.baladiyaName) setBaladiyaName(d.baladiyaName);
+      if (d.deliveryType) setDeliveryType(d.deliveryType);
+      if (d.address) setAddress(d.address);
+      if (d.paymentMethod) setPaymentMethod(d.paymentMethod);
+      if (d.couponCode) setCouponCode(d.couponCode);
+      sessionStorage.removeItem(DRAFT_KEY);
+    } catch {}
+  }, []);
+
+  const saveDraftAndSignIn = () => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+        name, phone, wilayaId, baladiyaName, deliveryType, address, paymentMethod, couponCode,
+      }));
+    } catch {}
+    setGuestLimitOpen(false);
+    navigate('/auth?redirect=%2Fcheckout');
+  };
+
 
   const validatePhone = (v: string) => /^0[567]\d{8}$/.test(v);
   const validatePhoneInternational = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s/g, ''));
@@ -267,14 +300,14 @@ export default function CheckoutPage() {
 
     const guard = await orderGuard.verify({ phone, userId: user?.id });
     if (!guard.ok) {
-      toast({
-        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
-        description: guard.message,
-        variant: 'destructive',
-      });
-      if (guard.reason === 'guest_limit') navigate('/auth');
+      if (guard.reason === 'guest_limit') {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: 'تعذر إرسال الطلب', description: guard.message, variant: 'destructive' });
+      }
       return;
     }
+
 
     setSubmitting(true);
     try {
@@ -328,8 +361,13 @@ export default function CheckoutPage() {
       setOrderSubmitted(true);
       clearCart();
       navigate(`/order-confirmation/${order.order_number}`);
-    } catch (err) {
-      toast({ title: t('checkout.err.title'), description: t('checkout.err.submitFailed'), variant: 'destructive' });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('guest_order_limit_reached')) {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: t('checkout.err.title'), description: t('checkout.err.submitFailed'), variant: 'destructive' });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -350,7 +388,9 @@ export default function CheckoutPage() {
 
   return (
     <div className="container py-8 max-w-4xl">
+      <GuestLimitDialog open={guestLimitOpen} onOpenChange={setGuestLimitOpen} onSignIn={saveDraftAndSignIn} />
       <h1 className="font-cairo font-bold text-3xl mb-8">{t('checkout.title')}</h1>
+
 
       {!user && (
         <Link to="/auth" className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 hover:bg-primary/10 transition-colors">
