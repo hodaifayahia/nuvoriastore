@@ -101,16 +101,21 @@ export default function IndexPage() {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { data: allProducts, isLoading } = useQuery({
-    queryKey: ['all-active-products'],
+    queryKey: ['all-active-products', 'home-v2'],
     queryFn: async () => {
+      // Only fetch the columns the homepage actually renders, and cap the
+      // payload — the full catalogue lives on /products with its own pager.
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('id,name,price,old_price,price_text,short_description,images,main_image_index,category,stock,shipping_price,is_featured,created_at')
         .eq('is_active', true)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(60);
       if (error) throw error;
       return data;
     },
+    staleTime: 2 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: heroSlides } = useQuery({
