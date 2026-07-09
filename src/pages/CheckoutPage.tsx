@@ -388,7 +388,9 @@ export default function CheckoutPage() {
 
   return (
     <div className="container py-8 max-w-4xl">
+      <GuestLimitDialog open={guestLimitOpen} onOpenChange={setGuestLimitOpen} onSignIn={saveDraftAndSignIn} />
       <h1 className="font-cairo font-bold text-3xl mb-8">{t('checkout.title')}</h1>
+
 
       {!user && (
         <Link to="/auth" className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 hover:bg-primary/10 transition-colors">
