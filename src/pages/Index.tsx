@@ -425,7 +425,7 @@ export default function IndexPage() {
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
-                          className="max-w-[85%] max-h-[85%] w-auto h-auto object-contain mx-auto my-auto drop-shadow-2xl"
+                          className="w-full h-full object-cover"
                         />
                       </Link>
 
