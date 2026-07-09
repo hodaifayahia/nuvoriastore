@@ -188,19 +188,6 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             <Heart className={`w-4 h-4 ${wishlisted ? 'fill-current' : ''}`} />
           </button>
 
-          {/* Quick View button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setQuickViewOpen(true);
-            }}
-            className="absolute bottom-3 left-3 w-9 h-9 rounded-full bg-background/70 backdrop-blur-md flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-background hover:text-foreground hover:scale-110 shadow-md"
-            aria-label={t('pc.quickView')}
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-
           {/* Hover add-to-cart overlay (desktop only) */}
           <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo font-bold text-xs gap-1.5 rounded-xl h-9 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30">
