@@ -120,7 +120,7 @@ const RouteFallback = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
-      <WishlistProvider>
+      
       <StoreThemeProvider>
       <TooltipProvider>
         <Toaster />
