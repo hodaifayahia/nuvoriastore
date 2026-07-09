@@ -300,14 +300,14 @@ export default function CheckoutPage() {
 
     const guard = await orderGuard.verify({ phone, userId: user?.id });
     if (!guard.ok) {
-      toast({
-        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
-        description: guard.message,
-        variant: 'destructive',
-      });
-      if (guard.reason === 'guest_limit') navigate('/auth');
+      if (guard.reason === 'guest_limit') {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: 'تعذر إرسال الطلب', description: guard.message, variant: 'destructive' });
+      }
       return;
     }
+
 
     setSubmitting(true);
     try {
