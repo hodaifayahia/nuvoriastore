@@ -95,7 +95,7 @@ const NAV_GROUPS = [
   {
     groupKey: 'sidebar.marketing',
     items: [
-      { href: '/admin/landing-generator', key: 'sidebar.landingGenerator', icon: Sparkles },
+      // { href: '/admin/landing-generator', key: 'sidebar.landingGenerator', icon: Sparkles },
     ],
   },
 ];
