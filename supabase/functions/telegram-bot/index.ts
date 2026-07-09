@@ -53,6 +53,15 @@ Deno.serve(async (req) => {
       } else if (data === "menu:orders" || data.startsWith("orders_page:")) {
         const page = data.startsWith("orders_page:") ? parseInt(data.split(":")[1]) : 0;
         await handleOrders(supabase, botToken, chatId, page, messageId);
+      } else if (data === "orders_search") {
+        await supabase.from("telegram_bot_state").upsert({
+          chat_id: chatId,
+          state: { action: "find_order" },
+          updated_at: new Date().toISOString(),
+        });
+        await sendMessage(botToken, chatId, "🔍 أرسل رقم الطلب (مثال: <b>ORD-001</b> أو <b>001</b>):\n\nأو أرسل /cancel للإلغاء", {
+          inline_keyboard: [[{ text: "❌ إلغاء", callback_data: "menu:orders" }]],
+        });
       } else if (data === "menu:products" || data.startsWith("products_page:")) {
         const page = data.startsWith("products_page:") ? parseInt(data.split(":")[1]) : 0;
         await handleProducts(supabase, botToken, chatId, page, messageId);
