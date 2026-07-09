@@ -289,29 +289,29 @@ export default function LandingPage() {
         currency: 'DZD',
       });
 
-      const { data: order, error } = await supabase.from('orders').insert({
-        order_number: '',
-        customer_name: orderName,
-        customer_phone: orderPhone,
-        wilaya_id: orderWilayaId || null,
-        baladiya: orderBaladiya || null,
-        delivery_type: orderDeliveryType || 'office',
-        address: orderAddress || null,
-        subtotal: displayPrice,
-        shipping_cost: shippingCost,
-        total_amount: total,
-        payment_method: 'cod',
-        landing_page_id: id,
-      } as any).select().single();
-      if (error) throw error;
-
-      await supabase.from('order_items').insert({
-        order_id: order.id,
-        product_id: product.id,
-        variant_id: selectedVariantId || null,
-        quantity: 1,
-        unit_price: displayPrice,
+      const { data: rpcData, error } = await supabase.rpc('create_public_order', {
+        p_order: {
+          customer_name: orderName,
+          customer_phone: orderPhone,
+          wilaya_id: orderWilayaId || null,
+          baladiya: orderBaladiya || null,
+          delivery_type: orderDeliveryType || 'office',
+          address: orderAddress || null,
+          subtotal: displayPrice,
+          shipping_cost: shippingCost,
+          total_amount: total,
+          payment_method: 'cod',
+          landing_page_id: id,
+        },
+        p_items: [{
+          product_id: product.id,
+          variant_id: selectedVariantId || null,
+          quantity: 1,
+          unit_price: displayPrice,
+        }],
       });
+      if (error) throw error;
+      const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
 
       trackEvent('Purchase', {
         content_ids: [product.id],
