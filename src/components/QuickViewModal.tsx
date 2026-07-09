@@ -204,18 +204,6 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => {
-                    toggleWishlist({ id: product.id, name: product.name, price: product.price, image: images[0] || '' });
-                    toast({ title: wishlisted ? t('qv.removed') : t('qv.addedToWishlist') });
-                  }}
-                  className={`flex-1 font-cairo text-xs gap-1.5 rounded-xl h-9 ${wishlisted ? 'text-destructive' : 'text-muted-foreground'}`}
-                >
-                  <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-current' : ''}`} />
-                  {wishlisted ? t('qv.inWishlist') : t('qv.addToWishlist')}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
                   onClick={handleShare}
                   className="flex-1 font-cairo text-xs gap-1.5 rounded-xl h-9 text-muted-foreground"
                 >
