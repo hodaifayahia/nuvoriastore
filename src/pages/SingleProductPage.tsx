@@ -34,6 +34,10 @@ function StarRating({ value, onChange, readonly = false }: { value: number; onCh
   );
 }
 
+const ALGERIAN_PHONE_REGEX = /^0[567]\d{8}$/;
+
+const normalizePhone = (value: string) => value.replace(/\D/g, '').slice(0, 10);
+
 function CountdownTimer({ endsAt, title }: { endsAt: string; title?: string }) {
   const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -534,17 +538,22 @@ export default function SingleProductPage() {
       return;
     }
     const newErrors: Record<string, string> = {};
+    const normalizedPhone = normalizePhone(orderPhone);
     if (!orderName.trim()) newErrors.orderName = t('sp.enterFullName');
-    if (!orderPhone.trim()) newErrors.orderPhone = t('sp.enterPhone');
-    else if (!/^0[567]\d{8}$/.test(orderPhone)) newErrors.orderPhone = t('sp.invalidPhone');
+    if (!normalizedPhone) newErrors.orderPhone = t('sp.enterPhone');
+    else if (!ALGERIAN_PHONE_REGEX.test(normalizedPhone)) newErrors.orderPhone = t('sp.invalidPhone');
     if (!orderWilayaId) newErrors.orderWilayaId = t('sp.selectWilaya');
     if (!orderDeliveryType) newErrors.orderDeliveryType = t('sp.selectDeliveryType');
     if (!paymentMethod) newErrors.paymentMethod = t('sp.selectPaymentMethod');
     if (['baridimob', 'flexy', 'binance', 'vodafone', 'redotpay'].includes(paymentMethod) && !receiptFile) newErrors.receiptFile = t('sp.attachReceiptError');
     setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (Object.keys(newErrors).length > 0) {
+      toast({ title: t('sp.error'), description: Object.values(newErrors)[0], variant: 'destructive' });
+      orderFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
 
-    const guard = await orderGuard.verify({ phone: orderPhone, userId: user?.id });
+    const guard = await orderGuard.verify({ phone: normalizedPhone, userId: user?.id });
     if (!guard.ok) {
       toast({
         title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
@@ -577,7 +586,7 @@ export default function SingleProductPage() {
       const { data: rpcData, error } = await supabase.rpc('create_public_order', {
         p_order: {
           customer_name: orderName,
-          customer_phone: orderPhone,
+          customer_phone: normalizedPhone,
           wilaya_id: orderWilayaId,
           baladiya: orderBaladiya || null,
           delivery_type: orderDeliveryType || null,
@@ -597,8 +606,22 @@ export default function SingleProductPage() {
       const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
       // Telegram notification is handled server-side by a database trigger.
       navigate(`/order-confirmation/${order.order_number}`);
-    } catch (err) {
-      toast({ title: t('sp.error'), description: t('sp.orderError'), variant: 'destructive' });
+    } catch (err: any) {
+      const message = String(err?.message || '');
+      if (message.includes('invalid_algerian_phone')) {
+        setErrors(prev => ({ ...prev, orderPhone: t('sp.invalidPhone') }));
+        toast({ title: t('sp.error'), description: t('sp.invalidPhone'), variant: 'destructive' });
+        orderFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (message.includes('guest_order_limit_reached')) {
+        toast({
+          title: 'يرجى إنشاء حساب',
+          description: 'لقد وصلت للحد الأقصى (2) من الطلبات كزائر. الرجاء تسجيل الدخول للمتابعة.',
+          variant: 'destructive',
+        });
+        navigate('/auth');
+      } else {
+        toast({ title: t('sp.error'), description: t('sp.orderError'), variant: 'destructive' });
+      }
     } finally {
       setSubmittingOrder(false);
     }
@@ -911,9 +934,22 @@ export default function SingleProductPage() {
                   </div>
                   <div>
                     <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
-                    <Input value={orderPhone} onChange={e => { setOrderPhone(e.target.value.replace(/\D/g, '').slice(0, 10)); setErrors(prev => ({ ...prev, orderPhone: '' })); }}
+                    <Input value={orderPhone} onChange={e => {
+                        const nextPhone = normalizePhone(e.target.value);
+                        setOrderPhone(nextPhone);
+                        setErrors(prev => ({
+                          ...prev,
+                          orderPhone: nextPhone.length === 10 && !ALGERIAN_PHONE_REGEX.test(nextPhone) ? t('sp.invalidPhone') : '',
+                        }));
+                      }}
+                      onBlur={() => {
+                        if (orderPhone && !ALGERIAN_PHONE_REGEX.test(orderPhone)) {
+                          setErrors(prev => ({ ...prev, orderPhone: t('sp.invalidPhone') }));
+                        }
+                      }}
                       type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}"
-                      placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive' : ''}`} dir="ltr" />
+                      aria-invalid={!!errors.orderPhone}
+                      placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive focus-visible:ring-destructive' : ''}`} dir="ltr" />
                     {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
                   </div>
                 </div>
