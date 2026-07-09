@@ -158,10 +158,12 @@ Deno.serve(async (req) => {
           });
           return new Response("OK");
         }
-        // Send fresh detail message (no messageId to edit from a text message flow)
-        const sent = await sendMessage(botToken, chatId, "⏳ جاري تحميل الطلب...");
-        if (sent?.result?.message_id) {
-          await handleOrderDetail(supabase, botToken, chatId, found.id, sent.result.message_id);
+        console.log("find_order matched:", found.order_number, found.id);
+        try {
+          await sendOrderDetail(supabase, botToken, chatId, found.id);
+        } catch (e) {
+          console.error("sendOrderDetail failed:", e);
+          await sendMessage(botToken, chatId, `❌ خطأ في تحميل الطلب: ${(e as Error).message}`, backToMainKeyboard());
         }
         return new Response("OK");
       }
