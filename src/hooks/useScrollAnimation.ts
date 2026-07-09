@@ -6,7 +6,22 @@ export function useScrollAnimation(threshold = 0.1) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el) {
+      setIsVisible(true);
+      return;
+    }
+
+    // Respect reduced-motion users — show immediately.
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
+
+    // If IntersectionObserver is unsupported, just show.
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -15,11 +30,26 @@ export function useScrollAnimation(threshold = 0.1) {
           observer.disconnect();
         }
       },
-      { threshold }
+      {
+        threshold,
+        // Trigger earlier so fast scrolling doesn't leave elements hidden.
+        rootMargin: '200px 0px 200px 0px',
+      }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+
+    // Safety net: if the observer hasn't fired quickly (fast scroll past,
+    // element already off-screen, etc.), reveal the content anyway.
+    const fallback = window.setTimeout(() => {
+      setIsVisible(true);
+      observer.disconnect();
+    }, 600);
+
+    return () => {
+      window.clearTimeout(fallback);
+      observer.disconnect();
+    };
   }, [threshold]);
 
   return { ref, isVisible };
