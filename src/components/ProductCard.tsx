@@ -192,7 +192,7 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
         </div>
 
         {/* Content */}
-        <div className="p-4 pt-3.5 space-y-2.5">
+        <div className="p-4 pt-3.5 space-y-2.5 flex-1 flex flex-col">
           <h3 className="font-cairo font-bold text-foreground text-sm leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors duration-300">
             {name}
           </h3>
@@ -220,31 +220,30 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             </div>
           )}
 
-          <div className="space-y-2.5 pt-0.5">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col items-start gap-0.5">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-roboto font-extrabold text-primary text-lg tracking-tight">
-                    {formatPrice(price)}
-                  </span>
-                  {oldPrice && oldPrice > price && (
-                    <span className="font-roboto text-[11px] text-muted-foreground/60 line-through decoration-destructive/40">
-                      {formatPrice(oldPrice)}
-                    </span>
-                  )}
-                </div>
-                {priceText && (
-                  <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight">
-                    {priceText}
+          <div className="space-y-2.5 pt-0.5 mt-auto">
+            <div className="flex flex-col gap-0.5 min-h-[2.75rem]">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
+                <span className="font-roboto font-extrabold text-primary text-base sm:text-lg tracking-tight whitespace-nowrap">
+                  {formatPrice(price)}
+                </span>
+                {oldPrice && oldPrice > price && (
+                  <span className="font-roboto text-[11px] text-muted-foreground/60 line-through decoration-destructive/40 whitespace-nowrap">
+                    {formatPrice(oldPrice)}
                   </span>
                 )}
               </div>
+              {priceText && (
+                <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight truncate">
+                  {priceText}
+                </span>
+              )}
               {(shippingPrice ?? 0) > 0 && (
-                <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-0.5 bg-muted/50 px-1.5 py-0.5 rounded-md">
+                <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-0.5 mt-0.5">
                   <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
                 </p>
               )}
             </div>
+
             <div className="flex items-center gap-1.5 w-full">
               <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
                 <ShoppingCart className="w-3.5 h-3.5 text-foreground" />
