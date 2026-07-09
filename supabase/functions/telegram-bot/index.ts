@@ -166,6 +166,18 @@ Deno.serve(async (req) => {
         return new Response("OK");
       }
     }
+
+    // ==================== COMMANDS ====================
+    const cmd = text.split(" ")[0].toLowerCase();
+    switch (cmd) {
+      case "/start":
+      case "/menu":
+        await sendMessage(botToken, chatId, mainMenuText(), mainMenuKeyboard());
+        break;
+      case "/orders":
+        await sendMessage(botToken, chatId, "⏳ ...", mainMenuKeyboard());
+        break;
+      case "/help":
         await sendMessage(botToken, chatId, helpText(), backToMainKeyboard());
         break;
       case "/cancel":
