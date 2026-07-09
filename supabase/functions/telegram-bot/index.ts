@@ -53,6 +53,15 @@ Deno.serve(async (req) => {
       } else if (data === "menu:orders" || data.startsWith("orders_page:")) {
         const page = data.startsWith("orders_page:") ? parseInt(data.split(":")[1]) : 0;
         await handleOrders(supabase, botToken, chatId, page, messageId);
+      } else if (data === "orders_search") {
+        await supabase.from("telegram_bot_state").upsert({
+          chat_id: chatId,
+          state: { action: "find_order" },
+          updated_at: new Date().toISOString(),
+        });
+        await sendMessage(botToken, chatId, "🔍 أرسل رقم الطلب (مثال: <b>ORD-001</b> أو <b>001</b>):\n\nأو أرسل /cancel للإلغاء", {
+          inline_keyboard: [[{ text: "❌ إلغاء", callback_data: "menu:orders" }]],
+        });
       } else if (data === "menu:products" || data.startsWith("products_page:")) {
         const page = data.startsWith("products_page:") ? parseInt(data.split(":")[1]) : 0;
         await handleProducts(supabase, botToken, chatId, page, messageId);
@@ -118,6 +127,42 @@ Deno.serve(async (req) => {
           });
         }
         await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
+        return new Response("OK");
+      }
+      if (state.action === "find_order") {
+        await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
+        const raw = (text || "").trim().toUpperCase();
+        if (!raw) {
+          await sendMessage(botToken, chatId, "❌ رقم فارغ. حاول مجدداً من قائمة الطلبات.", backToMainKeyboard());
+          return new Response("OK");
+        }
+        // Accept "001", "ORD-001", or "#ORD-001"
+        const cleaned = raw.replace(/^#/, "");
+        const candidates = [cleaned];
+        if (!cleaned.startsWith("ORD-")) {
+          const digits = cleaned.replace(/\D/g, "");
+          if (digits) candidates.push(`ORD-${digits.padStart(3, "0")}`);
+        }
+        const { data: found } = await supabase
+          .from("orders")
+          .select("id, order_number")
+          .in("order_number", candidates)
+          .limit(1)
+          .maybeSingle();
+        if (!found) {
+          await sendMessage(botToken, chatId, `❌ لم يتم العثور على طلب بالرقم <b>${raw}</b>.`, {
+            inline_keyboard: [
+              [{ text: "🔍 بحث آخر", callback_data: "orders_search" }],
+              [{ text: "🔙 عودة للطلبات", callback_data: "menu:orders" }],
+            ],
+          });
+          return new Response("OK");
+        }
+        // Send fresh detail message (no messageId to edit from a text message flow)
+        const sent = await sendMessage(botToken, chatId, "⏳ جاري تحميل الطلب...");
+        if (sent?.result?.message_id) {
+          await handleOrderDetail(supabase, botToken, chatId, found.id, sent.result.message_id);
+        }
         return new Response("OK");
       }
     }
@@ -187,11 +232,12 @@ function helpText() {
 
 // ==================== TELEGRAM API ====================
 async function sendMessage(token: string, chatId: string, text: string, reply_markup?: unknown) {
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", reply_markup, disable_web_page_preview: true }),
   });
+  try { return await res.json(); } catch { return null; }
 }
 
 async function editMessage(token: string, chatId: string, messageId: number, text: string, reply_markup?: unknown) {
@@ -226,7 +272,12 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
     .range(from, to);
 
   if (!orders || orders.length === 0) {
-    await editMessage(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", backToMainKeyboard());
+    await editMessage(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", {
+      inline_keyboard: [
+        [{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }],
+        [{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }],
+      ],
+    });
     return;
   }
 
@@ -249,6 +300,7 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
   if (page < totalPages - 1) navRow.push({ text: "التالي ➡️", callback_data: `orders_page:${page + 1}` });
   if (navRow.length > 0) buttons.push(navRow);
 
+  buttons.push([{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }]);
   buttons.push([{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }]);
 
   await editMessage(token, chatId, messageId, msg, { inline_keyboard: buttons });
