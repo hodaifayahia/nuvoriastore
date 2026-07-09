@@ -78,7 +78,9 @@ Deno.serve(async (req) => {
       } else if (data.startsWith("order_status:")) {
         const parts = data.split(":");
         const orderId = parts[1];
-        const status = parts.slice(2).join(":");
+        const code = parts[2];
+        const statusMap: Record<string, string> = { n: "جديد", c: "مؤكد", p: "قيد التحضير", s: "تم الشحن", d: "تم التسليم", x: "ملغي" };
+        const status = statusMap[code] || code;
         await handleOrderStatusUpdate(supabase, botToken, chatId, orderId, status, messageId);
       } else if (data.startsWith("product_detail:")) {
         const productId = data.split(":")[1];
@@ -394,11 +396,12 @@ async function buildOrderDetail(supabase: ReturnType<typeof createClient>, order
   }
 
   const statuses = ["جديد", "مؤكد", "قيد التحضير", "تم الشحن", "تم التسليم", "ملغي"];
+  const statusCode: Record<string, string> = { "جديد": "n", "مؤكد": "c", "قيد التحضير": "p", "تم الشحن": "s", "تم التسليم": "d", "ملغي": "x" };
   const statusEmoji: Record<string, string> = { "جديد": "🆕", "مؤكد": "✅", "قيد التحضير": "📦", "تم الشحن": "🚚", "تم التسليم": "✔️", "ملغي": "❌" };
   msg += `\n\n<b>🔄 غيّر الحالة:</b>`;
   const statusButtons = statuses
     .filter((st) => st !== order.status)
-    .map((st) => ({ text: `${statusEmoji[st]} ${st}`, callback_data: `order_status:${order.id}:${st}` }));
+    .map((st) => ({ text: `${statusEmoji[st]} ${st}`, callback_data: `order_status:${order.id}:${statusCode[st]}` }));
 
   const keyboard: Array<Array<{ text: string; callback_data: string }>> = [];
   for (let i = 0; i < statusButtons.length; i += 2) keyboard.push(statusButtons.slice(i, i + 2));
