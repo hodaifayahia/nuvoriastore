@@ -17,6 +17,7 @@ import { Copy, Upload, CheckCircle, LogIn, Truck, Building2, Home, X } from 'luc
 import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/FormSettingsTab';
 import { useTranslation } from '@/i18n';
 import { useOrderGuard } from '@/lib/orderGuard';
+import GuestLimitDialog from '@/components/GuestLimitDialog';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
