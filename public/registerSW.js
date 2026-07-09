@@ -1,5 +1,5 @@
 (function () {
-  var cleanupVersion = 'supabase-env-fix-2026-06-23';
+  var cleanupVersion = 'homepage-categories-refresh-2026-07-09';
   var storageKey = 'nature-island-sw-cleanup-version';
 
   if (!('serviceWorker' in navigator)) return;
