@@ -19,7 +19,8 @@ Deno.serve(async (req) => {
     const update = await req.json();
     const callbackQuery = update.callback_query;
     const message = update.message || callbackQuery?.message;
-    const chatId = String(callbackQuery?.from?.id || message?.chat?.id || "");
+    const chatId = String(message?.chat?.id || callbackQuery?.from?.id || "");
+    const actorId = String(callbackQuery?.from?.id || message?.from?.id || "");
     const text = update.message?.text || "";
     const messageId = callbackQuery?.message?.message_id as number | undefined;
 
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
 
     const adminIds = s.telegram_chat_id?.split(",").map((id: string) => id.trim()).filter(Boolean) || [];
 
-    if (!adminIds.includes(chatId)) {
+    if (!adminIds.includes(chatId) && !adminIds.includes(actorId)) {
       await sendMessage(botToken, chatId, "⛔ غير مصرح لك باستخدام هذا البوت.");
       return new Response("OK");
     }
