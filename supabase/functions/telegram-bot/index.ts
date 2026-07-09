@@ -308,18 +308,17 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
   await editMessage(token, chatId, messageId, msg, { inline_keyboard: buttons });
 }
 
-async function handleOrderDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string, messageId: number) {
-  const { data: order } = await supabase.from("orders").select("*").eq("id", orderId).single();
-  if (!order) {
-    await editMessage(token, chatId, messageId, "❌ الطلب غير موجود.", backToMainKeyboard());
-    return;
-  }
+async function buildOrderDetail(supabase: ReturnType<typeof createClient>, orderId: string) {
+  const { data: order } = await supabase.from("orders").select("*").eq("id", orderId).maybeSingle();
+  if (!order) return null;
 
   const { data: items } = await supabase.from("order_items").select("quantity, unit_price, product_id").eq("order_id", orderId);
-  const productIds = items?.map((i: { product_id: string }) => i.product_id) || [];
-  const { data: products } = await supabase.from("products").select("id, name").in("id", productIds);
+  const productIds = (items?.map((i: { product_id: string | null }) => i.product_id).filter(Boolean) as string[]) || [];
   const pMap: Record<string, string> = {};
-  products?.forEach((p: { id: string; name: string }) => { pMap[p.id] = p.name; });
+  if (productIds.length > 0) {
+    const { data: products } = await supabase.from("products").select("id, name").in("id", productIds);
+    products?.forEach((p: { id: string; name: string }) => { pMap[p.id] = p.name; });
+  }
 
   const paymentLabel: Record<string, string> = { cod: "عند التسليم", baridimob: "بريدي موب", flexy: "فليكسي" };
 
@@ -332,8 +331,9 @@ async function handleOrderDetail(supabase: ReturnType<typeof createClient>, toke
     + `📦 الحالة: <b>${order.status}</b>\n\n`
     + `<b>🛒 المنتجات:</b>\n`;
 
-  items?.forEach((i: { product_id: string; quantity: number; unit_price: number }) => {
-    msg += `  • ${pMap[i.product_id] || "منتج"} × ${i.quantity} = <b>${i.unit_price * i.quantity} دج</b>\n`;
+  items?.forEach((i: { product_id: string | null; quantity: number; unit_price: number }) => {
+    const name = (i.product_id && pMap[i.product_id]) || "منتج";
+    msg += `  • ${name} × ${i.quantity} = <b>${i.unit_price * i.quantity} دج</b>\n`;
   });
 
   msg += `\n━━━━━━━━━━━━━━━━\n`;
@@ -361,7 +361,25 @@ async function handleOrderDetail(supabase: ReturnType<typeof createClient>, toke
     { text: "🏠 الرئيسية", callback_data: "menu:main" },
   ]);
 
-  await editMessage(token, chatId, messageId, msg, { inline_keyboard: keyboard });
+  return { msg, keyboard };
+}
+
+async function handleOrderDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string, messageId: number) {
+  const built = await buildOrderDetail(supabase, orderId);
+  if (!built) {
+    await editMessage(token, chatId, messageId, "❌ الطلب غير موجود.", backToMainKeyboard());
+    return;
+  }
+  await editMessage(token, chatId, messageId, built.msg, { inline_keyboard: built.keyboard });
+}
+
+async function sendOrderDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string) {
+  const built = await buildOrderDetail(supabase, orderId);
+  if (!built) {
+    await sendMessage(token, chatId, "❌ الطلب غير موجود.", backToMainKeyboard());
+    return;
+  }
+  await sendMessage(token, chatId, built.msg, { inline_keyboard: built.keyboard });
 }
 
 async function handleOrderStatusUpdate(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string, status: string, messageId: number) {
