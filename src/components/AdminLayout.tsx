@@ -92,12 +92,12 @@ const NAV_GROUPS = [
       { href: '/admin/delivery', key: 'delivery.title', icon: Truck },
     ],
   },
-  {
-    groupKey: 'sidebar.marketing',
-    items: [
-      // { href: '/admin/landing-generator', key: 'sidebar.landingGenerator', icon: Sparkles },
-    ],
-  },
+  // {
+  //   groupKey: 'sidebar.marketing',
+  //   items: [
+  //     { href: '/admin/landing-generator', key: 'sidebar.landingGenerator', icon: Sparkles },
+  //   ],
+  // },
 ];
 
 const SETTINGS_SUB_KEYS = [
