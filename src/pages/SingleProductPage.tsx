@@ -590,14 +590,14 @@ export default function SingleProductPage() {
 
     const guard = await orderGuard.verify({ phone: normalizedPhone, userId: user?.id });
     if (!guard.ok) {
-      toast({
-        title: guard.reason === 'guest_limit' ? 'يرجى إنشاء حساب' : 'تعذر إرسال الطلب',
-        description: guard.message,
-        variant: 'destructive',
-      });
-      if (guard.reason === 'guest_limit') navigate('/auth');
+      if (guard.reason === 'guest_limit') {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: 'تعذر إرسال الطلب', description: guard.message, variant: 'destructive' });
+      }
       return;
     }
+
 
     setSubmittingOrder(true);
     try {
