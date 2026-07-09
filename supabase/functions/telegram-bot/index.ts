@@ -19,7 +19,8 @@ Deno.serve(async (req) => {
     const update = await req.json();
     const callbackQuery = update.callback_query;
     const message = update.message || callbackQuery?.message;
-    const chatId = String(callbackQuery?.from?.id || message?.chat?.id || "");
+    const chatId = String(message?.chat?.id || callbackQuery?.from?.id || "");
+    const actorId = String(callbackQuery?.from?.id || message?.from?.id || "");
     const text = update.message?.text || "";
     const messageId = callbackQuery?.message?.message_id as number | undefined;
 
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
 
     const adminIds = s.telegram_chat_id?.split(",").map((id: string) => id.trim()).filter(Boolean) || [];
 
-    if (!adminIds.includes(chatId)) {
+    if (!adminIds.includes(chatId) && !adminIds.includes(actorId)) {
       await sendMessage(botToken, chatId, "⛔ غير مصرح لك باستخدام هذا البوت.");
       return new Response("OK");
     }
@@ -239,7 +240,11 @@ async function sendMessage(token: string, chatId: string, text: string, reply_ma
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", reply_markup, disable_web_page_preview: true }),
   });
-  try { return await res.json(); } catch { return null; }
+  const json = await safeTelegramJson(res);
+  if (!res.ok || json?.ok === false) {
+    console.error("Telegram sendMessage failed:", JSON.stringify({ status: res.status, body: json }));
+  }
+  return json;
 }
 
 async function editMessage(token: string, chatId: string, messageId: number, text: string, reply_markup?: unknown) {
@@ -248,10 +253,35 @@ async function editMessage(token: string, chatId: string, messageId: number, tex
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, message_id: messageId, text, parse_mode: "HTML", reply_markup, disable_web_page_preview: true }),
   });
-  if (!res.ok) {
+  const json = await safeTelegramJson(res);
+  if (!res.ok || json?.ok === false) {
+    console.error("Telegram editMessage failed:", JSON.stringify({ status: res.status, body: json }));
     // fallback: send as new message if edit fails (e.g. identical content)
     await sendMessage(token, chatId, text, reply_markup);
   }
+}
+
+async function safeTelegramJson(res: Response) {
+  try { return await res.json(); } catch { return null; }
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function display(value: unknown, fallback = "—"): string {
+  const text = String(value ?? "").trim();
+  return escapeHtml(text || fallback);
+}
+
+function safeHref(value: unknown): string | null {
+  const url = String(value ?? "").trim();
+  if (!/^https?:\/\//i.test(url)) return null;
+  return escapeHtml(url);
 }
 
 async function answerCallback(token: string, callbackId: string) {
@@ -309,41 +339,58 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
 }
 
 async function buildOrderDetail(supabase: ReturnType<typeof createClient>, orderId: string) {
-  const { data: order } = await supabase.from("orders").select("*").eq("id", orderId).maybeSingle();
+  const { data: order, error: orderError } = await supabase.from("orders").select("*").eq("id", orderId).maybeSingle();
+  if (orderError) {
+    console.error("buildOrderDetail order query failed:", orderError.message);
+    throw orderError;
+  }
   if (!order) return null;
 
-  const { data: items } = await supabase.from("order_items").select("quantity, unit_price, product_id").eq("order_id", orderId);
+  const { data: items, error: itemsError } = await supabase.from("order_items").select("quantity, unit_price, product_id").eq("order_id", orderId);
+  if (itemsError) {
+    console.error("buildOrderDetail items query failed:", itemsError.message);
+    throw itemsError;
+  }
   const productIds = (items?.map((i: { product_id: string | null }) => i.product_id).filter(Boolean) as string[]) || [];
   const pMap: Record<string, string> = {};
   if (productIds.length > 0) {
-    const { data: products } = await supabase.from("products").select("id, name").in("id", productIds);
+    const { data: products, error: productsError } = await supabase.from("products").select("id, name").in("id", productIds);
+    if (productsError) {
+      console.error("buildOrderDetail products query failed:", productsError.message);
+      throw productsError;
+    }
     products?.forEach((p: { id: string; name: string }) => { pMap[p.id] = p.name; });
   }
 
-  const paymentLabel: Record<string, string> = { cod: "عند التسليم", baridimob: "بريدي موب", flexy: "فليكسي" };
+  const paymentLabel: Record<string, string> = { cod: "عند التسليم", cash_on_delivery: "عند التسليم", baridimob: "بريدي موب", flexy: "فليكسي" };
 
-  let msg = `🧾 <b>طلب #${order.order_number}</b>\n`
+  let msg = `🧾 <b>طلب #${display(order.order_number)}</b>\n`
     + `━━━━━━━━━━━━━━━━\n\n`
-    + `👤 <b>${order.customer_name}</b>\n`
-    + `📱 ${order.customer_phone}\n`
-    + `📍 ${order.baladiya || order.address || "—"}\n`
-    + `💳 ${paymentLabel[order.payment_method || ""] || order.payment_method || "—"}\n`
-    + `📦 الحالة: <b>${order.status}</b>\n\n`
+    + `👤 <b>${display(order.customer_name)}</b>\n`
+    + `📱 ${display(order.customer_phone)}\n`
+    + `📍 ${display(order.baladiya || order.address)}\n`
+    + `💳 ${display(paymentLabel[order.payment_method || ""] || order.payment_method)}\n`
+    + `📦 الحالة: <b>${display(order.status)}</b>\n\n`
     + `<b>🛒 المنتجات:</b>\n`;
 
-  items?.forEach((i: { product_id: string | null; quantity: number; unit_price: number }) => {
-    const name = (i.product_id && pMap[i.product_id]) || "منتج";
-    msg += `  • ${name} × ${i.quantity} = <b>${i.unit_price * i.quantity} دج</b>\n`;
-  });
+  if (items && items.length > 0) {
+    items.forEach((i: { product_id: string | null; quantity: number; unit_price: number }) => {
+      const name = (i.product_id && pMap[i.product_id]) || "منتج";
+      msg += `  • ${display(name)} × ${display(i.quantity)} = <b>${display(i.unit_price * i.quantity)} دج</b>\n`;
+    });
+  } else {
+    msg += `  —\n`;
+  }
 
   msg += `\n━━━━━━━━━━━━━━━━\n`;
-  if (order.subtotal) msg += `المجموع الفرعي: ${order.subtotal} دج\n`;
-  if (order.discount_amount) msg += `🏷️ الخصم: -${order.discount_amount} دج\n`;
-  if (order.shipping_cost) msg += `🚚 التوصيل: ${order.shipping_cost} دج\n`;
-  msg += `💵 <b>الإجمالي: ${order.total_amount} دج</b>`;
+  if (order.subtotal) msg += `المجموع الفرعي: ${display(order.subtotal)} دج\n`;
+  if (order.discount_amount) msg += `🏷️ الخصم: -${display(order.discount_amount)} دج\n`;
+  if (order.shipping_cost) msg += `🚚 التوصيل: ${display(order.shipping_cost)} دج\n`;
+  msg += `💵 <b>الإجمالي: ${display(order.total_amount)} دج</b>`;
 
-  if (order.payment_receipt_url) {
-    msg += `\n\n🧾 <a href="${order.payment_receipt_url}">عرض إيصال الدفع</a>`;
+  const receiptUrl = safeHref(order.payment_receipt_url);
+  if (receiptUrl) {
+    msg += `\n\n🧾 <a href="${receiptUrl}">عرض إيصال الدفع</a>`;
   }
 
   const statuses = ["جديد", "مؤكد", "قيد التحضير", "تم الشحن", "تم التسليم", "ملغي"];
