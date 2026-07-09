@@ -32,19 +32,6 @@ function getCategoryIcon(iconName: string): LucideIcon {
   return ICON_MAP[iconName] || Grid3X3;
 }
 
-// Fallback categories shown when no categories exist in the database yet
-const DEFAULT_CATEGORIES = [
-  { name: 'Phones',     icon: 'Smartphone' },
-  { name: 'Cases',      icon: 'Smartphone' },
-  { name: 'Chargers',   icon: 'BatteryCharging' },
-  { name: 'Cables',     icon: 'Cable' },
-  { name: 'Headphones', icon: 'Headphones' },
-  { name: 'Keyboards',  icon: 'Keyboard' },
-  { name: 'Mice',       icon: 'Mouse' },
-  { name: 'Laptops',    icon: 'Laptop' },
-  { name: 'Gaming',     icon: 'Gamepad2' },
-  { name: 'Watches',    icon: 'Watch' },
-];
 
 const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
   { to: '/', key: 'nav.home', icon: Home },
@@ -66,12 +53,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { language, setLanguage, t } = useTranslation();
-  const { data: categoriesData } = useCategories();
+  const { data: categoriesData = [] } = useCategories();
   const { theme, toggle: toggleTheme } = useTheme();
-  const categories = useMemo(
-    () => (categoriesData && categoriesData.length > 0 ? categoriesData : DEFAULT_CATEGORIES),
-    [categoriesData],
-  );
+  const categories = categoriesData;
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const langTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
