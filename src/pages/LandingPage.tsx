@@ -165,7 +165,7 @@ export default function LandingPage() {
   const { data: wilayas } = useQuery({
     queryKey: ['wilayas-lp'],
     queryFn: async () => {
-      const { data } = await supabase.from('wilayas').select('*').eq('is_active', true).order('name');
+      const { data } = await supabase.from('wilayas').select('*').eq('is_active', true).order('code', { ascending: true, nullsFirst: false });
       return data || [];
     },
     staleTime: 1000 * 60 * 60,

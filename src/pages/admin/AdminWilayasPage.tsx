@@ -29,7 +29,7 @@ export default function AdminWilayasPage() {
   const { data: wilayas = [] } = useQuery({
     queryKey: ['admin-wilayas'],
     queryFn: async () => {
-      const { data } = await supabase.from('wilayas').select('*').order('name');
+      const { data } = await supabase.from('wilayas').select('*').order('code', { ascending: true, nullsFirst: false });
       return data || [];
     },
   });
