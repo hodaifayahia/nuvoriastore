@@ -97,7 +97,7 @@ export default function ProductImage({
         fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"
         onLoad={() => { markImageLoaded(src); setLoaded(true); }}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${className}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${className}`}
       />
     </>
   );
