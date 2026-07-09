@@ -1,5 +1,5 @@
 import SEO from '@/components/SEO';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,10 +21,11 @@ import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
-import MinimalTemplate from '@/components/templates/MinimalTemplate';
-import BoldTemplate from '@/components/templates/BoldTemplate';
-import LiquidTemplate from '@/components/templates/LiquidTemplate';
-import DigitalTemplate from '@/components/templates/DigitalTemplate';
+// Lazy-load storefront templates so visitors only download the one that's active.
+const MinimalTemplate = lazy(() => import('@/components/templates/MinimalTemplate'));
+const BoldTemplate = lazy(() => import('@/components/templates/BoldTemplate'));
+const LiquidTemplate = lazy(() => import('@/components/templates/LiquidTemplate'));
+const DigitalTemplate = lazy(() => import('@/components/templates/DigitalTemplate'));
 import TextMarquee from '@/components/TextMarquee';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
@@ -100,16 +101,21 @@ export default function IndexPage() {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { data: allProducts, isLoading } = useQuery({
-    queryKey: ['all-active-products'],
+    queryKey: ['all-active-products', 'home-v2'],
     queryFn: async () => {
+      // Only fetch the columns the homepage actually renders, and cap the
+      // payload — the full catalogue lives on /products with its own pager.
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('id,name,price,old_price,price_text,short_description,images,main_image_index,category,stock,shipping_price,is_featured,created_at')
         .eq('is_active', true)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(60);
       if (error) throw error;
       return data;
     },
+    staleTime: 2 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: heroSlides } = useQuery({
@@ -203,10 +209,26 @@ export default function IndexPage() {
     if (searchQuery.trim()) navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
   };
 
-  if (storeTemplate === 'minimal') return <MinimalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} />;
-  if (storeTemplate === 'bold')    return <BoldTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
-  if (storeTemplate === 'liquid')  return <LiquidTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
-  if (storeTemplate === 'digital') return <DigitalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
+  if (storeTemplate && storeTemplate !== 'classic') {
+    if (storeTemplate === 'minimal') {
+      return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <MinimalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} />
+        </Suspense>
+      );
+    }
+    const Tpl =
+      storeTemplate === 'bold' ? BoldTemplate :
+      storeTemplate === 'liquid' ? LiquidTemplate :
+      storeTemplate === 'digital' ? DigitalTemplate : null;
+    if (Tpl) {
+      return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <Tpl products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />
+        </Suspense>
+      );
+    }
+  }
 
   const bentoCats = useMemo(() => {
     return (categoriesData || [])
