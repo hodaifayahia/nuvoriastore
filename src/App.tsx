@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,61 +14,63 @@ import ScrollToTopOnRouteChange from "@/components/ScrollToTopOnRouteChange";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 import AdminLayout from "@/components/AdminLayout";
+// Keep the homepage eager for fast LCP; lazy-load everything else.
 import Index from "./pages/Index";
-import ProductsPage from "./pages/ProductsPage";
-import SingleProductPage from "./pages/SingleProductPage";
-import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import OrderConfirmationPage from "./pages/OrderConfirmationPage";
-import TrackOrderPage from "./pages/TrackOrderPage";
-import AuthPage from "./pages/AuthPage";
-import CustomerDashboardPage from "./pages/CustomerDashboardPage";
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import AdminProductsPage from "./pages/admin/AdminProductsPage";
-import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
-import AdminWilayasPage from "./pages/admin/AdminWilayasPage";
-import AdminCouponsPage from "./pages/admin/AdminCouponsPage";
-import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
-import AdminBrandsPage from "./pages/admin/AdminBrandsPage";
-import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
-import AdminIdentityPage from "./pages/admin/settings/AdminIdentityPage";
-import AdminPaymentPage from "./pages/admin/settings/AdminPaymentPage";
-import AdminTelegramPage from "./pages/admin/settings/AdminTelegramPage";
-import AdminReturnsSettingsPage from "./pages/admin/settings/AdminReturnsSettingsPage";
-import AdminFormSettingsPage from "./pages/admin/settings/AdminFormSettingsPage";
 
-import AdminHomepagePage from "./pages/admin/settings/AdminHomepagePage";
-import AdminFAQPage from "./pages/admin/settings/AdminFAQPage";
-import AdminSecurityPage from "./pages/admin/settings/AdminSecurityPage";
-import AdminLeadsPage from "./pages/admin/AdminLeadsPage";
-import AdminVariationsPage from "./pages/admin/AdminVariationsPage";
-import AdminAbandonedPage from "./pages/admin/AdminAbandonedPage";
-import AdminInventoryPage from "./pages/admin/AdminInventoryPage";
-import AdminConfirmersPage from "./pages/admin/AdminConfirmersPage";
-import AdminReturnsPage from "./pages/admin/AdminReturnsPage";
-import AdminCostsPage from "./pages/admin/AdminCostsPage";
-import AdminCostDetailPage from "./pages/admin/AdminCostDetailPage";
-import AdminLandingPagePage from "./pages/admin/AdminLandingPagePage";
-import AdminLandingGeneratorPage from "./pages/admin/AdminLandingGeneratorPage";
-import AdminSuppliersPage from "./pages/admin/AdminSuppliersPage";
-import AdminSupplierDetailPage from "./pages/admin/AdminSupplierDetailPage";
-import AdminSupplierTransactionCreatePage from "./pages/admin/AdminSupplierTransactionCreatePage";
-import AdminClientsPage from "./pages/admin/AdminClientsPage";
-import AdminClientDetailPage from "./pages/admin/AdminClientDetailPage";
-import AdminCreateOrderPage from "./pages/admin/AdminCreateOrderPage";
-import AdminStatisticsPage from "./pages/admin/AdminStatisticsPage";
-import AdminDeliveryPage from "./pages/admin/settings/AdminDeliveryPage";
-import AdminPixelsPage from "./pages/admin/settings/AdminPixelsPage";
-import AboutPage from "./pages/AboutPage";
-import FAQPage from "./pages/FAQPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import LandingPage from "./pages/LandingPage";
-import PublicGeneratedLandingPage from "./pages/PublicGeneratedLandingPage";
-import WishlistPage from "./pages/WishlistPage";
-import NotFound from "./pages/NotFound";
-import ConfirmerLayout from "./components/ConfirmerLayout";
-import ConfirmerDashboardPage from "./pages/confirmer/ConfirmerDashboardPage";
+const ProductsPage = lazy(() => import("./pages/ProductsPage"));
+const SingleProductPage = lazy(() => import("./pages/SingleProductPage"));
+const CartPage = lazy(() => import("./pages/CartPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const OrderConfirmationPage = lazy(() => import("./pages/OrderConfirmationPage"));
+const TrackOrderPage = lazy(() => import("./pages/TrackOrderPage"));
+const AuthPage = lazy(() => import("./pages/AuthPage"));
+const CustomerDashboardPage = lazy(() => import("./pages/CustomerDashboardPage"));
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage"));
+const AdminProductsPage = lazy(() => import("./pages/admin/AdminProductsPage"));
+const AdminOrdersPage = lazy(() => import("./pages/admin/AdminOrdersPage"));
+const AdminWilayasPage = lazy(() => import("./pages/admin/AdminWilayasPage"));
+const AdminCouponsPage = lazy(() => import("./pages/admin/AdminCouponsPage"));
+const AdminCategoriesPage = lazy(() => import("./pages/admin/AdminCategoriesPage"));
+const AdminBrandsPage = lazy(() => import("./pages/admin/AdminBrandsPage"));
+const AdminSettingsPage = lazy(() => import("./pages/admin/AdminSettingsPage"));
+const AdminIdentityPage = lazy(() => import("./pages/admin/settings/AdminIdentityPage"));
+const AdminPaymentPage = lazy(() => import("./pages/admin/settings/AdminPaymentPage"));
+const AdminTelegramPage = lazy(() => import("./pages/admin/settings/AdminTelegramPage"));
+const AdminReturnsSettingsPage = lazy(() => import("./pages/admin/settings/AdminReturnsSettingsPage"));
+const AdminFormSettingsPage = lazy(() => import("./pages/admin/settings/AdminFormSettingsPage"));
+const AdminHomepagePage = lazy(() => import("./pages/admin/settings/AdminHomepagePage"));
+const AdminFAQPage = lazy(() => import("./pages/admin/settings/AdminFAQPage"));
+const AdminSecurityPage = lazy(() => import("./pages/admin/settings/AdminSecurityPage"));
+const AdminLeadsPage = lazy(() => import("./pages/admin/AdminLeadsPage"));
+const AdminVariationsPage = lazy(() => import("./pages/admin/AdminVariationsPage"));
+const AdminAbandonedPage = lazy(() => import("./pages/admin/AdminAbandonedPage"));
+const AdminInventoryPage = lazy(() => import("./pages/admin/AdminInventoryPage"));
+const AdminConfirmersPage = lazy(() => import("./pages/admin/AdminConfirmersPage"));
+const AdminReturnsPage = lazy(() => import("./pages/admin/AdminReturnsPage"));
+const AdminCostsPage = lazy(() => import("./pages/admin/AdminCostsPage"));
+const AdminCostDetailPage = lazy(() => import("./pages/admin/AdminCostDetailPage"));
+const AdminLandingPagePage = lazy(() => import("./pages/admin/AdminLandingPagePage"));
+const AdminLandingGeneratorPage = lazy(() => import("./pages/admin/AdminLandingGeneratorPage"));
+const AdminSuppliersPage = lazy(() => import("./pages/admin/AdminSuppliersPage"));
+const AdminSupplierDetailPage = lazy(() => import("./pages/admin/AdminSupplierDetailPage"));
+const AdminSupplierTransactionCreatePage = lazy(() => import("./pages/admin/AdminSupplierTransactionCreatePage"));
+const AdminClientsPage = lazy(() => import("./pages/admin/AdminClientsPage"));
+const AdminClientDetailPage = lazy(() => import("./pages/admin/AdminClientDetailPage"));
+const AdminCreateOrderPage = lazy(() => import("./pages/admin/AdminCreateOrderPage"));
+const AdminStatisticsPage = lazy(() => import("./pages/admin/AdminStatisticsPage"));
+const AdminDeliveryPage = lazy(() => import("./pages/admin/settings/AdminDeliveryPage"));
+const AdminPixelsPage = lazy(() => import("./pages/admin/settings/AdminPixelsPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
+const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const PublicGeneratedLandingPage = lazy(() => import("./pages/PublicGeneratedLandingPage"));
+const WishlistPage = lazy(() => import("./pages/WishlistPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ConfirmerLayout = lazy(() => import("./components/ConfirmerLayout"));
+const ConfirmerDashboardPage = lazy(() => import("./pages/confirmer/ConfirmerDashboardPage"));
+
 import { useStoreTheme } from "@/hooks/useStoreTheme";
 import { useFavicon } from "@/hooks/useFavicon";
 import { useFacebookPixel } from "@/hooks/useFacebookPixel";
@@ -75,7 +78,16 @@ import { LanguageProvider } from "@/i18n";
 import OfflineBanner from "@/components/OfflineBanner";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 5 * 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function StoreThemeProvider({ children }: { children: React.ReactNode }) {
   useStoreTheme();
@@ -99,6 +111,12 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const RouteFallback = () => (
+  <div className="min-h-[60vh] flex items-center justify-center">
+    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
@@ -112,6 +130,7 @@ const App = () => (
         
         <BrowserRouter>
           <ScrollToTopOnRouteChange />
+          <Suspense fallback={<RouteFallback />}>
           <Routes>
             {/* Public */}
             <Route path="/" element={<PublicLayout><Index /></PublicLayout>} />
@@ -176,6 +195,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
         </LanguageProvider>
       </TooltipProvider>
