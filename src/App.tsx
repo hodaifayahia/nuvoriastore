@@ -66,7 +66,7 @@ const FAQPage = lazy(() => import("./pages/FAQPage"));
 const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const PublicGeneratedLandingPage = lazy(() => import("./pages/PublicGeneratedLandingPage"));
-const WishlistPage = lazy(() => import("./pages/WishlistPage"));
+
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ConfirmerLayout = lazy(() => import("./components/ConfirmerLayout"));
 const ConfirmerDashboardPage = lazy(() => import("./pages/confirmer/ConfirmerDashboardPage"));
