@@ -420,12 +420,12 @@ export default function IndexPage() {
                       {/* Product image */}
                       <Link
                         to={activeCtaHref}
-                        className="block w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 border-4 border-white rotate-3 hover:rotate-0 transition-transform duration-500 bg-slate-100"
+                        className="group/img relative flex items-center justify-center w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 border-4 border-white bg-gradient-to-br from-slate-50 to-white hover:scale-[1.02] transition-transform duration-500"
                       >
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
-                          className="w-full h-full object-cover"
+                          className="max-w-[85%] max-h-[85%] w-auto h-auto object-contain mx-auto my-auto drop-shadow-2xl"
                         />
                       </Link>
 
