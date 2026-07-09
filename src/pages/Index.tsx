@@ -1,5 +1,5 @@
 import SEO from '@/components/SEO';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,10 +21,11 @@ import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
 import { useHomepageSettings } from '@/hooks/useHomepageSettings';
-import MinimalTemplate from '@/components/templates/MinimalTemplate';
-import BoldTemplate from '@/components/templates/BoldTemplate';
-import LiquidTemplate from '@/components/templates/LiquidTemplate';
-import DigitalTemplate from '@/components/templates/DigitalTemplate';
+// Lazy-load storefront templates so visitors only download the one that's active.
+const MinimalTemplate = lazy(() => import('@/components/templates/MinimalTemplate'));
+const BoldTemplate = lazy(() => import('@/components/templates/BoldTemplate'));
+const LiquidTemplate = lazy(() => import('@/components/templates/LiquidTemplate'));
+const DigitalTemplate = lazy(() => import('@/components/templates/DigitalTemplate'));
 import TextMarquee from '@/components/TextMarquee';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
