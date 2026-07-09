@@ -626,7 +626,7 @@ export default function IndexPage() {
             ) : (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-                  {(allProducts?.slice(0, 8) || []).map((p) => (
+                  {(allProducts?.slice(0, 4) || []).map((p) => (
                     <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
                       <ProductCard
                         id={p.id}
@@ -643,7 +643,7 @@ export default function IndexPage() {
                     </div>
                   ))}
                 </div>
-                {(allProducts?.length || 0) > 8 && (
+                {(allProducts?.length || 0) > 4 && (
                   <div className="mt-10 flex justify-center">
                     <Link to="/products" className="btn-neon inline-flex items-center gap-2 px-7 py-3 rounded-full min-h-[48px] font-semibold">
                       {txt('new_viewAll', 'عرض كل المنتجات')} <ChevronRight className="w-4 h-4" />
@@ -656,14 +656,24 @@ export default function IndexPage() {
         </section>
       )}
 
-      {/* ─────────── PRODUCTS BY CATEGORY (first two seeded cats) ─────────── */}
-      {bentoCats.slice(0, 2).map((cat, idx) => {
-        const catProducts = (allProducts || [])
-          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name))
+      {/* ─────────── PRODUCTS BY CATEGORY (all categories, randomized picks) ─────────── */}
+      {bentoCats.map((cat, idx) => {
+        const pool = (allProducts || [])
+          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name));
+        // Shuffle so each visit shows different products from the category
+        const catProducts = [...pool]
+          .sort(() => Math.random() - 0.5)
           .slice(0, 4);
         if (catProducts.length === 0) return null;
         const CatIcon = cat.icon;
-        const accent = idx === 0 ? 'from-primary/20 to-transparent' : 'from-amber-400/20 to-transparent';
+        const accents = [
+          'from-primary/20 to-transparent',
+          'from-amber-400/20 to-transparent',
+          'from-emerald-400/20 to-transparent',
+          'from-fuchsia-400/20 to-transparent',
+          'from-sky-400/20 to-transparent',
+        ];
+        const accent = accents[idx % accents.length];
         return (
           <section key={cat.name} className="px-4 sm:px-6 lg:px-8 pb-16">
             <div className="max-w-6xl mx-auto">
