@@ -129,19 +129,43 @@ Deno.serve(async (req) => {
         await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
         return new Response("OK");
       }
+      if (state.action === "find_order") {
+        await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
+        const raw = (text || "").trim().toUpperCase();
+        if (!raw) {
+          await sendMessage(botToken, chatId, "❌ رقم فارغ. حاول مجدداً من قائمة الطلبات.", backToMainKeyboard());
+          return new Response("OK");
+        }
+        // Accept "001", "ORD-001", or "#ORD-001"
+        const cleaned = raw.replace(/^#/, "");
+        const candidates = [cleaned];
+        if (!cleaned.startsWith("ORD-")) {
+          const digits = cleaned.replace(/\D/g, "");
+          if (digits) candidates.push(`ORD-${digits.padStart(3, "0")}`);
+        }
+        const { data: found } = await supabase
+          .from("orders")
+          .select("id, order_number")
+          .in("order_number", candidates)
+          .limit(1)
+          .maybeSingle();
+        if (!found) {
+          await sendMessage(botToken, chatId, `❌ لم يتم العثور على طلب بالرقم <b>${raw}</b>.`, {
+            inline_keyboard: [
+              [{ text: "🔍 بحث آخر", callback_data: "orders_search" }],
+              [{ text: "🔙 عودة للطلبات", callback_data: "menu:orders" }],
+            ],
+          });
+          return new Response("OK");
+        }
+        // Send fresh detail message (no messageId to edit from a text message flow)
+        const sent = await sendMessage(botToken, chatId, "⏳ جاري تحميل الطلب...");
+        if (sent?.result?.message_id) {
+          await handleOrderDetail(supabase, botToken, chatId, found.id, sent.result.message_id);
+        }
+        return new Response("OK");
+      }
     }
-
-    // ==================== COMMANDS ====================
-    const cmd = text.split(" ")[0].toLowerCase();
-    switch (cmd) {
-      case "/start":
-      case "/menu":
-        await sendMessage(botToken, chatId, mainMenuText(), mainMenuKeyboard());
-        break;
-      case "/orders":
-        await sendMessage(botToken, chatId, "⏳ ...", mainMenuKeyboard());
-        break;
-      case "/help":
         await sendMessage(botToken, chatId, helpText(), backToMainKeyboard());
         break;
       case "/cancel":
