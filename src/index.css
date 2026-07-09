@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent stray horizontal scroll and give the browser image-render hints */
+html, body { overflow-x: hidden; max-width: 100vw; }
+img { content-visibility: auto; }
+
+
 @layer base {
   :root {
     /* === NuvoriaStore — unified with admin dashboard palette === */

@@ -701,11 +701,11 @@ export default function SingleProductPage() {
         {/* Images with touch swipe */}
         <div className="flex flex-col-reverse md:flex-row gap-3 md:sticky md:top-24 md:self-start">
           {images.length > 1 && (
-            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:max-h-[500px] md:w-20 shrink-0 scrollbar-hide">
+            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible md:w-20 shrink-0 scrollbar-hide">
               {images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)}
                   className={`w-16 h-16 md:w-full md:h-20 rounded-xl overflow-hidden border-2 shrink-0 transition-all duration-300 ${i === selectedImage ? 'border-primary ring-2 ring-primary/20 shadow-md shadow-primary/10' : 'border-border/50 hover:border-primary/40 opacity-70 hover:opacity-100'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -715,7 +715,7 @@ export default function SingleProductPage() {
             onTouchEnd={handleTouchEnd}>
             <div className="aspect-square rounded-3xl overflow-hidden bg-muted/50 cursor-zoom-in shadow-lg shadow-foreground/5 border border-border/30" onMouseEnter={() => setIsZoomed(true)} onMouseLeave={() => setIsZoomed(false)}>
               {images[selectedImage] ? (
-                <img src={images[selectedImage]} alt={product.name} className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
+                <img src={images[selectedImage]} alt={product.name} loading="eager" fetchPriority="high" decoding="async" className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground/30"><ShoppingCart className="w-20 h-20" /></div>
               )}
@@ -1347,7 +1347,7 @@ export default function SingleProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {images.map((img, i) => (
                 <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
-                  <img src={img} alt={`${product.name} - ${i + 1}`} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                  <img src={img} alt={`${product.name} - ${i + 1}`} loading="lazy" decoding="async" className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
                 </div>
               ))}
             </div>
@@ -1455,7 +1455,7 @@ export default function SingleProductPage() {
           <div className="container flex items-center justify-between gap-4 py-3">
             <div className="flex items-center gap-3 min-w-0">
               {images[0] && (
-                <img src={images[0]} alt={product.name} className="w-11 h-11 rounded-xl object-cover shrink-0 border border-border/30 shadow-sm" />
+                <img src={images[0]} alt={product.name} loading="lazy" decoding="async" className="w-11 h-11 rounded-xl object-cover shrink-0 border border-border/30 shadow-sm" />
               )}
               <div className="min-w-0">
                 <p className="font-cairo font-bold text-sm truncate">{product.name}</p>

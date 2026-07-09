@@ -425,6 +425,9 @@ export default function IndexPage() {
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
+                          loading="eager"
+                          fetchPriority="high"
+                          decoding="async"
                           className="w-full h-full object-cover"
                         />
                       </Link>
@@ -779,7 +782,7 @@ export default function IndexPage() {
             </div>
             <div className="relative min-h-[260px] md:min-h-full">
               {hp?.limited.image ? (
-                <img src={hp.limited.image} alt={hp.limited.title} className="absolute inset-0 w-full h-full object-cover" />
+                <img src={hp.limited.image} alt={hp.limited.title} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--grad-teal)/0.3)] to-[hsl(var(--grad-violet)/0.3)]" />
               )}
