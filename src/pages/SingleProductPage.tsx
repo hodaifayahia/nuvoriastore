@@ -1484,7 +1484,7 @@ export default function SingleProductPage() {
               </div>
             </div>
             <Button onClick={scrollToOrderForm}
-              className="font-cairo font-bold gap-2 rounded-2xl px-7 h-12 bg-gradient-to-l from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25 shrink-0 hover:shadow-xl hover:shadow-primary/30 transition-all animate-order-pulse">
+              className="font-cairo font-bold gap-2 rounded-2xl px-7 h-12 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 shrink-0 hover:shadow-xl hover:shadow-emerald-500/40 transition-all animate-order-pulse">
               <ShoppingCart className="w-4 h-4" />
               {t('product.orderNow')}
             </Button>
