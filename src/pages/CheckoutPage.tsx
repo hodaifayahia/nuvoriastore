@@ -361,8 +361,13 @@ export default function CheckoutPage() {
       setOrderSubmitted(true);
       clearCart();
       navigate(`/order-confirmation/${order.order_number}`);
-    } catch (err) {
-      toast({ title: t('checkout.err.title'), description: t('checkout.err.submitFailed'), variant: 'destructive' });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('guest_order_limit_reached')) {
+        setGuestLimitOpen(true);
+      } else {
+        toast({ title: t('checkout.err.title'), description: t('checkout.err.submitFailed'), variant: 'destructive' });
+      }
     } finally {
       setSubmitting(false);
     }
