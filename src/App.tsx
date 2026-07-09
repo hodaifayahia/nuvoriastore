@@ -145,7 +145,7 @@ const App = () => (
             <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
             <Route path="/faq" element={<PublicLayout><FAQPage /></PublicLayout>} />
             <Route path="/categories" element={<PublicLayout><CategoriesPage /></PublicLayout>} />
-            <Route path="/wishlist" element={<PublicLayout><WishlistPage /></PublicLayout>} />
+            
             <Route path="/lp/:id" element={<LandingPage />} />
             <Route path="/g/:id" element={<PublicGeneratedLandingPage />} />
 
