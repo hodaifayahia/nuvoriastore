@@ -210,8 +210,14 @@ export default function IndexPage() {
   };
 
   if (storeTemplate && storeTemplate !== 'classic') {
+    if (storeTemplate === 'minimal') {
+      return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <MinimalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} />
+        </Suspense>
+      );
+    }
     const Tpl =
-      storeTemplate === 'minimal' ? MinimalTemplate :
       storeTemplate === 'bold' ? BoldTemplate :
       storeTemplate === 'liquid' ? LiquidTemplate :
       storeTemplate === 'digital' ? DigitalTemplate : null;
