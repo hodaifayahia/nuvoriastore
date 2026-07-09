@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, X, Star, ChevronRight, ChevronLeft, Zap, Share2, Heart, ExternalLink } from 'lucide-react';
+import { ShoppingCart, X, Star, ChevronRight, ChevronLeft, Zap, Share2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from '@/lib/format';
 import { useTranslation } from '@/i18n';
@@ -29,13 +28,11 @@ interface QuickViewProps {
 
 export default function QuickViewModal({ product, reviewStats, onClose }: QuickViewProps) {
   const { addItem } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState(product.main_image_index ?? 0);
   const images = product.images || [];
   const outOfStock = (product.stock ?? 0) <= 0;
-  const wishlisted = isInWishlist(product.id);
   const discount = product.old_price && product.old_price > product.price
     ? Math.round((1 - product.price / product.old_price) * 100)
     : 0;
@@ -204,18 +201,6 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
               </div>
 
               <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    toggleWishlist({ id: product.id, name: product.name, price: product.price, image: images[0] || '' });
-                    toast({ title: wishlisted ? t('qv.removed') : t('qv.addedToWishlist') });
-                  }}
-                  className={`flex-1 font-cairo text-xs gap-1.5 rounded-xl h-9 ${wishlisted ? 'text-destructive' : 'text-muted-foreground'}`}
-                >
-                  <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-current' : ''}`} />
-                  {wishlisted ? t('qv.inWishlist') : t('qv.addToWishlist')}
-                </Button>
                 <Button
                   variant="ghost"
                   size="sm"

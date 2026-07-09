@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
-import { WishlistProvider } from "@/contexts/WishlistContext";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -66,7 +66,7 @@ const FAQPage = lazy(() => import("./pages/FAQPage"));
 const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const PublicGeneratedLandingPage = lazy(() => import("./pages/PublicGeneratedLandingPage"));
-const WishlistPage = lazy(() => import("./pages/WishlistPage"));
+
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ConfirmerLayout = lazy(() => import("./components/ConfirmerLayout"));
 const ConfirmerDashboardPage = lazy(() => import("./pages/confirmer/ConfirmerDashboardPage"));
@@ -120,7 +120,7 @@ const RouteFallback = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
-      <WishlistProvider>
+      
       <StoreThemeProvider>
       <TooltipProvider>
         <Toaster />
@@ -145,7 +145,7 @@ const App = () => (
             <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
             <Route path="/faq" element={<PublicLayout><FAQPage /></PublicLayout>} />
             <Route path="/categories" element={<PublicLayout><CategoriesPage /></PublicLayout>} />
-            <Route path="/wishlist" element={<PublicLayout><WishlistPage /></PublicLayout>} />
+            
             <Route path="/lp/:id" element={<LandingPage />} />
             <Route path="/g/:id" element={<PublicGeneratedLandingPage />} />
 
@@ -200,7 +200,7 @@ const App = () => (
         </LanguageProvider>
       </TooltipProvider>
       </StoreThemeProvider>
-      </WishlistProvider>
+      
     </CartProvider>
   </QueryClientProvider>
 );

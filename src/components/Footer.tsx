@@ -55,7 +55,7 @@ export default function Footer() {
         { to: '/', label: 'الرئيسية' },
         { to: '/products', label: 'المنتجات' },
         { to: '/cart', label: 'السلة' },
-        { to: '/wishlist', label: 'المفضلة' },
+        
       ],
     },
     {

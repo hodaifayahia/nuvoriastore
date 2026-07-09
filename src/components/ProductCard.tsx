@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Zap, ChevronLeft, ChevronRight, Truck, Star, Heart } from 'lucide-react';
+import { ShoppingCart, Zap, ChevronLeft, ChevronRight, Truck, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice } from '@/lib/format';
 import ProductImage from '@/components/ProductImage';
 import { useToast } from '@/hooks/use-toast';
@@ -29,12 +28,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, shippingPrice }: ProductCardProps) {
   const { addItem } = useCart();
-  const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
-  const wishlisted = isInWishlist(id);
 
   const { data: variationTypes } = useQuery({
     queryKey: ['product-variation-types', id],
@@ -159,28 +156,7 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             </Badge>
           </div>
 
-          {/* Wishlist button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleWishlist({ id, name, price, image: allImages[0] || '' });
-              toast({
-                title: wishlisted ? t('pc.removedFromWishlist') : t('pc.addedToWishlist'),
-                description: wishlisted
-                  ? t('pc.removedFromWishlistDesc').replace('{name}', name)
-                  : t('pc.addedToWishlistDesc').replace('{name}', name),
-              });
-            }}
-            className={`absolute top-3 left-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 ${
-              wishlisted
-                ? 'bg-destructive/90 text-white scale-110 shadow-md shadow-destructive/30'
-                : 'bg-background/70 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive hover:scale-110'
-            }`}
-            aria-label={wishlisted ? t('pc.removeFromWishlist') : t('pc.addToWishlist')}
-          >
-            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-current' : ''}`} />
-          </button>
+
 
           {/* Hover add-to-cart overlay (desktop only) */}
           <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
