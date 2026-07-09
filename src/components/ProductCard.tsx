@@ -28,12 +28,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, shippingPrice }: ProductCardProps) {
   const { addItem } = useCart();
-  const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
-  const wishlisted = isInWishlist(id);
 
   const { data: variationTypes } = useQuery({
     queryKey: ['product-variation-types', id],
