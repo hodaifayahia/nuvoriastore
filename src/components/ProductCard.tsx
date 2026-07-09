@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice } from '@/lib/format';
-import { optimizeImage, optimizedSrcSet } from '@/lib/image';
+import ProductImage from '@/components/ProductImage';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -115,21 +115,15 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
       <div className="bg-card rounded-3xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-          {allImages.length > 0 ? (
-            <img
-              src={optimizeImage(allImages[currentIndex], 400)}
-              srcSet={optimizedSrcSet(allImages[currentIndex], 400)}
-              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px"
-              alt={name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/10">
-              <ShoppingCart className="w-10 h-10 text-muted-foreground/30" />
-            </div>
-          )}
+          <ProductImage
+            src={allImages[currentIndex]}
+            alt={name}
+            width={400}
+            intrinsicWidth={400}
+            intrinsicHeight={300}
+            className="group-hover:scale-105 transition-transform duration-700 ease-out"
+          />
+
 
           {allImages.length > 1 && (
             <>
