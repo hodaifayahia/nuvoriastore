@@ -232,18 +232,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            <Link
-              to="/wishlist"
-              className="relative p-2.5 rounded-xl hover:bg-muted transition-colors"
-              aria-label={t('nav.wishlist')}
-            >
-              <Heart className={`w-5 h-5 ${wishlistCount > 0 ? 'text-destructive fill-destructive' : 'text-muted-foreground'}`} />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -left-0.5 w-4 h-4 bg-destructive text-white text-[10px] font-roboto rounded-full flex items-center justify-center font-bold shadow-sm">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
+
             <Link
               to="/cart"
               className="relative p-2.5 rounded-xl hover:bg-muted transition-colors"
