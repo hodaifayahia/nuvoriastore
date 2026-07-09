@@ -56,6 +56,38 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [abandonedSaved, setAbandonedSaved] = useState(false);
+  const [guestLimitOpen, setGuestLimitOpen] = useState(false);
+
+  const DRAFT_KEY = 'checkout_draft';
+
+  // Restore draft (e.g., after returning from sign-in)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.name) setName(d.name);
+      if (d.phone) setPhone(d.phone);
+      if (d.wilayaId) setWilayaId(d.wilayaId);
+      if (d.baladiyaName) setBaladiyaName(d.baladiyaName);
+      if (d.deliveryType) setDeliveryType(d.deliveryType);
+      if (d.address) setAddress(d.address);
+      if (d.paymentMethod) setPaymentMethod(d.paymentMethod);
+      if (d.couponCode) setCouponCode(d.couponCode);
+      sessionStorage.removeItem(DRAFT_KEY);
+    } catch {}
+  }, []);
+
+  const saveDraftAndSignIn = () => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+        name, phone, wilayaId, baladiyaName, deliveryType, address, paymentMethod, couponCode,
+      }));
+    } catch {}
+    setGuestLimitOpen(false);
+    navigate('/auth?redirect=%2Fcheckout');
+  };
+
 
   const validatePhone = (v: string) => /^0[567]\d{8}$/.test(v);
   const validatePhoneInternational = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s/g, ''));
