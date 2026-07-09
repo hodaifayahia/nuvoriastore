@@ -1455,7 +1455,7 @@ export default function SingleProductPage() {
           <div className="container flex items-center justify-between gap-4 py-3">
             <div className="flex items-center gap-3 min-w-0">
               {images[0] && (
-                <img src={images[0]} alt={product.name} className="w-11 h-11 rounded-xl object-cover shrink-0 border border-border/30 shadow-sm" />
+                <img src={images[0]} alt={product.name} loading="lazy" decoding="async" className="w-11 h-11 rounded-xl object-cover shrink-0 border border-border/30 shadow-sm" />
               )}
               <div className="min-w-0">
                 <p className="font-cairo font-bold text-sm truncate">{product.name}</p>
