@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Zap, ChevronLeft, ChevronRight, Truck, Star, Heart, Eye } from 'lucide-react';
+import { ShoppingCart, Zap, ChevronLeft, ChevronRight, Truck, Star, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
