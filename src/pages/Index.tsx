@@ -425,6 +425,9 @@ export default function IndexPage() {
                         <img
                           src={active.url}
                           alt={active.alt || activeTitle}
+                          loading="eager"
+                          fetchPriority="high"
+                          decoding="async"
                           className="w-full h-full object-cover"
                         />
                       </Link>
