@@ -42,7 +42,6 @@ const NAV_LINKS: { to: string; key: string; icon: typeof Home }[] = [
 
 export default function Navbar() {
   const { totalItems } = useCart();
-  const { totalItems: wishlistCount } = useWishlist();
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
