@@ -232,11 +232,12 @@ function helpText() {
 
 // ==================== TELEGRAM API ====================
 async function sendMessage(token: string, chatId: string, text: string, reply_markup?: unknown) {
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", reply_markup, disable_web_page_preview: true }),
   });
+  try { return await res.json(); } catch { return null; }
 }
 
 async function editMessage(token: string, chatId: string, messageId: number, text: string, reply_markup?: unknown) {
