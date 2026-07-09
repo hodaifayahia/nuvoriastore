@@ -396,15 +396,6 @@ export default function IndexPage() {
                           <span>{activeCta}</span>
                           <ArrowRight className="w-4 h-4 rotate-180" />
                         </Link>
-                        <Link
-                          to="/wishlist"
-                          aria-label={txt('hero_wishlist_alt', 'إضافة للمفضلة')}
-                          className="p-3.5 sm:p-4 border-2 border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors text-slate-900"
-                        >
-                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                        </Link>
                       </div>
                     </div>
 
