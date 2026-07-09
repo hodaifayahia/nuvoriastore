@@ -102,64 +102,88 @@ export default function TrackOrderPage() {
 
       <div className="container max-w-2xl py-10">
         {order && (
-          <div className="bg-card border border-border rounded-3xl p-6 md:p-8 animate-fade-in space-y-8 shadow-sm">
-            <div className="text-center pb-6 border-b border-border">
-              <p className="font-cairo text-sm text-muted-foreground">{t('trackOrder.orderNumber')}</p>
-              <p className="font-roboto font-bold text-2xl text-primary mt-1">{order.order_number}</p>
-              <p className="font-cairo text-sm text-muted-foreground mt-1">{formatDate(order.created_at)}</p>
+          <div className="bg-card border border-border rounded-3xl p-6 md:p-10 animate-fade-in shadow-sm">
+            {/* Order header */}
+            <div className="text-center pb-8 border-b border-border">
+              <p className="font-cairo text-xs uppercase tracking-[0.2em] text-muted-foreground">{t('trackOrder.orderNumber')}</p>
+              <p className="font-roboto font-black text-3xl md:text-4xl text-primary mt-2 tracking-tight">{order.order_number}</p>
+              <p className="font-cairo text-sm text-muted-foreground mt-2">{formatDate(order.created_at)}</p>
             </div>
 
+            {/* Timeline */}
             {order.status === 'ملغي' ? (
-              <div className="flex items-center justify-center gap-2 text-destructive py-4">
+              <div className="flex items-center justify-center gap-2 text-destructive py-10">
                 <XCircle className="w-6 h-6" />
                 <span className="font-cairo font-bold text-lg">{t('trackOrder.cancelled')}</span>
               </div>
             ) : (
-              <div className="flex items-center justify-between px-2">
-                {statusStepLabels.map((step, i) => {
-                  const Icon = STATUS_ICONS[i];
-                  const active = i <= currentStep;
+              <div className="relative py-10">
+                {/* Rail — full width behind the icons */}
+                <div className="absolute left-6 right-6 top-[52px] h-0.5 bg-border" />
+                {(() => {
+                  const total = statusStepLabels.length;
+                  // In RTL, active steps fill from the right — width of the progress rail
+                  const filled = currentStep < 0 ? 0 : currentStep / (total - 1);
                   return (
-                    <div key={step} className="flex flex-col items-center gap-2 relative flex-1">
-                      {i > 0 && (
-                        <div className={`absolute top-5 right-1/2 w-full h-0.5 -translate-y-1/2 ${i <= currentStep ? 'bg-primary' : 'bg-border'}`} style={{ right: '50%', width: '100%', zIndex: 0 }} />
-                      )}
-                      <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className={`font-cairo text-xs text-center ${active ? 'text-primary font-bold' : 'text-muted-foreground'}`}>{step}</span>
-                    </div>
+                    <div
+                      className="absolute top-[52px] h-0.5 bg-primary transition-all duration-500"
+                      style={{ right: '1.5rem', width: `calc((100% - 3rem) * ${filled})` }}
+                    />
                   );
-                })}
+                })()}
+                <div className="relative flex items-start justify-between">
+                  {statusStepLabels.map((step, i) => {
+                    const Icon = STATUS_ICONS[i];
+                    const active = i <= currentStep;
+                    const isCurrent = i === currentStep;
+                    return (
+                      <div key={step} className="flex flex-col items-center gap-3 flex-1 min-w-0">
+                        <div
+                          className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
+                            active
+                              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                              : 'bg-muted text-muted-foreground'
+                          } ${isCurrent ? 'ring-4 ring-primary/20 scale-110' : ''}`}
+                        >
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <span className={`font-cairo text-xs text-center leading-tight px-1 ${active ? 'text-primary font-bold' : 'text-muted-foreground'}`}>
+                          {step}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
+            {/* Details */}
             <div className="grid sm:grid-cols-2 gap-3 pt-6 border-t border-border">
-              <div className="flex items-center gap-3 bg-muted/50 rounded-xl p-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 bg-muted/40 rounded-2xl p-4 border border-border/50">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                   <User className="w-5 h-5 text-primary" />
                 </div>
-                <div className="min-w-0">
-                  <p className="font-cairo text-xs text-muted-foreground">{t('trackOrder.customerName')}</p>
-                  <p className="font-cairo font-semibold text-foreground truncate">{order.customer_name}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground">{t('trackOrder.customerName')}</p>
+                  <p className="font-cairo font-semibold text-foreground truncate mt-0.5">{order.customer_name}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-muted/50 rounded-xl p-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5 text-accent-foreground" />
+              <div className="flex items-center gap-3 bg-muted/40 rounded-2xl p-4 border border-border/50">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-primary" />
                 </div>
-                <div className="min-w-0">
-                  <p className="font-cairo text-xs text-muted-foreground">{t('trackOrder.wilaya')}</p>
-                  <p className="font-cairo font-semibold text-foreground truncate">{order.wilaya_name}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground">{t('trackOrder.wilaya')}</p>
+                  <p className="font-cairo font-semibold text-foreground truncate mt-0.5">{order.wilaya_name}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-primary text-primary-foreground rounded-xl p-4 sm:col-span-2">
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/15 flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 bg-primary text-primary-foreground rounded-2xl p-5 sm:col-span-2 shadow-lg shadow-primary/20">
+                <div className="w-11 h-11 rounded-xl bg-primary-foreground/15 flex items-center justify-center shrink-0">
                   <Receipt className="w-5 h-5" />
                 </div>
-                <div className="flex-1 flex items-center justify-between">
+                <div className="flex-1 flex items-center justify-between gap-3">
                   <p className="font-cairo font-semibold">{t('trackOrder.total')}</p>
-                  <p className="font-roboto font-bold text-lg">{formatPrice(Number(order.total_amount))}</p>
+                  <p className="font-roboto font-black text-xl tracking-tight">{formatPrice(Number(order.total_amount))}</p>
                 </div>
               </div>
             </div>
