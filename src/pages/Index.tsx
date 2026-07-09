@@ -699,10 +699,9 @@ export default function IndexPage() {
       {bentoCats.map((cat, idx) => {
         const pool = (allProducts || [])
           .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name));
-        // Shuffle so each visit shows different products from the category
-        const catProducts = [...pool]
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 4);
+        // Stable pick — keep the same 4 products across renders (products are
+        // already ordered by created_at DESC from the query).
+        const catProducts = pool.slice(0, 4);
         if (catProducts.length === 0) return null;
         const CatIcon = cat.icon;
         const accents = [
