@@ -567,27 +567,34 @@ export default function SingleProductPage() {
         receiptUrl = urlData.publicUrl;
       }
 
-      const { data: order, error } = await supabase.from('orders').insert({
-        order_number: '',
-        customer_name: orderName, customer_phone: orderPhone,
-        wilaya_id: orderWilayaId, baladiya: orderBaladiya || null,
-        delivery_type: orderDeliveryType || null,
-        address: orderAddress || null,
-        subtotal: itemSubtotal, shipping_cost: shippingCost, total_amount: orderTotal,
-        payment_method: paymentMethod, payment_receipt_url: receiptUrl || null,
-        coupon_code: couponApplied ? couponCode : null,
-        discount_amount: couponDiscount,
-        user_id: user?.id || null,
-      }).select().single();
-      if (error) throw error;
+      const items: any[] = [{
+        product_id: product.id,
+        quantity: qty,
+        unit_price: effectivePrice,
+      }];
+      if (hasNewVariants && matchedVariant) items[0].variant_id = matchedVariant.id;
 
-      const orderItemPayload: any = {
-        order_id: order.id, product_id: product.id, quantity: qty, unit_price: effectivePrice,
-      };
-      if (hasNewVariants && matchedVariant) {
-        orderItemPayload.variant_id = matchedVariant.id;
-      }
-      await supabase.from('order_items').insert(orderItemPayload);
+      const { data: rpcData, error } = await supabase.rpc('create_public_order', {
+        p_order: {
+          customer_name: orderName,
+          customer_phone: orderPhone,
+          wilaya_id: orderWilayaId,
+          baladiya: orderBaladiya || null,
+          delivery_type: orderDeliveryType || null,
+          address: orderAddress || null,
+          subtotal: itemSubtotal,
+          shipping_cost: shippingCost,
+          total_amount: orderTotal,
+          payment_method: paymentMethod,
+          payment_receipt_url: receiptUrl || null,
+          coupon_code: couponApplied ? couponCode : null,
+          discount_amount: couponDiscount,
+          user_id: user?.id || null,
+        },
+        p_items: items,
+      });
+      if (error) throw error;
+      const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
       // Telegram notification is handled server-side by a database trigger.
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err) {
