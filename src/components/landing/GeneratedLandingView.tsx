@@ -386,26 +386,24 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
     setSubmitting(true);
     try {
       const qty = Math.max(1, Number(form.quantity) || 1);
-      const { data: order, error } = await supabase.from('orders').insert({
-        customer_name: form.customer_name.trim(),
-        customer_phone: form.phone.trim(),
-        wilaya_id: form.wilaya_id || null,
-        baladiya: form.baladiya || null,
-        total_amount: total,
-        subtotal: total,
-        status: 'جديد',
-        landing_page_id: landingPageId,
-      } as any).select('id').single();
-      if (error) throw error;
-
-      const { error: itemErr } = await supabase.from('order_items').insert({
-        order_id: order.id,
-        product_id: productId,
-        variant_id: form.variant_id || null,
-        quantity: qty,
-        unit_price: unitPrice,
+      const { error } = await supabase.rpc('create_public_order', {
+        p_order: {
+          customer_name: form.customer_name.trim(),
+          customer_phone: form.phone.trim(),
+          wilaya_id: form.wilaya_id || null,
+          baladiya: form.baladiya || null,
+          total_amount: total,
+          subtotal: total,
+          landing_page_id: landingPageId,
+        },
+        p_items: [{
+          product_id: productId,
+          variant_id: form.variant_id || null,
+          quantity: qty,
+          unit_price: unitPrice,
+        }],
       });
-      if (itemErr) throw itemErr;
+      if (error) throw error;
 
       setDone(true);
       toast.success('تم استلام طلبك — سنتصل بك قريباً');

@@ -1804,6 +1804,13 @@ export type Database = {
         Args: { p_phone: string }
         Returns: number
       }
+      create_public_order: {
+        Args: { p_items: Json; p_order: Json }
+        Returns: {
+          id: string
+          order_number: string
+        }[]
+      }
       get_active_facebook_pixels: {
         Args: never
         Returns: {

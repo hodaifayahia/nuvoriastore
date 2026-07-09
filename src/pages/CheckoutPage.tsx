@@ -288,28 +288,8 @@ export default function CheckoutPage() {
         receiptUrl = urlData.publicUrl;
       }
 
-      const { data: order, error } = await supabase.from('orders').insert({
-        order_number: '',
-        customer_name: name,
-        customer_phone: phone,
-        wilaya_id: isDigitalOnly ? null : (wilayaId || null),
-        baladiya: isDigitalOnly ? null : (baladiyaName || null),
-        delivery_type: isDigitalOnly ? 'digital' : (deliveryType || null),
-        address: isDigitalOnly ? null : (address || null),
-        subtotal,
-        shipping_cost: shippingCost,
-        total_amount: total,
-        payment_method: paymentMethod,
-        payment_receipt_url: receiptUrl || null,
-        coupon_code: couponApplied ? couponCode : null,
-        discount_amount: discount,
-        user_id: user?.id || null,
-      }).select().single();
-      if (error) throw error;
-
       const orderItems = items.map(item => {
         const oi: any = {
-          order_id: order.id,
           product_id: item.id,
           quantity: item.quantity,
           unit_price: item.price,
@@ -317,7 +297,28 @@ export default function CheckoutPage() {
         if (item.variantId) oi.variant_id = item.variantId;
         return oi;
       });
-      await supabase.from('order_items').insert(orderItems);
+
+      const { data: rpcData, error } = await supabase.rpc('create_public_order', {
+        p_order: {
+          customer_name: name,
+          customer_phone: phone,
+          wilaya_id: isDigitalOnly ? null : (wilayaId || null),
+          baladiya: isDigitalOnly ? null : (baladiyaName || null),
+          delivery_type: isDigitalOnly ? 'digital' : (deliveryType || null),
+          address: isDigitalOnly ? null : (address || null),
+          subtotal,
+          shipping_cost: shippingCost,
+          total_amount: total,
+          payment_method: paymentMethod,
+          payment_receipt_url: receiptUrl || null,
+          coupon_code: couponApplied ? couponCode : null,
+          discount_amount: discount,
+          user_id: user?.id || null,
+        },
+        p_items: orderItems,
+      });
+      if (error) throw error;
+      const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
 
       // Auto-resolve abandoned cart
       await supabase.rpc('mark_abandoned_recovered', { p_phone: phone.trim(), p_order_id: order.id });
