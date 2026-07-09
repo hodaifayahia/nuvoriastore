@@ -648,12 +648,8 @@ export default function SingleProductPage() {
         toast({ title: t('sp.error'), description: t('sp.invalidPhone'), variant: 'destructive' });
         orderFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (message.includes('guest_order_limit_reached')) {
-        toast({
-          title: 'يرجى إنشاء حساب',
-          description: 'لقد وصلت للحد الأقصى (2) من الطلبات كزائر. الرجاء تسجيل الدخول للمتابعة.',
-          variant: 'destructive',
-        });
-        navigate('/auth');
+        setGuestLimitOpen(true);
+
       } else {
         toast({ title: t('sp.error'), description: t('sp.orderError'), variant: 'destructive' });
       }
