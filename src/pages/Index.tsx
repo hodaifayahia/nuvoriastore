@@ -209,10 +209,20 @@ export default function IndexPage() {
     if (searchQuery.trim()) navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
   };
 
-  if (storeTemplate === 'minimal') return <MinimalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} />;
-  if (storeTemplate === 'bold')    return <BoldTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
-  if (storeTemplate === 'liquid')  return <LiquidTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
-  if (storeTemplate === 'digital') return <DigitalTemplate products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />;
+  if (storeTemplate && storeTemplate !== 'classic') {
+    const Tpl =
+      storeTemplate === 'minimal' ? MinimalTemplate :
+      storeTemplate === 'bold' ? BoldTemplate :
+      storeTemplate === 'liquid' ? LiquidTemplate :
+      storeTemplate === 'digital' ? DigitalTemplate : null;
+    if (Tpl) {
+      return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <Tpl products={allProducts} isLoading={isLoading} categories={categoriesData} heroSlides={heroSlides} />
+        </Suspense>
+      );
+    }
+  }
 
   const bentoCats = useMemo(() => {
     return (categoriesData || [])
