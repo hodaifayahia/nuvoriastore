@@ -440,7 +440,6 @@ export default function AdminCategoriesPage() {
                     </Button>
                   </div>
                 </div>
-                </div>
               );
             })}
           </div>
