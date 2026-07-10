@@ -805,38 +805,8 @@ export default function IndexPage() {
 
 
 
-      {/* ─────────── LIMITED EDITION ─────────── */}
-      {showSection('limited') && (hp?.limited.title || hp?.limited.image) && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto glass-card neon-border rounded-3xl overflow-hidden grid md:grid-cols-2 gap-0 relative">
-            <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-teal)/0.25)] blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-violet)/0.25)] blur-3xl" />
-            <div className="relative p-6 sm:p-10 flex flex-col justify-center">
-              <span className="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.3em] font-semibold border border-white/10 glass-panel mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" /> Édition limitée
-              </span>
-              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{hp?.limited.title}</h2>
-              {hp?.limited.subtitle && (
-                <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-md leading-relaxed">{hp.limited.subtitle}</p>
-              )}
-              <div className="mt-6">
-                <Link to={hp?.limited.link || '/products'}>
-                  <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                    {hp?.limited.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant')} <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="relative min-h-[260px] md:min-h-full">
-              {hp?.limited.image ? (
-                <img src={hp.limited.image} alt={hp.limited.title} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--grad-teal)/0.3)] to-[hsl(var(--grad-violet)/0.3)]" />
-              )}
-            </div>
-          </div>
-        </section>
-      )}
+
+
 
       {/* ─────────── BRANDS ─────────── */}
       {showSection('brands') && (
