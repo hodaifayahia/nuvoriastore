@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef, ReactNode, FormEvent } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { LayoutDashboard, Package, MapPin, ShoppingCart, Tag, Settings, LogOut, Menu, X, Layers, Users, UserCheck, Bell, AlertTriangle, Clock, Palette, Search, ExternalLink, User, ChevronDown, PackageX, RotateCcw, DollarSign, Globe, Store, CreditCard, Bot, FormInput, Paintbrush, Shield, Rocket, Truck, ChevronRight, BarChart3, Award, Sun, Moon, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Package, MapPin, ShoppingCart, Tag, Settings, LogOut, Menu, X, Layers, Users, UserCheck, Bell, AlertTriangle, Clock, Palette, Search, ExternalLink, User, ChevronDown, PackageX, RotateCcw, DollarSign, Globe, Store, CreditCard, Bot, FormInput, Paintbrush, Shield, Rocket, Truck, ChevronRight, BarChart3, Award, Sun, Moon, Sparkles, LayoutTemplate } from 'lucide-react';
 import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -107,6 +107,8 @@ const SETTINGS_SUB_KEYS = [
   { href: '/admin/settings/telegram', key: 'settings.telegram', icon: Bot },
   { href: '/admin/settings/returns', key: 'settings.returnsTab', icon: RotateCcw },
   { href: '/admin/settings/form', key: 'sidebar.form', icon: FormInput },
+  { href: '/admin/ln', key: 'settings.homepage', icon: LayoutTemplate },
+
   
   { href: '/admin/settings/security', key: 'settings.security', icon: Shield },
   { href: '/admin/settings/pixels', key: 'pixels.title', icon: Globe },
