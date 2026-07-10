@@ -27,6 +27,8 @@ const BoldTemplate = lazy(() => import('@/components/templates/BoldTemplate'));
 const LiquidTemplate = lazy(() => import('@/components/templates/LiquidTemplate'));
 const DigitalTemplate = lazy(() => import('@/components/templates/DigitalTemplate'));
 import TextMarquee from '@/components/TextMarquee';
+import LimitedOfferSection from '@/components/homepage/LimitedOfferSection';
+
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
 import heroBanner3 from '@/assets/hero-banner-3.jpg';
