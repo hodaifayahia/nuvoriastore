@@ -32,9 +32,9 @@ function detectBrowserLanguage(): Language {
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'fr';
   const stored = localStorage.getItem('site_language');
-  if (stored === 'ar' || stored === 'fr') return stored;
-  // Migrate legacy 'en' value
-  if (stored === 'en') return 'fr';
+  // Storefront is French/LTR by default; migrate older Arabic/English cached choices.
+  if (stored !== 'fr') return 'fr';
+  if (stored === 'fr') return stored;
   return detectBrowserLanguage();
 }
 
