@@ -3,10 +3,10 @@ import { ar } from './locales/ar';
 import { fr } from './locales/fr';
 import { en } from './locales/en';
 
-export type Language = 'ar' | 'fr' | 'en';
+export type Language = 'ar' | 'fr';
 export type TranslationKeys = keyof typeof ar;
 
-const translations: Record<Language, Record<string, string>> = { ar, fr, en };
+const translations: Record<Language, Record<string, string>> = { ar, fr };
 
 interface LanguageContextType {
   language: Language;
@@ -17,8 +17,25 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+function detectBrowserLanguage(): Language {
+  if (typeof navigator === 'undefined') return 'ar';
+  const langs = [navigator.language, ...(navigator.languages || [])].filter(Boolean);
+  for (const l of langs) {
+    const code = l.toLowerCase().split('-')[0];
+    if (code === 'ar') return 'ar';
+    if (code === 'fr') return 'fr';
+  }
+  // Non-Arabic / non-French browser locale → French per user rule
+  return 'fr';
+}
+
 function getInitialLanguage(): Language {
-  return 'ar';
+  if (typeof window === 'undefined') return 'ar';
+  const stored = localStorage.getItem('site_language');
+  if (stored === 'ar' || stored === 'fr') return stored;
+  // Migrate legacy 'en' value
+  if (stored === 'en') return 'fr';
+  return detectBrowserLanguage();
 }
 
 
@@ -39,7 +56,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: string): string => {
-    return translations[language]?.[key] || translations.ar[key] || key;
+    return translations[language]?.[key] || translations.ar[key] || (en as Record<string, string>)[key] || key;
   }, [language]);
 
 
