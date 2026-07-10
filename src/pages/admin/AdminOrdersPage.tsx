@@ -64,13 +64,44 @@ export default function AdminOrdersPage() {
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [exportingDelivery, setExportingDelivery] = useState(false);
 
-  const { data: orders } = useQuery({
-    queryKey: ['admin-orders'],
+  // Pagination
+  const PAGE_SIZE = 30;
+  const [page, setPage] = useState(1);
+
+  // Reset to page 1 when any filter/search changes
+  const filterKey = `${search}|${statusFilter}|${sourceFilter}|${wilayaFilter}|${paymentFilter}|${dateFrom}|${dateTo}|${minTotal}|${maxTotal}`;
+  useMemo(() => { setPage(1); }, [filterKey]);
+
+  const { data: ordersResult, isFetching } = useQuery({
+    queryKey: ['admin-orders', page, search, statusFilter, sourceFilter, wilayaFilter, paymentFilter, dateFrom, dateTo, minTotal, maxTotal],
     queryFn: async () => {
-      const { data } = await supabase.from('orders').select('*, wilayas(name)').order('created_at', { ascending: false });
-      return data || [];
+      let q = supabase.from('orders').select('*, wilayas(name)', { count: 'exact' });
+
+      if (search.trim()) {
+        const s = search.trim().replace(/[%,]/g, '');
+        q = q.or(`order_number.ilike.%${s}%,customer_name.ilike.%${s}%,customer_phone.ilike.%${s}%`);
+      }
+      if (statusFilter !== 'الكل') q = q.eq('status', statusFilter);
+      if (paymentFilter !== 'الكل') q = q.eq('payment_method', paymentFilter);
+      if (dateFrom) q = q.gte('created_at', dateFrom);
+      if (dateTo) q = q.lte('created_at', dateTo + 'T23:59:59');
+      if (minTotal) q = q.gte('total_amount', Number(minTotal));
+      if (maxTotal) q = q.lte('total_amount', Number(maxTotal));
+      if (sourceFilter === 'landing') q = q.not('landing_page_id', 'is', null);
+      else if (sourceFilter === 'website') q = q.is('landing_page_id', null);
+
+      const from = (page - 1) * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+      q = q.order('created_at', { ascending: false }).range(from, to);
+
+      const { data, count } = await q;
+      return { rows: data || [], count: count || 0 };
     },
   });
+
+  const orders = ordersResult?.rows;
+  const totalCount = ordersResult?.count || 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const { data: orderItems } = useQuery({
     queryKey: ['order-items', selectedOrder?.id],
@@ -196,20 +227,13 @@ export default function AdminOrdersPage() {
   }, [orders]);
 
   const filtered = useMemo(() => {
+    // Server already applied search/status/source/payment/dates/totals.
+    // Wilaya is a joined field, so filter client-side against the current page.
     return (orders || []).filter(o => {
-      const matchSearch = !search || o.order_number?.includes(search) || o.customer_name?.includes(search) || o.customer_phone?.includes(search);
-      const matchStatus = statusFilter === 'الكل' || o.status === statusFilter;
       const wilayaName = (o as any).wilayas?.name;
-      const matchWilaya = wilayaFilter === 'الكل' || wilayaName === wilayaFilter;
-      const matchPayment = paymentFilter === 'الكل' || o.payment_method === paymentFilter;
-      const matchDateFrom = !dateFrom || (o.created_at && o.created_at >= dateFrom);
-      const matchDateTo = !dateTo || (o.created_at && o.created_at <= dateTo + 'T23:59:59');
-      const matchMinTotal = !minTotal || Number(o.total_amount) >= Number(minTotal);
-      const matchMaxTotal = !maxTotal || Number(o.total_amount) <= Number(maxTotal);
-      const matchSource = sourceFilter === 'all' || (sourceFilter === 'landing' ? !!(o as any).landing_page_id : !(o as any).landing_page_id);
-      return matchSearch && matchStatus && matchWilaya && matchPayment && matchDateFrom && matchDateTo && matchMinTotal && matchMaxTotal && matchSource;
+      return wilayaFilter === 'الكل' || wilayaName === wilayaFilter;
     });
-  }, [orders, search, statusFilter, wilayaFilter, paymentFilter, dateFrom, dateTo, minTotal, maxTotal, sourceFilter]);
+  }, [orders, wilayaFilter]);
 
   const handleQuickStatus = (orderId: string, status: string) => {
     updateStatus.mutate({ id: orderId, status });
@@ -368,7 +392,7 @@ export default function AdminOrdersPage() {
                 <Input type="number" value={maxTotal} onChange={e => setMaxTotal(e.target.value)} placeholder="∞" className="mt-1 h-9 text-xs font-roboto" />
               </div>
             </div>
-            <p className="font-cairo text-xs text-muted-foreground">{t('orders.matchingOrders').replace('{n}', String(filtered.length))}</p>
+            <p className="font-cairo text-xs text-muted-foreground">{t('orders.matchingOrders').replace('{n}', String(totalCount))}</p>
           </div>
         )}
 
@@ -546,6 +570,24 @@ export default function AdminOrdersPage() {
             );
           })}
         </div>
+
+        {/* Pagination */}
+        {totalCount > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-card border rounded-lg p-3">
+            <p className="font-cairo text-xs text-muted-foreground">
+              {`عرض ${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, totalCount)} من ${totalCount}`}
+              {isFetching && <Loader2 className="inline w-3 h-3 ml-2 animate-spin" />}
+            </p>
+            <div className="flex items-center gap-1">
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(1)} disabled={page === 1}>الأولى</Button>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>السابق</Button>
+              <span className="px-3 font-cairo text-sm">{page} / {totalPages}</span>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}>التالي</Button>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(totalPages)} disabled={page >= totalPages}>الأخيرة</Button>
+            </div>
+          </div>
+        )}
+
 
         <Dialog open={!!selectedOrder} onOpenChange={open => !open && setSelectedOrder(null)}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
