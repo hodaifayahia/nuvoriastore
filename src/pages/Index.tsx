@@ -10,7 +10,7 @@ import {
   BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
   Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
   ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
-  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote, RefreshCw, Wrench,
+  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote, RefreshCw, Wrench, Grid3X3,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -311,203 +311,62 @@ export default function IndexPage() {
         const lineTwo = titleParts[1] || '';
 
         return (
-          <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12">
+          <section className="relative px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-10">
             <div className="relative max-w-7xl mx-auto group">
-              <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-white via-white to-slate-50 text-slate-900 shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.35)] border border-white ring-1 ring-slate-200/60">
-                {/* Ambient background blurs */}
+              {/* Colored hero panel */}
+              <div
+                className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.5rem] text-white shadow-[0_40px_100px_-40px_hsl(var(--primary)/0.55)] ring-1 ring-white/10"
+                style={{
+                  background:
+                    'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.88) 55%, hsl(var(--primary) / 0.75) 100%)',
+                }}
+              >
+                {/* Decorative ambient */}
                 <div aria-hidden className="pointer-events-none absolute inset-0">
-                  <div className="absolute -top-[15%] -right-[8%] w-[55%] h-[70%] rounded-full blur-[130px] opacity-60"
-                       style={{ background: 'hsl(var(--primary) / 0.25)' }} />
-                  <div className="absolute -bottom-[15%] -left-[8%] w-[50%] h-[60%] rounded-full blur-[110px] opacity-40"
-                       style={{ background: 'hsl(var(--primary) / 0.18)' }} />
-                  {/* subtle grid texture */}
-                  <div className="absolute inset-0 opacity-[0.035]"
-                       style={{
-                         backgroundImage:
-                           'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
-                         backgroundSize: '48px 48px',
-                       }} />
+                  <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[80%] rounded-full blur-[130px] opacity-40 bg-white" />
+                  <div className="absolute -bottom-[25%] -right-[10%] w-[55%] h-[70%] rounded-full blur-[120px] opacity-25 bg-black" />
+                  {/* subtle diagonal noise */}
+                  <div
+                    className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 1px, transparent 0)",
+                      backgroundSize: '22px 22px',
+                    }}
+                  />
+                  {/* corner arc */}
+                  <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full border border-white/15" />
+                  <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full border border-white/10" />
                 </div>
 
                 {/* Corner wordmark */}
-                <div aria-hidden className="hidden md:block absolute top-6 left-6 opacity-[0.06] select-none">
-                  <span className="font-display text-5xl font-black tracking-tighter text-slate-900">NUVORIA</span>
+                <div aria-hidden className="hidden md:block absolute bottom-6 left-8 opacity-[0.10] select-none">
+                  <span className="font-display text-5xl font-black tracking-tighter">NUVORIA</span>
                 </div>
 
-                {/* Embla viewport (hidden overlay just for autoplay + swipe) */}
+                {/* Embla viewport (invisible, drives autoplay + swipe) */}
                 <div className="absolute inset-0 opacity-0 pointer-events-none" ref={emblaRef}>
                   <div className="flex h-full">
                     {slides.map((_, i) => (<div key={i} className="flex-[0_0_100%] min-w-0 h-full" />))}
                   </div>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-6 p-6 sm:p-10 md:p-14 lg:p-16 min-h-[560px] md:min-h-[600px] lg:min-h-[640px]" dir="rtl">
-                  {/* ── Text column ── */}
-                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1">
-                    {/* Badges row */}
-                    <div className="flex flex-wrap gap-2 animate-fade-in">
-                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary text-primary-foreground text-[11px] font-bold rounded-full tracking-wide shadow-md shadow-primary/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse" />
-                        {activeBadge}
-                      </span>
-                      <span className="inline-flex items-center px-3.5 py-1.5 bg-white text-slate-600 text-[11px] font-bold rounded-full border border-slate-200 shadow-sm">
-                        {txt('hero_exclusive_badge', 'حصري في NuvoriaStore')}
-                      </span>
-                    </div>
-
-                    {/* Rating / social proof */}
-                    <div
-                      className="inline-flex items-center gap-2.5 self-start animate-fade-in"
-                      style={{ animationDelay: '40ms', animationFillMode: 'both' }}
-                    >
-                      <div className="flex items-center gap-0.5" dir="ltr">
-                        {[0, 1, 2, 3, 4].map((i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                      <span className="text-xs sm:text-sm text-slate-500 font-medium">
-                        <span className="font-bold text-slate-800">4.9</span>
-                        <span className="mx-1.5 text-slate-300">·</span>
-                        {txt('hero_reviews_label', '+1200 عميل راضٍ')}
-                      </span>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h1
-                        className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight animate-fade-in"
-                        style={{ animationDelay: '80ms', animationFillMode: 'both' }}
-                      >
-                        <span className="block text-slate-900">{lineOne}</span>
-                        {lineTwo && (
-                          <span
-                            className="block bg-clip-text text-transparent"
-                            style={{ backgroundImage: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.6))' }}
-                          >
-                            {lineTwo}
-                          </span>
-                        )}
-                      </h1>
-                      <p
-                        className="text-base sm:text-lg text-slate-500 max-w-lg leading-relaxed animate-fade-in"
-                        style={{ animationDelay: '180ms', animationFillMode: 'both' }}
-                      >
-                        {activeSubtitle}
-                      </p>
-                    </div>
-
-                    <div
-                      className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 animate-fade-in"
-                      style={{ animationDelay: '280ms', animationFillMode: 'both' }}
-                    >
-                      {(activePrice || activeOldPrice) && (
-                        <div className="flex flex-col">
-                          {activeOldPrice && (
-                            <span className="text-slate-400 text-sm line-through decoration-destructive/70">
-                              {activeOldPrice}
-                            </span>
-                          )}
-                          {activePrice && (
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{activePrice}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex items-center gap-3">
-                        <Link
-                          to={activeCtaHref}
-                          className="group/cta relative inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 font-bold rounded-2xl text-white overflow-hidden transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-primary/30"
-                          style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.85))' }}
-                        >
-                          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
-                          <span className="relative">{activeCta}</span>
-                          <ArrowRight className="relative w-4 h-4 rotate-180 transition-transform group-hover/cta:-translate-x-1" />
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Trust icons row */}
-                    <div
-                      className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 animate-fade-in"
-                      style={{ animationDelay: '360ms', animationFillMode: 'both' }}
-                    >
-                      {[
-                        { icon: Truck, label: txt('hero_trust_shipping', 'شحن سريع لكل الولايات') },
-                        { icon: Shield, label: txt('hero_trust_warranty', 'ضمان سنة كاملة') },
-                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'الدفع عند الاستلام') },
-                      ].map((t, i) => (
-                        <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 font-medium">
-                          <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                            <t.icon className="w-3 h-3" />
-                          </span>
-                          {t.label}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Thumbnail slide selector */}
-                    {slides.length > 1 && (
-                      <div className="flex items-center gap-2 pt-1">
-                        {slides.slice(0, 5).map((s: any, i: number) => {
-                          const active = selectedSlide === i;
-                          return (
-                            <button
-                              key={i}
-                              type="button"
-                              onClick={() => scrollTo(i)}
-                              aria-label={`الشريحة ${i + 1}`}
-                              className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
-                                active
-                                  ? 'w-14 h-14 ring-2 ring-primary shadow-md shadow-primary/30 scale-105'
-                                  : 'w-11 h-11 ring-1 ring-slate-200 opacity-70 hover:opacity-100'
-                              }`}
-                            >
-                              <img src={s.url} alt="" className="w-full h-full object-cover" />
-                              {active && (
-                                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── Image column ── */}
-                  <div className="relative order-1 md:order-2 flex items-center justify-center p-2 sm:p-6">
-                    <div key={`img-${selectedSlide}`} className="relative w-full max-w-md aspect-square animate-scale-in">
+                <div
+                  className="relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-8 md:gap-6 items-center p-6 sm:p-10 md:p-14 lg:p-16 min-h-[540px] md:min-h-[560px] lg:min-h-[600px]"
+                  dir="rtl"
+                >
+                  {/* ── Image column (left in RTL visual thanks to order) ── */}
+                  <div className="relative order-1 md:order-2 flex items-center justify-center">
+                    <div key={`img-${selectedSlide}`} className="relative w-full max-w-[420px] aspect-square animate-scale-in">
                       {/* decorative rings */}
-                      <div aria-hidden className="absolute -inset-4 rounded-[3rem] border border-primary/15" />
-                      <div aria-hidden className="absolute -inset-8 rounded-[3.5rem] border border-primary/10" />
-                      {/* soft glow behind product */}
-                      <div aria-hidden className="absolute inset-6 rounded-full blur-3xl opacity-70"
-                           style={{ background: 'radial-gradient(closest-side, hsl(var(--primary) / 0.25), transparent 70%)' }} />
+                      <div aria-hidden className="absolute -inset-2 rounded-full border border-white/25" />
+                      <div aria-hidden className="absolute -inset-6 rounded-full border border-white/15" />
+                      <div aria-hidden className="absolute -inset-12 rounded-full border border-white/10" />
 
-                      {/* Top-right floating: energy badge */}
-                      <div className="absolute -top-3 right-3 sm:-top-4 sm:right-4 z-20 bg-white/90 backdrop-blur-lg p-3 sm:p-3.5 rounded-3xl shadow-xl shadow-slate-900/10 border border-white flex items-center gap-3 animate-fade-in"
-                           style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-4 ring-emerald-50/60">
-                          <Zap className="w-5 h-5" />
-                        </div>
-                        <div className="text-right">
-                          <div className="text-[10px] sm:text-xs text-slate-400 font-medium">{txt('hero_energy_label', 'توفير الطاقة')}</div>
-                          <div className="text-xs sm:text-sm font-bold text-slate-800">{txt('hero_energy_value', 'فئة +++A')}</div>
-                        </div>
-                      </div>
-
-                      {/* Top-left floating: rating pill */}
-                      <div className="absolute top-8 -left-2 sm:top-10 sm:-left-3 z-20 bg-white/95 backdrop-blur-lg px-3 py-2 rounded-2xl shadow-lg shadow-slate-900/10 border border-white flex items-center gap-1.5 animate-fade-in"
-                           style={{ animationDelay: '260ms', animationFillMode: 'both' }}>
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        <span className="text-xs font-bold text-slate-800">4.9</span>
-                        <span className="text-[10px] text-slate-400 font-medium">/5</span>
-                      </div>
-
-                      {/* Product image */}
+                      {/* Circular product mask */}
                       <Link
                         to={activeCtaHref}
-                        className="group/img relative flex items-center justify-center w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/15 border-4 border-white bg-gradient-to-br from-slate-50 to-white hover:scale-[1.02] transition-transform duration-500"
+                        className="group/img relative flex items-center justify-center w-full h-full rounded-full overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] ring-4 ring-white/25 bg-white/10 backdrop-blur-sm"
                       >
                         <img
                           src={active.url}
@@ -519,36 +378,168 @@ export default function IndexPage() {
                           decoding="async"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
                         />
-                        {/* subtle sheen */}
-                        <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover/img:translate-x-full transition-transform duration-1000" />
+                        <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-tr from-black/25 via-transparent to-white/10" />
                       </Link>
 
+                      {/* Rating chip (top) */}
+                      <div
+                        className="absolute top-2 -right-2 z-20 bg-white text-slate-900 px-3 py-2 rounded-2xl shadow-xl flex items-center gap-1.5 animate-fade-in"
+                        style={{ animationDelay: '220ms', animationFillMode: 'both' }}
+                      >
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-xs font-bold">4.9</span>
+                        <span className="text-[10px] text-slate-400 font-medium">/5</span>
+                      </div>
 
-
-
-                      {/* Bottom-right floating: delivery */}
-                      <div className="hidden sm:flex absolute -bottom-4 -right-3 z-20 bg-white/95 backdrop-blur-lg px-3.5 py-2.5 rounded-2xl shadow-lg shadow-slate-900/10 border border-white items-center gap-2 animate-fade-in"
-                           style={{ animationDelay: '380ms', animationFillMode: 'both' }}>
-                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                          <Truck className="w-4 h-4" />
+                      {/* Energy chip (bottom-left) */}
+                      <div
+                        className="absolute -bottom-2 -left-2 z-20 bg-white/95 backdrop-blur-lg text-slate-900 px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2.5 animate-fade-in"
+                        style={{ animationDelay: '280ms', animationFillMode: 'both' }}
+                      >
+                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-2 ring-emerald-100">
+                          <Zap className="w-4 h-4" />
                         </div>
                         <div className="text-right leading-tight">
-                          <div className="text-[10px] text-slate-400 font-medium">{txt('hero_delivery_label', 'التوصيل')}</div>
-                          <div className="text-xs font-bold text-slate-800">{txt('hero_delivery_value', '24-48 ساعة')}</div>
+                          <div className="text-[10px] text-slate-400 font-medium">
+                            {txt('hero_energy_label', 'توفير الطاقة')}
+                          </div>
+                          <div className="text-xs font-bold">{txt('hero_energy_value', 'فئة +++A')}</div>
                         </div>
+                      </div>
+
+                      {/* Delivery chip (top-left) */}
+                      <div
+                        className="hidden sm:flex absolute top-10 -left-3 z-20 bg-slate-900/85 backdrop-blur-lg text-white px-3 py-2 rounded-2xl shadow-xl items-center gap-2 animate-fade-in ring-1 ring-white/10"
+                        style={{ animationDelay: '340ms', animationFillMode: 'both' }}
+                      >
+                        <Truck className="w-3.5 h-3.5" />
+                        <span className="text-[11px] font-bold">{txt('hero_delivery_value', '24-48h')}</span>
                       </div>
                     </div>
                   </div>
+
+                  {/* ── Text column ── */}
+                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1 text-right">
+                    {/* Eyebrow */}
+                    <div
+                      className="flex items-center gap-3 justify-start animate-fade-in"
+                    >
+                      <span className="h-px w-10 bg-white/60" />
+                      <span className="text-[11px] sm:text-xs font-cairo font-bold uppercase tracking-[0.2em] text-white/90">
+                        {activeBadge}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h1
+                      className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight animate-fade-in drop-shadow-[0_6px_24px_rgba(0,0,0,0.15)]"
+                      style={{ animationDelay: '80ms', animationFillMode: 'both' }}
+                    >
+                      <span className="block">{lineOne}</span>
+                      {lineTwo && (
+                        <span className="block text-white/85">{lineTwo}</span>
+                      )}
+                    </h1>
+
+                    {/* Subtitle */}
+                    <p
+                      className="text-sm sm:text-base md:text-lg text-white/85 max-w-xl leading-relaxed animate-fade-in"
+                      style={{ animationDelay: '180ms', animationFillMode: 'both' }}
+                    >
+                      {activeSubtitle}
+                    </p>
+
+                    {/* Price */}
+                    {(activePrice || activeOldPrice) && (
+                      <div
+                        className="flex items-baseline gap-3 animate-fade-in"
+                        style={{ animationDelay: '240ms', animationFillMode: 'both' }}
+                      >
+                        {activePrice && (
+                          <span className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                            {activePrice}
+                          </span>
+                        )}
+                        {activeOldPrice && (
+                          <span className="text-sm text-white/60 line-through">{activeOldPrice}</span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* CTAs */}
+                    <div
+                      className="flex flex-wrap items-center gap-3 pt-1 animate-fade-in"
+                      style={{ animationDelay: '300ms', animationFillMode: 'both' }}
+                    >
+                      <Link
+                        to={activeCtaHref}
+                        className="group/cta relative inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 font-bold rounded-full bg-white text-primary overflow-hidden transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-black/20"
+                      >
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
+                        <span className="relative text-sm sm:text-base">{activeCta}</span>
+                        <ArrowRight className="relative w-4 h-4 rotate-180 transition-transform group-hover/cta:-translate-x-1" />
+                      </Link>
+                      <Link
+                        to="/products"
+                        className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 font-bold rounded-full border-2 border-white/70 text-white hover:bg-white hover:text-primary transition-all text-sm sm:text-base"
+                      >
+                        <Grid3X3 className="w-4 h-4" />
+                        {txt('hero_explore_cta', 'اكتشف التصنيفات')}
+                      </Link>
+                    </div>
+
+                    {/* Trust row */}
+                    <div
+                      className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 animate-fade-in"
+                      style={{ animationDelay: '380ms', animationFillMode: 'both' }}
+                    >
+                      {[
+                        { icon: Truck, label: txt('hero_trust_shipping', 'شحن سريع لكل الولايات') },
+                        { icon: Shield, label: txt('hero_trust_warranty', 'ضمان سنة كاملة') },
+                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'الدفع عند الاستلام') },
+                      ].map((tt, i) => (
+                        <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-white/85 font-medium">
+                          <span className="w-6 h-6 rounded-full bg-white/15 ring-1 ring-white/25 flex items-center justify-center">
+                            <tt.icon className="w-3 h-3" />
+                          </span>
+                          {tt.label}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Thumbnails */}
+                    {slides.length > 1 && (
+                      <div className="flex items-center gap-2 pt-2">
+                        {slides.slice(0, 5).map((s: any, i: number) => {
+                          const active = selectedSlide === i;
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => scrollTo(i)}
+                              aria-label={`الشريحة ${i + 1}`}
+                              className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
+                                active
+                                  ? 'w-14 h-14 ring-2 ring-white shadow-lg scale-105'
+                                  : 'w-11 h-11 ring-1 ring-white/40 opacity-70 hover:opacity-100'
+                              }`}
+                            >
+                              <img src={s.url} alt="" className="w-full h-full object-cover" />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-
 
               {/* Prev / Next */}
               <button
                 type="button"
                 onClick={scrollPrev}
                 aria-label="السابق"
-                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 hover:scale-110"
+                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
               >
                 <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
@@ -556,7 +547,7 @@ export default function IndexPage() {
                 type="button"
                 onClick={scrollNext}
                 aria-label="التالي"
-                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 hover:scale-110"
+                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
               >
                 <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
