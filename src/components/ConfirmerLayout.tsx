@@ -35,7 +35,7 @@ function playNotificationSound() {
 const LANG_OPTIONS: { value: Language; label: string; flag: string }[] = [
   { value: 'ar', label: 'العربية', flag: '🇩🇿' },
   { value: 'fr', label: 'Français', flag: '🇫🇷' },
-  { value: 'en', label: 'English', flag: '🇬🇧' },
+  
 ];
 
 export default function ConfirmerLayout({ children }: { children: ReactNode }) {
