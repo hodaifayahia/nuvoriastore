@@ -227,20 +227,13 @@ export default function AdminOrdersPage() {
   }, [orders]);
 
   const filtered = useMemo(() => {
+    // Server already applied search/status/source/payment/dates/totals.
+    // Wilaya is a joined field, so filter client-side against the current page.
     return (orders || []).filter(o => {
-      const matchSearch = !search || o.order_number?.includes(search) || o.customer_name?.includes(search) || o.customer_phone?.includes(search);
-      const matchStatus = statusFilter === 'الكل' || o.status === statusFilter;
       const wilayaName = (o as any).wilayas?.name;
-      const matchWilaya = wilayaFilter === 'الكل' || wilayaName === wilayaFilter;
-      const matchPayment = paymentFilter === 'الكل' || o.payment_method === paymentFilter;
-      const matchDateFrom = !dateFrom || (o.created_at && o.created_at >= dateFrom);
-      const matchDateTo = !dateTo || (o.created_at && o.created_at <= dateTo + 'T23:59:59');
-      const matchMinTotal = !minTotal || Number(o.total_amount) >= Number(minTotal);
-      const matchMaxTotal = !maxTotal || Number(o.total_amount) <= Number(maxTotal);
-      const matchSource = sourceFilter === 'all' || (sourceFilter === 'landing' ? !!(o as any).landing_page_id : !(o as any).landing_page_id);
-      return matchSearch && matchStatus && matchWilaya && matchPayment && matchDateFrom && matchDateTo && matchMinTotal && matchMaxTotal && matchSource;
+      return wilayaFilter === 'الكل' || wilayaName === wilayaFilter;
     });
-  }, [orders, search, statusFilter, wilayaFilter, paymentFilter, dateFrom, dateTo, minTotal, maxTotal, sourceFilter]);
+  }, [orders, wilayaFilter]);
 
   const handleQuickStatus = (orderId: string, status: string) => {
     updateStatus.mutate({ id: orderId, status });
