@@ -1260,41 +1260,43 @@ export default function SingleProductPage() {
                 </div>
               </div>
 
-              {/* Actions: WhatsApp + Add to Cart + Confirm */}
-              <div className="flex items-stretch gap-2 flex-wrap">
-                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 px-4 border-border hover:bg-muted shrink-0">
+              {/* Actions: Confirm + WhatsApp (top row), Add to Cart (full width below) */}
+              <div className="space-y-2">
+                <div className="flex items-stretch gap-2">
+                  <Button onClick={handleDirectOrder} disabled={submittingOrder}
+                    className="font-cairo font-bold text-base gap-2 rounded-xl h-12 flex-1 min-w-0 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
+                    {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                    {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={async () => {
+                      const res = await openWhatsAppOrder({
+                        customer_name: orderName,
+                        customer_phone: orderPhone,
+                        wilaya_name: selectedWilaya?.name,
+                        baladiya: orderBaladiya,
+                        address: orderAddress,
+                        delivery_type: orderDeliveryType,
+                        payment_method: paymentMethod,
+                        items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(selectedNewOptions || {}).join(' / ') : undefined }],
+                        subtotal: itemSubtotal,
+                        shipping_cost: shippingCost,
+                        discount: couponDiscount,
+                        coupon_code: couponApplied ? couponCode : undefined,
+                        total: orderTotal,
+                      });
+                      if (!res.ok) toast({ title: 'واتساب غير مُفعّل', description: 'يرجى إضافة رقم واتساب من الإعدادات', variant: 'destructive' });
+                    }}
+                    className="font-cairo font-bold text-sm gap-2 rounded-xl h-12 px-4 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>واتساب</span>
+                  </Button>
+                </div>
+                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 w-full border-border hover:bg-muted">
                   <ShoppingCart className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t('sp.addToCart')}</span>
-                </Button>
-                <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                  className="font-cairo font-bold text-base gap-2 rounded-xl h-12 flex-1 min-w-[160px] bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
-                  {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                  {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={async () => {
-                    const res = await openWhatsAppOrder({
-                      customer_name: orderName,
-                      customer_phone: orderPhone,
-                      wilaya_name: selectedWilaya?.name,
-                      baladiya: orderBaladiya,
-                      address: orderAddress,
-                      delivery_type: orderDeliveryType,
-                      payment_method: paymentMethod,
-                      items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(selectedNewOptions || {}).join(' / ') : undefined }],
-                      subtotal: itemSubtotal,
-                      shipping_cost: shippingCost,
-                      discount: couponDiscount,
-                      coupon_code: couponApplied ? couponCode : undefined,
-                      total: orderTotal,
-                    });
-                    if (!res.ok) toast({ title: 'واتساب غير مُفعّل', description: 'يرجى إضافة رقم واتساب من الإعدادات', variant: 'destructive' });
-                  }}
-                  className="font-cairo font-bold text-sm gap-2 rounded-xl h-12 px-4 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>واتساب</span>
+                  <span>{t('sp.addToCart')}</span>
                 </Button>
               </div>
             </div>
