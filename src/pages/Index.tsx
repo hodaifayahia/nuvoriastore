@@ -820,7 +820,7 @@ export default function IndexPage() {
               <div className="mt-6">
                 <Link to={hp?.limited.link || '/products'}>
                   <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                    {hp?.limited.cta || 'Acheter maintenant'} <ArrowRight className="w-4 h-4" />
+                    {hp?.limited.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant')} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
