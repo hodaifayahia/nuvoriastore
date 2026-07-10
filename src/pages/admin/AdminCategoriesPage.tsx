@@ -77,6 +77,10 @@ export default function AdminCategoriesPage() {
   const [editImage, setEditImage] = useState<string | undefined>();
   const [editUploading, setEditUploading] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState<number | null>(null);
+  const [subDialog, setSubDialog] = useState<number | null>(null);
+  const [subNewName, setSubNewName] = useState('');
+  const [subNewImage, setSubNewImage] = useState<string | undefined>();
+  const [subUploading, setSubUploading] = useState(false);
 
   const currentCategories = categories ?? categoriesData ?? [];
 
