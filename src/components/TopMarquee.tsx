@@ -1,9 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from '@/i18n';
 
-const DEFAULT_TEXT = '🎁 Produits 100% originaux 💯  ✦  🛡️ Garantie magasin 1 an  ✦  🚚 Livraison rapide dans les 58 wilayas  ✦  💳 Paiement à la livraison  ✦  🔥 Offres exclusives chaque semaine';
+const DEFAULT_TEXT_FR = '🎁 Produits 100% originaux 💯  ✦  🛡️ Garantie magasin 1 an  ✦  🚚 Livraison rapide dans les 58 wilayas  ✦  💳 Paiement à la livraison  ✦  🔥 Offres exclusives chaque semaine';
+const DEFAULT_TEXT_AR = '🎁 منتجات أصلية 100% 💯  ✦  🛡️ ضمان المتجر لمدة سنة  ✦  🚚 توصيل سريع لكل 58 ولاية  ✦  💳 الدفع عند الاستلام  ✦  🔥 عروض حصرية كل أسبوع';
 
 export default function TopMarquee() {
+  const { language, dir } = useTranslation();
   const { data } = useQuery({
     queryKey: ['top-marquee'],
     queryFn: async () => {
@@ -18,20 +21,19 @@ export default function TopMarquee() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Enabled by default unless explicitly set to 'false'
   const enabled = data?.top_marquee_enabled !== 'false';
-  const text = (data?.top_marquee_text?.trim() || DEFAULT_TEXT);
+  const defaultText = language === 'ar' ? DEFAULT_TEXT_AR : DEFAULT_TEXT_FR;
+  const text = (data?.top_marquee_text?.trim() || defaultText);
 
   if (!enabled) return null;
 
-  // Build a long repeated line so the animation is seamless on wide screens
   const chunk = `  •  ${text}`;
   const line = Array(6).fill(chunk).join('');
 
   return (
     <div
       className="sticky top-0 z-40 w-full overflow-hidden bg-gradient-to-r from-primary via-primary/90 to-primary text-primary-foreground shadow-sm"
-      dir="ltr"
+      dir={dir}
       role="marquee"
       aria-label={text}
     >

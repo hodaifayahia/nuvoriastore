@@ -32,11 +32,10 @@ function detectBrowserLanguage(): Language {
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'fr';
   const stored = localStorage.getItem('site_language');
-  // Storefront is French/LTR by default; migrate older Arabic/English cached choices.
-  if (stored !== 'fr') return 'fr';
-  if (stored === 'fr') return stored;
+  if (stored === 'ar' || stored === 'fr') return stored;
   return detectBrowserLanguage();
 }
+
 
 
 export function LanguageProvider({ children }: { children: ReactNode }) {

@@ -94,7 +94,9 @@ const FALLBACK_CATS = [
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
   const { data: brandsData } = useBrands();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const isAr = language === 'ar';
+
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleProductsCount, setVisibleProductsCount] = useState(12);
@@ -139,7 +141,7 @@ export default function IndexPage() {
   const { data: hp } = useHomepageSettings();
   const showSection = (s: 'hero'|'categories'|'featured'|'newest'|'best_prices'|'limited'|'brands'|'trust_strip') =>
     hp?.show?.[s] ?? (s !== 'limited');
-  const txt = (key: string, fallback: string) => hp?.text?.[key] || fallback;
+  const txt = (key: string, fallback: string, arFallback?: string) => hp?.text?.[key] || (isAr && arFallback ? arFallback : fallback);
 
   const newestProducts = useMemo(() => allProducts?.slice(0, visibleProductsCount) || [], [allProducts, visibleProductsCount]);
   const featuredProducts = useMemo(
@@ -283,8 +285,8 @@ export default function IndexPage() {
               price: p.price ? `${Number(p.price).toLocaleString('fr-DZ')} DZD` : '',
               oldPrice: p.old_price ? `${Number(p.old_price).toLocaleString('fr-DZ')} DZD` : '',
               link: `/product/${p.id}`,
-              badge: p.is_featured ? 'Sélection' : 'Nouveau',
-              cta: 'Acheter maintenant',
+              badge: p.is_featured ? (isAr ? 'مميّز' : 'Sélection') : (isAr ? 'جديد' : 'Nouveau'),
+              cta: isAr ? 'اشترِ الآن' : 'Acheter maintenant',
             };
           })
           .filter(Boolean) as any[];
@@ -295,14 +297,17 @@ export default function IndexPage() {
           : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
-        const activeTitle: string = active.title || active.alt || 'Des appareils fiables pour toute la maison';
+        const activeTitle: string = active.title || active.alt || (isAr ? 'أجهزة موثوقة لكل البيت' : 'Des appareils fiables pour toute la maison');
         const activeSubtitle: string =
           active.subtitle ||
-          'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.';
-        const activeBadge: string = active.badge || 'Nouveau';
+          (isAr
+            ? 'اكتشف تشكيلة من الأجهزة الأنيقة عالية الأداء مع توصيل سريع لكل الجزائر.'
+            : 'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.');
+        const activeBadge: string = active.badge || (isAr ? 'جديد' : 'Nouveau');
         const activePrice: string = active.price || '';
         const activeOldPrice: string = active.oldPrice || '';
-        const activeCta: string = active.cta || 'Acheter maintenant';
+        const activeCta: string = active.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant');
+
         const activeCtaHref: string = active.link || '/products';
 
         // Split title on <br/> or newline for two-line reveal (second line gets gradient)
@@ -401,9 +406,9 @@ export default function IndexPage() {
                         </div>
                         <div className="text-left leading-tight">
                           <div className="text-[10px] text-slate-400 font-medium">
-                            {txt('hero_energy_label', 'Économie d’énergie')}
+                            {txt('hero_energy_label', 'Économie d’énergie', 'توفير الطاقة')}
                           </div>
-                          <div className="text-xs font-bold">{txt('hero_energy_value', 'Classe A+++')}</div>
+                          <div className="text-xs font-bold">{txt('hero_energy_value', 'Classe A+++', 'فئة +++A')}</div>
                         </div>
                       </div>
 
@@ -413,7 +418,7 @@ export default function IndexPage() {
                         style={{ animationDelay: '340ms', animationFillMode: 'both' }}
                       >
                         <Truck className="w-3.5 h-3.5" />
-                        <span className="text-[11px] font-bold">{txt('hero_delivery_value', '24-48h')}</span>
+                        <span className="text-[11px] font-bold">{txt('hero_delivery_value', '24-48h', '24-48 ساعة')}</span>
                       </div>
                     </div>
                   </div>
@@ -484,7 +489,7 @@ export default function IndexPage() {
                         className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 font-bold rounded-full border-2 border-white/70 text-white hover:bg-white hover:text-primary transition-all text-sm sm:text-base"
                       >
                         <Grid3X3 className="w-4 h-4" />
-                        {txt('hero_explore_cta', 'Découvrir les catégories')}
+                        {txt('hero_explore_cta', 'Découvrir les catégories', 'اكتشف التصنيفات')}
                       </Link>
                     </div>
 
@@ -494,9 +499,9 @@ export default function IndexPage() {
                       style={{ animationDelay: '380ms', animationFillMode: 'both' }}
                     >
                       {[
-                        { icon: Truck, label: txt('hero_trust_shipping', 'Livraison rapide dans toutes les wilayas') },
-                        { icon: Shield, label: txt('hero_trust_warranty', 'Garantie 1 an') },
-                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'Paiement à la livraison') },
+                        { icon: Truck, label: txt('hero_trust_shipping', 'Livraison rapide dans toutes les wilayas', 'شحن سريع لكل الولايات') },
+                        { icon: Shield, label: txt('hero_trust_warranty', 'Garantie 1 an', 'ضمان سنة كاملة') },
+                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'Paiement à la livraison', 'الدفع عند الاستلام') },
                       ].map((tt, i) => (
                         <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-white/85 font-medium">
                           <span className="w-6 h-6 rounded-full bg-white/15 ring-1 ring-white/25 flex items-center justify-center">
@@ -605,12 +610,12 @@ export default function IndexPage() {
               </div>
               {/* Content */}
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'Catégorie')}</p>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'Catégorie', 'فئة')}</p>
                 <h3 className={`font-display font-extrabold tracking-tight ${titleSize} drop-shadow-lg`}>
                   {cat.name}
                 </h3>
                 <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                  {txt('cat_shop_now', 'Acheter maintenant')}
+                  {txt('cat_shop_now', 'Acheter maintenant', 'تسوق الآن')}
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                 </span>
               </div>
@@ -623,10 +628,10 @@ export default function IndexPage() {
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-10 sm:mb-14">
                 <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-3">
-                  {txt('cat_kicker', 'Acheter par catégorie')}
+                  {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
                 </p>
                 <h2 className="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">
-                  {txt('cat_title', 'Conçu pour chaque foyer')}
+                  {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
                 </h2>
                 <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
               </div>
@@ -667,20 +672,20 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-8 gap-4">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('feat_kicker', 'Produits sélectionnés')}
+                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('feat_kicker', 'Produits sélectionnés', 'منتجات مختارة')}
                 </p>
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">{txt('feat_title', 'Choix de la boutique')}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('feat_desc', 'Des produits soigneusement sélectionnés par notre équipe.')}</p>
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">{txt('feat_title', 'Choix de la boutique', 'اختيار المتجر')}</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('feat_desc', 'Des produits soigneusement sélectionnés par notre équipe.', 'منتجات مختارة بعناية من طرف فريقنا.')}</p>
               </div>
               <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {txt('feat_viewAll', 'Voir tout')} <ChevronRight className="w-4 h-4" />
+                {txt('feat_viewAll', 'Voir tout', 'عرض الكل')} <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {featuredProducts.map(p => (
                 <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden relative">
                   <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[10px] font-bold shadow-lg">
-                    <Star className="w-3 h-3 fill-current" /> {txt('feat_badge', 'Sélection')}
+                    <Star className="w-3 h-3 fill-current" /> {txt('feat_badge', 'Sélection', 'مميّز')}
                   </div>
                   <ProductCard
                     id={p.id}
@@ -709,12 +714,12 @@ export default function IndexPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'Nouveautés')}</p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'Nouveau en boutique')}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'Les dernières références des meilleures marques.')}</p>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'Nouveautés', 'جديد')}</p>
+                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'Nouveau en boutique', 'جديد في المتجر')}</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'Les dernières références des meilleures marques.', 'أحدث الإصدارات من أفضل العلامات.')}</p>
               </div>
               <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {txt('new_allProducts', 'Voir tout')} <ChevronRight className="w-4 h-4" />
+                {txt('new_allProducts', 'Voir tout', 'عرض الكل')} <ChevronRight className="w-4 h-4" />
               </Link>
 
             </div>
@@ -745,7 +750,7 @@ export default function IndexPage() {
                 {(allProducts?.length || 0) > 4 && (
                   <div className="mt-10 flex justify-center">
                     <Link to="/products" className="btn-neon inline-flex items-center gap-2 px-7 py-3 rounded-full min-h-[48px] font-semibold">
-                      {txt('new_viewAll', 'Voir tous les produits')} <ChevronRight className="w-4 h-4" />
+                      {txt('new_viewAll', 'Voir tous les produits', 'عرض كل المنتجات')} <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
                 )}
@@ -765,7 +770,7 @@ export default function IndexPage() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border/60 min-h-[260px] sm:min-h-[340px]">
               <img
                 src={bestPricesBanner.url}
-                alt={`${txt('bp_title_line1', 'Les meilleurs prix')} ${txt('bp_title_line2', 'en Algérie')}`}
+                alt={`${txt('bp_title_line1', 'Les meilleurs prix', 'أفضل الأسعار')} ${txt('bp_title_line2', 'en Algérie', 'في الجزائر')}`}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -774,19 +779,19 @@ export default function IndexPage() {
               <div className="relative h-full flex items-center justify-start p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
                 <div className="max-w-md text-left text-white">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
-                    <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'Meilleur prix garanti')}
+                    <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'Meilleur prix garanti', 'أفضل سعر مضمون')}
                   </div>
                   <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight drop-shadow-lg">
-                    {txt('bp_title_line1', 'Les meilleurs prix')}<br />{txt('bp_title_line2', 'en Algérie')}
+                    {txt('bp_title_line1', 'Les meilleurs prix', 'أفضل الأسعار')}<br />{txt('bp_title_line2', 'en Algérie', 'في الجزائر')}
                   </h2>
                   <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed">
-                    {txt('bp_desc', 'Électroménager original à prix imbattables, avec livraison rapide dans les 58 wilayas.')}
+                    {txt('bp_desc', 'Électroménager original à prix imbattables, avec livraison rapide dans les 58 wilayas.', 'أجهزة كهرومنزلية أصلية بأسعار لا تُقاوم، مع توصيل سريع لـ 58 ولاية.')}
                   </p>
                   <Link
                     to="/products"
                     className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#0a1e3a] font-bold text-sm shadow-xl hover:scale-105 transition-transform"
                   >
-                    {txt('bp_cta', 'Acheter maintenant')} <ArrowRight className="w-4 h-4" />
+                    {txt('bp_cta', 'Acheter maintenant', 'اشترِ الآن')} <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -815,7 +820,7 @@ export default function IndexPage() {
               <div className="mt-6">
                 <Link to={hp?.limited.link || '/products'}>
                   <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                    {hp?.limited.cta || 'Acheter maintenant'} <ArrowRight className="w-4 h-4" />
+                    {hp?.limited.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant')} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
@@ -836,8 +841,8 @@ export default function IndexPage() {
         <section className="pb-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'Marques fiables')}</p>
-              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'Sélection des meilleures marques')}</h2>
+              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'Marques fiables', 'علامات موثوقة')}</p>
+              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'Sélection des meilleures marques', 'اختيار من أفضل العلامات')}</h2>
             </div>
           </div>
 
@@ -906,21 +911,21 @@ export default function IndexPage() {
               <div className="lg:col-span-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--grad-teal)/0.12)] border border-[hsl(var(--grad-teal)/0.3)] text-[hsl(var(--grad-teal))] text-xs font-semibold mb-4">
                   <Shield className="w-3.5 h-3.5" />
-                  {txt('ts_tag', 'Protection fiable')}
+                  {txt('ts_tag', 'Protection fiable', 'حماية موثوقة')}
                 </div>
                 <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight mb-3">
-                  {txt('ts_title', 'Politique de garantie')}
+                  {txt('ts_title', 'Politique de garantie', 'سياسة الضمان')}
                 </h2>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="font-display text-5xl sm:text-6xl font-black bg-gradient-to-br from-[hsl(var(--grad-teal))] to-[hsl(var(--grad-amber))] bg-clip-text text-transparent">
-                    {txt('ts_months', '12')}
+                    {txt('ts_months', '12', '12')}
                   </span>
                   <span className="text-lg font-semibold text-muted-foreground">
-                    {txt('ts_months_suffix', 'mois à compter de l’achat')}
+                    {txt('ts_months_suffix', 'mois à compter de l’achat', 'شهرًا من تاريخ الشراء')}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {txt('ts_desc', 'Cette garantie couvre les défauts de fabrication pendant toute la période indiquée, selon les conditions applicables.')}
+                  {txt('ts_desc', 'Cette garantie couvre les défauts de fabrication pendant toute la période indiquée, selon les conditions applicables.', 'يغطي هذا الضمان عيوب التصنيع خلال الفترة المذكورة وفق الشروط المعمول بها.')}
                 </p>
               </div>
 
@@ -929,16 +934,16 @@ export default function IndexPage() {
                 {[
                   {
                     icon: RefreshCw,
-                    tag: txt('ts_card1_tag', 'Les 7 premiers jours'),
-                    title: txt('ts_card1_title', 'Remplacement complet'),
-                    desc: txt('ts_card1_desc', 'Remplacement complet de l’appareil pendant les sept premiers jours si un défaut de fabrication est confirmé.'),
+                    tag: txt('ts_card1_tag', 'Les 7 premiers jours', 'أول 7 أيام'),
+                    title: txt('ts_card1_title', 'Remplacement complet', 'استبدال كامل'),
+                    desc: txt('ts_card1_desc', 'Remplacement complet de l’appareil pendant les sept premiers jours si un défaut de fabrication est confirmé.', 'استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال تأكيد عيب تصنيع.'),
                     color: 'grad-teal',
                   },
                   {
                     icon: Wrench,
-                    tag: txt('ts_card2_tag', 'Après la période de remplacement'),
-                    title: txt('ts_card2_title', 'Réparation et pièces'),
-                    desc: txt('ts_card2_desc', 'La garantie couvre la réparation des pannes dues à un défaut de fabrication, avec pièces détachées si nécessaire.'),
+                    tag: txt('ts_card2_tag', 'Après la période de remplacement', 'بعد فترة الاستبدال'),
+                    title: txt('ts_card2_title', 'Réparation et pièces', 'إصلاح وقطع غيار'),
+                    desc: txt('ts_card2_desc', 'La garantie couvre la réparation des pannes dues à un défaut de fabrication, avec pièces détachées si nécessaire.', 'يشمل الضمان إصلاح الأعطال الناتجة عن عيوب التصنيع مع توفير قطع الغيار عند الحاجة.'),
                     color: 'grad-amber',
                   },
                 ].map((it) => (
@@ -967,7 +972,7 @@ export default function IndexPage() {
                     <BadgeCheck className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
                   </div>
                   <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">
-                    {txt('ts_coverage', 'La garantie couvre uniquement les défauts de fabrication et ne couvre pas les dommages causés par une mauvaise utilisation ou un accident.')}
+                    {txt('ts_coverage', 'La garantie couvre uniquement les défauts de fabrication et ne couvre pas les dommages causés par une mauvaise utilisation ou un accident.', 'يغطي الضمان عيوب التصنيع فقط ولا يشمل الأعطال الناتجة عن سوء الاستخدام أو الحوادث.')}
                   </p>
                 </div>
               </div>
