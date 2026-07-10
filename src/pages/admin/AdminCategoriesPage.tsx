@@ -204,6 +204,49 @@ export default function AdminCategoriesPage() {
     cancelEdit();
   };
 
+  const handleSubImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSubUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setSubNewImage(url);
+    } catch (err: any) {
+      toast({ title: err.message || t('categories.imageFailed'), variant: 'destructive' });
+    } finally {
+      setSubUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const addSubcategory = () => {
+    if (subDialog === null) return;
+    const trimmed = subNewName.trim();
+    if (!trimmed) return;
+    const cat = currentCategories[subDialog];
+    const subs = cat.subcategories || [];
+    if (subs.some(s => s.name === trimmed)) {
+      toast({ title: t('categories.alreadyExists'), variant: 'destructive' });
+      return;
+    }
+    const updated = currentCategories.map((c, i) =>
+      i === subDialog ? { ...c, subcategories: [...subs, { name: trimmed, image: subNewImage }] } : c
+    );
+    setCategories(updated);
+    saveMutation.mutate(updated);
+    setSubNewName('');
+    setSubNewImage(undefined);
+  };
+
+  const removeSubcategory = (subName: string) => {
+    if (subDialog === null) return;
+    const updated = currentCategories.map((c, i) =>
+      i === subDialog ? { ...c, subcategories: (c.subcategories || []).filter(s => s.name !== subName) } : c
+    );
+    setCategories(updated);
+    saveMutation.mutate(updated);
+  };
+
   const SelectedIcon = AVAILABLE_ICONS.find(i => i.value === newIcon)?.Icon || Home;
 
   return (
