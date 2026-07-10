@@ -100,19 +100,19 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 px-3 pt-3">
       {/* Floating glass nav */}
-      <div className="relative mx-auto max-w-6xl rounded-2xl border border-white/10 bg-card/40 backdrop-blur-xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.6)]">
+      <div className="relative mx-auto max-w-6xl rounded-2xl border border-border/60 bg-background/75 backdrop-blur-xl shadow-[0_8px_32px_-12px_hsl(var(--primary)/0.25)] ring-1 ring-black/[0.02]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-2xl opacity-60"
+          className="pointer-events-none absolute inset-0 rounded-2xl opacity-70"
           style={{
             background:
-              'radial-gradient(60% 100% at 0% 0%, hsl(180 90% 45% / 0.18), transparent 60%), radial-gradient(60% 100% at 100% 100%, hsl(270 90% 60% / 0.18), transparent 60%)',
+              'radial-gradient(70% 120% at 100% 0%, hsl(var(--primary) / 0.10), transparent 60%)',
           }}
         />
-        <div className="relative container flex items-center justify-between h-[64px]">
+        <div className="relative container flex items-center justify-between h-[64px] gap-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-            <span className="h-11 w-11 rounded-full bg-white/95 border border-white/20 overflow-hidden flex items-center justify-center shadow-[0_0_24px_-4px_hsl(180_90%_50%/0.5)] transition-transform group-hover:scale-105">
+            <span className="h-10 w-10 rounded-full bg-white border border-border overflow-hidden flex items-center justify-center shadow-sm ring-2 ring-primary/10 transition-transform group-hover:scale-105">
               <img src={logoUrl || NUVORIA_LOGO_URL} alt={displayName} className="h-full w-full object-cover" />
             </span>
             <span className="font-serif font-bold text-lg sm:text-xl tracking-tight text-primary italic">{displayName}</span>
