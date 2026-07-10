@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCategories } from '@/hooks/useCategories';
 import {
   Plus, Trash2, Pencil, Home, Sparkles, Watch, ShoppingBag, Gift, Star, Heart, Shirt, Layers, Check, X,
-  Upload, ImageIcon, Loader2,
+  Upload, ImageIcon, Loader2, ListTree,
   Laptop, Smartphone, Car, Utensils, Baby, Headphones, Camera, Sofa, Dumbbell, Palette,
   Book, Gem, Zap, Flame, Leaf, Music, Plane, Pizza, Coffee, Glasses, Footprints, Dog,
   Wrench, Gamepad2, Crown, Flower2, Bike, Briefcase, Stethoscope
