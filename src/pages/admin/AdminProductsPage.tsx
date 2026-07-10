@@ -717,12 +717,15 @@ interface VariantRow {
 function ProductForm({ product, categoryNames, brandNames, onClose }: { product: any; categoryNames: string[]; brandNames: string[]; onClose: () => void }) {
   const qc = useQueryClient();
   const { toast } = useToast();
+  const { data: allCategories = [] } = useCategories();
+
 
   const [name, setName] = useState(product?.name || '');
   const [description, setDescription] = useState(product?.description || '');
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [sku, setSku] = useState(product?.sku || '');
   const [category, setCategory] = useState(product ? (Array.isArray(product.category) ? product.category[0] : product.category) : categoryNames[0] || '');
+  const [subcategory, setSubcategory] = useState<string>(product && Array.isArray(product.category) && product.category[1] ? product.category[1] : '');
   const [brand, setBrand] = useState<string>(product?.brand || '');
   const [stock, setStock] = useState(product ? String(product.stock) : '0');
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
@@ -1032,7 +1035,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         name: name.trim(),
         description: description.trim(),
         price: Number(price),
-        category: [category],
+        category: subcategory ? [category, subcategory] : [category],
         brand: brand || null,
         stock: hasVariants ? variantRows.reduce((sum, v) => sum + Number(v.quantity || 0), 0) : (productType === 'digital' ? 99999 : Number(stock)),
         is_active: isActive,
@@ -1270,12 +1273,30 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label className="font-cairo">الفئة</Label>
-              <Select value={category} onValueChange={setCategory}>
+              <Select value={category} onValueChange={(v) => { setCategory(v); setSubcategory(''); }}>
                 <SelectTrigger className="font-cairo mt-1.5 h-11"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {categoryNames.map(c => <SelectItem key={c} value={c} className="font-cairo">{c}</SelectItem>)}
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label className="font-cairo">الفئة الفرعية</Label>
+              {(() => {
+                const subs = allCategories.find(c => c.name === category)?.subcategories || [];
+                const disabled = subs.length === 0;
+                return (
+                  <Select value={subcategory || '__none__'} onValueChange={v => setSubcategory(v === '__none__' ? '' : v)} disabled={disabled}>
+                    <SelectTrigger className="font-cairo mt-1.5 h-11">
+                      <SelectValue placeholder={disabled ? 'لا توجد فئات فرعية' : 'اختر فئة فرعية'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__" className="font-cairo text-muted-foreground">بدون فئة فرعية</SelectItem>
+                      {subs.map(s => <SelectItem key={s.name} value={s.name} className="font-cairo">{s.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                );
+              })()}
             </div>
             <div>
               <Label className="font-cairo">العلامة التجارية</Label>
