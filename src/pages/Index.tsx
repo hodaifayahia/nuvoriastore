@@ -755,77 +755,8 @@ export default function IndexPage() {
         </section>
       )}
 
-      {/* ─────────── PRODUCTS BY CATEGORY (all categories, randomized picks) ─────────── */}
-      {bentoCats.map((cat, idx) => {
-        const pool = (allProducts || [])
-          .filter((p: any) => Array.isArray(p.category) && p.category.some((c: string) => c === cat.name));
-        // Stable pick — keep the same 4 products across renders (products are
-        // already ordered by created_at DESC from the query).
-        const catProducts = pool.slice(0, 4);
-        if (catProducts.length === 0) return null;
-        const CatIcon = cat.icon;
-        const accents = [
-          'from-primary/20 to-transparent',
-          'from-amber-400/20 to-transparent',
-          'from-emerald-400/20 to-transparent',
-          'from-fuchsia-400/20 to-transparent',
-          'from-sky-400/20 to-transparent',
-        ];
-        const accent = accents[idx % accents.length];
-        return (
-          <section key={cat.name} className="px-4 sm:px-6 lg:px-8 pb-16">
-            <div className="max-w-6xl mx-auto">
-              <div className={`relative rounded-3xl border border-border/60 bg-gradient-to-br ${accent} p-5 sm:p-8 overflow-hidden`}>
-                <div className="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-primary/10 blur-3xl" />
-                <div className="relative flex items-end justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-background/80 backdrop-blur border border-border/60 flex items-center justify-center shadow-sm">
-                      <CatIcon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-1">Catégorie</p>
-                      <h2 className="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">{cat.name}</h2>
-                    </div>
-                  </div>
-                  <Link
-                    to={`/products?category=${encodeURIComponent(cat.name)}`}
-                    className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                  >
-                    Voir tout <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-                  {catProducts.map((p: any) => (
-                    <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden">
-                      <ProductCard
-                        id={p.id}
-                        name={p.name}
-                        price={Number(p.price)}
-                        oldPrice={p.old_price ? Number(p.old_price) : undefined}
-                    priceText={(p as any).price_text}
-                        image={p.images?.[p.main_image_index ?? 0] || p.images?.[0] || ''}
-                        images={p.images || []}
-                        mainImageIndex={p.main_image_index ?? 0}
-                        category={p.category || []}
-                        stock={p.stock ?? 0}
-                        shippingPrice={Number(p.shipping_price) || 0}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="sm:hidden mt-5 flex justify-center">
-                  <Link
-                    to={`/products?category=${encodeURIComponent(cat.name)}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
-                  >
-                    Voir tous les produits {cat.name} <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
-        );
-      })}
+
+
 
       {/* ─────────── BEST PRICES BANNER ─────────── */}
       {showSection('best_prices') && (
