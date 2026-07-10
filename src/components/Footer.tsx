@@ -25,9 +25,12 @@ export default function Footer() {
   });
 
   const storeName = 'NuvoriaStore';
+  const isAr = t('nav.home') === 'الرئيسية';
   const description =
     settings?.footer_description ||
-    'Boutique spécialisée en électroménager et électronique aux meilleurs prix en Algérie.';
+    (isAr
+      ? 'متجر متخصص في الأجهزة الكهرومنزلية والإلكترونيات بأفضل الأسعار في الجزائر.'
+      : 'Boutique spécialisée en électroménager et électronique aux meilleurs prix en Algérie.');
 
   const TikTokIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -48,35 +51,64 @@ export default function Footer() {
     { url: settings?.telegram_url, Icon: Send, label: 'Telegram' },
   ].filter(s => s.url);
 
-  const columns: { title: string; links: { to: string; label: string }[] }[] = [
-    {
-      title: 'Boutique',
-      links: [
-        { to: '/', label: 'Accueil' },
-        { to: '/products', label: 'Produits' },
-        { to: '/cart', label: 'Panier' },
-        
-      ],
-    },
-    {
-      title: 'Entreprise',
-      links: [
-        { to: '/about', label: 'À propos' },
-        { to: '/track', label: 'Suivi de commande' },
-        { to: '/contact', label: 'Contact' },
-        { to: '/faq', label: 'FAQ' },
-      ],
-    },
-    {
-      title: 'Ressources',
-      links: [
-        { to: '/auth', label: 'Mon compte' },
-        { to: '/returns', label: 'Retours et échanges' },
-        { to: '/warranty', label: 'Garantie' },
-        { to: '/privacy', label: 'Confidentialité' },
-      ],
-    },
-  ];
+  const columns: { title: string; links: { to: string; label: string }[] }[] = isAr
+    ? [
+        {
+          title: 'المتجر',
+          links: [
+            { to: '/', label: 'الرئيسية' },
+            { to: '/products', label: 'المنتجات' },
+            { to: '/cart', label: 'السلة' },
+          ],
+        },
+        {
+          title: 'الشركة',
+          links: [
+            { to: '/about', label: 'من نحن' },
+            { to: '/track', label: 'تتبع الطلب' },
+            { to: '/contact', label: 'اتصل بنا' },
+            { to: '/faq', label: 'الأسئلة الشائعة' },
+          ],
+        },
+        {
+          title: 'موارد',
+          links: [
+            { to: '/auth', label: 'حسابي' },
+            { to: '/returns', label: 'الإرجاع والاستبدال' },
+            { to: '/warranty', label: 'الضمان' },
+            { to: '/privacy', label: 'الخصوصية' },
+          ],
+        },
+      ]
+    : [
+        {
+          title: 'Boutique',
+          links: [
+            { to: '/', label: 'Accueil' },
+            { to: '/products', label: 'Produits' },
+            { to: '/cart', label: 'Panier' },
+          ],
+        },
+        {
+          title: 'Entreprise',
+          links: [
+            { to: '/about', label: 'À propos' },
+            { to: '/track', label: 'Suivi de commande' },
+            { to: '/contact', label: 'Contact' },
+            { to: '/faq', label: 'FAQ' },
+          ],
+        },
+        {
+          title: 'Ressources',
+          links: [
+            { to: '/auth', label: 'Mon compte' },
+            { to: '/returns', label: 'Retours et échanges' },
+            { to: '/warranty', label: 'Garantie' },
+            { to: '/privacy', label: 'Confidentialité' },
+          ],
+        },
+      ];
+
 
   return (
     <footer className="bg-background text-foreground border-t border-border/50 mt-auto">
