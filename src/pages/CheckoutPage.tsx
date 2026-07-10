@@ -715,6 +715,31 @@ export default function CheckoutPage() {
             <Button onClick={handleSubmit} disabled={submitting} className="w-full font-cairo font-semibold mt-4">
               {submitting ? t('checkout.submitting') : t('checkout.confirmOrder')}
             </Button>
+            <Button
+              type="button"
+              onClick={async () => {
+                const res = await openWhatsAppOrder({
+                  customer_name: name,
+                  customer_phone: phone,
+                  wilaya_name: selectedWilaya?.name,
+                  baladiya: baladiyaName,
+                  address,
+                  delivery_type: isDigitalOnly ? 'digital' : deliveryType,
+                  payment_method: paymentMethod,
+                  items: items.map(i => ({ name: i.name, quantity: i.quantity, unit_price: i.price })),
+                  subtotal,
+                  shipping_cost: shippingCost,
+                  discount,
+                  coupon_code: couponApplied ? couponCode : undefined,
+                  total,
+                });
+                if (!res.ok) toast({ title: 'واتساب غير مُفعّل', description: 'يرجى إضافة رقم واتساب من الإعدادات', variant: 'destructive' });
+              }}
+              className="w-full font-cairo font-semibold mt-2 gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30"
+            >
+              <Send className="w-4 h-4" />
+              اطلب عبر واتساب
+            </Button>
           </div>
         </div>
       </div>
