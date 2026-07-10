@@ -90,9 +90,14 @@ img { content-visibility: auto; }
     @apply border-border;
   }
 
-  html {
+  html:not([dir="rtl"]) {
     direction: ltr;
   }
+
+  html[dir="rtl"] {
+    direction: rtl;
+  }
+
 
   body {
     @apply bg-background text-foreground;
