@@ -126,7 +126,7 @@ export default function Navbar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2 rounded-xl text-[12px] lg:text-sm font-cairo font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 rounded-lg text-[11px] lg:text-[12px] font-cairo font-medium whitespace-nowrap transition-all duration-200 ${
                     isActive
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -146,15 +146,15 @@ export default function Navbar() {
                 onMouseLeave={handleCatLeave}
               >
                 <button
-                  className={`flex items-center gap-1 px-2 lg:px-2.5 py-1.5 rounded-lg text-[11px] lg:text-xs font-cairo font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1 px-2 lg:px-2.5 py-1.5 rounded-lg text-[11px] lg:text-[12px] font-cairo font-medium whitespace-nowrap transition-all duration-200 ${
                     catOpen
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
-                  <Grid3X3 className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  <Grid3X3 className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                   {t('nav.categories')}
-                  <ChevronDown className={`w-3 h-3 lg:w-3.5 lg:h-3.5 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${catOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Dropdown */}
@@ -224,11 +224,11 @@ export default function Navbar() {
             {!loading && user && isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold whitespace-nowrap bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3 h-3" />
-                {t('nav.adminPanel')}
+                <span className="hidden lg:inline">{t('nav.adminPanel')}</span>
               </Link>
             )}
 
