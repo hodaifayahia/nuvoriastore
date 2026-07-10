@@ -864,6 +864,18 @@ export const fr: Record<string, string> = {
   'sp.chooseGroup': 'Choisir {name}',
   'sp.receipt': 'reçu',
   'sp.screenshot': "capture d'écran",
+  'sp.deliveryInfo': 'Informations de livraison',
+  'sp.required': 'requis',
+  'sp.summaryTitle': 'Résumé de la commande',
+  'sp.chooseAllOptions': 'Veuillez sélectionner toutes les options.',
+  'sp.warrantyPolicy': 'Politique de garantie',
+  'sp.warrantyPeriod': "Garantie de 12 mois à compter de la date d'achat",
+  'sp.warrantyDefects': 'Cette garantie couvre les défauts de fabrication pendant toute la période indiquée, selon les conditions générales applicables.',
+  'sp.warrantyReplace': "Remplacement complet de l'appareil durant les sept premiers jours si un défaut de fabrication est confirmé.",
+  'sp.warrantyRepair': 'Après la période de remplacement, la garantie couvre la réparation des pannes dues à un défaut de fabrication, avec pièces détachées si nécessaire.',
+  'sp.whatsapp': 'WhatsApp',
+  'sp.whatsappNotEnabled': 'WhatsApp non activé',
+  'sp.whatsappSettings': 'Veuillez ajouter un numéro WhatsApp dans les paramètres',
 
   // ═══ Landing Page Builder ═══
   'sidebar.landing': "Page d'atterrissage",
