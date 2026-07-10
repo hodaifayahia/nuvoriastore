@@ -177,12 +177,13 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-6">
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Conditions générales
+              {isAr ? 'الشروط العامة' : 'Conditions générales'}
             </Link>
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Politique de confidentialité
+              {isAr ? 'سياسة الخصوصية' : 'Politique de confidentialité'}
             </Link>
           </div>
+
         </div>
       </div>
     </footer>
