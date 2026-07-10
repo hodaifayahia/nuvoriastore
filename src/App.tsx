@@ -9,6 +9,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import TopMarquee from "@/components/TopMarquee";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopOnRouteChange from "@/components/ScrollToTopOnRouteChange";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
