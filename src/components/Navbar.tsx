@@ -224,11 +224,11 @@ export default function Navbar() {
             {!loading && user && isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold whitespace-nowrap bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3 h-3" />
-                {t('nav.adminPanel')}
+                <span className="hidden lg:inline">{t('nav.adminPanel')}</span>
               </Link>
             )}
 
