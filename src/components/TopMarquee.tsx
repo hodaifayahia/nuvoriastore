@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-const DEFAULT_TEXT = '✨ نوفر جميع المنتجات الأصلية 💯 مع ضمان لمدة عام كامل 🛡️ من طرف المحل 🏪 توصيل سريع لكامل الولايات 🚚';
+const DEFAULT_TEXT = '🎁 منتجات أصلية 100% 💯  ✦  🛡️ ضمان سنة كاملة من المحل  ✦  🚚 توصيل سريع لكل 58 ولاية  ✦  💳 الدفع عند الاستلام  ✦  🔥 عروض حصرية كل أسبوع';
 
 export default function TopMarquee() {
   const { data } = useQuery({

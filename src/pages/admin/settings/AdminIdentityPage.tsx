@@ -172,13 +172,13 @@ export default function AdminIdentityPage() {
             value={mergedSettings.top_marquee_text ?? ''}
             onChange={e => setField('top_marquee_text', e.target.value)}
             className="font-cairo mt-1 min-h-[80px]"
-            placeholder="✨ نوفر جميع المنتجات الأصلية 💯 مع ضمان لمدة عام كامل 🛡️ من طرف المحل 🏪 توصيل سريع لكامل الولايات 🚚"
+            placeholder="🎁 منتجات أصلية 100% 💯  ✦  🛡️ ضمان سنة كاملة من المحل  ✦  🚚 توصيل سريع لكل 58 ولاية  ✦  💳 الدفع عند الاستلام  ✦  🔥 عروض حصرية كل أسبوع"
           />
         </div>
         {mergedSettings.top_marquee_enabled !== 'false' && (
           <div className="rounded-lg overflow-hidden" style={{ backgroundColor: primaryColor }}>
             <p className="text-center text-sm font-cairo py-2 text-white truncate px-4">
-              {(mergedSettings.top_marquee_text?.trim()) || '✨ نوفر جميع المنتجات الأصلية 💯 مع ضمان لمدة عام كامل 🛡️ من طرف المحل 🏪 توصيل سريع لكامل الولايات 🚚'}
+              {(mergedSettings.top_marquee_text?.trim()) || '🎁 منتجات أصلية 100% 💯  ✦  🛡️ ضمان سنة كاملة من المحل  ✦  🚚 توصيل سريع لكل 58 ولاية  ✦  💳 الدفع عند الاستلام  ✦  🔥 عروض حصرية كل أسبوع'}
             </p>
           </div>
         )}
