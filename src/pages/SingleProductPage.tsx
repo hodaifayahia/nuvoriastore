@@ -957,37 +957,98 @@ export default function SingleProductPage() {
 
           </div>
 
-          {/* ─── Inline Order Form ─── */}
-          {!outOfStock && (
-            <div ref={orderFormRef} className="bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm shadow-primary/5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-md shadow-primary/20">
-                  <Truck className="w-5 h-5 text-primary-foreground" />
+          {/* ─── Inline Order Form (Yaxii style) ─── */}
+          {!outOfStock && (() => {
+            const phoneNormalized = normalizePhone(orderPhone);
+            const phoneValid = ALGERIAN_PHONE_REGEX.test(phoneNormalized);
+            const phoneTouched = phoneNormalized.length > 0;
+            const nameValid = orderName.trim().length >= 2;
+            const paymentOptions = [
+              cashOnDeliveryEnabled && 'cash_on_delivery',
+              baridimobEnabled && 'baridimob',
+              flexyEnabled && 'flexy',
+              binanceEnabled && 'binance',
+              vodafoneEnabled && 'vodafone',
+              redotpayEnabled && 'redotpay',
+            ].filter(Boolean) as string[];
+            const showPaymentPicker = paymentOptions.length > 1;
+            const singlePaymentAutoSelect = paymentOptions.length === 1 && !paymentMethod ? paymentOptions[0] : paymentMethod;
+            if (paymentOptions.length === 1 && !paymentMethod) {
+              // auto-select the only method silently
+              setTimeout(() => setPaymentMethod(paymentOptions[0]), 0);
+            }
+            const activePayment = singlePaymentAutoSelect;
+
+            return (
+            <div ref={orderFormRef} className="bg-card rounded-3xl p-4 md:p-6 space-y-5 shadow-lg shadow-foreground/5 border border-border/60 overflow-hidden">
+              {/* Top green accent bar */}
+              <div className="-mx-4 md:-mx-6 -mt-4 md:-mt-6 mb-1 h-1.5 bg-emerald-500" />
+
+              {/* Product summary mini-card */}
+              <div className="rounded-2xl border border-border/60 p-3 flex items-center gap-3 bg-card">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline justify-between gap-2 mb-1">
+                    <span className="font-roboto font-extrabold text-foreground text-sm">{formatPrice(effectivePrice)}</span>
+                    <h3 className="font-cairo font-bold text-sm text-foreground truncate">{product.name}</h3>
+                  </div>
+                  {selectedVariationForCart && (
+                    <p className="font-cairo text-[11px] text-muted-foreground truncate">
+                      {selectedVariationForCart.type} : {selectedVariationForCart.value}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between mt-2">
+                    {effectiveStock > 0 && effectiveStock <= 15 && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 text-red-600 px-2 py-0.5 text-[10px] font-cairo font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        {t('product.onlyLeft').replace('{n}', String(effectiveStock))}
+                      </span>
+                    )}
+                    <div className="flex items-center gap-2 ms-auto">
+                      <button type="button" onClick={() => setQty(q => Math.max(1, q - 1))} className="w-7 h-7 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"><Minus className="w-3.5 h-3.5" /></button>
+                      <span className="w-8 text-center font-roboto font-bold text-sm">{qty}</span>
+                      <button type="button" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="w-7 h-7 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"><Plus className="w-3.5 h-3.5" /></button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-cairo font-bold text-xl text-foreground">{t('sp.orderDirectly')}</h2>
-                  <p className="font-cairo text-xs text-muted-foreground">{t('sp.fillInfoFast')}</p>
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-muted shrink-0">
+                  <img src={images[0]} alt={product.name} className="w-full h-full object-cover" />
                 </div>
               </div>
 
-              {/* Step 1: User Info */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">1</div>
-                  <User className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">{t('sp.personalInfo')}</span>
-                </div>
-                <orderGuard.HoneypotField />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <Label className="font-cairo text-sm">{t('sp.fullName')}</Label>
-                    <Input value={orderName} onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
-                      placeholder={t("sp.fullNamePlaceholder")} className={`font-cairo mt-1 ${errors.orderName ? 'border-destructive' : ''}`} />
-                    {errors.orderName && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderName}</p>}
+              {/* Delivery Info Header */}
+              <div className="flex items-center justify-between pt-1">
+                <h3 className="font-cairo font-bold text-base text-foreground">{t('sp.deliveryInfo') !== 'sp.deliveryInfo' ? t('sp.deliveryInfo') : 'معلومات التوصيل'}</h3>
+                <span className="font-cairo text-[11px] text-muted-foreground">* مطلوب</span>
+              </div>
+
+              <orderGuard.HoneypotField />
+
+              {/* Name + Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Full Name */}
+                <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${errors.orderName ? 'border-red-500' : nameValid ? 'border-emerald-500' : 'border-border'}`}>
+                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground">{t('sp.fullName')}</label>
+                    <Input
+                      value={orderName}
+                      onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
+                      placeholder=""
+                      className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right"
+                    />
+                    {nameValid && !errors.orderName && (
+                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-emerald-500" />
+                    )}
                   </div>
-                  <div>
-                    <Label className="font-cairo text-sm">{t('sp.phone')}</Label>
-                    <Input value={orderPhone} onChange={e => {
+                  {errors.orderName && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderName}</p>}
+                </div>
+
+                {/* Phone */}
+                <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${(errors.orderPhone || (phoneTouched && !phoneValid && phoneNormalized.length === 10)) ? 'border-red-500' : phoneValid ? 'border-emerald-500' : phoneTouched ? 'border-amber-500' : 'border-border'}`}>
+                    <label className={`absolute top-1.5 right-3 font-cairo text-[10px] ${phoneValid ? 'text-emerald-600' : (errors.orderPhone ? 'text-red-500' : 'text-muted-foreground')}`}>{t('sp.phone')}</label>
+                    <Input
+                      value={orderPhone}
+                      onChange={e => {
                         const nextPhone = normalizePhone(e.target.value);
                         setOrderPhone(nextPhone);
                         setErrors(prev => ({
@@ -1002,359 +1063,220 @@ export default function SingleProductPage() {
                       }}
                       type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}"
                       aria-invalid={!!errors.orderPhone}
-                      placeholder="05XXXXXXXX" className={`font-roboto mt-1 ${errors.orderPhone ? 'border-destructive focus-visible:ring-destructive' : ''}`} dir="ltr" />
-                    {errors.orderPhone && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderPhone}</p>}
+                      placeholder="05XXXXXXXX"
+                      className="font-roboto border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right"
+                      dir="ltr"
+                    />
+                    {phoneValid && !errors.orderPhone && (
+                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-emerald-500" />
+                    )}
+                    {(errors.orderPhone || (phoneTouched && !phoneValid && phoneNormalized.length === 10)) && (
+                      <div className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px] font-bold">!</div>
+                    )}
                   </div>
+                  {errors.orderPhone && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderPhone}</p>}
                 </div>
               </div>
 
-              <hr className="border-border" />
-
-              {/* Step 2: Delivery */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">2</div>
-                  <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">{t('sp.delivery')}</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <Label className="font-cairo text-sm">{t('sp.wilaya')}</Label>
+              {/* Wilaya + Baladiya */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${errors.orderWilayaId ? 'border-red-500' : orderWilayaId ? 'border-emerald-500' : 'border-border'}`}>
+                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.wilaya')}</label>
                     <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
-                      <SelectTrigger className={`font-cairo mt-1 ${errors.orderWilayaId ? 'border-destructive' : ''}`}><SelectValue placeholder={t("sp.chooseWilaya")} /></SelectTrigger>
+                      <SelectTrigger className="font-cairo border-0 bg-transparent focus:ring-0 focus:ring-offset-0 h-14 pt-5 pb-1"><SelectValue placeholder="" /></SelectTrigger>
                       <SelectContent>
                         {wilayas?.map(w => (
                           <SelectItem key={w.id} value={w.id} className="font-cairo">{w.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    {errors.orderWilayaId && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderWilayaId}</p>}
                   </div>
-
-                  {orderWilayaId && baladiyat && baladiyat.length > 0 && (
-                    <div>
-                      <Label className="font-cairo text-sm">{t('sp.baladiya')}</Label>
-                      <Select value={orderBaladiya} onValueChange={setOrderBaladiya}>
-                        <SelectTrigger className="font-cairo mt-1"><SelectValue placeholder={t("sp.chooseBaladiya")} /></SelectTrigger>
-                        <SelectContent>
-                          {baladiyat.map(b => (
-                            <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
+                  {errors.orderWilayaId && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderWilayaId}</p>}
                 </div>
 
-
-                {orderWilayaId && selectedWilaya && (
-                  <div>
-                    <Label className="font-cairo text-sm">{t('sp.deliveryType')}</Label>
-                    <div className="grid grid-cols-2 gap-3 mt-2">
-                      <button type="button" onClick={() => { setOrderDeliveryType('office'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                        className={`flex flex-col items-center gap-1.5 p-3 border-2 rounded-xl transition-all text-sm ${orderDeliveryType === 'office' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
-                        <Building2 className={`w-5 h-5 ${orderDeliveryType === 'office' ? 'text-primary' : 'text-muted-foreground'}`} />
-                        <span className="font-cairo font-semibold">{t('sp.office')}</span>
-                        <span className="font-roboto font-bold text-primary">{formatPrice(Number(selectedWilaya.shipping_price))}</span>
-                      </button>
-                      <button type="button" onClick={() => { setOrderDeliveryType('home'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                        className={`flex flex-col items-center gap-1.5 p-3 border-2 rounded-xl transition-all text-sm ${orderDeliveryType === 'home' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
-                        <Home className={`w-5 h-5 ${orderDeliveryType === 'home' ? 'text-primary' : 'text-muted-foreground'}`} />
-                        <span className="font-cairo font-semibold">{t('sp.homeDelivery')}</span>
-                        <span className="font-roboto font-bold text-primary">{formatPrice(Number(selectedWilaya.shipping_price_home))}</span>
-                      </button>
-                    </div>
-                    {errors.orderDeliveryType && <p className="text-destructive text-xs font-cairo mt-1">{errors.orderDeliveryType}</p>}
+                <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${orderBaladiya ? 'border-emerald-500' : 'border-border'}`}>
+                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.baladiya')}</label>
+                    <Select value={orderBaladiya} onValueChange={setOrderBaladiya} disabled={!orderWilayaId || !baladiyat || baladiyat.length === 0}>
+                      <SelectTrigger className="font-cairo border-0 bg-transparent focus:ring-0 focus:ring-offset-0 h-14 pt-5 pb-1"><SelectValue placeholder="" /></SelectTrigger>
+                      <SelectContent>
+                        {baladiyat?.map(b => (
+                          <SelectItem key={b.id} value={b.name} className="font-cairo">{b.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
+                </div>
+              </div>
 
+              {/* Delivery Type toggle */}
+              {orderWilayaId && selectedWilaya && (
                 <div>
-                  <Label className="font-cairo text-sm">{t('sp.address')}</Label>
-                  <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder={t("sp.optional")} className="font-cairo mt-1" />
+                  <label className="font-cairo text-xs text-muted-foreground mb-1.5 block">{t('sp.deliveryType')}</label>
+                  <div className={`grid grid-cols-2 rounded-xl border overflow-hidden ${errors.orderDeliveryType ? 'border-red-500' : 'border-border'}`}>
+                    <button type="button" onClick={() => { setOrderDeliveryType('home'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
+                      className={`flex items-center justify-center gap-2 py-3 text-sm font-cairo transition-all ${orderDeliveryType === 'home' ? 'bg-emerald-500 text-white font-bold' : 'bg-card hover:bg-muted/50 text-foreground'}`}>
+                      <Home className="w-4 h-4" />
+                      <span>{t('sp.homeDelivery')}</span>
+                      <span className="font-roboto text-xs opacity-90">- {formatPrice(Number(selectedWilaya.shipping_price_home))}</span>
+                    </button>
+                    <button type="button" onClick={() => { setOrderDeliveryType('office'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
+                      className={`flex items-center justify-center gap-2 py-3 text-sm font-cairo transition-all ${orderDeliveryType === 'office' ? 'bg-emerald-500 text-white font-bold' : 'bg-card hover:bg-muted/50 text-foreground'}`}>
+                      <Building2 className="w-4 h-4" />
+                      <span>{t('sp.office')}</span>
+                      <span className="font-roboto text-xs opacity-90">- {formatPrice(Number(selectedWilaya.shipping_price))}</span>
+                    </button>
+                  </div>
+                  {errors.orderDeliveryType && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderDeliveryType}</p>}
                 </div>
-              </div>
+              )}
 
-              <hr className="border-border" />
-
-              {/* Step 3: Payment */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold font-roboto shrink-0">3</div>
-                  <CreditCard className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">{t('sp.payment')}</span>
-                </div>
-                <div className="space-y-2">
-                  {cashOnDeliveryEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'cash_on_delivery' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="cash_on_delivery" checked={paymentMethod === 'cash_on_delivery'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.cod')}</span>
-                        <p className="text-xs text-muted-foreground font-cairo mt-1">{t('sp.codDesc')}</p>
-                      </div>
-                    </label>
-                  )}
-
-                  {baridimobEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'baridimob' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="baridimob" checked={paymentMethod === 'baridimob'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.baridimob')}</span>
-                        {paymentMethod === 'baridimob' && settings && (
-                          <div className="mt-2 space-y-1.5 text-xs">
-                            <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">{t('sp.account')}</span>
-                              <span className="font-roboto font-bold">{settings.ccp_number}</span>
-                              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.ccp_number)}><Copy className="w-3 h-3" /></Button>
-                            </div>
-                            <p className="font-cairo">{t('sp.nameLabel').replace('{name}', settings.ccp_name || '')}</p>
-                            <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">{t('sp.attachReceipt')}</Label>
-                              <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
-                              {receiptPreview && (
-                                <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
-                                  <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {receiptFile && !receiptPreview && (
-                                <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
-                                  <Upload className="w-3 h-3" /> {receiptFile.name}
-                                  <button onClick={removeReceipt} className="text-destructive"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {errors.receiptFile && <p className="text-destructive text-xs font-cairo mt-1">{errors.receiptFile}</p>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )}
-
-                  {flexyEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'flexy' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="flexy" checked={paymentMethod === 'flexy'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.flexy')}</span>
-                        {paymentMethod === 'flexy' && settings && (
-                          <div className="mt-2 space-y-1.5 text-xs">
-                            <p className="font-cairo">{t('sp.flexyInstruction').split('{amount}')[0]}<span className="font-roboto font-bold">{formatPrice(Number(settings.flexy_deposit_amount || 500))}</span>{t('sp.flexyInstruction').split('{amount}')[1]}</p>
-                            <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-roboto font-bold">{settings.flexy_number}</span>
-                              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.flexy_number)}><Copy className="w-3 h-3" /></Button>
-                            </div>
-                            <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">{t('sp.attachScreenshot')}</Label>
-                              <Input type="file" accept="image/*" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
-                              {receiptPreview && (
-                                <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt={t("sp.screenshot")} className="w-24 h-24 object-cover rounded-lg border" />
-                                  <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {receiptFile && !receiptPreview && (
-                                <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
-                                  <Upload className="w-3 h-3" /> {receiptFile.name}
-                                  <button onClick={removeReceipt} className="text-destructive"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {errors.receiptFile && <p className="text-destructive text-xs font-cairo mt-1">{errors.receiptFile}</p>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )}
-
-                  {binanceEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'binance' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="binance" checked={paymentMethod === 'binance'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.binance')}</span>
-                        {paymentMethod === 'binance' && settings && (
-                          <div className="mt-2 space-y-1.5 text-xs">
-                            <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">{t('sp.wallet')}</span>
-                              <span className="font-roboto font-bold">{settings.binance_wallet}</span>
-                              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.binance_wallet)}><Copy className="w-3 h-3" /></Button>
-                            </div>
-                            <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
-                              <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
-                              {receiptPreview && (
-                                <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
-                                  <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {receiptFile && !receiptPreview && (
-                                <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
-                                  <Upload className="w-3 h-3" /> {receiptFile.name}
-                                  <button onClick={removeReceipt} className="text-destructive"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {errors.receiptFile && <p className="text-destructive text-xs font-cairo mt-1">{errors.receiptFile}</p>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )}
-
-                  {vodafoneEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'vodafone' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="vodafone" checked={paymentMethod === 'vodafone'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.vodafone')}</span>
-                        {paymentMethod === 'vodafone' && settings && (
-                          <div className="mt-2 space-y-1.5 text-xs">
-                            <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">{t('sp.walletNumber')}</span>
-                              <span className="font-roboto font-bold">{settings.vodafone_number}</span>
-                              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.vodafone_number)}><Copy className="w-3 h-3" /></Button>
-                            </div>
-                            <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
-                              <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
-                              {receiptPreview && (
-                                <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
-                                  <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {receiptFile && !receiptPreview && (
-                                <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
-                                  <Upload className="w-3 h-3" /> {receiptFile.name}
-                                  <button onClick={removeReceipt} className="text-destructive"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {errors.receiptFile && <p className="text-destructive text-xs font-cairo mt-1">{errors.receiptFile}</p>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )}
-
-                  {redotpayEnabled && (
-                    <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'redotpay' ? 'border-primary bg-accent' : ''}`}>
-                      <input type="radio" name="inline-payment" value="redotpay" checked={paymentMethod === 'redotpay'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
-                      <div className="flex-1">
-                        <span className="font-cairo font-semibold">{t('sp.redotpay')}</span>
-                        {paymentMethod === 'redotpay' && settings && (
-                          <div className="mt-2 space-y-1.5 text-xs">
-                            <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                              <span className="font-cairo">{t('sp.account')}</span>
-                              <span className="font-roboto font-bold">{settings.redotpay_account}</span>
-                              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.redotpay_account)}><Copy className="w-3 h-3" /></Button>
-                            </div>
-                            <div className="mt-1.5">
-                              <Label className="font-cairo text-[11px]">{t('sp.attachPaymentReceipt')}</Label>
-                              <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-destructive' : ''}`} />
-                              {receiptPreview && (
-                                <div className="relative mt-2 inline-block">
-                                  <img src={receiptPreview} alt={t("sp.receipt")} className="w-24 h-24 object-cover rounded-lg border" />
-                                  <button onClick={removeReceipt} className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {receiptFile && !receiptPreview && (
-                                <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
-                                  <Upload className="w-3 h-3" /> {receiptFile.name}
-                                  <button onClick={removeReceipt} className="text-destructive"><X className="w-3 h-3" /></button>
-                                </div>
-                              )}
-                              {errors.receiptFile && <p className="text-destructive text-xs font-cairo mt-1">{errors.receiptFile}</p>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )}
-                </div>
-                {errors.paymentMethod && <p className="text-destructive text-xs font-cairo mt-1">{errors.paymentMethod}</p>}
-              </div>
-
-              {/* Coupon Code */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 mb-1">
-                  <Tag className="w-4 h-4 text-primary" />
-                  <span className="font-cairo font-semibold text-sm">{t('sp.couponCodeLabel')}</span>
-                </div>
-                {couponApplied ? (
-                  <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-xl p-3">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="font-cairo text-sm text-green-700">{t("sp.couponAppliedAmt").replace("{amount}", formatPrice(couponDiscount))}</span>
-                  </div>
-                ) : (
-                  <div className="flex gap-2">
-                    <Input
-                      value={couponCode}
-                      onChange={e => setCouponCode(e.target.value)}
-                      placeholder={t("sp.couponPlaceholder")}
-                      className="font-cairo flex-1"
-                      dir="ltr"
-                    />
-                    <Button variant="outline" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()} className="font-cairo">
-                      {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('sp.apply')}
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {/* Order Summary */}
-              {orderWilayaId && orderDeliveryType && (
-                <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-2 text-sm font-cairo">
-                  <div className="flex items-center gap-2 pb-2 border-b border-primary/20">
-                    <Tag className="w-4 h-4 text-primary" />
-                    <span className="font-cairo font-bold text-base text-foreground">ملخص الطلبية</span>
-                  </div>
-                  <div className="flex justify-between pt-1">
-                    <span>{t('sp.productLine').replace('{n}', String(qty))}</span>
-                    <span className="font-roboto font-bold">{formatPrice(itemSubtotal)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : t('sp.office'))}</span>
-                    <span className="font-roboto font-bold">{formatPrice(shippingCost)}</span>
-                  </div>
-                  {couponDiscount > 0 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>{t('sp.discountLine')}</span>
-                      <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
-                    </div>
-                  )}
-                  <hr className="my-1 border-primary/20" />
-                  <div className="flex justify-between font-bold text-base">
-                    <span>{t('sp.total')}</span>
-                    <span className="font-roboto text-primary">{formatPrice(orderTotal)}</span>
+              {/* Optional address */}
+              {orderDeliveryType === 'home' && (
+                <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${orderAddress ? 'border-emerald-500' : 'border-border'}`}>
+                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground">{t('sp.address')}</label>
+                    <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder="" className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right" />
                   </div>
                 </div>
               )}
 
-              {/* Quantity + Buy Now + Add to Cart */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="flex items-center border border-border/50 rounded-2xl bg-muted/30">
-                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.max(1, q - 1))} className="rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-colors"><Minus className="w-4 h-4" /></Button>
-                    <span className="w-12 text-center font-roboto font-bold text-lg">{qty}</span>
-                    <Button variant="ghost" size="icon" onClick={() => setQty(q => Math.min(effectiveStock, q + 1))} className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors"><Plus className="w-4 h-4" /></Button>
+              {/* Payment method (only if more than one) */}
+              {showPaymentPicker && (
+                <div className="space-y-2 pt-1">
+                  <label className="font-cairo text-xs text-muted-foreground block">{t('sp.payment')}</label>
+                  <div className="space-y-2">
+                    {cashOnDeliveryEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'cash_on_delivery' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="cash_on_delivery" checked={paymentMethod === 'cash_on_delivery'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1">
+                          <span className="font-cairo font-semibold">{t('sp.cod')}</span>
+                          <p className="text-xs text-muted-foreground font-cairo mt-1">{t('sp.codDesc')}</p>
+                        </div>
+                      </label>
+                    )}
+                    {baridimobEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'baridimob' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="baridimob" checked={paymentMethod === 'baridimob'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1">
+                          <span className="font-cairo font-semibold">{t('sp.baridimob')}</span>
+                          {paymentMethod === 'baridimob' && settings && (
+                            <div className="mt-2 space-y-1.5 text-xs">
+                              <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
+                                <span className="font-cairo">{t('sp.account')}</span>
+                                <span className="font-roboto font-bold">{settings.ccp_number}</span>
+                                <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(settings.ccp_number)}><Copy className="w-3 h-3" /></Button>
+                              </div>
+                              <div className="mt-1.5">
+                                <Label className="font-cairo text-[11px]">{t('sp.attachReceipt')}</Label>
+                                <Input type="file" accept="image/*,.pdf" onChange={e => { handleReceiptFile(e.target.files?.[0] || null); setErrors(prev => ({ ...prev, receiptFile: '' })); }} className={`mt-0.5 h-8 text-xs ${errors.receiptFile ? 'border-red-500' : ''}`} />
+                                {receiptFile && (
+                                  <div className="flex items-center gap-2 mt-1 text-xs font-cairo text-muted-foreground">
+                                    <Upload className="w-3 h-3" /> {receiptFile.name}
+                                    <button onClick={removeReceipt} className="text-red-500"><X className="w-3 h-3" /></button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </label>
+                    )}
+                    {flexyEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'flexy' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="flexy" checked={paymentMethod === 'flexy'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1"><span className="font-cairo font-semibold">{t('sp.flexy')}</span></div>
+                      </label>
+                    )}
+                    {binanceEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'binance' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="binance" checked={paymentMethod === 'binance'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1"><span className="font-cairo font-semibold">{t('sp.binance')}</span></div>
+                      </label>
+                    )}
+                    {vodafoneEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'vodafone' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="vodafone" checked={paymentMethod === 'vodafone'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1"><span className="font-cairo font-semibold">{t('sp.vodafone')}</span></div>
+                      </label>
+                    )}
+                    {redotpayEnabled && (
+                      <label className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors text-sm ${paymentMethod === 'redotpay' ? 'border-emerald-500 bg-emerald-500/5' : 'border-border'}`}>
+                        <input type="radio" name="inline-payment" value="redotpay" checked={paymentMethod === 'redotpay'} onChange={e => { setPaymentMethod(e.target.value); setErrors(prev => ({ ...prev, paymentMethod: '', receiptFile: '' })); }} className="mt-0.5" />
+                        <div className="flex-1"><span className="font-cairo font-semibold">{t('sp.redotpay')}</span></div>
+                      </label>
+                    )}
                   </div>
-                  <span className="font-cairo text-xs text-muted-foreground">{t('sp.totalPieces').replace('{n}', String(qty))}</span>
+                  {errors.paymentMethod && <p className="text-red-500 text-[11px] font-cairo mt-1">{errors.paymentMethod}</p>}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-2 rounded-xl h-14 border-primary/40 hover:bg-primary/5 hover:border-primary/60 transition-all">
-                    <ShoppingCart className="w-5 h-5" />
-                    {t('sp.addToCart')}
-                  </Button>
-                  <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                    className="font-cairo font-bold text-base gap-2 rounded-xl h-14 bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
-                    {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                    {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
-                  </Button>
+              )}
+
+              {/* Coupon (collapsible) */}
+              {couponApplied ? (
+                <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-2.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-600" />
+                  <span className="font-cairo text-xs text-emerald-700">{t("sp.couponAppliedAmt").replace("{amount}", formatPrice(couponDiscount))}</span>
+                </div>
+              ) : (
+                <details className="group">
+                  <summary className="cursor-pointer list-none flex items-center gap-2 text-xs font-cairo text-muted-foreground hover:text-foreground transition-colors">
+                    <Tag className="w-3.5 h-3.5" /> {t('sp.couponCodeLabel')}
+                  </summary>
+                  <div className="flex gap-2 mt-2">
+                    <Input value={couponCode} onChange={e => setCouponCode(e.target.value)} placeholder={t("sp.couponPlaceholder")} className="font-cairo flex-1 h-10" dir="ltr" />
+                    <Button variant="outline" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()} className="font-cairo h-10">
+                      {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('sp.apply')}
+                    </Button>
+                  </div>
+                </details>
+              )}
+
+              {/* Order Summary */}
+              <div className="rounded-2xl border border-border/60 p-3.5 space-y-2 text-sm font-cairo bg-muted/30">
+                <div className="font-cairo font-bold text-xs text-muted-foreground mb-1">ملخص الطلب</div>
+                <div className="flex justify-between items-center">
+                  <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
+                  <span className="text-foreground truncate">{product.name} <span className="text-muted-foreground text-xs">×{qty}</span></span>
+                </div>
+                <div className="flex justify-between items-center text-muted-foreground text-xs">
+                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? formatPrice(shippingCost) : '-'}</span>
+                  <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
+                </div>
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between items-center text-emerald-600 text-xs">
+                    <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
+                    <span>{t('sp.discountLine')}</span>
+                  </div>
+                )}
+                <div className="border-t border-border/60 pt-2 flex justify-between items-center">
+                  {orderWilayaId && orderDeliveryType ? (
+                    <span className="font-roboto font-extrabold text-foreground text-base">{formatPrice(orderTotal)}</span>
+                  ) : (
+                    <span className="font-cairo text-xs text-amber-600">يرجى اختيار جميع الخيارات.</span>
+                  )}
+                  <span className="font-cairo font-bold text-foreground">{t('sp.total')}</span>
                 </div>
               </div>
+
+              {/* Actions: Add to Cart + Confirm */}
+              <div className="flex items-stretch gap-2">
+                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 px-4 border-border hover:bg-muted shrink-0">
+                  <ShoppingCart className="w-4 h-4" />
+                  <span className="hidden sm:inline">{t('sp.addToCart')}</span>
+                </Button>
+                <Button onClick={handleDirectOrder} disabled={submittingOrder}
+                  className="font-cairo font-bold text-base gap-2 rounded-xl h-12 flex-1 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
+                  {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                  {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
+                </Button>
+              </div>
             </div>
-          )}
+            );
+          })()}
         </div>
       </div>
+
 
       {/* Rich Product Details */}
       {product.description && (
