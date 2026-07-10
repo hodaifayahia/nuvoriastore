@@ -150,6 +150,41 @@ export default function AdminIdentityPage() {
         )}
       </div>
 
+      {/* Top Scrolling Marquee */}
+      <div className="bg-card border rounded-lg p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <Megaphone className="w-5 h-5 text-primary" />
+          <h2 className="font-cairo font-bold text-xl">الشريط المتحرك العلوي</h2>
+        </div>
+        <p className="font-cairo text-sm text-muted-foreground">
+          يظهر في أعلى الموقع ويتحرك بشكل مستمر (Sticky). يمكنك تخصيص النص وإضافة الرموز التعبيرية.
+        </p>
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={mergedSettings.top_marquee_enabled !== 'false'}
+            onCheckedChange={v => setField('top_marquee_enabled', String(v))}
+          />
+          <Label className="font-cairo">تفعيل الشريط المتحرك</Label>
+        </div>
+        <div>
+          <Label className="font-cairo text-sm">نص الشريط</Label>
+          <Textarea
+            value={mergedSettings.top_marquee_text ?? ''}
+            onChange={e => setField('top_marquee_text', e.target.value)}
+            className="font-cairo mt-1 min-h-[80px]"
+            placeholder="✨ نوفر جميع المنتجات الأصلية 💯 مع ضمان لمدة عام كامل 🛡️ من طرف المحل 🏪 توصيل سريع لكامل الولايات 🚚"
+          />
+        </div>
+        {mergedSettings.top_marquee_enabled !== 'false' && (
+          <div className="rounded-lg overflow-hidden" style={{ backgroundColor: primaryColor }}>
+            <p className="text-center text-sm font-cairo py-2 text-white truncate px-4">
+              {(mergedSettings.top_marquee_text?.trim()) || '✨ نوفر جميع المنتجات الأصلية 💯 مع ضمان لمدة عام كامل 🛡️ من طرف المحل 🏪 توصيل سريع لكامل الولايات 🚚'}
+            </p>
+          </div>
+        )}
+      </div>
+
+
       {/* Hero Slider */}
       <div className="bg-card border rounded-lg p-6 space-y-4">
         <div className="flex items-center gap-2">
