@@ -1282,7 +1282,7 @@ export default function SingleProductPage() {
                       address: orderAddress,
                       delivery_type: orderDeliveryType,
                       payment_method: paymentMethod,
-                      items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(testSelection || {}).join(' / ') : undefined }],
+                      items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(selectedNewOptions || {}).join(' / ') : undefined }],
                       subtotal: itemSubtotal,
                       shipping_cost: shippingCost,
                       discount: couponDiscount,
