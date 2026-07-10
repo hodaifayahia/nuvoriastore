@@ -177,7 +177,7 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 4000, stopOnInteraction: false })]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: false })]);
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
   useEffect(() => {
