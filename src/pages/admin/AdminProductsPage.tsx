@@ -723,6 +723,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [sku, setSku] = useState(product?.sku || '');
   const [category, setCategory] = useState(product ? (Array.isArray(product.category) ? product.category[0] : product.category) : categoryNames[0] || '');
+  const [subcategory, setSubcategory] = useState<string>(product && Array.isArray(product.category) && product.category[1] ? product.category[1] : '');
   const [brand, setBrand] = useState<string>(product?.brand || '');
   const [stock, setStock] = useState(product ? String(product.stock) : '0');
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
