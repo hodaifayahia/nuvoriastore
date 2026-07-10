@@ -27,12 +27,12 @@ const STATUS_KEYS: Record<string, string> = {
   'ملغي': 'status.cancelled',
 };
 
-const STATUS_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: string }> = {
-  'جديد': { icon: Clock, color: 'text-sky-600', bg: 'bg-sky-500/10' },
-  'قيد المعالجة': { icon: PackageOpen, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-  'تم الشحن': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  'تم التسليم': { icon: PackageCheck, color: 'text-primary', bg: 'bg-primary/10' },
-  'ملغي': { icon: Ban, color: 'text-destructive', bg: 'bg-destructive/10' },
+const STATUS_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: string; row: string; border: string }> = {
+  'جديد': { icon: Clock, color: 'text-sky-600', bg: 'bg-sky-500/10', row: 'bg-sky-50/60 hover:bg-sky-100/60 dark:bg-sky-500/5 dark:hover:bg-sky-500/10', border: 'border-l-4 border-l-sky-500' },
+  'قيد المعالجة': { icon: PackageOpen, color: 'text-orange-500', bg: 'bg-orange-500/10', row: 'bg-orange-50/60 hover:bg-orange-100/60 dark:bg-orange-500/5 dark:hover:bg-orange-500/10', border: 'border-l-4 border-l-orange-500' },
+  'تم الشحن': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-500/10', row: 'bg-blue-50/60 hover:bg-blue-100/60 dark:bg-blue-500/5 dark:hover:bg-blue-500/10', border: 'border-l-4 border-l-blue-500' },
+  'تم التسليم': { icon: PackageCheck, color: 'text-primary', bg: 'bg-primary/10', row: 'bg-emerald-50/60 hover:bg-emerald-100/60 dark:bg-emerald-500/5 dark:hover:bg-emerald-500/10', border: 'border-l-4 border-l-emerald-500' },
+  'ملغي': { icon: Ban, color: 'text-destructive', bg: 'bg-destructive/10', row: 'bg-red-50/60 hover:bg-red-100/60 dark:bg-red-500/5 dark:hover:bg-red-500/10', border: 'border-l-4 border-l-red-500' },
 };
 
 export default function AdminOrdersPage() {
