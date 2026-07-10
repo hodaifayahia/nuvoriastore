@@ -58,7 +58,8 @@ const AVAILABLE_ICONS: { value: string; label: string; Icon: LucideIcon }[] = [
   { value: 'Stethoscope', label: 'صحة', Icon: Stethoscope },
 ];
 
-type Category = { name: string; icon: string; image?: string };
+type Subcategory = { name: string; image?: string };
+type Category = { name: string; icon: string; image?: string; subcategories?: Subcategory[] };
 
 export default function AdminCategoriesPage() {
   const { t } = useTranslation();
