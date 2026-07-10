@@ -717,6 +717,8 @@ interface VariantRow {
 function ProductForm({ product, categoryNames, brandNames, onClose }: { product: any; categoryNames: string[]; brandNames: string[]; onClose: () => void }) {
   const qc = useQueryClient();
   const { toast } = useToast();
+  const { data: allCategories = [] } = useCategories();
+
 
   const [name, setName] = useState(product?.name || '');
   const [description, setDescription] = useState(product?.description || '');
