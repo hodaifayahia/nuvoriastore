@@ -107,6 +107,8 @@ const SETTINGS_SUB_KEYS = [
   { href: '/admin/settings/telegram', key: 'settings.telegram', icon: Bot },
   { href: '/admin/settings/returns', key: 'settings.returnsTab', icon: RotateCcw },
   { href: '/admin/settings/form', key: 'sidebar.form', icon: FormInput },
+  { href: '/admin/ln', key: 'settings.homepage', icon: LayoutTemplate },
+
   
   { href: '/admin/settings/security', key: 'settings.security', icon: Shield },
   { href: '/admin/settings/pixels', key: 'pixels.title', icon: Globe },
