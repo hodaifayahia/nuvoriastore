@@ -64,12 +64,44 @@ export default function AdminOrdersPage() {
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [exportingDelivery, setExportingDelivery] = useState(false);
 
-  const { data: orders } = useQuery({
-    queryKey: ['admin-orders'],
+  // Pagination
+  const PAGE_SIZE = 30;
+  const [page, setPage] = useState(1);
+
+  // Reset to page 1 when any filter/search changes
+  const filterKey = `${search}|${statusFilter}|${sourceFilter}|${wilayaFilter}|${paymentFilter}|${dateFrom}|${dateTo}|${minTotal}|${maxTotal}`;
+  useMemo(() => { setPage(1); }, [filterKey]);
+
+  const { data: ordersResult, isFetching } = useQuery({
+    queryKey: ['admin-orders', page, search, statusFilter, sourceFilter, wilayaFilter, paymentFilter, dateFrom, dateTo, minTotal, maxTotal],
     queryFn: async () => {
-      const { data } = await supabase.from('orders').select('*, wilayas(name)').order('created_at', { ascending: false });
-      return data || [];
+      let q = supabase.from('orders').select('*, wilayas(name)', { count: 'exact' });
+
+      if (search.trim()) {
+        const s = search.trim().replace(/[%,]/g, '');
+        q = q.or(`order_number.ilike.%${s}%,customer_name.ilike.%${s}%,customer_phone.ilike.%${s}%`);
+      }
+      if (statusFilter !== 'الكل') q = q.eq('status', statusFilter);
+      if (paymentFilter !== 'الكل') q = q.eq('payment_method', paymentFilter);
+      if (dateFrom) q = q.gte('created_at', dateFrom);
+      if (dateTo) q = q.lte('created_at', dateTo + 'T23:59:59');
+      if (minTotal) q = q.gte('total_amount', Number(minTotal));
+      if (maxTotal) q = q.lte('total_amount', Number(maxTotal));
+      if (sourceFilter === 'landing') q = q.not('landing_page_id', 'is', null);
+      else if (sourceFilter === 'website') q = q.is('landing_page_id', null);
+
+      const from = (page - 1) * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+      q = q.order('created_at', { ascending: false }).range(from, to);
+
+      const { data, count } = await q;
+      return { rows: data || [], count: count || 0 };
     },
+  });
+
+  const orders = ordersResult?.rows;
+  const totalCount = ordersResult?.count || 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   });
 
   const { data: orderItems } = useQuery({
