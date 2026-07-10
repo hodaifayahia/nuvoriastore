@@ -419,9 +419,19 @@ export default function AdminCategoriesPage() {
                         <CatIcon className="w-4 h-4 text-primary" />
                       </div>
                     )}
-                    <span className="font-cairo font-medium text-foreground">{cat.name}</span>
+                    <div className="flex flex-col">
+                      <span className="font-cairo font-medium text-foreground">{cat.name}</span>
+                      {cat.subcategories && cat.subcategories.length > 0 && (
+                        <span className="font-cairo text-[11px] text-muted-foreground">
+                          {cat.subcategories.length} فئة فرعية
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setSubDialog(index); setSubNewName(''); setSubNewImage(undefined); }} title="الفئات الفرعية">
+                      <ListTree className="w-3.5 h-3.5" />
+                    </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => startEdit(index)}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
@@ -429,6 +439,7 @@ export default function AdminCategoriesPage() {
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
+                </div>
                 </div>
               );
             })}
