@@ -115,7 +115,7 @@ const SETTINGS_SUB_KEYS = [
 const LANG_OPTIONS: { value: Language; label: string; flag: string }[] = [
   { value: 'ar', label: 'العربية', flag: '🇩🇿' },
   { value: 'fr', label: 'Français', flag: '🇫🇷' },
-  { value: 'en', label: 'English', flag: '🇬🇧' },
+  
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
