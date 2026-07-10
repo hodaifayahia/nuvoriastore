@@ -9,6 +9,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import TopMarquee from "@/components/TopMarquee";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopOnRouteChange from "@/components/ScrollToTopOnRouteChange";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
@@ -100,6 +101,7 @@ function StoreThemeProvider({ children }: { children: React.ReactNode }) {
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
+      <TopMarquee />
       <AnnouncementBar />
       <Navbar />
       <main className="flex-1">{children}</main>

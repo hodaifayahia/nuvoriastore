@@ -43,6 +43,7 @@ export function useAdminSettings() {
       qc.invalidateQueries({ queryKey: ['store-theme-colors'] });
       qc.invalidateQueries({ queryKey: ['store-favicon'] });
       qc.invalidateQueries({ queryKey: ['announcement-bar'] });
+      qc.invalidateQueries({ queryKey: ['top-marquee'] });
       qc.invalidateQueries({ queryKey: ['footer-settings'] });
       toast({ title: 'تم حفظ الإعدادات' });
       setForm({});
