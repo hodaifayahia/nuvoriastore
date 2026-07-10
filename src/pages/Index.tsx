@@ -313,18 +313,25 @@ export default function IndexPage() {
         return (
           <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12">
             <div className="relative max-w-7xl mx-auto group">
-              <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-white text-slate-900 shadow-2xl border border-white/60">
+              <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-white via-white to-slate-50 text-slate-900 shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.35)] border border-white ring-1 ring-slate-200/60">
                 {/* Ambient background blurs */}
                 <div aria-hidden className="pointer-events-none absolute inset-0">
-                  <div className="absolute -top-[10%] -right-[5%] w-[55%] h-[65%] rounded-full blur-[120px] opacity-70"
+                  <div className="absolute -top-[15%] -right-[8%] w-[55%] h-[70%] rounded-full blur-[130px] opacity-60"
+                       style={{ background: 'hsl(var(--primary) / 0.25)' }} />
+                  <div className="absolute -bottom-[15%] -left-[8%] w-[50%] h-[60%] rounded-full blur-[110px] opacity-40"
                        style={{ background: 'hsl(var(--primary) / 0.18)' }} />
-                  <div className="absolute -bottom-[10%] -left-[5%] w-[45%] h-[55%] rounded-full blur-[100px] opacity-50"
-                       style={{ background: 'hsl(var(--primary) / 0.12)' }} />
+                  {/* subtle grid texture */}
+                  <div className="absolute inset-0 opacity-[0.035]"
+                       style={{
+                         backgroundImage:
+                           'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
+                         backgroundSize: '48px 48px',
+                       }} />
                 </div>
 
                 {/* Corner wordmark */}
-                <div aria-hidden className="hidden md:block absolute top-6 left-6 opacity-[0.08] select-none">
-                  <span className="font-display text-4xl font-black tracking-tighter text-slate-900">NUVORIA</span>
+                <div aria-hidden className="hidden md:block absolute top-6 left-6 opacity-[0.06] select-none">
+                  <span className="font-display text-5xl font-black tracking-tighter text-slate-900">NUVORIA</span>
                 </div>
 
                 {/* Embla viewport (hidden overlay just for autoplay + swipe) */}
@@ -336,33 +343,34 @@ export default function IndexPage() {
 
                 <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4 p-6 sm:p-10 md:p-14 lg:p-16 min-h-[520px] md:min-h-[560px] lg:min-h-[600px]" dir="rtl">
                   {/* ── Text column ── */}
-                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-6 md:gap-8 order-2 md:order-1">
+                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-6 md:gap-7 order-2 md:order-1">
                     <div className="flex flex-wrap gap-2 animate-fade-in">
-                      <span className="px-4 py-1.5 bg-primary text-primary-foreground text-[11px] font-bold rounded-full tracking-wide">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary text-primary-foreground text-[11px] font-bold rounded-full tracking-wide shadow-md shadow-primary/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse" />
                         {activeBadge}
                       </span>
-                      <span className="px-4 py-1.5 bg-slate-100 text-slate-600 text-[11px] font-bold rounded-full">
+                      <span className="inline-flex items-center px-3.5 py-1.5 bg-white text-slate-600 text-[11px] font-bold rounded-full border border-slate-200 shadow-sm">
                         {txt('hero_exclusive_badge', 'حصري في NuvoriaStore')}
                       </span>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <h1
-                        className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight animate-fade-in"
+                        className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight animate-fade-in"
                         style={{ animationDelay: '80ms', animationFillMode: 'both' }}
                       >
                         <span className="block text-slate-900">{lineOne}</span>
                         {lineTwo && (
                           <span
                             className="block bg-clip-text text-transparent"
-                            style={{ backgroundImage: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.7))' }}
+                            style={{ backgroundImage: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.6))' }}
                           >
                             {lineTwo}
                           </span>
                         )}
                       </h1>
                       <p
-                        className="text-base sm:text-lg md:text-xl text-slate-500 max-w-lg leading-relaxed animate-fade-in"
+                        className="text-base sm:text-lg text-slate-500 max-w-lg leading-relaxed animate-fade-in"
                         style={{ animationDelay: '180ms', animationFillMode: 'both' }}
                       >
                         {activeSubtitle}
@@ -382,7 +390,7 @@ export default function IndexPage() {
                           )}
                           {activePrice && (
                             <div className="flex items-baseline gap-2">
-                              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">{activePrice}</span>
+                              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{activePrice}</span>
                             </div>
                           )}
                         </div>
@@ -391,10 +399,12 @@ export default function IndexPage() {
                       <div className="flex items-center gap-3">
                         <Link
                           to={activeCtaHref}
-                          className="px-8 sm:px-10 py-3.5 sm:py-4 bg-slate-900 text-white font-bold rounded-2xl hover:scale-[1.03] active:scale-95 transition-all shadow-xl shadow-slate-900/10 inline-flex items-center gap-2"
+                          className="group/cta relative inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 font-bold rounded-2xl text-white overflow-hidden transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-primary/30"
+                          style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.85))' }}
                         >
-                          <span>{activeCta}</span>
-                          <ArrowRight className="w-4 h-4 rotate-180" />
+                          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
+                          <span className="relative">{activeCta}</span>
+                          <ArrowRight className="relative w-4 h-4 rotate-180 transition-transform group-hover/cta:-translate-x-1" />
                         </Link>
                       </div>
                     </div>
@@ -408,7 +418,7 @@ export default function IndexPage() {
                           onClick={() => scrollTo(i)}
                           aria-label={`الشريحة ${i + 1}`}
                           className={`h-1.5 rounded-full transition-all duration-300 ${
-                            selectedSlide === i ? 'w-12 bg-primary' : 'w-3 bg-slate-200 hover:bg-slate-300'
+                            selectedSlide === i ? 'w-12 bg-primary shadow-sm shadow-primary/40' : 'w-3 bg-slate-200 hover:bg-slate-300'
                           }`}
                         />
                       ))}
@@ -418,14 +428,18 @@ export default function IndexPage() {
                   {/* ── Image column ── */}
                   <div className="relative order-1 md:order-2 flex items-center justify-center p-2 sm:p-6">
                     <div key={`img-${selectedSlide}`} className="relative w-full max-w-md aspect-square animate-scale-in">
+                      {/* decorative ring */}
+                      <div aria-hidden className="absolute -inset-4 rounded-[3rem] border border-primary/15" />
+                      <div aria-hidden className="absolute -inset-8 rounded-[3.5rem] border border-primary/10" />
+
                       {/* Top-left floating badge */}
-                      <div className="absolute -top-3 right-3 sm:-top-4 sm:right-4 z-20 bg-white/85 backdrop-blur-lg p-3 sm:p-4 rounded-3xl shadow-xl border border-white flex items-center gap-3 animate-fade-in"
+                      <div className="absolute -top-3 right-3 sm:-top-4 sm:right-4 z-20 bg-white/90 backdrop-blur-lg p-3 sm:p-4 rounded-3xl shadow-xl shadow-slate-900/10 border border-white flex items-center gap-3 animate-fade-in"
                            style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-4 ring-emerald-50/60">
                           <Zap className="w-5 h-5" />
                         </div>
                         <div className="text-right">
-                          <div className="text-[10px] sm:text-xs text-slate-400">{txt('hero_energy_label', 'توفير الطاقة')}</div>
+                          <div className="text-[10px] sm:text-xs text-slate-400 font-medium">{txt('hero_energy_label', 'توفير الطاقة')}</div>
                           <div className="text-xs sm:text-sm font-bold text-slate-800">{txt('hero_energy_value', 'فئة +++A')}</div>
                         </div>
                       </div>
@@ -433,7 +447,7 @@ export default function IndexPage() {
                       {/* Product image */}
                       <Link
                         to={activeCtaHref}
-                        className="group/img relative flex items-center justify-center w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 border-4 border-white bg-gradient-to-br from-slate-50 to-white hover:scale-[1.02] transition-transform duration-500"
+                        className="group/img relative flex items-center justify-center w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/15 border-4 border-white bg-gradient-to-br from-slate-50 to-white hover:scale-[1.02] transition-transform duration-500"
                       >
                         <img
                           src={active.url}
@@ -443,14 +457,14 @@ export default function IndexPage() {
                           loading="eager"
                           fetchPriority="high"
                           decoding="async"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
                         />
                       </Link>
 
                       {/* Bottom-right floating badge */}
-                      <div className="absolute -bottom-5 -left-3 sm:-bottom-6 sm:-left-4 z-20 bg-slate-900 p-4 sm:p-5 rounded-3xl shadow-2xl flex flex-col gap-1 text-white animate-fade-in"
+                      <div className="absolute -bottom-5 -left-3 sm:-bottom-6 sm:-left-4 z-20 bg-slate-900 p-4 sm:p-5 rounded-3xl shadow-2xl shadow-slate-900/30 flex flex-col gap-1 text-white animate-fade-in ring-1 ring-white/10"
                            style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
-                        <div className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'hsl(var(--primary) / 0.9)' }}>
+                        <div className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: 'hsl(var(--primary) / 0.9)' }}>
                           {txt('hero_features_label', 'المميزات التقنية')}
                         </div>
                         <div className="text-sm sm:text-base font-bold">{txt('hero_features_value', 'التحكم عبر التطبيق')}</div>
@@ -470,7 +484,7 @@ export default function IndexPage() {
                 type="button"
                 onClick={scrollPrev}
                 aria-label="السابق"
-                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 hover:scale-110"
               >
                 <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
@@ -478,7 +492,7 @@ export default function IndexPage() {
                 type="button"
                 onClick={scrollNext}
                 aria-label="التالي"
-                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-slate-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 hover:scale-110"
               >
                 <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>

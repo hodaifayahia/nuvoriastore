@@ -1381,6 +1381,7 @@ export const fr: Record<string, string> = {
   'nav.signIn': 'Se connecter',
   'nav.adminPanel': 'Panneau admin',
   'nav.language': 'Langue',
+  'nav.menu': 'Menu',
 
   // ═══ Footer ═══
   'footer.quickLinks': 'Liens rapides',

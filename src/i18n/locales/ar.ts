@@ -1391,6 +1391,7 @@ export const ar: Record<string, string> = {
   'nav.signIn': 'تسجيل الدخول',
   'nav.adminPanel': 'لوحة التحكم',
   'nav.language': 'اللغة',
+  'nav.menu': 'القائمة',
 
   // ═══ Footer ═══
   'footer.quickLinks': 'روابط سريعة',
