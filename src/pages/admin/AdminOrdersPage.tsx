@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Eye, ExternalLink, AlertTriangle, MoreHorizontal, PackageCheck, Truck, Clock, Ban, PackageOpen, CheckCircle, Filter, ChevronDown, ChevronUp, Loader2, CheckSquare, Zap, Plus, Download, Trash2, ShoppingCart } from 'lucide-react';
+import { Search, Eye, ExternalLink, AlertTriangle, MoreHorizontal, PackageCheck, Truck, Clock, Ban, PackageOpen, CheckCircle, Filter, ChevronDown, ChevronUp, Loader2, CheckSquare, Zap, Plus, Download, Trash2, ShoppingCart, Phone, MapPin, User, CreditCard, Package, Calendar, MessageCircle } from 'lucide-react';
 import { formatPrice, formatDate } from '@/lib/format';
 import { useTranslation } from '@/i18n';
 
@@ -26,12 +27,12 @@ const STATUS_KEYS: Record<string, string> = {
   'ملغي': 'status.cancelled',
 };
 
-const STATUS_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: string }> = {
-  'جديد': { icon: Clock, color: 'text-sky-600', bg: 'bg-sky-500/10' },
-  'قيد المعالجة': { icon: PackageOpen, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-  'تم الشحن': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  'تم التسليم': { icon: PackageCheck, color: 'text-primary', bg: 'bg-primary/10' },
-  'ملغي': { icon: Ban, color: 'text-destructive', bg: 'bg-destructive/10' },
+const STATUS_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: string; row: string; border: string }> = {
+  'جديد': { icon: Clock, color: 'text-sky-600', bg: 'bg-sky-500/10', row: 'bg-sky-50/60 hover:bg-sky-100/60 dark:bg-sky-500/5 dark:hover:bg-sky-500/10', border: 'border-l-4 border-l-sky-500' },
+  'قيد المعالجة': { icon: PackageOpen, color: 'text-orange-500', bg: 'bg-orange-500/10', row: 'bg-orange-50/60 hover:bg-orange-100/60 dark:bg-orange-500/5 dark:hover:bg-orange-500/10', border: 'border-l-4 border-l-orange-500' },
+  'تم الشحن': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-500/10', row: 'bg-blue-50/60 hover:bg-blue-100/60 dark:bg-blue-500/5 dark:hover:bg-blue-500/10', border: 'border-l-4 border-l-blue-500' },
+  'تم التسليم': { icon: PackageCheck, color: 'text-primary', bg: 'bg-primary/10', row: 'bg-emerald-50/60 hover:bg-emerald-100/60 dark:bg-emerald-500/5 dark:hover:bg-emerald-500/10', border: 'border-l-4 border-l-emerald-500' },
+  'ملغي': { icon: Ban, color: 'text-destructive', bg: 'bg-destructive/10', row: 'bg-red-50/60 hover:bg-red-100/60 dark:bg-red-500/5 dark:hover:bg-red-500/10', border: 'border-l-4 border-l-red-500' },
 };
 
 export default function AdminOrdersPage() {
@@ -431,7 +432,7 @@ export default function AdminOrdersPage() {
                 const statusCfg = STATUS_CONFIG[o.status || 'جديد'] || STATUS_CONFIG['جديد'];
                 const StatusIcon = statusCfg.icon;
                 return (
-                  <tr key={o.id} className={`border-b hover:bg-muted/50 ${selectedIds.has(o.id) ? 'bg-primary/5' : ''}`}>
+                  <tr key={o.id} className={`border-b transition-colors ${selectedIds.has(o.id) ? 'bg-primary/5' : statusCfg.row}`}>
                     <td className="p-3"><Checkbox checked={selectedIds.has(o.id)} onCheckedChange={() => toggleSelect(o.id)} /></td>
                     <td className="p-3 font-roboto font-bold text-primary">
                       {o.order_number}
@@ -505,7 +506,7 @@ export default function AdminOrdersPage() {
             const statusCfg = STATUS_CONFIG[o.status || 'جديد'] || STATUS_CONFIG['جديد'];
             const StatusIcon = statusCfg.icon;
             return (
-              <div key={o.id} className="bg-card border rounded-xl p-4 space-y-3">
+              <div key={o.id} className={`bg-card ${statusCfg.border} border rounded-xl p-4 space-y-3 transition-colors ${statusCfg.row}`}>
                 <div className="flex items-center justify-between">
                   <span className="font-roboto font-bold text-primary text-sm">
                     {o.order_number}
@@ -523,12 +524,26 @@ export default function AdminOrdersPage() {
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t">
                   <span className="font-roboto font-bold text-sm">{formatPrice(Number(o.total_amount))}</span>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="sm" className="h-8 font-cairo text-xs" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }}>
-                      <Eye className="w-3.5 h-3.5 ml-1" /> {t('common.view')}
+                  <div className="flex gap-1 items-center flex-nowrap overflow-x-auto">
+                    <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }} title={t('common.view')}>
+                      <Eye className="w-4 h-4" />
                     </Button>
+                    <a href={`tel:${o.customer_phone}`} className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="اتصال">
+                      <Phone className="w-4 h-4 text-emerald-600" />
+                    </a>
+                    <a href={`https://wa.me/${(o.customer_phone || '').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="واتساب">
+                      <MessageCircle className="w-4 h-4 text-green-600" />
+                    </a>
+                    {STATUSES.filter(s => s !== o.status).slice(0, 3).map(s => {
+                      const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon;
+                      return (
+                        <Button key={s} variant="outline" size="icon" className={`h-8 w-8 shrink-0 ${cfg.color}`} onClick={() => handleQuickStatus(o.id, s)} title={t(STATUS_KEYS[s])}>
+                          <Icon className="w-4 h-4" />
+                        </Button>
+                      );
+                    })}
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="outline" size="icon" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="outline" size="icon" className="h-8 w-8 shrink-0"><MoreHorizontal className="w-4 h-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover border z-50">
                         {STATUSES.map(s => { const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon; return (
                           <DropdownMenuItem key={s} onClick={() => handleQuickStatus(o.id, s)} className={`font-cairo gap-2 cursor-pointer ${cfg.color}`}><Icon className="w-4 h-4" /> {t(STATUS_KEYS[s])}</DropdownMenuItem>
@@ -547,79 +562,222 @@ export default function AdminOrdersPage() {
         </div>
 
         <Dialog open={!!selectedOrder} onOpenChange={open => !open && setSelectedOrder(null)}>
-          <DialogContent className="max-w-lg">
-            <DialogHeader><DialogTitle className="font-cairo">{t('orders.orderDetails')} {selectedOrder?.order_number}</DialogTitle></DialogHeader>
-            {selectedOrder && (
-              <div className="space-y-4 text-sm">
-                <div className="grid grid-cols-2 gap-2 font-cairo">
-                  <div><span className="text-muted-foreground">{t('orders.customer')}:</span> {selectedOrder.customer_name}</div>
-                  <div><span className="text-muted-foreground">{t('orders.phone')}:</span> <span className="font-roboto">{selectedOrder.customer_phone}</span></div>
-                  <div><span className="text-muted-foreground">{t('orders.wilaya')}:</span> {(selectedOrder as any).wilayas?.name}</div>
-                  <div><span className="text-muted-foreground">{t('orders.paymentMethod')}:</span> {selectedOrder.payment_method === 'baridimob' ? t('orders.baridimob') : selectedOrder.payment_method === 'flexy' ? t('orders.flexy') : selectedOrder.payment_method === 'cod' ? t('orders.cod') : selectedOrder.payment_method}</div>
-                </div>
-                {selectedOrder.address && <div className="font-cairo"><span className="text-muted-foreground">{t('orders.address')}:</span> {selectedOrder.address}</div>}
-                {selectedOrder.payment_receipt_url && (
-                  <div className="space-y-2">
-                    <a href={selectedOrder.payment_receipt_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary font-cairo hover:underline">
-                      <ExternalLink className="w-3 h-3" /> عرض إيصال الدفع
-                    </a>
-                    <img src={selectedOrder.payment_receipt_url} alt="إيصال الدفع" className="max-w-full max-h-48 rounded-lg border object-contain" />
-                  </div>
-                )}
-                <div className="border rounded-lg p-3">
-                  <h3 className="font-cairo font-bold mb-2">{t('orders.items')}</h3>
-                  {orderItems?.map((item: any) => (
-                    <div key={item.id} className="flex justify-between py-1 font-cairo">
-                      <span>{item.products?.name} ×{item.quantity}</span>
-                      <span className="font-roboto">{formatPrice(Number(item.unit_price) * item.quantity)}</span>
-                    </div>
-                  ))}
-                  <hr className="my-2" />
-                  <div className="flex justify-between font-cairo text-sm">
-                    <span>{t('orders.subtotal')}</span>
-                    <span className="font-roboto">{formatPrice(Number(selectedOrder.subtotal))}</span>
-                  </div>
-                  <div className="flex justify-between font-cairo text-sm">
-                    <span>{t('orders.shipping')}</span>
-                    <span className="font-roboto">{formatPrice(Number(selectedOrder.shipping_cost))}</span>
-                  </div>
-                  {Number(selectedOrder.discount_amount) > 0 && (
-                    <div className="flex justify-between font-cairo text-sm text-primary">
-                      <span>{t('orders.discount')} {selectedOrder.coupon_code && `(${selectedOrder.coupon_code})`}</span>
-                      <span className="font-roboto">-{formatPrice(Number(selectedOrder.discount_amount))}</span>
-                    </div>
-                  )}
-                  <hr className="my-2" />
-                  <div className="flex justify-between font-cairo font-bold">
-                    <span>{t('common.total')}</span>
-                    <span className="font-roboto text-primary">{formatPrice(Number(selectedOrder.total_amount))}</span>
-                  </div>
-                </div>
-                <div className="flex gap-2 items-end">
-                  <div className="flex-1">
-                    <Label className="font-cairo">{t('common.status')}</Label>
-                    <Select value={newStatus} onValueChange={setNewStatus}>
-                      <SelectTrigger className="font-cairo mt-1"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {STATUSES.map(s => {
-                          const cfg = STATUS_CONFIG[s];
-                          const Icon = cfg.icon;
-                          return (
-                            <SelectItem key={s} value={s} className="font-cairo">
-                              <span className="flex items-center gap-2">
-                                <Icon className={`w-3.5 h-3.5 ${cfg.color}`} />
-                                {t(STATUS_KEYS[s])}
-                              </span>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button onClick={() => { updateStatus.mutate({ id: selectedOrder.id, status: newStatus }); setSelectedOrder(null); }} disabled={updateStatus.isPending} className="font-cairo">{t('common.save')}</Button>
-                </div>
-              </div>
-            )}
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
+            {selectedOrder && (() => {
+              const sc = STATUS_CONFIG[selectedOrder.status || 'جديد'] || STATUS_CONFIG['جديد'];
+              const SIcon = sc.icon;
+              const phone = selectedOrder.customer_phone || '';
+              const waPhone = phone.replace(/\D/g, '');
+              return (
+                <>
+                  <DialogHeader className="p-4 sm:p-6 pb-0">
+                    <DialogTitle className="font-cairo flex items-center gap-2 flex-wrap">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs ${sc.bg} ${sc.color}`}>
+                        <SIcon className="w-3.5 h-3.5" /> {t(STATUS_KEYS[selectedOrder.status || 'جديد'])}
+                      </span>
+                      <span>{t('orders.orderDetails')}</span>
+                      <span className="font-roboto text-primary">{selectedOrder.order_number}</span>
+                    </DialogTitle>
+                  </DialogHeader>
+
+                  <Tabs defaultValue="overview" className="w-full p-4 sm:p-6 pt-4">
+                    <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto gap-1 bg-muted/50">
+                      <TabsTrigger value="overview" className="font-cairo text-xs sm:text-sm gap-1.5 py-2">
+                        <Eye className="w-3.5 h-3.5" /> نظرة عامة
+                      </TabsTrigger>
+                      <TabsTrigger value="customer" className="font-cairo text-xs sm:text-sm gap-1.5 py-2">
+                        <User className="w-3.5 h-3.5" /> معلومات العميل
+                      </TabsTrigger>
+                      <TabsTrigger value="product" className="font-cairo text-xs sm:text-sm gap-1.5 py-2">
+                        <Package className="w-3.5 h-3.5" /> تفاصيل المنتج
+                      </TabsTrigger>
+                      <TabsTrigger value="timeline" className="font-cairo text-xs sm:text-sm gap-1.5 py-2">
+                        <Calendar className="w-3.5 h-3.5" /> الجدول الزمني
+                      </TabsTrigger>
+                    </TabsList>
+
+                    {/* OVERVIEW */}
+                    <TabsContent value="overview" className="mt-4 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div className={`rounded-xl p-4 flex flex-col items-center justify-center text-center ${sc.bg}`}>
+                          <div className={`w-14 h-14 rounded-full ${sc.color} bg-white/70 dark:bg-black/20 flex items-center justify-center mb-2`}>
+                            <SIcon className="w-7 h-7" />
+                          </div>
+                          <p className={`font-cairo font-bold ${sc.color}`}>{t(STATUS_KEYS[selectedOrder.status || 'جديد'])}</p>
+                          <p className="font-cairo text-xs text-muted-foreground mt-1">حالة الطلب</p>
+                        </div>
+                        <div className="rounded-xl p-4 border bg-card">
+                          <p className="font-cairo text-xs text-muted-foreground mb-1">رقم الطلب</p>
+                          <p className="font-roboto font-bold text-primary text-lg">{selectedOrder.order_number}</p>
+                          <p className="font-cairo text-xs text-muted-foreground mt-3 mb-1">تاريخ الإنشاء</p>
+                          <p className="font-cairo text-sm">{formatDate(selectedOrder.created_at)}</p>
+                        </div>
+                        <div className="rounded-xl p-4 border bg-card">
+                          <p className="font-cairo text-xs text-muted-foreground mb-1">المبلغ الإجمالي</p>
+                          <p className="font-roboto font-bold text-primary text-xl">{formatPrice(Number(selectedOrder.total_amount))}</p>
+                          <p className="font-cairo text-xs text-muted-foreground mt-3 mb-1">طريقة الدفع</p>
+                          <p className="font-cairo text-sm">{selectedOrder.payment_method === 'baridimob' ? t('orders.baridimob') : selectedOrder.payment_method === 'flexy' ? t('orders.flexy') : selectedOrder.payment_method === 'cod' ? t('orders.cod') : selectedOrder.payment_method || '—'}</p>
+                        </div>
+                      </div>
+
+                      <div className="border rounded-xl p-4 space-y-2">
+                        <div className="flex justify-between font-cairo text-sm">
+                          <span className="text-muted-foreground">{t('orders.subtotal')}</span>
+                          <span className="font-roboto">{formatPrice(Number(selectedOrder.subtotal))}</span>
+                        </div>
+                        <div className="flex justify-between font-cairo text-sm">
+                          <span className="text-muted-foreground">{t('orders.shipping')}</span>
+                          <span className="font-roboto">{formatPrice(Number(selectedOrder.shipping_cost))}</span>
+                        </div>
+                        {Number(selectedOrder.discount_amount) > 0 && (
+                          <div className="flex justify-between font-cairo text-sm text-primary">
+                            <span>{t('orders.discount')} {selectedOrder.coupon_code && `(${selectedOrder.coupon_code})`}</span>
+                            <span className="font-roboto">-{formatPrice(Number(selectedOrder.discount_amount))}</span>
+                          </div>
+                        )}
+                        <hr />
+                        <div className="flex justify-between font-cairo font-bold">
+                          <span>{t('common.total')}</span>
+                          <span className="font-roboto text-primary">{formatPrice(Number(selectedOrder.total_amount))}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-end">
+                        <div className="flex-1">
+                          <Label className="font-cairo">تحديث الحالة</Label>
+                          <Select value={newStatus} onValueChange={setNewStatus}>
+                            <SelectTrigger className="font-cairo mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              {STATUSES.map(s => {
+                                const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon;
+                                return (
+                                  <SelectItem key={s} value={s} className="font-cairo">
+                                    <span className="flex items-center gap-2"><Icon className={`w-3.5 h-3.5 ${cfg.color}`} /> {t(STATUS_KEYS[s])}</span>
+                                  </SelectItem>
+                                );
+                              })}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button onClick={() => { updateStatus.mutate({ id: selectedOrder.id, status: newStatus }); setSelectedOrder(null); }} disabled={updateStatus.isPending} className="font-cairo">{t('common.save')}</Button>
+                      </div>
+                    </TabsContent>
+
+                    {/* CUSTOMER */}
+                    <TabsContent value="customer" className="mt-4 space-y-3">
+                      <div className="border rounded-xl p-4 space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-11 h-11 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                            <User className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="font-cairo font-bold">{selectedOrder.customer_name}</p>
+                            <p className="font-cairo text-xs text-muted-foreground">العميل</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t">
+                          <div className="flex items-start gap-2">
+                            <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div className="flex-1">
+                              <p className="font-cairo text-xs text-muted-foreground">الهاتف</p>
+                              <p className="font-roboto" dir="ltr">{selectedOrder.customer_phone}</p>
+                              <div className="flex gap-2 mt-2">
+                                <a href={`tel:${phone}`} className="inline-flex items-center gap-1 text-xs font-cairo bg-emerald-500/10 text-emerald-600 px-2 py-1 rounded-md hover:bg-emerald-500/20">
+                                  <Phone className="w-3 h-3" /> اتصال
+                                </a>
+                                <a href={`https://wa.me/${waPhone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-cairo bg-green-500/10 text-green-600 px-2 py-1 rounded-md hover:bg-green-500/20">
+                                  <MessageCircle className="w-3 h-3" /> واتساب
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-cairo text-xs text-muted-foreground">الولاية</p>
+                              <p className="font-cairo">{(selectedOrder as any).wilayas?.name || '—'}</p>
+                            </div>
+                          </div>
+                          {selectedOrder.address && (
+                            <div className="flex items-start gap-2 sm:col-span-2">
+                              <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                              <div>
+                                <p className="font-cairo text-xs text-muted-foreground">العنوان</p>
+                                <p className="font-cairo">{selectedOrder.address}</p>
+                              </div>
+                            </div>
+                          )}
+                          <div className="flex items-start gap-2">
+                            <Truck className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-cairo text-xs text-muted-foreground">نوع التوصيل</p>
+                              <p className="font-cairo">{selectedOrder.delivery_type || '—'}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <CreditCard className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-cairo text-xs text-muted-foreground">طريقة الدفع</p>
+                              <p className="font-cairo">{selectedOrder.payment_method === 'baridimob' ? t('orders.baridimob') : selectedOrder.payment_method === 'flexy' ? t('orders.flexy') : selectedOrder.payment_method === 'cod' ? t('orders.cod') : selectedOrder.payment_method || '—'}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {/* PRODUCT */}
+                    <TabsContent value="product" className="mt-4 space-y-3">
+                      <div className="border rounded-xl overflow-hidden">
+                        <div className="bg-muted/50 px-4 py-2 font-cairo font-semibold text-sm flex items-center gap-2">
+                          <Package className="w-4 h-4" /> {t('orders.items')} ({orderItems?.length || 0})
+                        </div>
+                        <div className="divide-y">
+                          {orderItems?.map((item: any) => (
+                            <div key={item.id} className="p-3 flex items-center justify-between gap-3">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-cairo truncate">{item.products?.name || '—'}</p>
+                                <p className="font-cairo text-xs text-muted-foreground">الكمية: {item.quantity} × <span className="font-roboto">{formatPrice(Number(item.unit_price))}</span></p>
+                              </div>
+                              <p className="font-roboto font-bold text-primary shrink-0">{formatPrice(Number(item.unit_price) * item.quantity)}</p>
+                            </div>
+                          )) || <div className="p-4 text-center text-sm text-muted-foreground font-cairo">لا توجد منتجات</div>}
+                        </div>
+                      </div>
+                      {selectedOrder.payment_receipt_url && (
+                        <div className="border rounded-xl p-3 space-y-2">
+                          <a href={selectedOrder.payment_receipt_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary font-cairo hover:underline text-sm">
+                            <ExternalLink className="w-3 h-3" /> عرض إيصال الدفع
+                          </a>
+                          <img src={selectedOrder.payment_receipt_url} alt="إيصال الدفع" className="max-w-full max-h-64 rounded-lg border object-contain" />
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    {/* TIMELINE */}
+                    <TabsContent value="timeline" className="mt-4">
+                      <div className="border rounded-xl p-4">
+                        <ol className="relative border-r-2 border-muted pr-5 space-y-5">
+                          <li className="relative">
+                            <span className="absolute -right-[27px] top-0 w-4 h-4 rounded-full bg-sky-500 ring-4 ring-sky-500/20" />
+                            <p className="font-cairo font-semibold text-sm">تم إنشاء الطلب</p>
+                            <p className="font-cairo text-xs text-muted-foreground">{formatDate(selectedOrder.created_at)}</p>
+                          </li>
+                          {selectedOrder.updated_at && selectedOrder.updated_at !== selectedOrder.created_at && (
+                            <li className="relative">
+                              <span className={`absolute -right-[27px] top-0 w-4 h-4 rounded-full ring-4 ${sc.color.replace('text-', 'bg-')} ring-current/20`} />
+                              <p className="font-cairo font-semibold text-sm flex items-center gap-2">
+                                <SIcon className={`w-4 h-4 ${sc.color}`} /> الحالة الحالية: {t(STATUS_KEYS[selectedOrder.status || 'جديد'])}
+                              </p>
+                              <p className="font-cairo text-xs text-muted-foreground">{formatDate(selectedOrder.updated_at)}</p>
+                            </li>
+                          )}
+                        </ol>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </>
+              );
+            })()}
           </DialogContent>
         </Dialog>
 
