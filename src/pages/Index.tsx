@@ -33,9 +33,9 @@ import heroBanner3 from '@/assets/hero-banner-3.jpg';
 import bestPricesBanner from '@/assets/best-prices-banner.jpg.asset.json';
 
 const DEFAULT_HERO_SLIDES = [
-  { url: heroBanner1, alt: 'تبريد وغسيل' },
-  { url: heroBanner2, alt: 'طبخ' },
-  { url: heroBanner3, alt: 'تكييف وأجهزة صغيرة' },
+  { url: heroBanner1, alt: 'Froid et lavage' },
+  { url: heroBanner2, alt: 'Cuisson' },
+  { url: heroBanner3, alt: 'Climatisation et petit électroménager' },
 ];
 
 
@@ -49,30 +49,30 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const SHOWCASE = [
   {
     key: 'laptops',
-    title: 'حواسيب محمولة',
-    desc: 'أجهزة عالية الأداء مصممة للمبدعين والمطورين واللاعبين.',
+    title: 'Ordinateurs portables',
+    desc: 'Appareils performants conçus pour les créateurs, développeurs et joueurs.',
     icon: Laptop,
-    cta: 'استكشف الحواسيب',
+    cta: 'Explorer les ordinateurs',
     href: '/products?category=Laptops',
     aura: 'aura-teal',
     accent: 'hsl(180 88% 55%)',
   },
   {
     key: 'phones',
-    title: 'هواتف ذكية',
-    desc: 'هواتف رائدة وأغطية وإكسسوارات مصممة لتألق يومي.',
+    title: 'Smartphones',
+    desc: 'Téléphones premium, coques et accessoires pensés pour le quotidien.',
     icon: Smartphone,
-    cta: 'استكشف الهواتف',
+    cta: 'Explorer les téléphones',
     href: '/products?category=Phones',
     aura: 'aura-violet',
     accent: 'hsl(270 85% 65%)',
   },
   {
     key: 'gear',
-    title: 'إكسسوارات أساسية',
-    desc: 'سماعات، لوحات مفاتيح، شواحن — كل ما يكمّل إعدادك.',
+    title: 'Accessoires essentiels',
+    desc: 'Écouteurs, claviers, chargeurs — tout pour compléter votre installation.',
     icon: Headphones,
-    cta: 'تسوق الإكسسوارات',
+    cta: 'Acheter les accessoires',
     href: '/products?category=Headphones',
     aura: 'aura-teal',
     accent: 'hsl(200 95% 55%)',
@@ -80,14 +80,14 @@ const SHOWCASE = [
 ];
 
 const FALLBACK_CATS = [
-  { name: 'سماعات', icon: Headphones },
-  { name: 'لوحات مفاتيح', icon: Keyboard },
-  { name: 'فأرات', icon: Mouse },
-  { name: 'شواحن', icon: BatteryCharging },
-  { name: 'كابلات', icon: Cable },
-  { name: 'ألعاب', icon: Gamepad2 },
-  { name: 'ساعات', icon: Watch },
-  { name: 'مكبرات صوت', icon: Speaker },
+  { name: 'Écouteurs', icon: Headphones },
+  { name: 'Claviers', icon: Keyboard },
+  { name: 'Souris', icon: Mouse },
+  { name: 'Chargeurs', icon: BatteryCharging },
+  { name: 'Câbles', icon: Cable },
+  { name: 'Gaming', icon: Gamepad2 },
+  { name: 'Montres', icon: Watch },
+  { name: 'Enceintes', icon: Speaker },
 ];
 
 
@@ -177,7 +177,7 @@ export default function IndexPage() {
     return () => clearInterval(id);
   }, []);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'rtl', loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: false })]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'ltr', loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: false })]);
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
   useEffect(() => {
@@ -250,8 +250,8 @@ export default function IndexPage() {
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden">
       <SEO
-        title="نوفوريا ستور — منظومة تقنية متكاملة"
-        description="حواسيب محمولة وهواتف ذكية وإكسسوارات أساسية. منظومة تقنية راقية مع توصيل سريع عبر 58 ولاية."
+        title="NuvoriaStore — Électroménager en Algérie"
+        description="Électroménager, électronique et accessoires originaux avec livraison rapide dans les 58 wilayas."
         path="/"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -280,11 +280,11 @@ export default function IndexPage() {
               alt: p.name,
               title: p.name,
               subtitle: p.short_description || p.description || '',
-              price: p.price ? `${p.price} د.ج` : '',
-              oldPrice: p.old_price ? `${p.old_price} د.ج` : '',
+              price: p.price ? `${Number(p.price).toLocaleString('fr-DZ')} DZD` : '',
+              oldPrice: p.old_price ? `${Number(p.old_price).toLocaleString('fr-DZ')} DZD` : '',
               link: `/product/${p.id}`,
-              badge: p.is_featured ? 'مميّز' : 'وصل حديثاً',
-              cta: 'اشترِ الآن',
+              badge: p.is_featured ? 'Sélection' : 'Nouveau',
+              cta: 'Acheter maintenant',
             };
           })
           .filter(Boolean) as any[];
@@ -295,14 +295,14 @@ export default function IndexPage() {
           : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
-        const activeTitle: string = active.title || active.alt || 'تجربة ذكية لكل ركن في منزلك';
+        const activeTitle: string = active.title || active.alt || 'Des appareils fiables pour toute la maison';
         const activeSubtitle: string =
           active.subtitle ||
-          'اكتشف الجيل القادم من الأجهزة المنزلية التي تجمع بين الأداء الفائق والتصميم العصري.';
-        const activeBadge: string = active.badge || 'وصل حديثاً';
+          'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.';
+        const activeBadge: string = active.badge || 'Nouveau';
         const activePrice: string = active.price || '';
         const activeOldPrice: string = active.oldPrice || '';
-        const activeCta: string = active.cta || 'اشترِ الآن';
+        const activeCta: string = active.cta || 'Acheter maintenant';
         const activeCtaHref: string = active.link || '/products';
 
         // Split title on <br/> or newline for two-line reveal (second line gets gradient)
@@ -353,7 +353,7 @@ export default function IndexPage() {
 
                 <div
                   className="relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-8 md:gap-6 items-center p-6 sm:p-10 md:p-14 lg:p-16 min-h-[540px] md:min-h-[560px] lg:min-h-[600px]"
-                  dir="rtl"
+                  dir="ltr"
                 >
                   {/* ── Image column (left in RTL visual thanks to order) ── */}
                   <div className="relative order-1 md:order-2 flex items-center justify-center">
@@ -399,11 +399,11 @@ export default function IndexPage() {
                         <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-2 ring-emerald-100">
                           <Zap className="w-4 h-4" />
                         </div>
-                        <div className="text-right leading-tight">
+                        <div className="text-left leading-tight">
                           <div className="text-[10px] text-slate-400 font-medium">
-                            {txt('hero_energy_label', 'توفير الطاقة')}
+                            {txt('hero_energy_label', 'Économie d’énergie')}
                           </div>
-                          <div className="text-xs font-bold">{txt('hero_energy_value', 'فئة +++A')}</div>
+                          <div className="text-xs font-bold">{txt('hero_energy_value', 'Classe A+++')}</div>
                         </div>
                       </div>
 
@@ -419,7 +419,7 @@ export default function IndexPage() {
                   </div>
 
                   {/* ── Text column ── */}
-                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1 text-right">
+                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1 text-left">
                     {/* Eyebrow */}
                     <div
                       className="flex items-center gap-3 justify-start animate-fade-in"
@@ -477,14 +477,14 @@ export default function IndexPage() {
                       >
                         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
                         <span className="relative text-sm sm:text-base">{activeCta}</span>
-                        <ArrowRight className="relative w-4 h-4 rotate-180 transition-transform group-hover/cta:-translate-x-1" />
+                        <ArrowRight className="relative w-4 h-4 transition-transform group-hover/cta:translate-x-1" />
                       </Link>
                       <Link
                         to="/products"
                         className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 font-bold rounded-full border-2 border-white/70 text-white hover:bg-white hover:text-primary transition-all text-sm sm:text-base"
                       >
                         <Grid3X3 className="w-4 h-4" />
-                        {txt('hero_explore_cta', 'اكتشف التصنيفات')}
+                        {txt('hero_explore_cta', 'Découvrir les catégories')}
                       </Link>
                     </div>
 
@@ -494,9 +494,9 @@ export default function IndexPage() {
                       style={{ animationDelay: '380ms', animationFillMode: 'both' }}
                     >
                       {[
-                        { icon: Truck, label: txt('hero_trust_shipping', 'شحن سريع لكل الولايات') },
-                        { icon: Shield, label: txt('hero_trust_warranty', 'ضمان سنة كاملة') },
-                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'الدفع عند الاستلام') },
+                        { icon: Truck, label: txt('hero_trust_shipping', 'Livraison rapide dans toutes les wilayas') },
+                        { icon: Shield, label: txt('hero_trust_warranty', 'Garantie 1 an') },
+                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'Paiement à la livraison') },
                       ].map((tt, i) => (
                         <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-white/85 font-medium">
                           <span className="w-6 h-6 rounded-full bg-white/15 ring-1 ring-white/25 flex items-center justify-center">
@@ -517,7 +517,7 @@ export default function IndexPage() {
                               key={i}
                               type="button"
                               onClick={() => scrollTo(i)}
-                              aria-label={`الشريحة ${i + 1}`}
+                              aria-label={`Diapositive ${i + 1}`}
                               className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
                                 active
                                   ? 'w-14 h-14 ring-2 ring-white shadow-lg scale-105'
@@ -538,7 +538,7 @@ export default function IndexPage() {
               <button
                 type="button"
                 onClick={scrollPrev}
-                aria-label="السابق"
+                aria-label="Précédent"
                 className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
               >
                 <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -546,7 +546,7 @@ export default function IndexPage() {
               <button
                 type="button"
                 onClick={scrollNext}
-                aria-label="التالي"
+                aria-label="Suivant"
                 className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
               >
                 <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -605,12 +605,12 @@ export default function IndexPage() {
               </div>
               {/* Content */}
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'فئة')}</p>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'Catégorie')}</p>
                 <h3 className={`font-display font-extrabold tracking-tight ${titleSize} drop-shadow-lg`}>
                   {cat.name}
                 </h3>
                 <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                  {txt('cat_shop_now', 'تسوق الآن')}
+                  {txt('cat_shop_now', 'Acheter maintenant')}
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                 </span>
               </div>
@@ -623,10 +623,10 @@ export default function IndexPage() {
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-10 sm:mb-14">
                 <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-3">
-                  {txt('cat_kicker', 'تسوق حسب الفئة')}
+                  {txt('cat_kicker', 'Acheter par catégorie')}
                 </p>
                 <h2 className="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">
-                  {txt('cat_title', 'مصمم لكل إعداد')}
+                  {txt('cat_title', 'Conçu pour chaque foyer')}
                 </h2>
                 <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
               </div>
@@ -667,20 +667,20 @@ export default function IndexPage() {
             <div className="flex items-end justify-between mb-8 gap-4">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2 flex items-center gap-2">
-                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('feat_kicker', 'منتجات مميزة')}
+                  <Star className="w-3.5 h-3.5 fill-current" /> {txt('feat_kicker', 'Produits sélectionnés')}
                 </p>
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">{txt('feat_title', 'اختيارات المتجر')}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('feat_desc', 'منتجات مختارة بعناية من طرف فريقنا خصيصاً لك.')}</p>
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">{txt('feat_title', 'Choix de la boutique')}</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('feat_desc', 'Des produits soigneusement sélectionnés par notre équipe.')}</p>
               </div>
               <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {txt('feat_viewAll', 'عرض الكل')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                {txt('feat_viewAll', 'Voir tout')} <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {featuredProducts.map(p => (
                 <div key={p.id} className="glass-card neon-border rounded-2xl overflow-hidden relative">
                   <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[10px] font-bold shadow-lg">
-                    <Star className="w-3 h-3 fill-current" /> {txt('feat_badge', 'مميز')}
+                    <Star className="w-3 h-3 fill-current" /> {txt('feat_badge', 'Sélection')}
                   </div>
                   <ProductCard
                     id={p.id}
@@ -709,12 +709,12 @@ export default function IndexPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'وصل حديثاً')}</p>
-                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'جديدنا')}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'إصدارات جديدة من أفضل العلامات.')}</p>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('new_kicker', 'Nouveautés')}</p>
+                <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('new_title', 'Nouveau en boutique')}</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md">{txt('new_desc', 'Les dernières références des meilleures marques.')}</p>
               </div>
               <Link to="/products" className="hidden sm:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {txt('new_allProducts', 'عرض الكل')} <ChevronRight className="w-4 h-4" />
+                {txt('new_allProducts', 'Voir tout')} <ChevronRight className="w-4 h-4" />
               </Link>
 
             </div>
@@ -745,7 +745,7 @@ export default function IndexPage() {
                 {(allProducts?.length || 0) > 4 && (
                   <div className="mt-10 flex justify-center">
                     <Link to="/products" className="btn-neon inline-flex items-center gap-2 px-7 py-3 rounded-full min-h-[48px] font-semibold">
-                      {txt('new_viewAll', 'عرض كل المنتجات')} <ChevronRight className="w-4 h-4" />
+                      {txt('new_viewAll', 'Voir tous les produits')} <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
                 )}
@@ -783,7 +783,7 @@ export default function IndexPage() {
                       <CatIcon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2} />
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-1">فئة</p>
+                      <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-1">Catégorie</p>
                       <h2 className="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">{cat.name}</h2>
                     </div>
                   </div>
@@ -791,7 +791,7 @@ export default function IndexPage() {
                     to={`/products?category=${encodeURIComponent(cat.name)}`}
                     className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
                   >
-                    عرض الكل <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                    Voir tout <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -818,7 +818,7 @@ export default function IndexPage() {
                     to={`/products?category=${encodeURIComponent(cat.name)}`}
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
                   >
-                    عرض كل منتجات {cat.name} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                    Voir tous les produits {cat.name} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -834,28 +834,28 @@ export default function IndexPage() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border/60 min-h-[260px] sm:min-h-[340px]">
               <img
                 src={bestPricesBanner.url}
-                alt={`${txt('bp_title_line1', 'أفضل الأسعار')} ${txt('bp_title_line2', 'في الجزائر')}`}
+                alt={`${txt('bp_title_line1', 'Les meilleurs prix')} ${txt('bp_title_line2', 'en Algérie')}`}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {/* Gradient overlay — stronger on right for RTL text */}
-              <div className="absolute inset-0 bg-gradient-to-l from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
-              <div className="relative h-full flex items-center justify-end p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
-                <div className="max-w-md text-right text-white">
+              {/* Gradient overlay — stronger on left for French text */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
+              <div className="relative h-full flex items-center justify-start p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
+                <div className="max-w-md text-left text-white">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
-                    <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'ضمان أفضل سعر')}
+                    <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'Meilleur prix garanti')}
                   </div>
                   <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight drop-shadow-lg">
-                    {txt('bp_title_line1', 'أفضل الأسعار')}<br />{txt('bp_title_line2', 'في الجزائر')}
+                    {txt('bp_title_line1', 'Les meilleurs prix')}<br />{txt('bp_title_line2', 'en Algérie')}
                   </h2>
                   <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed">
-                    {txt('bp_desc', 'أجهزة كهرومنزلية أصلية بأسعار لا تُقاوم، مع توصيل سريع إلى 58 ولاية.')}
+                    {txt('bp_desc', 'Électroménager original à prix imbattables, avec livraison rapide dans les 58 wilayas.')}
                   </p>
                   <Link
                     to="/products"
                     className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#0a1e3a] font-bold text-sm shadow-xl hover:scale-105 transition-transform"
                   >
-                    {txt('bp_cta', 'تسوق الآن')} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                    {txt('bp_cta', 'Acheter maintenant')} <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -875,7 +875,7 @@ export default function IndexPage() {
             <div className="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[hsl(var(--grad-violet)/0.25)] blur-3xl" />
             <div className="relative p-6 sm:p-10 flex flex-col justify-center">
               <span className="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.3em] font-semibold border border-white/10 glass-panel mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" /> إصدار محدود
+                <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--grad-teal))]" /> Édition limitée
               </span>
               <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{hp?.limited.title}</h2>
               {hp?.limited.subtitle && (
@@ -884,7 +884,7 @@ export default function IndexPage() {
               <div className="mt-6">
                 <Link to={hp?.limited.link || '/products'}>
                   <Button size="lg" className="btn-neon rounded-full gap-2 min-h-[48px] border-0">
-                    {hp?.limited.cta || 'تسوق الآن'} <ArrowRight className="w-4 h-4" />
+                    {hp?.limited.cta || 'Acheter maintenant'} <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
@@ -905,8 +905,8 @@ export default function IndexPage() {
         <section className="pb-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'علامات موثوقة')}</p>
-              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'مدعوم من الأفضل')}</h2>
+              <p className="text-[11px] uppercase tracking-[0.3em] text-[hsl(var(--grad-teal))] font-semibold mb-2">{txt('brands_kicker', 'Marques fiables')}</p>
+              <h2 className="font-display font-extrabold uppercase text-3xl sm:text-4xl tracking-tight">{txt('brands_title', 'Sélection des meilleures marques')}</h2>
             </div>
           </div>
 
@@ -975,21 +975,21 @@ export default function IndexPage() {
               <div className="lg:col-span-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--grad-teal)/0.12)] border border-[hsl(var(--grad-teal)/0.3)] text-[hsl(var(--grad-teal))] text-xs font-semibold mb-4">
                   <Shield className="w-3.5 h-3.5" />
-                  {txt('ts_tag', 'حماية موثوقة')}
+                  {txt('ts_tag', 'Protection fiable')}
                 </div>
                 <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight mb-3">
-                  {txt('ts_title', 'سياسة الضمان')}
+                  {txt('ts_title', 'Politique de garantie')}
                 </h2>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="font-display text-5xl sm:text-6xl font-black bg-gradient-to-br from-[hsl(var(--grad-teal))] to-[hsl(var(--grad-amber))] bg-clip-text text-transparent">
                     {txt('ts_months', '12')}
                   </span>
                   <span className="text-lg font-semibold text-muted-foreground">
-                    {txt('ts_months_suffix', 'شهراً من تاريخ الشراء')}
+                    {txt('ts_months_suffix', 'mois à compter de l’achat')}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {txt('ts_desc', 'يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.')}
+                  {txt('ts_desc', 'Cette garantie couvre les défauts de fabrication pendant toute la période indiquée, selon les conditions applicables.')}
                 </p>
               </div>
 
@@ -998,16 +998,16 @@ export default function IndexPage() {
                 {[
                   {
                     icon: RefreshCw,
-                    tag: txt('ts_card1_tag', 'الأيام السبعة الأولى'),
-                    title: txt('ts_card1_title', 'استبدال كامل للجهاز'),
-                    desc: txt('ts_card1_desc', 'استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.'),
+                    tag: txt('ts_card1_tag', 'Les 7 premiers jours'),
+                    title: txt('ts_card1_title', 'Remplacement complet'),
+                    desc: txt('ts_card1_desc', 'Remplacement complet de l’appareil pendant les sept premiers jours si un défaut de fabrication est confirmé.'),
                     color: 'grad-teal',
                   },
                   {
                     icon: Wrench,
-                    tag: txt('ts_card2_tag', 'بعد فترة الاستبدال'),
-                    title: txt('ts_card2_title', 'إصلاح وقطع غيار'),
-                    desc: txt('ts_card2_desc', 'يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.'),
+                    tag: txt('ts_card2_tag', 'Après la période de remplacement'),
+                    title: txt('ts_card2_title', 'Réparation et pièces'),
+                    desc: txt('ts_card2_desc', 'La garantie couvre la réparation des pannes dues à un défaut de fabrication, avec pièces détachées si nécessaire.'),
                     color: 'grad-amber',
                   },
                 ].map((it) => (
@@ -1036,7 +1036,7 @@ export default function IndexPage() {
                     <BadgeCheck className="w-5 h-5 text-[hsl(var(--grad-teal))]" />
                   </div>
                   <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">
-                    {txt('ts_coverage', 'الضمان يشمل عيوب التصنيع فقط، ولا يغطي الأعطال الناتجة عن سوء الاستخدام أو الحوادث.')}
+                    {txt('ts_coverage', 'La garantie couvre uniquement les défauts de fabrication et ne couvre pas les dommages causés par une mauvaise utilisation ou un accident.')}
                   </p>
                 </div>
               </div>

@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 
 import Navbar from "@/components/Navbar";
-import AutoPageTranslator from "@/components/AutoPageTranslator";
 import Footer from "@/components/Footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import TopMarquee from "@/components/TopMarquee";
@@ -102,7 +101,6 @@ function StoreThemeProvider({ children }: { children: React.ReactNode }) {
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <AutoPageTranslator />
       <TopMarquee />
       <AnnouncementBar />
       <Navbar />

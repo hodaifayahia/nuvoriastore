@@ -18,7 +18,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 function detectBrowserLanguage(): Language {
-  if (typeof navigator === 'undefined') return 'ar';
+  if (typeof navigator === 'undefined') return 'fr';
   const langs = [navigator.language, ...(navigator.languages || [])].filter(Boolean);
   for (const l of langs) {
     const code = l.toLowerCase().split('-')[0];
@@ -30,11 +30,11 @@ function detectBrowserLanguage(): Language {
 }
 
 function getInitialLanguage(): Language {
-  if (typeof window === 'undefined') return 'ar';
+  if (typeof window === 'undefined') return 'fr';
   const stored = localStorage.getItem('site_language');
-  if (stored === 'ar' || stored === 'fr') return stored;
-  // Migrate legacy 'en' value
-  if (stored === 'en') return 'fr';
+  // Storefront is French/LTR by default; migrate older Arabic/English cached choices.
+  if (stored !== 'fr') return 'fr';
+  if (stored === 'fr') return stored;
   return detectBrowserLanguage();
 }
 
@@ -56,7 +56,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: string): string => {
-    return translations[language]?.[key] || translations.ar[key] || (en as Record<string, string>)[key] || key;
+    const english = en as Record<string, string>;
+    return translations[language]?.[key]
+      || (language === 'fr' ? english[key] : translations.fr[key])
+      || translations.ar[key]
+      || key;
   }, [language]);
 
 
@@ -72,10 +76,10 @@ export function useTranslation() {
   if (!context) {
     // Fallback for components outside provider
     return {
-      language: 'ar' as Language,
+      language: 'fr' as Language,
       setLanguage: () => {},
-      t: (key: string) => ar[key as keyof typeof ar] || key,
-      dir: 'rtl' as const,
+      t: (key: string) => fr[key as keyof typeof fr] || ar[key as keyof typeof ar] || key,
+      dir: 'ltr' as const,
     };
   }
   return context;

@@ -1,12 +1,12 @@
 import { Sparkles } from 'lucide-react';
 
 const DEFAULT_PHRASES = [
-  'تسوق الآن',
-  'علامات موثوقة',
-  'مدعوم من الأفضل',
-  'شحن سريع لكل الولايات',
-  'ضمان سنة كاملة',
-  'دفع عند الاستلام',
+  'Acheter maintenant',
+  'Marques fiables',
+  'Sélection premium',
+  'Livraison dans toutes les wilayas',
+  'Garantie 1 an',
+  'Paiement à la livraison',
 ];
 
 interface Props {
