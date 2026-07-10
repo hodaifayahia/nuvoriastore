@@ -201,7 +201,7 @@ export default function Navbar() {
             <CategoriesSidebar
               trigger={
                 <button
-                  className="p-2.5 rounded-xl hover:bg-muted transition-colors"
+                  className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
                   aria-label={t('nav.categories')}
                 >
                   <Grid3X3 className="w-5 h-5 text-muted-foreground" />
