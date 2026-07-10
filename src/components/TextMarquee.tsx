@@ -1,6 +1,7 @@
 import { Sparkles } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
-const DEFAULT_PHRASES = [
+const DEFAULT_PHRASES_FR = [
   'Acheter maintenant',
   'Marques fiables',
   'Sélection premium',
@@ -9,27 +10,29 @@ const DEFAULT_PHRASES = [
   'Paiement à la livraison',
 ];
 
+const DEFAULT_PHRASES_AR = [
+  'اشترِ الآن',
+  'علامات موثوقة',
+  'اختيار مميّز',
+  'توصيل لكل الولايات',
+  'ضمان سنة كاملة',
+  'الدفع عند الاستلام',
+];
+
 interface Props {
   phrases?: string[];
-  /** Animation duration for one full loop */
   duration?: string;
   className?: string;
 }
 
-/**
- * Seamless infinite horizontal text marquee.
- * Two identical tracks side-by-side; the outer container translates from 0 to -50%
- * at a linear timing so items exiting one edge re-enter from the opposite edge
- * without any gap, flicker, or reset.
- */
 export default function TextMarquee({
-  phrases = DEFAULT_PHRASES,
+  phrases,
   duration = '35s',
   className = '',
 }: Props) {
-  // Repeat phrases inside each track so it is always wider than any viewport,
-  // guaranteeing a seamless loop with no visible gap on wrap.
-  const trackPhrases = [...phrases, ...phrases, ...phrases];
+  const { language } = useTranslation();
+  const resolved = phrases ?? (language === 'ar' ? DEFAULT_PHRASES_AR : DEFAULT_PHRASES_FR);
+  const trackPhrases = [...resolved, ...resolved, ...resolved];
 
   const Track = ({ ariaHidden = false }: { ariaHidden?: boolean }) => (
     <div
