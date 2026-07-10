@@ -466,40 +466,29 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="p-3 font-cairo text-xs text-muted-foreground">{formatDate(o.created_at!)}</td>
                     <td className="p-3">
-                      <div className="flex items-center gap-1 flex-wrap">
+                      <div className="flex items-center gap-1">
                         <Tooltip>
                           <TooltipTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }}><Eye className="w-4 h-4" /></Button></TooltipTrigger>
                           <TooltipContent className="font-cairo">{t('common.view')}</TooltipContent>
                         </Tooltip>
-                        {STATUSES.map(s => {
-                          const cfg = STATUS_CONFIG[s];
-                          const Icon = cfg.icon;
-                          const isActive = o.status === s;
-                          return (
-                            <Tooltip key={s}>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className={`h-8 w-8 ${cfg.color} ${isActive ? cfg.bg : ''}`}
-                                  onClick={() => !isActive && handleQuickStatus(o.id, s)}
-                                  disabled={isActive}
-                                >
-                                  <Icon className="w-4 h-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent className="font-cairo">{t(STATUS_KEYS[s])}</TooltipContent>
-                            </Tooltip>
-                          );
-                        })}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => setDeleteOrderId(o.id)}>
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent className="font-cairo">حذف الطلبية</TooltipContent>
-                        </Tooltip>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button></DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-popover border z-50 min-w-[160px]">
+                            {STATUSES.map(s => {
+                              const cfg = STATUS_CONFIG[s];
+                              const Icon = cfg.icon;
+                              return (
+                                <DropdownMenuItem key={s} onClick={() => handleQuickStatus(o.id, s)} className="font-cairo gap-2 cursor-pointer">
+                                  <Icon className={`w-4 h-4 ${cfg.color}`} /> {t(STATUS_KEYS[s])}
+                                </DropdownMenuItem>
+                              );
+                            })}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => setDeleteOrderId(o.id)} className="font-cairo gap-2 cursor-pointer text-destructive focus:text-destructive">
+                              <Trash2 className="w-4 h-4" /> حذف الطلبية
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </td>
                   </tr>
