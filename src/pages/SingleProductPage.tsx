@@ -21,6 +21,7 @@ import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 import { useTranslation } from '@/i18n';
 import { useOrderGuard } from '@/lib/orderGuard';
 import GuestLimitDialog from '@/components/GuestLimitDialog';
+import { openWhatsAppOrder } from '@/lib/whatsappOrder';
 
 function StarRating({ value, onChange, readonly = false }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
   return (
