@@ -101,6 +101,7 @@ function StoreThemeProvider({ children }: { children: React.ReactNode }) {
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
+      <TopMarquee />
       <AnnouncementBar />
       <Navbar />
       <main className="flex-1">{children}</main>
