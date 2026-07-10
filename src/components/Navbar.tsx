@@ -197,16 +197,6 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
-            <CategoriesSidebar
-              trigger={
-                <button
-                  className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
-                  aria-label={t('nav.categories')}
-                >
-                  <Grid3X3 className="w-5 h-5 text-muted-foreground" />
-                </button>
-              }
-            />
             <button
               onClick={() => setSearchOpen(true)}
               className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
