@@ -660,6 +660,17 @@ export default function IndexPage() {
         );
       })()}
 
+      {/* ─────────── LIMITED OFFER (under categories) ─────────── */}
+      {showSection('limited') && (
+        <LimitedOfferSection
+          title={hp?.limited.title}
+          subtitle={hp?.limited.subtitle}
+          image={hp?.limited.image}
+          link={hp?.limited.link}
+          cta={hp?.limited.cta}
+          endDate={hp?.limited.end_date}
+        />
+      )}
 
 
       {/* ─────────── FEATURED PRODUCTS (admin picks) ─────────── */}
