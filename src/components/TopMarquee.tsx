@@ -30,7 +30,7 @@ export default function TopMarquee() {
 
   return (
     <div
-      className="sticky top-0 z-[60] w-full overflow-hidden bg-gradient-to-r from-primary via-primary/90 to-primary text-primary-foreground shadow-sm"
+      className="sticky top-0 z-40 w-full overflow-hidden bg-gradient-to-r from-primary via-primary/90 to-primary text-primary-foreground shadow-sm"
       dir="ltr"
       role="marquee"
       aria-label={text}
