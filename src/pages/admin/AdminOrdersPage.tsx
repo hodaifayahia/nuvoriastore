@@ -506,7 +506,7 @@ export default function AdminOrdersPage() {
             const statusCfg = STATUS_CONFIG[o.status || 'جديد'] || STATUS_CONFIG['جديد'];
             const StatusIcon = statusCfg.icon;
             return (
-              <div key={o.id} className="bg-card border rounded-xl p-4 space-y-3">
+              <div key={o.id} className={`bg-card ${statusCfg.border} border rounded-xl p-4 space-y-3 transition-colors ${statusCfg.row}`}>
                 <div className="flex items-center justify-between">
                   <span className="font-roboto font-bold text-primary text-sm">
                     {o.order_number}
@@ -524,12 +524,26 @@ export default function AdminOrdersPage() {
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t">
                   <span className="font-roboto font-bold text-sm">{formatPrice(Number(o.total_amount))}</span>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="sm" className="h-8 font-cairo text-xs" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }}>
-                      <Eye className="w-3.5 h-3.5 ml-1" /> {t('common.view')}
+                  <div className="flex gap-1 items-center flex-nowrap overflow-x-auto">
+                    <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }} title={t('common.view')}>
+                      <Eye className="w-4 h-4" />
                     </Button>
+                    <a href={`tel:${o.customer_phone}`} className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="اتصال">
+                      <Phone className="w-4 h-4 text-emerald-600" />
+                    </a>
+                    <a href={`https://wa.me/${(o.customer_phone || '').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="واتساب">
+                      <MessageCircle className="w-4 h-4 text-green-600" />
+                    </a>
+                    {STATUSES.filter(s => s !== o.status).slice(0, 3).map(s => {
+                      const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon;
+                      return (
+                        <Button key={s} variant="outline" size="icon" className={`h-8 w-8 shrink-0 ${cfg.color}`} onClick={() => handleQuickStatus(o.id, s)} title={t(STATUS_KEYS[s])}>
+                          <Icon className="w-4 h-4" />
+                        </Button>
+                      );
+                    })}
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><Button variant="outline" size="icon" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="outline" size="icon" className="h-8 w-8 shrink-0"><MoreHorizontal className="w-4 h-4" /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover border z-50">
                         {STATUSES.map(s => { const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon; return (
                           <DropdownMenuItem key={s} onClick={() => handleQuickStatus(o.id, s)} className={`font-cairo gap-2 cursor-pointer ${cfg.color}`}><Icon className="w-4 h-4" /> {t(STATUS_KEYS[s])}</DropdownMenuItem>
