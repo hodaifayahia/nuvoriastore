@@ -120,13 +120,14 @@ export default function CategoriesSidebar({ trigger }: Props) {
             <Link
               to="/products"
               onClick={close}
+              dir="ltr"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted transition-colors"
             >
               <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                 <Grid3X3 className="w-5 h-5 text-primary" />
               </div>
-              <span className="flex-1 font-cairo font-semibold text-sm">{t('nav.all')}</span>
-              <ChevronLeft className="w-4 h-4 text-muted-foreground rtl:rotate-180" />
+              <span className="flex-1 font-cairo font-semibold text-sm text-right">{t('nav.all')}</span>
+              <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
             </Link>
 
             <div className="flex flex-col">
@@ -137,6 +138,7 @@ export default function CategoriesSidebar({ trigger }: Props) {
                     key={cat.name}
                     to={`/products?category=${encodeURIComponent(cat.name)}`}
                     onClick={close}
+                    dir="ltr"
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted transition-colors group"
                   >
                     <div className="w-11 h-11 rounded-lg overflow-hidden bg-muted flex items-center justify-center shrink-0 border">
@@ -151,10 +153,10 @@ export default function CategoriesSidebar({ trigger }: Props) {
                         <Icon className="w-5 h-5 text-muted-foreground" />
                       )}
                     </div>
-                    <span className="flex-1 font-cairo font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
+                    <span className="flex-1 font-cairo font-semibold text-sm text-foreground group-hover:text-primary transition-colors text-right">
                       {cat.name}
                     </span>
-                    <ChevronLeft className="w-4 h-4 text-muted-foreground rtl:rotate-180 group-hover:text-primary transition-colors" />
+                    <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180 group-hover:text-primary transition-colors" />
                   </Link>
                 );
               })}
