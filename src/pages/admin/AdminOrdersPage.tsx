@@ -102,7 +102,6 @@ export default function AdminOrdersPage() {
   const orders = ordersResult?.rows;
   const totalCount = ordersResult?.count || 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  });
 
   const { data: orderItems } = useQuery({
     queryKey: ['order-items', selectedOrder?.id],
