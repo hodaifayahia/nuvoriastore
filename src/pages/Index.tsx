@@ -94,7 +94,9 @@ const FALLBACK_CATS = [
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
   const { data: brandsData } = useBrands();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const isAr = language === 'ar';
+
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleProductsCount, setVisibleProductsCount] = useState(12);
