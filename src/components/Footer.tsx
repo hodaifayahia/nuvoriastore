@@ -27,7 +27,7 @@ export default function Footer() {
   const storeName = 'NuvoriaStore';
   const description =
     settings?.footer_description ||
-    'متجر متخصص في الأجهزة الكهرومنزلية والإلكترونيات بأفضل الأسعار في الجزائر.';
+    'Boutique spécialisée en électroménager et électronique aux meilleurs prix en Algérie.';
 
   const TikTokIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -50,30 +50,30 @@ export default function Footer() {
 
   const columns: { title: string; links: { to: string; label: string }[] }[] = [
     {
-      title: 'المتجر',
+      title: 'Boutique',
       links: [
-        { to: '/', label: 'الرئيسية' },
-        { to: '/products', label: 'المنتجات' },
-        { to: '/cart', label: 'السلة' },
+        { to: '/', label: 'Accueil' },
+        { to: '/products', label: 'Produits' },
+        { to: '/cart', label: 'Panier' },
         
       ],
     },
     {
-      title: 'الشركة',
+      title: 'Entreprise',
       links: [
-        { to: '/about', label: 'من نحن' },
-        { to: '/track', label: 'تتبع الطلب' },
-        { to: '/contact', label: 'اتصل بنا' },
-        { to: '/faq', label: 'الأسئلة الشائعة' },
+        { to: '/about', label: 'À propos' },
+        { to: '/track', label: 'Suivi de commande' },
+        { to: '/contact', label: 'Contact' },
+        { to: '/faq', label: 'FAQ' },
       ],
     },
     {
-      title: 'موارد',
+      title: 'Ressources',
       links: [
-        { to: '/auth', label: 'حسابي' },
-        { to: '/returns', label: 'الإرجاع والاستبدال' },
-        { to: '/warranty', label: 'الضمان' },
-        { to: '/privacy', label: 'الخصوصية' },
+        { to: '/auth', label: 'Mon compte' },
+        { to: '/returns', label: 'Retours et échanges' },
+        { to: '/warranty', label: 'Garantie' },
+        { to: '/privacy', label: 'Confidentialité' },
       ],
     },
   ];
@@ -141,14 +141,14 @@ export default function Footer() {
         <div className="mt-14 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
             {settings?.copyright_text ||
-              `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved') || 'جميع الحقوق محفوظة.'}`}
+              `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved') || 'Tous droits réservés.'}`}
           </p>
           <div className="flex items-center gap-6">
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              الشروط والأحكام
+              Conditions générales
             </Link>
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              سياسة الخصوصية
+              Politique de confidentialité
             </Link>
           </div>
         </div>
