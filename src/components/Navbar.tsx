@@ -109,14 +109,15 @@ export default function Navbar() {
               'radial-gradient(70% 120% at 100% 0%, hsl(var(--primary) / 0.10), transparent 60%)',
           }}
         />
-        <div className="relative container flex items-center justify-between h-[64px] gap-3">
+        <div className="relative container flex items-center justify-between h-[60px] gap-2">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-            <span className="h-10 w-10 rounded-full bg-white border border-border overflow-hidden flex items-center justify-center shadow-sm ring-2 ring-primary/10 transition-transform group-hover:scale-105">
+          <Link to="/" className="flex items-center gap-2 group shrink-0 min-w-0">
+            <span className="h-9 w-9 rounded-full bg-white border border-border overflow-hidden flex items-center justify-center shadow-sm ring-2 ring-primary/10 transition-transform group-hover:scale-105 shrink-0">
               <img src={logoUrl || NUVORIA_LOGO_URL} alt={displayName} className="h-full w-full object-cover" />
             </span>
-            <span className="font-serif font-bold text-lg sm:text-xl tracking-tight text-primary italic">{displayName}</span>
+            <span className="font-serif font-bold text-base lg:text-lg tracking-tight text-primary italic truncate">{displayName}</span>
           </Link>
+
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5">
