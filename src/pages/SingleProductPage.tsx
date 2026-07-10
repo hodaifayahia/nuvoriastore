@@ -608,7 +608,7 @@ export default function SingleProductPage() {
       if (guard.reason === 'guest_limit') {
         setGuestLimitOpen(true);
       } else {
-        toast({ title: 'تعذر إرسال الطلب', description: guard.message, variant: 'destructive' });
+        toast({ title: t('sp.orderError'), description: guard.message, variant: 'destructive' });
       }
       return;
     }
@@ -989,8 +989,8 @@ export default function SingleProductPage() {
               <div className="rounded-2xl border border-border/60 p-3 flex items-center gap-3 bg-card">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2 mb-1">
-                    <span className="font-roboto font-extrabold text-foreground text-sm">{formatPrice(effectivePrice)}</span>
                     <h3 className="font-cairo font-bold text-sm text-foreground truncate">{product.name}</h3>
+                    <span className="font-roboto font-extrabold text-foreground text-sm">{formatPrice(effectivePrice)}</span>
                   </div>
                   {selectedVariationForCart && (
                     <p className="font-cairo text-[11px] text-muted-foreground truncate">
@@ -1018,8 +1018,8 @@ export default function SingleProductPage() {
 
               {/* Delivery Info Header */}
               <div className="flex items-center justify-between pt-1">
-                <h3 className="font-cairo font-bold text-base text-foreground">{t('sp.deliveryInfo') !== 'sp.deliveryInfo' ? t('sp.deliveryInfo') : 'معلومات التوصيل'}</h3>
-                <span className="font-cairo text-[11px] text-muted-foreground">* مطلوب</span>
+                <h3 className="font-cairo font-bold text-base text-foreground">{t('sp.deliveryInfo')}</h3>
+                <span className="font-cairo text-[11px] text-muted-foreground">* {t('sp.required')}</span>
               </div>
 
               <orderGuard.HoneypotField />
@@ -1029,15 +1029,15 @@ export default function SingleProductPage() {
                 {/* Full Name */}
                 <div className="relative">
                   <div className={`relative rounded-xl border transition-colors ${errors.orderName ? 'border-red-500' : nameValid ? 'border-emerald-500' : 'border-border'}`}>
-                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground">{t('sp.fullName')}</label>
+                    <label className="absolute top-1.5 left-3 font-cairo text-[10px] text-muted-foreground">{t('sp.fullName')}</label>
                     <Input
                       value={orderName}
                       onChange={e => { setOrderName(e.target.value); setErrors(prev => ({ ...prev, orderName: '' })); }}
                       placeholder=""
-                      className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right"
+                      className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-left"
                     />
                     {nameValid && !errors.orderName && (
-                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-emerald-500" />
+                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 right-3 w-4 h-4 text-emerald-500" />
                     )}
                   </div>
                   {errors.orderName && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderName}</p>}
@@ -1046,7 +1046,7 @@ export default function SingleProductPage() {
                 {/* Phone */}
                 <div className="relative">
                   <div className={`relative rounded-xl border transition-colors ${(errors.orderPhone || (phoneTouched && !phoneValid && phoneNormalized.length === 10)) ? 'border-red-500' : phoneValid ? 'border-emerald-500' : phoneTouched ? 'border-amber-500' : 'border-border'}`}>
-                    <label className={`absolute top-1.5 right-3 font-cairo text-[10px] ${phoneValid ? 'text-emerald-600' : (errors.orderPhone ? 'text-red-500' : 'text-muted-foreground')}`}>{t('sp.phone')}</label>
+                    <label className={`absolute top-1.5 left-3 font-cairo text-[10px] ${phoneValid ? 'text-emerald-600' : (errors.orderPhone ? 'text-red-500' : 'text-muted-foreground')}`}>{t('sp.phone')}</label>
                     <Input
                       value={orderPhone}
                       onChange={e => {
@@ -1065,14 +1065,14 @@ export default function SingleProductPage() {
                       type="tel" inputMode="numeric" maxLength={10} pattern="0[567][0-9]{8}"
                       aria-invalid={!!errors.orderPhone}
                       placeholder="05XXXXXXXX"
-                      className="font-roboto border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right"
+                      className="font-roboto border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-left"
                       dir="ltr"
                     />
                     {phoneValid && !errors.orderPhone && (
-                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-emerald-500" />
+                      <CheckCircle className="absolute top-1/2 -translate-y-1/2 right-3 w-4 h-4 text-emerald-500" />
                     )}
                     {(errors.orderPhone || (phoneTouched && !phoneValid && phoneNormalized.length === 10)) && (
-                      <div className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px] font-bold">!</div>
+                      <div className="absolute top-1/2 -translate-y-1/2 right-3 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px] font-bold">!</div>
                     )}
                   </div>
                   {errors.orderPhone && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderPhone}</p>}
@@ -1083,7 +1083,7 @@ export default function SingleProductPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="relative">
                   <div className={`relative rounded-xl border transition-colors ${errors.orderWilayaId ? 'border-red-500' : orderWilayaId ? 'border-emerald-500' : 'border-border'}`}>
-                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.wilaya')}</label>
+                    <label className="absolute top-1.5 left-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.wilaya')}</label>
                     <Select value={orderWilayaId} onValueChange={v => { setOrderWilayaId(v); setOrderBaladiya(''); setOrderDeliveryType(''); setErrors(prev => ({ ...prev, orderWilayaId: '', orderDeliveryType: '' })); }}>
                       <SelectTrigger className="font-cairo border-0 bg-transparent focus:ring-0 focus:ring-offset-0 h-14 pt-5 pb-1"><SelectValue placeholder="" /></SelectTrigger>
                       <SelectContent>
@@ -1098,7 +1098,7 @@ export default function SingleProductPage() {
 
                 <div className="relative">
                   <div className={`relative rounded-xl border transition-colors ${orderBaladiya ? 'border-emerald-500' : 'border-border'}`}>
-                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.baladiya')}</label>
+                    <label className="absolute top-1.5 left-3 font-cairo text-[10px] text-muted-foreground z-10 pointer-events-none">{t('sp.baladiya')}</label>
                     <Select value={orderBaladiya} onValueChange={setOrderBaladiya} disabled={!orderWilayaId || !baladiyat || baladiyat.length === 0}>
                       <SelectTrigger className="font-cairo border-0 bg-transparent focus:ring-0 focus:ring-offset-0 h-14 pt-5 pb-1"><SelectValue placeholder="" /></SelectTrigger>
                       <SelectContent>
@@ -1137,8 +1137,8 @@ export default function SingleProductPage() {
               {orderDeliveryType === 'home' && (
                 <div className="relative">
                   <div className={`relative rounded-xl border transition-colors ${orderAddress ? 'border-emerald-500' : 'border-border'}`}>
-                    <label className="absolute top-1.5 right-3 font-cairo text-[10px] text-muted-foreground">{t('sp.address')}</label>
-                    <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder="" className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-right" />
+                    <label className="absolute top-1.5 left-3 font-cairo text-[10px] text-muted-foreground">{t('sp.address')}</label>
+                    <Input value={orderAddress} onChange={e => setOrderAddress(e.target.value)} placeholder="" className="font-cairo border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-14 pt-5 pb-1 text-left" />
                   </div>
                 </div>
               )}
@@ -1235,28 +1235,28 @@ export default function SingleProductPage() {
 
               {/* Order Summary */}
               <div className="rounded-2xl border border-border/60 p-3.5 space-y-2 text-sm font-cairo bg-muted/30">
-                <div className="font-cairo font-bold text-xs text-muted-foreground mb-1">ملخص الطلب</div>
+                <div className="font-cairo font-bold text-xs text-muted-foreground mb-1">{t('sp.summaryTitle')}</div>
                 <div className="flex justify-between items-center">
-                  <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
                   <span className="text-foreground truncate">{product.name} <span className="text-muted-foreground text-xs">×{qty}</span></span>
+                  <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
                 </div>
                 <div className="flex justify-between items-center text-muted-foreground text-xs">
-                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? formatPrice(shippingCost) : '-'}</span>
                   <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
+                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? formatPrice(shippingCost) : '-'}</span>
                 </div>
                 {couponDiscount > 0 && (
                   <div className="flex justify-between items-center text-emerald-600 text-xs">
-                    <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
                     <span>{t('sp.discountLine')}</span>
+                    <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
                   </div>
                 )}
                 <div className="border-t border-border/60 pt-2 flex justify-between items-center">
+                  <span className="font-cairo font-bold text-foreground">{t('sp.total')}</span>
                   {orderWilayaId && orderDeliveryType ? (
                     <span className="font-roboto font-extrabold text-foreground text-base">{formatPrice(orderTotal)}</span>
                   ) : (
-                    <span className="font-cairo text-xs text-amber-600">يرجى اختيار جميع الخيارات.</span>
+                    <span className="font-cairo text-xs text-amber-600">{t('sp.chooseAllOptions')}</span>
                   )}
-                  <span className="font-cairo font-bold text-foreground">{t('sp.total')}</span>
                 </div>
               </div>
 
@@ -1286,12 +1286,12 @@ export default function SingleProductPage() {
                         coupon_code: couponApplied ? couponCode : undefined,
                         total: orderTotal,
                       });
-                      if (!res.ok) toast({ title: 'واتساب غير مُفعّل', description: 'يرجى إضافة رقم واتساب من الإعدادات', variant: 'destructive' });
+                      if (!res.ok) toast({ title: t('sp.whatsappNotEnabled'), description: t('sp.whatsappSettings'), variant: 'destructive' });
                     }}
                     className="font-cairo font-bold text-sm gap-2 rounded-xl h-12 px-4 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0"
                   >
                     <Send className="w-4 h-4" />
-                    <span>واتساب</span>
+                    <span>{t('sp.whatsapp')}</span>
                   </Button>
                 </div>
                 <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 w-full border-border hover:bg-muted">
@@ -1332,7 +1332,7 @@ export default function SingleProductPage() {
           <div className="w-1 h-8 rounded-full bg-gradient-to-b from-amber-400 to-amber-400/30" />
           <h2 className="font-cairo font-extrabold text-2xl text-foreground flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-amber-500" />
-            سياسة الضمان
+            {t('sp.warrantyPolicy')}
           </h2>
         </div>
         <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 shadow-sm">
@@ -1341,21 +1341,21 @@ export default function SingleProductPage() {
               <ShieldCheck className="w-6 h-6 text-amber-500" />
             </div>
             <p className="font-cairo font-bold text-base md:text-lg text-foreground">
-              ضمان لمدة 12 شهراً من تاريخ الشراء
+              {t('sp.warrantyPeriod')}
             </p>
           </div>
           <ul className="space-y-4 font-cairo text-sm md:text-base text-muted-foreground leading-relaxed">
             <li className="flex gap-3">
               <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-              <span>يغطي هذا الضمان عيوب التصنيع طوال مدة الضمان المحددة أعلاه، وفق الشروط والأحكام المعمول بها.</span>
+              <span>{t('sp.warrantyDefects')}</span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-              <span>استبدال كامل للجهاز خلال الأيام السبعة الأولى في حال ثبوت عيب مصنعي.</span>
+              <span>{t('sp.warrantyReplace')}</span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-              <span>بعد انقضاء فترة الاستبدال، يقتصر الضمان على إصلاح الأعطال الناتجة عن عيوب التصنيع، مع توفير قطع الغيار.</span>
+              <span>{t('sp.warrantyRepair')}</span>
             </li>
           </ul>
         </div>
