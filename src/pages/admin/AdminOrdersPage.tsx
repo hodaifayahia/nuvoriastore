@@ -484,10 +484,6 @@ export default function AdminOrdersPage() {
                                 </DropdownMenuItem>
                               );
                             })}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setDeleteOrderId(o.id)} className="font-cairo gap-2 cursor-pointer text-destructive focus:text-destructive">
-                              <Trash2 className="w-4 h-4" /> حذف الطلبية
-                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
