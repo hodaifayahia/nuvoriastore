@@ -27,7 +27,6 @@ export default function AutoPageTranslator() {
           pageLanguage: 'ar',
           autoDisplay: false,
           includedLanguages: 'ar,en,fr',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
         },
         'google_translate_element'
       );
