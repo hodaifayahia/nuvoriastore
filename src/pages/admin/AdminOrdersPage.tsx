@@ -484,10 +484,6 @@ export default function AdminOrdersPage() {
                                 </DropdownMenuItem>
                               );
                             })}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setDeleteOrderId(o.id)} className="font-cairo gap-2 cursor-pointer text-destructive focus:text-destructive">
-                              <Trash2 className="w-4 h-4" /> حذف الطلبية
-                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -542,10 +538,6 @@ export default function AdminOrdersPage() {
                         {STATUSES.map(s => { const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon; return (
                           <DropdownMenuItem key={s} onClick={() => handleQuickStatus(o.id, s)} className={`font-cairo gap-2 cursor-pointer ${cfg.color}`}><Icon className="w-4 h-4" /> {t(STATUS_KEYS[s])}</DropdownMenuItem>
                         ); })}
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => setDeleteOrderId(o.id)} className="font-cairo gap-2 cursor-pointer text-destructive focus:text-destructive">
-                          <Trash2 className="w-4 h-4" /> حذف الطلبية
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -819,28 +811,6 @@ export default function AdminOrdersPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Delete Order Confirmation */}
-        <AlertDialog open={!!deleteOrderId} onOpenChange={open => !open && setDeleteOrderId(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="font-cairo">تأكيد حذف الطلبية</AlertDialogTitle>
-              <AlertDialogDescription className="font-cairo">
-                هل أنت متأكد من حذف هذه الطلبية؟ سيتم حذف جميع عناصرها بشكل نهائي ولا يمكن التراجع.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="font-cairo">إلغاء</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => deleteOrderId && deleteOrderMutation.mutate(deleteOrderId)}
-                className="font-cairo bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                disabled={deleteOrderMutation.isPending}
-              >
-                {deleteOrderMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin ml-1" /> : <Trash2 className="w-4 h-4 ml-1" />}
-                حذف نهائياً
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
         
       </div>
     </TooltipProvider>
