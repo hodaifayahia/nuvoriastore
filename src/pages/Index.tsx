@@ -341,9 +341,10 @@ export default function IndexPage() {
                   </div>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4 p-6 sm:p-10 md:p-14 lg:p-16 min-h-[520px] md:min-h-[560px] lg:min-h-[600px]" dir="rtl">
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-6 p-6 sm:p-10 md:p-14 lg:p-16 min-h-[560px] md:min-h-[600px] lg:min-h-[640px]" dir="rtl">
                   {/* ── Text column ── */}
-                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-6 md:gap-7 order-2 md:order-1">
+                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1">
+                    {/* Badges row */}
                     <div className="flex flex-wrap gap-2 animate-fade-in">
                       <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary text-primary-foreground text-[11px] font-bold rounded-full tracking-wide shadow-md shadow-primary/30">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse" />
@@ -351,6 +352,23 @@ export default function IndexPage() {
                       </span>
                       <span className="inline-flex items-center px-3.5 py-1.5 bg-white text-slate-600 text-[11px] font-bold rounded-full border border-slate-200 shadow-sm">
                         {txt('hero_exclusive_badge', 'حصري في NuvoriaStore')}
+                      </span>
+                    </div>
+
+                    {/* Rating / social proof */}
+                    <div
+                      className="inline-flex items-center gap-2.5 self-start animate-fade-in"
+                      style={{ animationDelay: '40ms', animationFillMode: 'both' }}
+                    >
+                      <div className="flex items-center gap-0.5" dir="ltr">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        ))}
+                      </div>
+                      <span className="text-xs sm:text-sm text-slate-500 font-medium">
+                        <span className="font-bold text-slate-800">4.9</span>
+                        <span className="mx-1.5 text-slate-300">·</span>
+                        {txt('hero_reviews_label', '+1200 عميل راضٍ')}
                       </span>
                     </div>
 
@@ -409,31 +427,65 @@ export default function IndexPage() {
                       </div>
                     </div>
 
-                    {/* Dots */}
-                    <div className="flex gap-2.5 mt-2">
-                      {Array.from({ length: count }).map((_, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => scrollTo(i)}
-                          aria-label={`الشريحة ${i + 1}`}
-                          className={`h-1.5 rounded-full transition-all duration-300 ${
-                            selectedSlide === i ? 'w-12 bg-primary shadow-sm shadow-primary/40' : 'w-3 bg-slate-200 hover:bg-slate-300'
-                          }`}
-                        />
+                    {/* Trust icons row */}
+                    <div
+                      className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 animate-fade-in"
+                      style={{ animationDelay: '360ms', animationFillMode: 'both' }}
+                    >
+                      {[
+                        { icon: Truck, label: txt('hero_trust_shipping', 'شحن سريع لكل الولايات') },
+                        { icon: Shield, label: txt('hero_trust_warranty', 'ضمان سنة كاملة') },
+                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'الدفع عند الاستلام') },
+                      ].map((t, i) => (
+                        <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 font-medium">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                            <t.icon className="w-3 h-3" />
+                          </span>
+                          {t.label}
+                        </div>
                       ))}
                     </div>
+
+                    {/* Thumbnail slide selector */}
+                    {slides.length > 1 && (
+                      <div className="flex items-center gap-2 pt-1">
+                        {slides.slice(0, 5).map((s: any, i: number) => {
+                          const active = selectedSlide === i;
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => scrollTo(i)}
+                              aria-label={`الشريحة ${i + 1}`}
+                              className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
+                                active
+                                  ? 'w-14 h-14 ring-2 ring-primary shadow-md shadow-primary/30 scale-105'
+                                  : 'w-11 h-11 ring-1 ring-slate-200 opacity-70 hover:opacity-100'
+                              }`}
+                            >
+                              <img src={s.url} alt="" className="w-full h-full object-cover" />
+                              {active && (
+                                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   {/* ── Image column ── */}
                   <div className="relative order-1 md:order-2 flex items-center justify-center p-2 sm:p-6">
                     <div key={`img-${selectedSlide}`} className="relative w-full max-w-md aspect-square animate-scale-in">
-                      {/* decorative ring */}
+                      {/* decorative rings */}
                       <div aria-hidden className="absolute -inset-4 rounded-[3rem] border border-primary/15" />
                       <div aria-hidden className="absolute -inset-8 rounded-[3.5rem] border border-primary/10" />
+                      {/* soft glow behind product */}
+                      <div aria-hidden className="absolute inset-6 rounded-full blur-3xl opacity-70"
+                           style={{ background: 'radial-gradient(closest-side, hsl(var(--primary) / 0.25), transparent 70%)' }} />
 
-                      {/* Top-left floating badge */}
-                      <div className="absolute -top-3 right-3 sm:-top-4 sm:right-4 z-20 bg-white/90 backdrop-blur-lg p-3 sm:p-4 rounded-3xl shadow-xl shadow-slate-900/10 border border-white flex items-center gap-3 animate-fade-in"
+                      {/* Top-right floating: energy badge */}
+                      <div className="absolute -top-3 right-3 sm:-top-4 sm:right-4 z-20 bg-white/90 backdrop-blur-lg p-3 sm:p-3.5 rounded-3xl shadow-xl shadow-slate-900/10 border border-white flex items-center gap-3 animate-fade-in"
                            style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
                         <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-4 ring-emerald-50/60">
                           <Zap className="w-5 h-5" />
@@ -442,6 +494,14 @@ export default function IndexPage() {
                           <div className="text-[10px] sm:text-xs text-slate-400 font-medium">{txt('hero_energy_label', 'توفير الطاقة')}</div>
                           <div className="text-xs sm:text-sm font-bold text-slate-800">{txt('hero_energy_value', 'فئة +++A')}</div>
                         </div>
+                      </div>
+
+                      {/* Top-left floating: rating pill */}
+                      <div className="absolute top-8 -left-2 sm:top-10 sm:-left-3 z-20 bg-white/95 backdrop-blur-lg px-3 py-2 rounded-2xl shadow-lg shadow-slate-900/10 border border-white flex items-center gap-1.5 animate-fade-in"
+                           style={{ animationDelay: '260ms', animationFillMode: 'both' }}>
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-xs font-bold text-slate-800">4.9</span>
+                        <span className="text-[10px] text-slate-400 font-medium">/5</span>
                       </div>
 
                       {/* Product image */}
@@ -459,9 +519,11 @@ export default function IndexPage() {
                           decoding="async"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
                         />
+                        {/* subtle sheen */}
+                        <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover/img:translate-x-full transition-transform duration-1000" />
                       </Link>
 
-                      {/* Bottom-right floating badge */}
+                      {/* Bottom-left floating: features */}
                       <div className="absolute -bottom-5 -left-3 sm:-bottom-6 sm:-left-4 z-20 bg-slate-900 p-4 sm:p-5 rounded-3xl shadow-2xl shadow-slate-900/30 flex flex-col gap-1 text-white animate-fade-in ring-1 ring-white/10"
                            style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
                         <div className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: 'hsl(var(--primary) / 0.9)' }}>
@@ -474,10 +536,23 @@ export default function IndexPage() {
                           <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary) / 0.3)' }} />
                         </div>
                       </div>
+
+                      {/* Bottom-right floating: delivery */}
+                      <div className="hidden sm:flex absolute -bottom-4 -right-3 z-20 bg-white/95 backdrop-blur-lg px-3.5 py-2.5 rounded-2xl shadow-lg shadow-slate-900/10 border border-white items-center gap-2 animate-fade-in"
+                           style={{ animationDelay: '380ms', animationFillMode: 'both' }}>
+                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                          <Truck className="w-4 h-4" />
+                        </div>
+                        <div className="text-right leading-tight">
+                          <div className="text-[10px] text-slate-400 font-medium">{txt('hero_delivery_label', 'التوصيل')}</div>
+                          <div className="text-xs font-bold text-slate-800">{txt('hero_delivery_value', '24-48 ساعة')}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
 
               {/* Prev / Next */}
               <button
