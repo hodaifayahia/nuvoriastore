@@ -571,6 +571,24 @@ export default function AdminOrdersPage() {
           })}
         </div>
 
+        {/* Pagination */}
+        {totalCount > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-card border rounded-lg p-3">
+            <p className="font-cairo text-xs text-muted-foreground">
+              {`عرض ${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, totalCount)} من ${totalCount}`}
+              {isFetching && <Loader2 className="inline w-3 h-3 ml-2 animate-spin" />}
+            </p>
+            <div className="flex items-center gap-1">
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(1)} disabled={page === 1}>الأولى</Button>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>السابق</Button>
+              <span className="px-3 font-cairo text-sm">{page} / {totalPages}</span>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}>التالي</Button>
+              <Button variant="outline" size="sm" className="h-8 font-cairo" onClick={() => setPage(totalPages)} disabled={page >= totalPages}>الأخيرة</Button>
+            </div>
+          </div>
+        )}
+
+
         <Dialog open={!!selectedOrder} onOpenChange={open => !open && setSelectedOrder(null)}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
             {selectedOrder && (() => {
