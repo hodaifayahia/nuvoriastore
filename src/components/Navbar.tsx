@@ -197,6 +197,43 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
+            {/* Language switcher */}
+            <div
+              className="relative hidden md:block"
+              onMouseEnter={handleLangEnter}
+              onMouseLeave={handleLangLeave}
+            >
+              <button
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-cairo font-semibold whitespace-nowrap transition-all duration-200 ${
+                  langOpen ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+                aria-label={t('nav.language')}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                {currentLang.short}
+                <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {langOpen && (
+                <div className="absolute top-full right-0 mt-1 min-w-[140px] bg-card border rounded-xl shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {LANGS.map((l) => {
+                    const active = language === l.code;
+                    return (
+                      <button
+                        key={l.code}
+                        onClick={() => { setLanguage(l.code); setLangOpen(false); }}
+                        className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm font-cairo font-semibold transition-colors ${
+                          active ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted'
+                        }`}
+                      >
+                        <span>{l.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{l.short}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => setSearchOpen(true)}
               className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
@@ -204,6 +241,7 @@ export default function Navbar() {
             >
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
+
 
             {!loading && (
               <Link
