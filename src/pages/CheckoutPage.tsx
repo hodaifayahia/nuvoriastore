@@ -18,6 +18,8 @@ import { parseFormConfig, type CheckoutFormConfig } from '@/components/admin/For
 import { useTranslation } from '@/i18n';
 import { useOrderGuard } from '@/lib/orderGuard';
 import GuestLimitDialog from '@/components/GuestLimitDialog';
+import { openWhatsAppOrder } from '@/lib/whatsappOrder';
+import { Send } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
