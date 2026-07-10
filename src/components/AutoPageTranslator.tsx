@@ -68,5 +68,20 @@ export default function AutoPageTranslator() {
     return () => window.clearInterval(timer);
   }, [language]);
 
-  return <div id="google_translate_element" className="hidden" aria-hidden="true" />;
+  return (
+    <div
+      id="google_translate_element"
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        top: '-9999px',
+        left: '-9999px',
+        width: 1,
+        height: 1,
+        overflow: 'hidden',
+        opacity: 0,
+        pointerEvents: 'none',
+      }}
+    />
+  );
 }
