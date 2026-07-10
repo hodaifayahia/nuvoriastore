@@ -528,12 +528,6 @@ export default function AdminOrdersPage() {
                     <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" onClick={() => { setSelectedOrder(o); setNewStatus(o.status || 'جديد'); }} title={t('common.view')}>
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <a href={`tel:${o.customer_phone}`} className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="اتصال">
-                      <Phone className="w-4 h-4 text-emerald-600" />
-                    </a>
-                    <a href={`https://wa.me/${(o.customer_phone || '').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="h-8 w-8 shrink-0 inline-flex items-center justify-center rounded-md border border-input hover:bg-accent" title="واتساب">
-                      <MessageCircle className="w-4 h-4 text-green-600" />
-                    </a>
                     {STATUSES.filter(s => s !== o.status).slice(0, 3).map(s => {
                       const cfg = STATUS_CONFIG[s]; const Icon = cfg.icon;
                       return (
