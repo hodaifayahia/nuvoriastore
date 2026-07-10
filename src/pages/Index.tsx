@@ -523,19 +523,8 @@ export default function IndexPage() {
                         <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover/img:translate-x-full transition-transform duration-1000" />
                       </Link>
 
-                      {/* Bottom-left floating: features */}
-                      <div className="absolute -bottom-5 -left-3 sm:-bottom-6 sm:-left-4 z-20 bg-slate-900 p-4 sm:p-5 rounded-3xl shadow-2xl shadow-slate-900/30 flex flex-col gap-1 text-white animate-fade-in ring-1 ring-white/10"
-                           style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
-                        <div className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: 'hsl(var(--primary) / 0.9)' }}>
-                          {txt('hero_features_label', 'المميزات التقنية')}
-                        </div>
-                        <div className="text-sm sm:text-base font-bold">{txt('hero_features_value', 'التحكم عبر التطبيق')}</div>
-                        <div className="flex gap-1 mt-1" dir="ltr">
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary))' }} />
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary) / 0.5)' }} />
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(var(--primary) / 0.3)' }} />
-                        </div>
-                      </div>
+
+
 
                       {/* Bottom-right floating: delivery */}
                       <div className="hidden sm:flex absolute -bottom-4 -right-3 z-20 bg-white/95 backdrop-blur-lg px-3.5 py-2.5 rounded-2xl shadow-lg shadow-slate-900/10 border border-white items-center gap-2 animate-fade-in"
