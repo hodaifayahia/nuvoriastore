@@ -1273,12 +1273,30 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label className="font-cairo">الفئة</Label>
-              <Select value={category} onValueChange={setCategory}>
+              <Select value={category} onValueChange={(v) => { setCategory(v); setSubcategory(''); }}>
                 <SelectTrigger className="font-cairo mt-1.5 h-11"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {categoryNames.map(c => <SelectItem key={c} value={c} className="font-cairo">{c}</SelectItem>)}
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label className="font-cairo">الفئة الفرعية</Label>
+              {(() => {
+                const subs = allCategories.find(c => c.name === category)?.subcategories || [];
+                const disabled = subs.length === 0;
+                return (
+                  <Select value={subcategory || '__none__'} onValueChange={v => setSubcategory(v === '__none__' ? '' : v)} disabled={disabled}>
+                    <SelectTrigger className="font-cairo mt-1.5 h-11">
+                      <SelectValue placeholder={disabled ? 'لا توجد فئات فرعية' : 'اختر فئة فرعية'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__" className="font-cairo text-muted-foreground">بدون فئة فرعية</SelectItem>
+                      {subs.map(s => <SelectItem key={s.name} value={s.name} className="font-cairo">{s.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                );
+              })()}
             </div>
             <div>
               <Label className="font-cairo">العلامة التجارية</Label>
