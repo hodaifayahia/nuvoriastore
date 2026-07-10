@@ -77,7 +77,6 @@ export default function Navbar() {
   const LANGS: { code: Language; label: string; short: string }[] = [
     { code: 'ar', label: 'العربية', short: 'AR' },
     { code: 'fr', label: 'Français', short: 'FR' },
-    { code: 'en', label: 'English', short: 'EN' },
   ];
   const currentLang = LANGS.find(l => l.code === language) ?? LANGS[0];
 
