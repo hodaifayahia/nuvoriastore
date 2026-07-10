@@ -27,7 +27,7 @@ const STATUS_KEYS: Record<string, string> = {
 };
 
 const STATUS_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: string }> = {
-  'جديد': { icon: Clock, color: 'text-secondary', bg: 'bg-secondary/10' },
+  'جديد': { icon: Clock, color: 'text-sky-600', bg: 'bg-sky-500/10' },
   'قيد المعالجة': { icon: PackageOpen, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   'تم الشحن': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-500/10' },
   'تم التسليم': { icon: PackageCheck, color: 'text-primary', bg: 'bg-primary/10' },
