@@ -101,6 +101,7 @@ function StoreThemeProvider({ children }: { children: React.ReactNode }) {
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
+      <AutoPageTranslator />
       <TopMarquee />
       <AnnouncementBar />
       <Navbar />
@@ -112,6 +113,7 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
 
   );
 }
+
 
 const RouteFallback = () => (
   <div className="min-h-[60vh] flex items-center justify-center">
