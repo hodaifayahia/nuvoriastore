@@ -255,9 +255,13 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            <Button variant="ghost" size="icon" className="md:hidden rounded-xl" onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
+            <CategoriesSidebar
+              trigger={
+                <Button variant="ghost" size="icon" className="md:hidden rounded-xl" aria-label="Menu">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              }
+            />
           </div>
         </div>
       </div>
@@ -265,79 +269,6 @@ export default function Navbar() {
 
 
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden border-b bg-card/95 backdrop-blur-xl animate-fade-in">
-          <div className="container py-3 space-y-3">
-            {categories && categories.length > 0 && (
-              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-2 border-b border-border/50">
-                <Link
-                  to="/products"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-cairo font-semibold whitespace-nowrap shrink-0 bg-primary/10 text-primary"
-                >
-                  <Grid3X3 className="w-3.5 h-3.5" />
-                  {t('nav.all')}
-                </Link>
-                {categories.map(cat => {
-                  const Icon = getCategoryIcon(cat.icon);
-                  return (
-                    <Link
-                      key={cat.name}
-                      to={`/products?category=${encodeURIComponent(cat.name)}`}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-cairo font-semibold whitespace-nowrap shrink-0 bg-muted text-muted-foreground hover:text-foreground"
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                      {cat.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-
-            <nav className="flex flex-col gap-1">
-              {NAV_LINKS.map(link => {
-                const isActive = location.pathname === link.to;
-                return (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm transition-colors ${
-                      isActive
-                        ? 'text-primary bg-primary/10'
-                        : 'text-muted-foreground hover:bg-muted'
-                    }`}
-                  >
-                    <link.icon className="w-4 h-4" />
-                    {t(link.key)}
-                  </Link>
-                );
-              })}
-              <Link
-                to={user ? '/dashboard' : '/auth'}
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-medium text-sm text-muted-foreground hover:bg-muted"
-              >
-                <User className="w-4 h-4" />
-                {user ? t('nav.account') : t('nav.signIn')}
-              </Link>
-              {user && isAdmin && (
-                <Link
-                  to="/admin"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-cairo font-semibold text-sm bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  {t('nav.adminPanel')}
-                </Link>
-              )}
-            </nav>
-
-          </div>
-        </div>
-      )}
       {/* Smart Search Modal */}
       {searchOpen && <SmartSearch onClose={() => setSearchOpen(false)} />}
     </header>
