@@ -116,7 +116,7 @@ export default function Navbar() {
             <span className="h-11 w-11 rounded-full bg-white/95 border border-white/20 overflow-hidden flex items-center justify-center shadow-[0_0_24px_-4px_hsl(180_90%_50%/0.5)] transition-transform group-hover:scale-105">
               <img src={logoUrl || NUVORIA_LOGO_URL} alt={displayName} className="h-full w-full object-cover" />
             </span>
-            <span className="font-display font-extrabold text-base tracking-tight text-foreground hidden lg:inline uppercase">{displayName}</span>
+            <span className="font-serif font-bold text-lg sm:text-xl tracking-tight text-primary italic">{displayName}</span>
           </Link>
 
           {/* Desktop nav */}
