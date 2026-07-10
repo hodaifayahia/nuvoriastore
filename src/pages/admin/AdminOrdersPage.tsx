@@ -432,7 +432,7 @@ export default function AdminOrdersPage() {
                 const statusCfg = STATUS_CONFIG[o.status || 'جديد'] || STATUS_CONFIG['جديد'];
                 const StatusIcon = statusCfg.icon;
                 return (
-                  <tr key={o.id} className={`border-b hover:bg-muted/50 ${selectedIds.has(o.id) ? 'bg-primary/5' : ''}`}>
+                  <tr key={o.id} className={`border-b transition-colors ${selectedIds.has(o.id) ? 'bg-primary/5' : statusCfg.row}`}>
                     <td className="p-3"><Checkbox checked={selectedIds.has(o.id)} onCheckedChange={() => toggleSelect(o.id)} /></td>
                     <td className="p-3 font-roboto font-bold text-primary">
                       {o.order_number}
