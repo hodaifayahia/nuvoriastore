@@ -285,8 +285,8 @@ export default function IndexPage() {
               price: p.price ? `${Number(p.price).toLocaleString('fr-DZ')} DZD` : '',
               oldPrice: p.old_price ? `${Number(p.old_price).toLocaleString('fr-DZ')} DZD` : '',
               link: `/product/${p.id}`,
-              badge: p.is_featured ? 'Sélection' : 'Nouveau',
-              cta: 'Acheter maintenant',
+              badge: p.is_featured ? (isAr ? 'مميّز' : 'Sélection') : (isAr ? 'جديد' : 'Nouveau'),
+              cta: isAr ? 'اشترِ الآن' : 'Acheter maintenant',
             };
           })
           .filter(Boolean) as any[];
@@ -297,14 +297,17 @@ export default function IndexPage() {
           : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
-        const activeTitle: string = active.title || active.alt || 'Des appareils fiables pour toute la maison';
+        const activeTitle: string = active.title || active.alt || (isAr ? 'أجهزة موثوقة لكل البيت' : 'Des appareils fiables pour toute la maison');
         const activeSubtitle: string =
           active.subtitle ||
-          'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.';
-        const activeBadge: string = active.badge || 'Nouveau';
+          (isAr
+            ? 'اكتشف تشكيلة من الأجهزة الأنيقة عالية الأداء مع توصيل سريع لكل الجزائر.'
+            : 'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.');
+        const activeBadge: string = active.badge || (isAr ? 'جديد' : 'Nouveau');
         const activePrice: string = active.price || '';
         const activeOldPrice: string = active.oldPrice || '';
-        const activeCta: string = active.cta || 'Acheter maintenant';
+        const activeCta: string = active.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant');
+
         const activeCtaHref: string = active.link || '/products';
 
         // Split title on <br/> or newline for two-line reveal (second line gets gradient)
