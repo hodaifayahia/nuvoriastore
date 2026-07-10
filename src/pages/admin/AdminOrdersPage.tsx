@@ -392,7 +392,7 @@ export default function AdminOrdersPage() {
                 <Input type="number" value={maxTotal} onChange={e => setMaxTotal(e.target.value)} placeholder="∞" className="mt-1 h-9 text-xs font-roboto" />
               </div>
             </div>
-            <p className="font-cairo text-xs text-muted-foreground">{t('orders.matchingOrders').replace('{n}', String(filtered.length))}</p>
+            <p className="font-cairo text-xs text-muted-foreground">{t('orders.matchingOrders').replace('{n}', String(totalCount))}</p>
           </div>
         )}
 
