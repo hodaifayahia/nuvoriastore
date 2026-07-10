@@ -469,6 +469,78 @@ export default function AdminCategoriesPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Subcategories manager */}
+      <Dialog open={subDialog !== null} onOpenChange={(o) => { if (!o) { setSubDialog(null); setSubNewName(''); setSubNewImage(undefined); } }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-cairo text-right flex items-center gap-2">
+              <ListTree className="w-5 h-5 text-primary" />
+              الفئات الفرعية — {subDialog !== null ? currentCategories[subDialog]?.name : ''}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Add new subcategory */}
+            <div className="bg-muted/40 border rounded-xl p-3 space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  value={subNewName}
+                  onChange={e => setSubNewName(e.target.value)}
+                  placeholder="اسم الفئة الفرعية"
+                  className="font-cairo h-10"
+                  onKeyDown={e => e.key === 'Enter' && addSubcategory()}
+                />
+                <Button onClick={addSubcategory} disabled={!subNewName.trim() || saveMutation.isPending} className="font-cairo gap-1 h-10">
+                  <Plus className="w-4 h-4" /> إضافة
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                {subNewImage ? (
+                  <div className="flex items-center gap-2">
+                    <img src={subNewImage} alt="" className="w-10 h-10 rounded-lg object-cover border" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSubNewImage(undefined)}>
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="cursor-pointer">
+                    <input type="file" accept="image/*" className="hidden" onChange={handleSubImageUpload} disabled={subUploading} />
+                    <Button variant="outline" size="sm" className="font-cairo gap-1.5 pointer-events-none" disabled={subUploading}>
+                      {subUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                      {subUploading ? 'جاري الرفع...' : 'صورة الفئة الفرعية'}
+                    </Button>
+                  </label>
+                )}
+              </div>
+            </div>
+
+            {/* Existing subcategories */}
+            <div className="border rounded-xl overflow-hidden">
+              {subDialog !== null && (currentCategories[subDialog]?.subcategories?.length ?? 0) > 0 ? (
+                <div className="divide-y">
+                  {currentCategories[subDialog]!.subcategories!.map((sub) => (
+                    <div key={sub.name} className="flex items-center gap-3 px-3 py-2.5">
+                      {sub.image ? (
+                        <img src={sub.image} alt={sub.name} className="w-9 h-9 rounded-lg object-cover border" />
+                      ) : (
+                        <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center border">
+                          <ImageIcon className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                      )}
+                      <span className="font-cairo flex-1">{sub.name}</span>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive" onClick={() => removeSubcategory(sub.name)}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 font-cairo text-sm text-muted-foreground">لا توجد فئات فرعية بعد</div>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
