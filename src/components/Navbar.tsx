@@ -237,7 +237,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="hidden md:flex p-2.5 rounded-xl hover:bg-muted transition-colors"
+              className="hidden md:flex p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label={t('nav.search')}
             >
               <Search className="w-5 h-5 text-muted-foreground" />
@@ -247,7 +247,7 @@ export default function Navbar() {
             {!loading && (
               <Link
                 to={user ? '/dashboard' : '/auth'}
-                className="p-2.5 rounded-xl hover:bg-muted transition-colors"
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
               >
                 {user ? (
                   <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center">
@@ -267,14 +267,14 @@ export default function Navbar() {
                 title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3 h-3" />
-                <span className="hidden lg:inline">{t('nav.adminPanel')}</span>
+                <span className="hidden xl:inline">{t('nav.adminPanel')}</span>
               </Link>
             )}
 
 
             <Link
               to="/cart"
-              className="relative p-2.5 rounded-xl hover:bg-muted transition-colors"
+              className="relative p-2 rounded-lg hover:bg-muted transition-colors"
             >
               <ShoppingCart className="w-5 h-5 text-foreground" />
               {totalItems > 0 && (
