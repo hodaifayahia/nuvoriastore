@@ -255,9 +255,13 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            <Button variant="ghost" size="icon" className="md:hidden rounded-xl" onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
+            <CategoriesSidebar
+              trigger={
+                <Button variant="ghost" size="icon" className="md:hidden rounded-xl" aria-label="Menu">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              }
+            />
           </div>
         </div>
       </div>
