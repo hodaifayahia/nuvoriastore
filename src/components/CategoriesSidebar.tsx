@@ -25,6 +25,15 @@ export default function CategoriesSidebar({ trigger }: Props) {
   const { t, language, setLanguage } = useTranslation();
   const { user } = useAuth();
   const location = useLocation();
+  const { data: logoUrl } = useStoreLogo();
+  const { data: storeName } = useQuery({
+    queryKey: ['store-name'],
+    queryFn: async () => {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'store_name').maybeSingle();
+      return data?.value || 'NuvoriaStore';
+    },
+    staleTime: 10 * 60 * 1000,
+  });
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
