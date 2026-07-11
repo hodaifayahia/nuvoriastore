@@ -71,24 +71,8 @@ export default function Navbar() {
 
 
 
-  // Brand name — bilingual, reads from settings with sensible fallbacks
-  const { data: storeNames } = useQuery({
-    queryKey: ['navbar-store-names'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('settings')
-        .select('key, value')
-        .in('key', ['store_name', 'store_name_ar', 'store_name_fr']);
-      const map: Record<string, string> = {};
-      data?.forEach((r: { key: string; value: string }) => { map[r.key] = r.value; });
-      return map;
-    },
-    staleTime: 10 * 60 * 1000,
-  });
-  const _brandFallback = storeNames?.store_name || 'NuvoriaStore';
-  const displayName = language === 'ar'
-    ? (storeNames?.store_name_ar || (/[\u0600-\u06FF]/.test(_brandFallback) ? _brandFallback : 'نيفوريا ستور'))
-    : (storeNames?.store_name_fr || (/[\u0600-\u06FF]/.test(_brandFallback) ? 'NuvoriaStore' : _brandFallback));
+  // Brand name — always the same across languages
+  const displayName = 'Nuvoria Store';
 
   const LANGS: { code: Language; label: string; short: string }[] = [
     { code: 'ar', label: 'العربية', short: 'AR' },
