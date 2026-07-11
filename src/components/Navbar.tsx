@@ -120,7 +120,7 @@ export default function Navbar() {
 
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-0.5">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {NAV_LINKS.map(link => {
               const isActive = location.pathname === link.to;
               return (
@@ -200,7 +200,7 @@ export default function Navbar() {
           <div className="flex items-center gap-1">
             {/* Language switcher */}
             <div
-              className="relative hidden md:block"
+              className="relative hidden lg:block"
               onMouseEnter={handleLangEnter}
               onMouseLeave={handleLangLeave}
             >
@@ -237,7 +237,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="hidden md:flex p-2 rounded-lg hover:bg-muted transition-colors"
+              className="hidden lg:flex p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label={t('nav.search')}
             >
               <Search className="w-5 h-5 text-muted-foreground" />
@@ -263,7 +263,7 @@ export default function Navbar() {
             {!loading && user && isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold whitespace-nowrap bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="hidden lg:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-cairo font-semibold whitespace-nowrap bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 title={t('nav.adminPanel')}
               >
                 <LayoutDashboard className="w-3 h-3" />
@@ -285,7 +285,7 @@ export default function Navbar() {
             </Link>
             <CategoriesSidebar
               trigger={
-                <Button variant="ghost" size="icon" className="md:hidden rounded-xl" aria-label="Menu">
+                <Button variant="ghost" size="icon" className="lg:hidden rounded-xl" aria-label="Menu">
                   <Menu className="w-5 h-5" />
                 </Button>
               }
