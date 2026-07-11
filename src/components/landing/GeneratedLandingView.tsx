@@ -386,7 +386,7 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
     setSubmitting(true);
     try {
       const qty = Math.max(1, Number(form.quantity) || 1);
-      const { error } = await supabase.rpc('create_public_order', {
+      const { data: rpcData, error } = await supabase.rpc('create_public_order', {
         p_order: {
           customer_name: form.customer_name.trim(),
           customer_phone: form.phone.trim(),
@@ -404,6 +404,10 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
         }],
       });
       if (error) throw error;
+      const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
+      if (order?.id) {
+        supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
+      }
 
       setDone(true);
       toast.success('تم استلام طلبك — سنتصل بك قريباً');
