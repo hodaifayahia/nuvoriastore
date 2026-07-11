@@ -778,7 +778,7 @@ export default function IndexPage() {
               {/* Gradient overlay — stronger on left for French text */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent" />
               <div dir="ltr" className="relative h-full flex items-center justify-start p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]">
-                <div dir={txt('bp_title_line1','ltr','rtl')} className="max-w-md text-left text-white" style={{ textAlign: 'left' }}>
+                <div dir={isAr ? 'rtl' : 'ltr'} className="max-w-md text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
                     <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'Meilleur prix garanti', 'أفضل سعر مضمون')}
                   </div>
