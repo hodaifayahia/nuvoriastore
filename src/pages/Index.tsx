@@ -573,92 +573,79 @@ export default function IndexPage() {
           <div className="max-w-7xl mx-auto min-h-[560px] sm:min-h-[720px] md:min-h-[760px] lg:min-h-[900px]" />
         </section>
       )}
-      {showSection('categories') && bentoCats.length > 0 && (() => {
-        const [c0, c1, c2, c3, c4] = [0, 1, 2, 3, 4].map((i) => bentoCats[i] || bentoCats[i % bentoCats.length]);
-
-        const Tile = ({
-          cat, className = '', size = 'md',
-        }: {
-          cat: typeof bentoCats[number];
-          className?: string;
-          size?: 'sm' | 'md' | 'lg';
-        }) => {
-          const Icon = cat.icon;
-          const titleSize = size === 'lg' ? 'text-3xl sm:text-4xl' : size === 'md' ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
-          return (
-            <Link
-              to={`/products?category=${encodeURIComponent(cat.name)}`}
-              className={`group relative overflow-hidden rounded-3xl border border-border/60 bg-card shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 ${className}`}
-            >
-              {cat.image ? (
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  width={600}
-                  height={600}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-              )}
-              {/* Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-tr from-primary/40 via-transparent to-transparent" />
-              {/* Icon badge */}
-              <div className="absolute top-4 right-4 w-11 h-11 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg">
-                <Icon className="w-5 h-5" strokeWidth={2} />
-              </div>
-              {/* Content */}
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-white/60 mb-1.5 font-semibold">{txt('cat_tag', 'Catégorie', 'فئة')}</p>
-                <h3 className={`font-display font-extrabold tracking-tight ${titleSize} drop-shadow-lg`}>
-                  {cat.name}
-                </h3>
-                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                  {txt('cat_shop_now', 'Acheter maintenant', 'تسوق الآن')}
-                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                </span>
-              </div>
-            </Link>
-          );
-        };
-
-        return (
-          <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
-            <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-10 sm:mb-14">
-                <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-3">
+      {showSection('categories') && bentoCats.length > 0 && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
                   {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
                 </p>
-                <h2 className="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">
+                <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight">
                   {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
                 </h2>
-                <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
               </div>
-
-              {/* Building bento: two tall towers + middle split, small-appliances base */}
-              <div className="grid grid-cols-4 md:grid-cols-12 auto-rows-[140px] sm:auto-rows-[170px] md:auto-rows-[180px] lg:auto-rows-[220px] gap-2.5 sm:gap-3 md:gap-4">
-                {/* Left tower — tall on all screens */}
-                {c0 && <Tile cat={c0} size="lg" className="col-span-2 row-span-2 md:col-span-4 md:row-span-2" />}
-
-                {/* Top-right small */}
-                {c1 && <Tile cat={c1} size="md" className="col-span-2 md:col-span-4" />}
-
-                {/* Bottom-right small (aligns beside left tower on mobile) */}
-                {c2 && <Tile cat={c2} size="md" className="col-span-2 md:col-span-4" />}
-
-                {/* Wide feature — full width on mobile, tall right tower on desktop */}
-                {c3 && <Tile cat={c3} size="lg" className="col-span-4 md:col-span-4 md:row-span-2 md:col-start-9 md:row-start-1" />}
-
-                {/* Base — full-width small appliances */}
-                {c4 && <Tile cat={c4} size="md" className="col-span-4 md:col-span-12" />}
-              </div>
+              <Link
+                to="/products"
+                className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2.5 transition-all"
+              >
+                {txt('cat_all', 'Voir tout', 'عرض الكل')}
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
             </div>
-          </section>
-        );
-      })()}
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+              {bentoCats.slice(0, 8).map((cat) => {
+                const Icon = cat.icon;
+                return (
+                  <Link
+                    key={cat.name}
+                    to={`/products?category=${encodeURIComponent(cat.name)}`}
+                    className="group relative aspect-[4/5] sm:aspect-square overflow-hidden rounded-2xl border border-border/60 bg-card shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
+                  >
+                    {cat.image ? (
+                      <img
+                        src={cat.image}
+                        alt={cat.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                        <Icon className="w-10 h-10 text-primary/60" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    <div className="absolute top-3 end-3 w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white">
+                      <Icon className="w-4 h-4" strokeWidth={2} />
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 text-white">
+                      <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl tracking-tight drop-shadow-lg line-clamp-2">
+                        {cat.name}
+                      </h3>
+                      <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-white/90">
+                        {txt('cat_shop_now', 'Acheter', 'تسوق')}
+                        <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="mt-6 sm:hidden text-center">
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
+              >
+                {txt('cat_all', 'Voir tout', 'عرض الكل')}
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ─────────── LIMITED OFFER (under categories) ─────────── */}
       {showSection('limited') && (

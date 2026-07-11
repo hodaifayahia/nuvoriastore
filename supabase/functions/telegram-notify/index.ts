@@ -16,30 +16,35 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Require admin auth - this function should only be invoked from the admin panel.
-    // Automated new-order notifications are handled by a database trigger calling Telegram directly.
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ ok: false, reason: "Unauthorized" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user } } = await supabase.auth.getUser(token);
-    if (!user) {
-      return new Response(JSON.stringify({ ok: false, reason: "Unauthorized" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-    if (!isAdmin) {
-      return new Response(JSON.stringify({ ok: false, reason: "Forbidden" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // Parse body first so we can allow anonymous invocations for automatic
+    // new-order notifications (fired from public checkout flows).
+    const payload = await req.json().catch(() => ({}));
+    const { type, order_id } = payload as { type?: string; order_id?: string };
+
+    // Admin-only operations (like the "test" ping) still require an authenticated admin.
+    const requiresAdmin = type !== 'new_order';
+    if (requiresAdmin) {
+      const authHeader = req.headers.get('Authorization');
+      if (!authHeader) {
+        return new Response(JSON.stringify({ ok: false, reason: 'Unauthorized' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user } } = await supabase.auth.getUser(token);
+      if (!user) {
+        return new Response(JSON.stringify({ ok: false, reason: 'Unauthorized' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+      if (!isAdmin) {
+        return new Response(JSON.stringify({ ok: false, reason: 'Forbidden' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
-
-    const { type, order_id } = await req.json();
 
     // Fetch telegram settings
     const { data: settingsRows } = await supabase
