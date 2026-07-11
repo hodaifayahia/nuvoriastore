@@ -576,12 +576,23 @@ export default function IndexPage() {
       {showSection('categories') && bentoCats.length > 0 && (
         <section className="pb-16 sm:pb-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
-                  {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
-                </p>
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+            <div className="flex flex-col items-center text-center mb-8 sm:mb-10">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
+                {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
+              </p>
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+                {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
+              </h2>
+              <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
+            </div>
+          </div>
+
+          <div
+            className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <div className="flex justify-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 pb-4 mx-auto w-max min-w-full">
+
                   {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
                 </h2>
               </div>
