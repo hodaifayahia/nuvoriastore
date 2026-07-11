@@ -409,7 +409,7 @@ export default function SingleProductPage() {
   if (isLoading) {
     return (
       <div className="container py-8">
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Skeleton className="aspect-square rounded-lg" />
           <div className="space-y-4"><Skeleton className="h-8 w-3/4" /><Skeleton className="h-6 w-32" /><Skeleton className="h-24 w-full" /><Skeleton className="h-10 w-40" /></div>
         </div>
@@ -712,7 +712,7 @@ export default function SingleProductPage() {
         <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
       </nav>
 
-      <div className="grid md:grid-cols-2 gap-6 lg:gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 min-w-0">
         {/* Images with touch swipe */}
         <div className="flex flex-col-reverse md:flex-row gap-3 md:sticky md:top-24 md:self-start">
           {images.length > 1 && (
@@ -1264,12 +1264,13 @@ export default function SingleProductPage() {
               <div className="space-y-2">
                 <div className="flex items-stretch gap-2">
                   <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                    className="font-cairo font-bold text-base gap-2 rounded-xl h-12 flex-1 min-w-0 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
-                    {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                    {submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}
+                    className="font-cairo font-bold text-sm sm:text-base gap-1.5 rounded-xl h-12 flex-1 min-w-0 px-2 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
+                    {submittingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
+                    <span className="truncate">{submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}</span>
                   </Button>
                   <Button
                     type="button"
+                    aria-label={t('sp.whatsapp')}
                     onClick={async () => {
                       const res = await openWhatsAppOrder({
                         customer_name: orderName,
@@ -1288,10 +1289,10 @@ export default function SingleProductPage() {
                       });
                       if (!res.ok) toast({ title: t('sp.whatsappNotEnabled'), description: t('sp.whatsappSettings'), variant: 'destructive' });
                     }}
-                    className="font-cairo font-bold text-sm gap-2 rounded-xl h-12 px-4 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0"
+                    className="font-cairo font-bold rounded-xl h-12 w-12 sm:w-auto sm:px-4 sm:gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0 flex items-center justify-center"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{t('sp.whatsapp')}</span>
+                    <span className="hidden sm:inline">{t('sp.whatsapp')}</span>
                   </Button>
                 </div>
                 <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 w-full border-border hover:bg-muted">
