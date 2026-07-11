@@ -777,7 +777,7 @@ export default function IndexPage() {
               />
               {/* Gradient overlay — stronger on the side where text sits */}
               <div className={`absolute inset-0 ${isAr ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-[#0a1e3a]/95 via-[#0a1e3a]/70 to-transparent`} />
-              <div dir={isAr ? 'rtl' : 'ltr'} className={`relative h-full flex items-center ${isAr ? 'justify-end' : 'justify-start'} p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]`}>
+              <div dir="ltr" className={`relative h-full flex items-center ${isAr ? 'justify-end' : 'justify-start'} p-6 sm:p-12 lg:p-16 min-h-[260px] sm:min-h-[340px]`}>
                 <div dir={isAr ? 'rtl' : 'ltr'} className="max-w-md text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/95 text-amber-950 text-[11px] font-bold mb-4 shadow-lg">
                     <BadgeCheck className="w-3.5 h-3.5" /> {txt('bp_badge', 'Meilleur prix garanti', 'أفضل سعر مضمون')}
