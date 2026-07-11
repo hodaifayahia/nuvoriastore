@@ -358,7 +358,9 @@ export default function CheckoutPage() {
       // Auto-resolve abandoned cart
       await supabase.rpc('mark_abandoned_recovered', { p_phone: phone.trim(), p_order_id: order.id });
 
-      // Telegram notification is handled server-side by a database trigger.
+      // Fire-and-forget Telegram notification for the new order.
+      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
+
 
       setOrderSubmitted(true);
       clearCart();
