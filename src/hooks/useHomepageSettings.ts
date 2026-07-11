@@ -92,6 +92,8 @@ export interface HomepageSettings {
     link: string;
     cta: string;
     end_date: string;
+    price: number | null;
+    old_price: number | null;
   };
 }
 
@@ -104,6 +106,8 @@ const HP_ALL_KEYS = [
   'hp_limited_link',
   'hp_limited_cta',
   'hp_limited_end_date',
+  'hp_limited_price',
+  'hp_limited_old_price',
 ];
 
 export function useHomepageSettings() {
