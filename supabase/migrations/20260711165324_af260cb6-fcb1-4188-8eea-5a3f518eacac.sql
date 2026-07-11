@@ -1,0 +1,1 @@
+ALTER TABLE public.faqs ADD COLUMN IF NOT EXISTS question_fr text, ADD COLUMN IF NOT EXISTS answer_fr text;
