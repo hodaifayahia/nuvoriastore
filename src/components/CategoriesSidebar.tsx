@@ -85,24 +85,24 @@ export default function CategoriesSidebar({ trigger }: Props) {
         dir={isRTL ? 'rtl' : 'ltr'}
         className="w-[86vw] sm:w-[400px] p-0 bg-background overflow-hidden flex flex-col border-0 shadow-2xl"
       >
-        {/* Header — Brand logo + name */}
-        <SheetHeader className="relative px-6 pt-6 pb-5 border-b bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
+        {/* Header — Brand logo + name (matches desktop navbar) */}
+        <SheetHeader className="relative px-5 pt-5 pb-4 border-b bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
           <div className="absolute inset-0 opacity-40 pointer-events-none"
-               style={{ background: 'radial-gradient(60% 100% at 100% 0%, hsl(var(--primary) / 0.15), transparent 60%)' }} />
+               style={{ background: 'radial-gradient(60% 100% at 100% 0%, hsl(var(--primary) / 0.18), transparent 60%)' }} />
           <SheetTitle asChild>
-            <Link to="/" onClick={close} className="relative flex items-center gap-3">
-              <span className="w-12 h-12 rounded-2xl overflow-hidden bg-background/80 border border-primary/20 shadow-md flex items-center justify-center shrink-0">
+            <Link to="/" onClick={close} className="relative flex items-center gap-3 min-w-0 group">
+              <span className="w-11 h-11 rounded-full overflow-hidden bg-background border-2 border-primary/30 ring-2 ring-primary/10 shadow-md flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 {logoUrl ? (
-                  <img src={logoUrl} alt={storeName || 'Logo'} className="w-full h-full object-contain" />
+                  <img src={logoUrl} alt={storeName} className="w-full h-full object-contain" />
                 ) : (
-                  <Grid3X3 className="w-6 h-6 text-primary" />
+                  <Grid3X3 className="w-5 h-5 text-primary" />
                 )}
               </span>
-              <span className="flex flex-col items-start min-w-0">
-                <span className="font-display font-extrabold text-lg tracking-tight text-foreground truncate max-w-[200px]">
-                  {storeName || 'NuvoriaStore'}
+              <span className="flex flex-col items-start min-w-0 leading-tight">
+                <span className="font-serif italic font-bold text-lg sm:text-xl tracking-tight text-primary truncate max-w-[220px]">
+                  {storeName}
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold">
+                <span className="mt-0.5 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/70 font-cairo font-semibold">
                   {t('nav.menu')}
                 </span>
               </span>
