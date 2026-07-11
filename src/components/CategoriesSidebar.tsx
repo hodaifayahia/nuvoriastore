@@ -76,15 +76,28 @@ export default function CategoriesSidebar({ trigger }: Props) {
         dir={isRTL ? 'rtl' : 'ltr'}
         className="w-[86vw] sm:w-[400px] p-0 bg-background overflow-hidden flex flex-col border-0 shadow-2xl"
       >
-        {/* Header */}
+        {/* Header — Brand logo + name */}
         <SheetHeader className="relative px-6 pt-6 pb-5 border-b bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
           <div className="absolute inset-0 opacity-40 pointer-events-none"
                style={{ background: 'radial-gradient(60% 100% at 100% 0%, hsl(var(--primary) / 0.15), transparent 60%)' }} />
-          <SheetTitle className="relative flex items-center gap-2.5 text-xl font-serif italic font-bold text-primary">
-            <span className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
-              <Grid3X3 className="w-5 h-5" />
-            </span>
-            {t('nav.menu')}
+          <SheetTitle asChild>
+            <Link to="/" onClick={close} className="relative flex items-center gap-3">
+              <span className="w-12 h-12 rounded-2xl overflow-hidden bg-background/80 border border-primary/20 shadow-md flex items-center justify-center shrink-0">
+                {logoUrl ? (
+                  <img src={logoUrl} alt={storeName || 'Logo'} className="w-full h-full object-contain" />
+                ) : (
+                  <Grid3X3 className="w-6 h-6 text-primary" />
+                )}
+              </span>
+              <span className="flex flex-col items-start min-w-0">
+                <span className="font-display font-extrabold text-lg tracking-tight text-foreground truncate max-w-[200px]">
+                  {storeName || 'NuvoriaStore'}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold">
+                  {t('nav.menu')}
+                </span>
+              </span>
+            </Link>
           </SheetTitle>
         </SheetHeader>
 
