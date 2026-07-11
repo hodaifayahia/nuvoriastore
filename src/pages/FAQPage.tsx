@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/accordion';
 
 export default function FAQPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const { data: settings } = useQuery({
     queryKey: ['faq-settings'],
@@ -32,7 +32,7 @@ export default function FAQPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from('faqs')
-        .select('question,answer')
+        .select('question,answer,question_fr,answer_fr')
         .eq('is_active', true)
         .order('sort_order', { ascending: true });
       return data || [];
@@ -43,11 +43,15 @@ export default function FAQPage() {
   const whatsappNumber = settings?.footer_phone || '';
 
   const faqs = (dbFaqs && dbFaqs.length > 0)
-    ? dbFaqs
+    ? dbFaqs.map((f: any) => ({
+        question: language === 'fr' ? (f.question_fr || f.question) : f.question,
+        answer: language === 'fr' ? (f.answer_fr || f.answer) : f.answer,
+      }))
     : Array.from({ length: 10 }, (_, i) => ({
         question: t(`faq.items.${i + 1}.question`),
         answer: t(`faq.items.${i + 1}.answer`),
       }));
+
 
   return (
     <div className="min-h-screen bg-background">
