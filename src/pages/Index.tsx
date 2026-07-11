@@ -655,6 +655,8 @@ export default function IndexPage() {
           link={hp?.limited.link}
           cta={hp?.limited.cta}
           endDate={hp?.limited.end_date}
+          price={hp?.limited.price ?? undefined}
+          oldPrice={hp?.limited.old_price ?? undefined}
         />
       )}
 
