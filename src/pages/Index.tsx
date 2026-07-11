@@ -574,8 +574,8 @@ export default function IndexPage() {
         </section>
       )}
       {showSection('categories') && bentoCats.length > 0 && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
-          <div className="max-w-7xl mx-auto">
+        <section className="pb-16 sm:pb-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
@@ -587,62 +587,68 @@ export default function IndexPage() {
               </div>
               <Link
                 to="/products"
-                className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2.5 transition-all"
+                className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2.5 transition-all shrink-0"
               >
                 {txt('cat_all', 'Voir tout', 'عرض الكل')}
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
               </Link>
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-              {bentoCats.slice(0, 8).map((cat) => {
+          <div
+            className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <div className="flex gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 pb-4">
+              <Link
+                to="/products"
+                className="group flex flex-col items-center gap-3 shrink-0 snap-start"
+              >
+                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center group-hover:scale-105 group-hover:border-primary/50 transition-all shadow-md">
+                  <Grid3X3 className="w-9 h-9 sm:w-10 sm:h-10 text-primary" strokeWidth={1.8} />
+                </div>
+                <span className="font-display font-bold text-sm sm:text-base text-foreground text-center max-w-[110px] truncate">
+                  {txt('cat_all', 'Tout', 'الكل')}
+                </span>
+              </Link>
+
+              {bentoCats.map((cat) => {
                 const Icon = cat.icon;
                 return (
                   <Link
                     key={cat.name}
                     to={`/products?category=${encodeURIComponent(cat.name)}`}
-                    className="group relative aspect-[4/5] sm:aspect-square overflow-hidden rounded-2xl border border-border/60 bg-card shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
+                    className="group flex flex-col items-center gap-3 shrink-0 snap-start"
                   >
-                    {cat.image ? (
-                      <img
-                        src={cat.image}
-                        alt={cat.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                        <Icon className="w-10 h-10 text-primary/60" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                    <div className="absolute top-3 end-3 w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white">
-                      <Icon className="w-4 h-4" strokeWidth={2} />
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-muted border-2 border-border/60 group-hover:scale-105 group-hover:border-primary/60 group-hover:shadow-xl transition-all shadow-md">
+                      {cat.image ? (
+                        <img
+                          src={cat.image}
+                          alt={cat.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/25 to-primary/5 flex items-center justify-center">
+                          <Icon className="w-9 h-9 sm:w-10 sm:h-10 text-primary/70" strokeWidth={1.8} />
+                        </div>
+                      )}
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 text-white">
-                      <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl tracking-tight drop-shadow-lg line-clamp-2">
-                        {cat.name}
-                      </h3>
-                      <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-white/90">
-                        {txt('cat_shop_now', 'Acheter', 'تسوق')}
-                        <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
-                      </span>
-                    </div>
+                    <span className="font-display font-bold text-sm sm:text-base text-foreground text-center max-w-[110px] sm:max-w-[130px] truncate">
+                      {cat.name}
+                    </span>
                   </Link>
                 );
               })}
             </div>
+          </div>
 
-            <div className="mt-6 sm:hidden text-center">
-              <Link
-                to="/products"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
-              >
-                {txt('cat_all', 'Voir tout', 'عرض الكل')}
-                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-              </Link>
-            </div>
+          <div className="mt-4 sm:hidden text-center">
+            <Link to="/products" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+              {txt('cat_all', 'Voir tout', 'عرض الكل')}
+              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+            </Link>
           </div>
         </section>
       )}
