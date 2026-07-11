@@ -6,6 +6,7 @@ import { useTranslation, type Language } from '@/i18n';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useStoreLogo } from '@/hooks/useStoreLogo';
 import { useState, type ReactNode } from 'react';
 
 const ICON_MAP: Record<string, LucideIcon> = {
