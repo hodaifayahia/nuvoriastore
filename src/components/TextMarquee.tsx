@@ -27,19 +27,22 @@ interface Props {
 
 export default function TextMarquee({
   phrases,
-  duration = '35s',
+  duration = '40s',
   className = '',
 }: Props) {
   const { language } = useTranslation();
   const resolved = phrases ?? (language === 'ar' ? DEFAULT_PHRASES_AR : DEFAULT_PHRASES_FR);
-  const trackPhrases = [...resolved, ...resolved, ...resolved];
 
+  // A single "track" = one full pass of the phrases. We render it twice inside
+  // a flex row and animate translateX from 0 → -50%. Because both tracks are
+  // identical and the gap between items is uniform (including the gap between
+  // the two tracks), the loop point is invisible — no pause, no jump.
   const Track = ({ ariaHidden = false }: { ariaHidden?: boolean }) => (
     <div
-      className="flex items-center gap-6 sm:gap-10 pr-6 sm:pr-10 shrink-0"
+      className="flex items-center gap-6 sm:gap-10 shrink-0"
       aria-hidden={ariaHidden || undefined}
     >
-      {trackPhrases.map((phrase, i) => (
+      {resolved.map((phrase, i) => (
         <div key={i} className="flex items-center gap-6 sm:gap-10 shrink-0">
           <span className="font-display font-extrabold uppercase tracking-tight text-base sm:text-xl md:text-2xl whitespace-nowrap">
             {phrase}
@@ -65,8 +68,8 @@ export default function TextMarquee({
       }}
     >
       <div
-        className="flex w-max animate-brand-marquee"
-        style={{ animationDuration: duration, animationTimingFunction: 'linear' }}
+        className="flex w-max gap-6 sm:gap-10 animate-brand-marquee will-change-transform"
+        style={{ animationDuration: duration, animationTimingFunction: 'linear', animationIterationCount: 'infinite' }}
       >
         <Track />
         <Track ariaHidden />
