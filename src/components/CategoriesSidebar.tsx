@@ -26,14 +26,23 @@ export default function CategoriesSidebar({ trigger }: Props) {
   const { user } = useAuth();
   const location = useLocation();
   const { data: logoUrl } = useStoreLogo();
-  const { data: storeName } = useQuery({
-    queryKey: ['store-name'],
+  const { data: storeNames } = useQuery({
+    queryKey: ['store-names'],
     queryFn: async () => {
-      const { data } = await supabase.from('settings').select('value').eq('key', 'store_name').maybeSingle();
-      return data?.value || 'NuvoriaStore';
+      const { data } = await supabase
+        .from('settings')
+        .select('key, value')
+        .in('key', ['store_name', 'store_name_ar', 'store_name_fr']);
+      const map: Record<string, string> = {};
+      data?.forEach((r: { key: string; value: string }) => { map[r.key] = r.value; });
+      return map;
     },
     staleTime: 10 * 60 * 1000,
   });
+  const fallback = storeNames?.store_name || 'NuvoriaStore';
+  const storeName = language === 'ar'
+    ? (storeNames?.store_name_ar || (/[\u0600-\u06FF]/.test(fallback) ? fallback : 'نيفوريا ستور'))
+    : (storeNames?.store_name_fr || (/[\u0600-\u06FF]/.test(fallback) ? 'NuvoriaStore' : fallback));
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
