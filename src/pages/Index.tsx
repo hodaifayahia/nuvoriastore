@@ -576,22 +576,14 @@ export default function IndexPage() {
       {showSection('categories') && bentoCats.length > 0 && (
         <section className="pb-16 sm:pb-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
-                  {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
-                </p>
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-                  {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
-                </h2>
-              </div>
-              <Link
-                to="/products"
-                className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2.5 transition-all shrink-0"
-              >
-                {txt('cat_all', 'Voir tout', 'عرض الكل')}
-                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-              </Link>
+            <div className="flex flex-col items-center text-center mb-8 sm:mb-10">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-primary font-semibold mb-2">
+                {txt('cat_kicker', 'Acheter par catégorie', 'تسوق حسب الفئة')}
+              </p>
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+                {txt('cat_title', 'Conçu pour chaque foyer', 'مصمّم لكل بيت')}
+              </h2>
+              <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
             </div>
           </div>
 
@@ -599,7 +591,8 @@ export default function IndexPage() {
             className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div className="flex gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 pb-4">
+            <div className="flex justify-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 pb-4 mx-auto w-max min-w-full">
+
               <Link
                 to="/products"
                 className="group flex flex-col items-center gap-3 shrink-0 snap-start"
