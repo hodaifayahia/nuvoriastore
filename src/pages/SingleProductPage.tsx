@@ -712,7 +712,7 @@ export default function SingleProductPage() {
         <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
       </nav>
 
-      <div className="grid md:grid-cols-2 gap-6 lg:gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 min-w-0">
         {/* Images with touch swipe */}
         <div className="flex flex-col-reverse md:flex-row gap-3 md:sticky md:top-24 md:self-start">
           {images.length > 1 && (
