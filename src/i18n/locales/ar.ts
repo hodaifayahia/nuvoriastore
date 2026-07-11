@@ -1618,7 +1618,20 @@ export const ar: Record<string, string> = {
   'about.story.body': 'بدأت رحلة {storeName} من شغفنا بتقديم أفضل المنتجات للعائلة الجزائرية. نسعى دائماً لتوفير منتجات عالية الجودة بأسعار مناسبة مع خدمة توصيل سريعة وموثوقة إلى جميع ولايات الوطن. هدفنا هو أن نكون الوجهة الأولى للتسوق الإلكتروني في الجزائر.',
   'about.story.heading': 'رحلتنا معك',
   'about.features.label': 'مميزاتنا',
+  'sp.deliveryInfo': 'معلومات التوصيل',
+  'sp.required': 'مطلوب',
+  'sp.summaryTitle': 'ملخص الطلب',
+  'sp.chooseAllOptions': 'يرجى اختيار جميع الخيارات.',
+  'sp.warrantyPolicy': 'سياسة الضمان',
+  'sp.warrantyPeriod': 'مدة الضمان',
+  'sp.warrantyReplace': 'استبدال كامل',
+  'sp.warrantyRepair': 'إصلاح وقطع غيار',
+  'sp.warrantyDefects': 'يغطي الضمان عيوب التصنيع فقط ولا يشمل الأعطال الناتجة عن سوء الاستخدام أو الحوادث.',
+  'sp.whatsapp': 'واتساب',
+  'sp.whatsappNotEnabled': 'واتساب غير مفعّل حالياً.',
+  'sp.whatsappSettings': 'إعدادات واتساب',
 };
+
 // (appended)
 Object.assign(ar, {
   'sidebar.brands': 'العلامات التجارية',
