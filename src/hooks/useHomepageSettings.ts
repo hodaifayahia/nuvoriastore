@@ -143,6 +143,8 @@ export function useHomepageSettings() {
           link: map.hp_limited_link || '/products',
           cta: map.hp_limited_cta || '',
           end_date: map.hp_limited_end_date || '',
+          price: map.hp_limited_price ? Number(map.hp_limited_price) : null,
+          old_price: map.hp_limited_old_price ? Number(map.hp_limited_old_price) : null,
         },
       };
     },
