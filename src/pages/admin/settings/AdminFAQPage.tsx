@@ -14,12 +14,15 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Plus, Pencil, Trash2, HelpCircle, ArrowUp, ArrowDown } from 'lucide-react';
 
 type Faq = {
   id: string;
   question: string;
   answer: string;
+  question_fr: string | null;
+  answer_fr: string | null;
   sort_order: number;
   is_active: boolean;
 };
@@ -48,16 +51,19 @@ export default function AdminFAQPage() {
       if (payload.id) {
         const { error } = await supabase.from('faqs').update({
           question: payload.question, answer: payload.answer,
+          question_fr: payload.question_fr, answer_fr: payload.answer_fr,
           sort_order: payload.sort_order, is_active: payload.is_active,
-        }).eq('id', payload.id);
+        } as any).eq('id', payload.id);
         if (error) throw error;
       } else {
         const { error } = await supabase.from('faqs').insert({
           question: payload.question || '',
           answer: payload.answer || '',
+          question_fr: payload.question_fr || null,
+          answer_fr: payload.answer_fr || null,
           sort_order: payload.sort_order ?? (faqs.length + 1),
           is_active: payload.is_active ?? true,
-        });
+        } as any);
         if (error) throw error;
       }
     },
@@ -102,7 +108,7 @@ export default function AdminFAQPage() {
             الأسئلة الشائعة
           </h1>
           <p className="font-cairo text-sm text-muted-foreground mt-1">
-            أضف، عدّل أو احذف الأسئلة التي تظهر في صفحة «الأسئلة الشائعة» للعملاء.
+            أضف السؤال والإجابة بالعربية والفرنسية. تظهر النسخة المطابقة للغة الزائر.
           </p>
         </div>
         <Button onClick={() => setCreating(true)} className="font-cairo gap-2">
@@ -130,8 +136,14 @@ export default function AdminFAQPage() {
                   {!faq.is_active && (
                     <span className="text-[10px] font-cairo bg-muted text-muted-foreground px-2 py-0.5 rounded-full">مخفي</span>
                   )}
+                  {(!faq.question_fr || !faq.answer_fr) && (
+                    <span className="text-[10px] font-cairo bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">FR ناقص</span>
+                  )}
                 </div>
                 <p className="font-cairo text-sm text-muted-foreground leading-relaxed line-clamp-2">{faq.answer}</p>
+                {faq.question_fr && (
+                  <p className="font-cairo text-xs text-muted-foreground/80 mt-1 italic line-clamp-1" dir="ltr">FR: {faq.question_fr}</p>
+                )}
               </div>
               <div className="flex flex-col items-center gap-1 shrink-0">
                 <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => move(faq, -1)} disabled={i === 0}>
@@ -196,12 +208,16 @@ function FaqDialog({
 }) {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [questionFr, setQuestionFr] = useState('');
+  const [answerFr, setAnswerFr] = useState('');
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     if (open) {
       setQuestion(faq?.question || '');
       setAnswer(faq?.answer || '');
+      setQuestionFr(faq?.question_fr || '');
+      setAnswerFr(faq?.answer_fr || '');
       setIsActive(faq?.is_active ?? true);
     }
   }, [open, faq]);
@@ -212,6 +228,8 @@ function FaqDialog({
       id: faq?.id,
       question: question.trim(),
       answer: answer.trim(),
+      question_fr: questionFr.trim() || null,
+      answer_fr: answerFr.trim() || null,
       is_active: isActive,
     });
   };
@@ -222,23 +240,44 @@ function FaqDialog({
         <DialogHeader>
           <DialogTitle className="font-cairo">{faq ? 'تعديل السؤال' : 'إضافة سؤال جديد'}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label className="font-cairo text-sm">السؤال</Label>
-            <Input value={question} onChange={e => setQuestion(e.target.value)} className="font-cairo mt-1" placeholder="مثال: كيف يمكنني تتبع طلبي؟" />
-          </div>
-          <div>
-            <Label className="font-cairo text-sm">الإجابة</Label>
-            <Textarea value={answer} onChange={e => setAnswer(e.target.value)} className="font-cairo mt-1" rows={5} placeholder="اكتب إجابة واضحة ومفيدة..." />
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-xl border bg-muted/20">
+
+        <Tabs defaultValue="ar" className="w-full">
+          <TabsList className="grid grid-cols-2 w-full">
+            <TabsTrigger value="ar" className="font-cairo">العربية 🇩🇿</TabsTrigger>
+            <TabsTrigger value="fr" className="font-cairo">Français 🇫🇷</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="ar" className="space-y-4 mt-4">
             <div>
-              <p className="font-cairo text-sm font-semibold">إظهار السؤال</p>
-              <p className="font-cairo text-xs text-muted-foreground">عند الإيقاف لن يظهر السؤال للعملاء.</p>
+              <Label className="font-cairo text-sm">السؤال (بالعربية)</Label>
+              <Input value={question} onChange={e => setQuestion(e.target.value)} className="font-cairo mt-1" placeholder="مثال: كيف يمكنني تتبع طلبي؟" dir="rtl" />
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
+            <div>
+              <Label className="font-cairo text-sm">الإجابة (بالعربية)</Label>
+              <Textarea value={answer} onChange={e => setAnswer(e.target.value)} className="font-cairo mt-1" rows={5} placeholder="اكتب إجابة واضحة ومفيدة..." dir="rtl" />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="fr" className="space-y-4 mt-4">
+            <div>
+              <Label className="font-cairo text-sm">Question (Français)</Label>
+              <Input value={questionFr} onChange={e => setQuestionFr(e.target.value)} className="mt-1" placeholder="Ex: Comment suivre ma commande ?" dir="ltr" />
+            </div>
+            <div>
+              <Label className="font-cairo text-sm">Réponse (Français)</Label>
+              <Textarea value={answerFr} onChange={e => setAnswerFr(e.target.value)} className="mt-1" rows={5} placeholder="Rédigez une réponse claire et utile..." dir="ltr" />
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex items-center justify-between p-3 rounded-xl border bg-muted/20 mt-2">
+          <div>
+            <p className="font-cairo text-sm font-semibold">إظهار السؤال</p>
+            <p className="font-cairo text-xs text-muted-foreground">عند الإيقاف لن يظهر السؤال للعملاء.</p>
           </div>
+          <Switch checked={isActive} onCheckedChange={setIsActive} />
         </div>
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose} className="font-cairo">إلغاء</Button>
           <Button onClick={submit} disabled={saving || !question.trim() || !answer.trim()} className="font-cairo">
