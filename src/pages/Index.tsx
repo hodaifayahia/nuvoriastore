@@ -737,7 +737,9 @@ export default function IndexPage() {
               );
             };
 
-            const trackItems = [...list, ...list, ...list];
+            const trackItemsYellow = [...list, ...list, ...list];
+            const shiftedList = list.length > 2 ? [...list.slice(2), ...list.slice(0, 2)] : list;
+            const trackItemsWhite = [...shiftedList, ...shiftedList, ...shiftedList];
             
             return (
               <div className="relative overflow-hidden py-12 flex flex-col gap-8 w-full">
@@ -751,10 +753,10 @@ export default function IndexPage() {
                 >
                   <div className="flex w-max animate-brand-marquee" style={{ animationTimingFunction: 'linear' }}>
                     <div className="flex shrink-0">
-                      {trackItems.map((b, i) => renderBrand(b, i, true))}
+                      {trackItemsYellow.map((b, i) => renderBrand(b, i, true))}
                     </div>
                     <div className="flex shrink-0" aria-hidden="true">
-                      {trackItems.map((b, i) => renderBrand(b, i + trackItems.length, true))}
+                      {trackItemsYellow.map((b, i) => renderBrand(b, i + trackItemsYellow.length, true))}
                     </div>
                   </div>
                 </div>
@@ -767,12 +769,12 @@ export default function IndexPage() {
                     WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' 
                   }}
                 >
-                  <div className="flex w-max animate-brand-marquee-reverse">
+                  <div className="flex w-max animate-brand-marquee-reverse" style={{ animationTimingFunction: 'linear' }}>
                     <div className="flex shrink-0">
-                      {trackItems.map((b, i) => renderBrand(b, i, false))}
+                      {trackItemsWhite.map((b, i) => renderBrand(b, i, false))}
                     </div>
                     <div className="flex shrink-0" aria-hidden="true">
-                      {trackItems.map((b, i) => renderBrand(b, i + trackItems.length, false))}
+                      {trackItemsWhite.map((b, i) => renderBrand(b, i + trackItemsWhite.length, false))}
                     </div>
                   </div>
                 </div>

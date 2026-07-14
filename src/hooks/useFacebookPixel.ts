@@ -14,7 +14,12 @@ export function useFacebookPixel() {
     queryKey: ['facebook-pixels-active'],
     queryFn: async () => {
       const { data } = await supabase.rpc('get_active_facebook_pixels');
-      return data?.map((p: { pixel_id: string }) => p.pixel_id).filter(Boolean) || [];
+      return data?.map((p: any) => {
+        if (typeof p === 'object' && p !== null) {
+          return p.pixel_id;
+        }
+        return typeof p === 'string' ? p : '';
+      }).filter(Boolean) || [];
     },
     staleTime: 1000 * 60 * 10,
   });
