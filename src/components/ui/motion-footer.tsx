@@ -242,6 +242,15 @@ export function CinematicFooter() {
   const giantTextRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const [isMobile, setIsMobile] = React.useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const { t, language } = useTranslation();
   const isAr = language === 'ar';
 
@@ -405,25 +414,30 @@ export function CinematicFooter() {
       
       <div
         ref={wrapperRef}
-        className="relative h-[120vh] md:h-screen w-full"
-        style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
+        className={isMobile ? "relative w-full h-auto bg-background" : "relative h-screen w-full"}
+        style={isMobile ? {} : { clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
-        <footer className="fixed bottom-0 left-0 flex h-[120vh] md:h-screen w-full flex-col justify-between overflow-y-auto md:overflow-hidden bg-background text-foreground cinematic-footer-wrapper py-6 md:py-10 z-0">
+        <footer className={isMobile 
+          ? "relative w-full flex flex-col gap-8 bg-[#FAF9F6] dark:bg-slate-950 py-10 px-4 text-foreground z-10 overflow-hidden"
+          : "fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-background text-foreground cinematic-footer-wrapper py-10 z-0"
+        }>
           
           {/* Ambient Light & Grid Background */}
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
 
           {/* Giant background text */}
-          <div
-            ref={giantTextRef}
-            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
-          >
-            NUVORIA
-          </div>
+          {!isMobile && (
+            <div
+              ref={giantTextRef}
+              className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
+            >
+              NUVORIA
+            </div>
+          )}
 
           {/* 1. Diagonal Sleek Marquee (Top of footer) with Brands */}
-          <div className="absolute top-12 left-0 w-full overflow-hidden border-y border-border/50 bg-background/60 backdrop-blur-md py-4 z-10 -rotate-2 scale-110 shadow-2xl">
+          <div className={`${isMobile ? 'relative my-8' : 'absolute top-12'} left-0 w-full overflow-hidden border-y border-border/50 bg-background/60 backdrop-blur-md py-4 z-10 -rotate-2 scale-110 shadow-2xl`}>
             <div className="flex w-max animate-footer-scroll-marquee text-xs md:text-sm font-bold tracking-[0.3em] text-muted-foreground uppercase">
               <MarqueeItem brands={brandsData} fallback={fallbackBrands} />
               <MarqueeItem brands={brandsData} fallback={fallbackBrands} />
@@ -433,7 +447,7 @@ export function CinematicFooter() {
           {/* 2. Main Center Content - Redesigned columns */}
           <div 
             ref={contentRef}
-            className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 md:px-8 mt-24 md:mt-20 w-full max-w-6xl mx-auto space-y-8 md:space-y-10"
+            className={`relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 md:px-8 ${isMobile ? 'mt-4 space-y-8' : 'mt-20 space-y-10'} w-full max-w-6xl mx-auto`}
           >
             {/* Title / Heading set to pure black */}
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black dark:text-white tracking-tighter text-center uppercase">
