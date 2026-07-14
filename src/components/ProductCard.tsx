@@ -78,12 +78,7 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
   const handleDirectOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (variationTypes && Object.keys(variationTypes).length > 0) {
-      navigate(`/product/${id}`);
-      return;
-    }
-    addItem({ id, name, price, image: allImages[0] || '', stock, shippingPrice });
-    navigate('/checkout');
+    navigate(`/product/${id}`);
   };
 
   const handlePrev = (e: React.MouseEvent) => {

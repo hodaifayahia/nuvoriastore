@@ -270,9 +270,10 @@ export default function IndexPage() {
         }}
       />
 
-
-      {/* ─────────── HERO CAROUSEL (banners only, autoplay 2s) ─────────── */}
+      {/* ─────────── HERO — Full-Width Image/Video Slider ─────────── */}
       {showSection('hero') && (() => {
+        const customSlides = (heroSlides && heroSlides.length > 0 ? heroSlides : []) as any[];
+        
         // Build product-based slides from featured (or newest) products with real photos
         const productPool = (featuredProducts.length > 0 ? featuredProducts : (allProducts || []).slice(0, 6));
         const productSlides = productPool
@@ -283,281 +284,112 @@ export default function IndexPage() {
               url: img,
               alt: p.name,
               title: p.name,
-              subtitle: p.short_description || p.description || '',
-              price: p.price ? `${Number(p.price).toLocaleString('fr-DZ')} DZD` : '',
-              oldPrice: p.old_price ? `${Number(p.old_price).toLocaleString('fr-DZ')} DZD` : '',
               link: `/product/${p.id}`,
-              badge: p.is_featured ? (isAr ? 'مميّز' : 'Sélection') : (isAr ? 'جديد' : 'Nouveau'),
-              cta: isAr ? 'اشترِ الآن' : 'Acheter maintenant',
+              cta: isAr ? 'اكتشف المزيد' : 'Découvrir',
             };
           })
           .filter(Boolean) as any[];
 
-        const customSlides = (heroSlides && heroSlides.length > 0 ? heroSlides : []) as any[];
         const slides = customSlides.length > 0
           ? customSlides
-          : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES as any[]);
+          : (productSlides.length > 0 ? productSlides : DEFAULT_HERO_SLIDES.map(s => ({ ...s, title: s.alt, cta: 'Découvrir' })) as any[]);
         const count = slideCount || slides.length;
         const active = slides[selectedSlide] || slides[0] || {};
-        const activeTitle: string = active.title || active.alt || (isAr ? 'أجهزة موثوقة لكل البيت' : 'Des appareils fiables pour toute la maison');
-        const activeSubtitle: string =
-          active.subtitle ||
-          (isAr
-            ? 'اكتشف تشكيلة من الأجهزة الأنيقة عالية الأداء مع توصيل سريع لكل الجزائر.'
-            : 'Découvrez une sélection d’appareils performants, élégants et livrés rapidement partout en Algérie.');
-        const activeBadge: string = active.badge || (isAr ? 'جديد' : 'Nouveau');
-        const activePrice: string = active.price || '';
-        const activeOldPrice: string = active.oldPrice || '';
-        const activeCta: string = active.cta || (isAr ? 'اشترِ الآن' : 'Acheter maintenant');
-
-        const activeCtaHref: string = active.link || '/products';
-
-        // Split title on <br/> or newline for two-line reveal (second line gets gradient)
-        const titleParts = activeTitle.split(/<br\s*\/?>|\n/).map((s) => s.trim()).filter(Boolean);
-        const lineOne = titleParts[0] || activeTitle;
-        const lineTwo = titleParts[1] || '';
+        const isVideo = (url: string) => /\.(mp4|webm|mov)$/i.test(url);
 
         return (
-          <section className="relative px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-10">
-            <div className="relative max-w-7xl mx-auto group">
-              {/* Colored hero panel */}
-              <div
-                className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.5rem] text-white shadow-[0_40px_100px_-40px_hsl(var(--primary)/0.55)] ring-1 ring-white/10"
-                style={{
-                  background:
-                    'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.88) 55%, hsl(var(--primary) / 0.75) 100%)',
-                }}
-              >
-                {/* Decorative ambient */}
-                <div aria-hidden className="pointer-events-none absolute inset-0">
-                  <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[80%] rounded-full blur-[130px] opacity-40 bg-white" />
-                  <div className="absolute -bottom-[25%] -right-[10%] w-[55%] h-[70%] rounded-full blur-[120px] opacity-25 bg-black" />
-                  {/* subtle diagonal noise */}
-                  <div
-                    className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 1px, transparent 0)",
-                      backgroundSize: '22px 22px',
-                    }}
-                  />
-                  {/* corner arc */}
-                  <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full border border-white/15" />
-                  <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full border border-white/10" />
-                </div>
-
-                {/* Corner wordmark */}
-                <div aria-hidden className="hidden md:block absolute bottom-6 left-8 opacity-[0.10] select-none">
-                  <span className="font-display text-5xl font-black tracking-tighter">NUVORIA</span>
-                </div>
-
-                {/* Embla viewport (invisible, drives autoplay + swipe) */}
-                <div className="absolute inset-0 opacity-0 pointer-events-none" ref={emblaRef}>
-                  <div className="flex h-full">
-                    {slides.map((_, i) => (<div key={i} className="flex-[0_0_100%] min-w-0 h-full" />))}
-                  </div>
-                </div>
-
-                <div
-                  className="relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-8 md:gap-6 items-center p-6 sm:p-10 md:p-14 lg:p-16 min-h-[540px] md:min-h-[560px] lg:min-h-[600px]"
-                  dir="ltr"
-                >
-                  {/* ── Image column (left in RTL visual thanks to order) ── */}
-                  <div className="relative order-1 md:order-2 flex items-center justify-center">
-                    <div key={`img-${selectedSlide}`} className="relative w-full max-w-[420px] aspect-square animate-scale-in">
-                      {/* decorative rings */}
-                      <div aria-hidden className="absolute -inset-2 rounded-full border border-white/25" />
-                      <div aria-hidden className="absolute -inset-6 rounded-full border border-white/15" />
-                      <div aria-hidden className="absolute -inset-12 rounded-full border border-white/10" />
-
-                      {/* Circular product mask */}
-                      <Link
-                        to={activeCtaHref}
-                        className="group/img relative flex items-center justify-center w-full h-full rounded-full overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] ring-4 ring-white/25 bg-white/10 backdrop-blur-sm"
-                      >
-                        <img
-                          src={active.url}
-                          alt={active.alt || activeTitle}
-                          width={800}
-                          height={800}
-                          loading="eager"
-                          fetchPriority="high"
-                          decoding="async"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
-                        />
-                        <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-tr from-black/25 via-transparent to-white/10" />
-                      </Link>
-
-                      {/* Rating chip (top) */}
-                      <div
-                        className="absolute top-2 -right-2 z-20 bg-white text-slate-900 px-3 py-2 rounded-2xl shadow-xl flex items-center gap-1.5 animate-fade-in"
-                        style={{ animationDelay: '220ms', animationFillMode: 'both' }}
-                      >
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        <span className="text-xs font-bold">4.9</span>
-                        <span className="text-[10px] text-slate-400 font-medium">/5</span>
-                      </div>
-
-                      {/* Energy chip (bottom-left) */}
-                      <div
-                        className="absolute -bottom-2 -left-2 z-20 bg-white/95 backdrop-blur-lg text-slate-900 px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2.5 animate-fade-in"
-                        style={{ animationDelay: '280ms', animationFillMode: 'both' }}
-                      >
-                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ring-2 ring-emerald-100">
-                          <Zap className="w-4 h-4" />
-                        </div>
-                        <div className="text-left leading-tight">
-                          <div className="text-[10px] text-slate-400 font-medium">
-                            {txt('hero_energy_label', 'Économie d’énergie', 'توفير الطاقة')}
-                          </div>
-                          <div className="text-xs font-bold">{txt('hero_energy_value', 'Classe A+++', 'فئة +++A')}</div>
-                        </div>
-                      </div>
-
-                      {/* Delivery chip (top-left) */}
-                      <div
-                        className="hidden sm:flex absolute top-10 -left-3 z-20 bg-slate-900/85 backdrop-blur-lg text-white px-3 py-2 rounded-2xl shadow-xl items-center gap-2 animate-fade-in ring-1 ring-white/10"
-                        style={{ animationDelay: '340ms', animationFillMode: 'both' }}
-                      >
-                        <Truck className="w-3.5 h-3.5" />
-                        <span className="text-[11px] font-bold">{txt('hero_delivery_value', '24-48h', '24-48 ساعة')}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* ── Text column ── */}
-                  <div key={`text-${selectedSlide}`} className="flex flex-col justify-center gap-5 md:gap-6 order-2 md:order-1 text-left">
-                    {/* Eyebrow */}
-                    <div
-                      className="flex items-center gap-3 justify-start animate-fade-in"
-                    >
-                      <span className="h-px w-10 bg-white/60" />
-                      <span className="text-[11px] sm:text-xs font-cairo font-bold uppercase tracking-[0.2em] text-white/90">
-                        {activeBadge}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h1
-                      className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight animate-fade-in drop-shadow-[0_6px_24px_rgba(0,0,0,0.15)]"
-                      style={{ animationDelay: '80ms', animationFillMode: 'both' }}
-                    >
-                      <span className="block">{lineOne}</span>
-                      {lineTwo && (
-                        <span className="block text-white/85">{lineTwo}</span>
-                      )}
-                    </h1>
-
-                    {/* Subtitle */}
-                    <p
-                      className="text-sm sm:text-base md:text-lg text-white/85 max-w-xl leading-relaxed animate-fade-in"
-                      style={{ animationDelay: '180ms', animationFillMode: 'both' }}
-                    >
-                      {activeSubtitle}
-                    </p>
-
-                    {/* Price */}
-                    {(activePrice || activeOldPrice) && (
-                      <div
-                        className="flex items-baseline gap-3 animate-fade-in"
-                        style={{ animationDelay: '240ms', animationFillMode: 'both' }}
-                      >
-                        {activePrice && (
-                          <span className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                            {activePrice}
-                          </span>
-                        )}
-                        {activeOldPrice && (
-                          <span className="text-sm text-white/60 line-through">{activeOldPrice}</span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* CTAs */}
-                    <div
-                      className="flex flex-wrap items-center gap-3 pt-1 animate-fade-in"
-                      style={{ animationDelay: '300ms', animationFillMode: 'both' }}
-                    >
-                      <Link
-                        to={activeCtaHref}
-                        className="group/cta relative inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 font-bold rounded-full bg-white text-primary overflow-hidden transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-black/20"
-                      >
-                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
-                        <span className="relative text-sm sm:text-base">{activeCta}</span>
-                        <ArrowRight className="relative w-4 h-4 transition-transform group-hover/cta:translate-x-1" />
-                      </Link>
-                      <Link
-                        to="/products"
-                        className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 font-bold rounded-full border-2 border-white/70 text-white hover:bg-white hover:text-primary transition-all text-sm sm:text-base"
-                      >
-                        <Grid3X3 className="w-4 h-4" />
-                        {txt('hero_explore_cta', 'Découvrir les catégories', 'اكتشف التصنيفات')}
-                      </Link>
-                    </div>
-
-                    {/* Trust row */}
-                    <div
-                      className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 animate-fade-in"
-                      style={{ animationDelay: '380ms', animationFillMode: 'both' }}
-                    >
-                      {[
-                        { icon: Truck, label: txt('hero_trust_shipping', 'Livraison rapide dans toutes les wilayas', 'شحن سريع لكل الولايات') },
-                        { icon: Shield, label: txt('hero_trust_warranty', 'Garantie 1 an', 'ضمان سنة كاملة') },
-                        { icon: BadgeCheck, label: txt('hero_trust_payment', 'Paiement à la livraison', 'الدفع عند الاستلام') },
-                      ].map((tt, i) => (
-                        <div key={i} className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-white/85 font-medium">
-                          <span className="w-6 h-6 rounded-full bg-white/15 ring-1 ring-white/25 flex items-center justify-center">
-                            <tt.icon className="w-3 h-3" />
-                          </span>
-                          {tt.label}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Thumbnails */}
-                    {slides.length > 1 && (
-                      <div className="flex items-center gap-2 pt-2">
-                        {slides.slice(0, 5).map((s: any, i: number) => {
-                          const active = selectedSlide === i;
-                          return (
-                            <button
-                              key={i}
-                              type="button"
-                              onClick={() => scrollTo(i)}
-                              aria-label={`Diapositive ${i + 1}`}
-                              className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
-                                active
-                                  ? 'w-14 h-14 ring-2 ring-white shadow-lg scale-105'
-                                  : 'w-11 h-11 ring-1 ring-white/40 opacity-70 hover:opacity-100'
-                              }`}
-                            >
-                              <img src={s.url} alt="" className="w-full h-full object-cover" />
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+          <section className="relative w-full">
+            <div className="relative max-w-[1920px] mx-auto group">
+              {/* Embla viewport (invisible, drives autoplay + swipe) */}
+              <div className="absolute inset-0 opacity-0 pointer-events-none" ref={emblaRef}>
+                <div className="flex h-full">
+                  {slides.map((_: any, i: number) => (<div key={i} className="flex-[0_0_100%] min-w-0 h-full" />))}
                 </div>
               </div>
 
-              {/* Prev / Next */}
-              <button
-                type="button"
-                onClick={scrollPrev}
-                aria-label="Précédent"
-                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
-              >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-              <button
-                type="button"
-                onClick={scrollNext}
-                aria-label="Suivant"
-                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md text-slate-900 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300"
-              >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
+              {/* Active slide — full-bleed */}
+              <div className="relative w-full aspect-[16/7] sm:aspect-[16/6] lg:aspect-[16/5] overflow-hidden bg-slate-900">
+                {slides.map((slide: any, i: number) => (
+                  <div key={i} className={`absolute inset-0 transition-opacity duration-700 ${i === selectedSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+                    {isVideo(slide.url) ? (
+                      <video
+                        src={slide.url}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={slide.url}
+                        alt={slide.alt || slide.title || ''}
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={i === 0 ? 'high' : undefined}
+                        decoding="async"
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )}
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  </div>
+                ))}
+
+                {/* Bottom content overlay */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-6 sm:p-10 lg:p-14 flex items-end justify-between gap-4">
+                  {/* Title */}
+                  <div>
+                    <h1 key={`title-${selectedSlide}`} className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)] animate-fade-in">
+                      {active.title || active.alt || (isAr ? 'اكتشف المجموعة' : 'Découvrez la collection')}
+                    </h1>
+                  </div>
+                  {/* CTA Button */}
+                  <Link
+                    to={active.link || '/products'}
+                    className="shrink-0 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-white/95 backdrop-blur-sm text-slate-900 font-bold text-sm sm:text-base shadow-xl hover:bg-white hover:scale-105 transition-all duration-300"
+                  >
+                    <span>{active.cta || (isAr ? 'اكتشف' : 'Découvrir')}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Navigation dots */}
+                {count > 1 && (
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+                    {slides.map((_: any, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => scrollTo(i)}
+                        className={`rounded-full transition-all duration-300 ${i === selectedSlide ? 'w-8 h-3 bg-white' : 'w-3 h-3 bg-white/50 hover:bg-white/70'}`}
+                        aria-label={`Slide ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Prev / Next arrows */}
+                <button
+                  type="button"
+                  onClick={scrollPrev}
+                  aria-label="Précédent"
+                  className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-8 z-20 w-12 h-12 rounded-full border-2 border-white/60 bg-transparent text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:text-slate-900 transition-all duration-300"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={scrollNext}
+                  aria-label="Suivant"
+                  className="absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 z-20 w-12 h-12 rounded-full border-2 border-white/60 bg-white/95 text-slate-900 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300 shadow-lg"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Swipe hint (mobile only) */}
+            <div className="sm:hidden text-center py-2">
+              <span className="text-xs text-muted-foreground font-cairo">👆 Glissez pour découvrir</span>
             </div>
           </section>
         );
@@ -708,6 +540,23 @@ export default function IndexPage() {
         </section>
       )}
 
+      {/* Promotional Video 1 */}
+      {hp?.promoVideos && hp.promoVideos[0] && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-4xl mx-auto rounded-[2rem] overflow-hidden shadow-2xl bg-slate-900 border border-white/10 aspect-video relative group">
+            <video
+              src={hp.promoVideos[0]}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </section>
+      )}
+
 
       {/* ─────────── NEWEST ─────────── */}
       {showSection('newest') && (
@@ -757,6 +606,23 @@ export default function IndexPage() {
                 )}
               </>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* Promotional Video 2 */}
+      {hp?.promoVideos && hp.promoVideos[1] && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-4xl mx-auto rounded-[2rem] overflow-hidden shadow-2xl bg-slate-900 border border-white/10 aspect-video relative group">
+            <video
+              src={hp.promoVideos[1]}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              className="w-full h-full object-cover"
+            />
           </div>
         </section>
       )}
@@ -822,13 +688,13 @@ export default function IndexPage() {
               ? brandsData
               : [{name:'Samsung'},{name:'LG'},{name:'Bosch'},{name:'Condor'},{name:'Brandt'}]
             );
-            const renderCard = (brand: any, i: number) => {
+             const renderCard = (brand: any, i: number) => {
               const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
               return (
                 <Link
                   key={`${brand.name}-${i}`}
                   to={`/products?brand=${encodeURIComponent(brand.name)}`}
-                  className="shrink-0 w-40 sm:w-52 h-24 sm:h-28 rounded-2xl overflow-hidden bg-white border border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] flex items-center justify-center hover:-translate-y-1 hover:shadow-[0_18px_45px_-15px_hsl(var(--grad-teal)/0.55)] transition-all duration-300"
+                  className="shrink-0 h-16 sm:h-20 px-8 sm:px-12 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-border/80 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] flex items-center justify-center hover:border-orange-500 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                   aria-label={brand.name}
                 >
                   {img ? (
@@ -836,10 +702,10 @@ export default function IndexPage() {
                       src={img}
                       alt={brand.name}
                       loading="lazy"
-                      className="max-h-16 sm:max-h-20 max-w-[80%] object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                      className="max-h-8 sm:max-h-10 w-auto object-contain grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-500"
                     />
                   ) : (
-                    <span className="font-display font-extrabold text-lg uppercase tracking-tight text-neutral-800">{brand.name}</span>
+                    <span className="font-display font-extrabold text-sm sm:text-base uppercase tracking-tight text-foreground/80">{brand.name}</span>
                   )}
                 </Link>
               );

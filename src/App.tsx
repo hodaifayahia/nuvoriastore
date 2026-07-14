@@ -13,6 +13,7 @@ import TopMarquee from "@/components/TopMarquee";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopOnRouteChange from "@/components/ScrollToTopOnRouteChange";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import FloatingCallButton from "@/components/FloatingCallButton";
 
 import AdminLayout from "@/components/AdminLayout";
 // Keep the homepage eager for fast LCP; lazy-load everything else.
@@ -108,6 +109,7 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
       <Footer />
       <ScrollToTop />
       <WhatsAppFloat />
+      <FloatingCallButton />
     </div>
 
   );

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useStoreLogo } from '@/hooks/useStoreLogo';
-import { Facebook, Instagram, Send, Twitter, MessageCircle } from 'lucide-react';
+import { Facebook, Instagram, Send, Twitter, MessageCircle, Phone } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 
 export default function Footer() {
@@ -169,8 +169,31 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* Phone Contact Block */}
+        {settings?.whatsapp_number && (
+          <div className="mt-12 pt-6 border-t border-border/50 flex items-center gap-4">
+            <a
+              href={`tel:${settings.whatsapp_number.replace(/\D/g, '')}`}
+              className="w-14 h-14 rounded-full bg-card border flex items-center justify-center text-foreground hover:bg-muted transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+            >
+              <Phone className="w-5 h-5" />
+            </a>
+            <div>
+              <a
+                href={`tel:${settings.whatsapp_number.replace(/\D/g, '')}`}
+                className="block font-cairo font-extrabold text-lg text-foreground hover:underline"
+              >
+                {settings.whatsapp_number}
+              </a>
+              <span className="block text-xs text-muted-foreground font-cairo">
+                {isAr ? 'أوقات العمل : 8:00 - 22:00' : 'Horaires : 8h00 - 22h00'}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Divider + bottom row */}
-        <div className="mt-14 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mt-8 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
             {settings?.copyright_text ||
               `© ${new Date().getFullYear()} ${storeName}. ${t('footer.rightsReserved') || 'Tous droits réservés.'}`}

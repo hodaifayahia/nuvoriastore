@@ -105,7 +105,7 @@ export default function SingleProductPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const orderGuard = useOrderGuard();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const qc = useQueryClient();
   const [qty, setQty] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -366,6 +366,19 @@ export default function SingleProductPage() {
       const map: Record<string, string> = {};
       data?.forEach(s => { map[s.key] = s.value || ''; });
       return map;
+    },
+  });
+
+  const { data: activeCompany } = useQuery({
+    queryKey: ['active-delivery-company'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('delivery_companies' as any)
+        .select('name')
+        .eq('is_active', true)
+        .order('is_builtin', { ascending: false })
+        .limit(1);
+      return (data?.[0]?.name as string) || null;
     },
   });
 
@@ -1111,25 +1124,56 @@ export default function SingleProductPage() {
                 </div>
               </div>
 
-              {/* Delivery Type toggle */}
+              {/* Delivery Type Cards */}
               {orderWilayaId && selectedWilaya && (
                 <div>
-                  <label className="font-cairo text-xs text-muted-foreground mb-1.5 block">{t('sp.deliveryType')}</label>
-                  <div className={`grid grid-cols-2 rounded-xl border overflow-hidden ${errors.orderDeliveryType ? 'border-red-500' : 'border-border'}`}>
+                  <label className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground font-semibold mb-2 block">{t('sp.deliveryType')}</label>
+                  <div className={`grid grid-cols-2 gap-3 ${errors.orderDeliveryType ? '' : ''}`}>
                     <button type="button" onClick={() => { setOrderDeliveryType('home'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                      className={`flex items-center justify-center gap-2 py-3 text-sm font-cairo transition-all ${orderDeliveryType === 'home' ? 'bg-emerald-500 text-white font-bold' : 'bg-card hover:bg-muted/50 text-foreground'}`}>
-                      <Home className="w-4 h-4" />
-                      <span>{t('sp.homeDelivery')}</span>
-                      <span className="font-roboto text-xs opacity-90">- {formatPrice(Number(selectedWilaya.shipping_price_home))}</span>
+                      className={`relative flex flex-col items-start gap-2 p-4 rounded-2xl border-2 transition-all text-left ${orderDeliveryType === 'home' ? 'border-orange-500 bg-orange-50/80 dark:bg-orange-500/10 shadow-md' : 'border-border hover:border-muted-foreground/30 bg-card'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${orderDeliveryType === 'home' ? 'bg-orange-500/15 text-orange-600' : 'bg-muted text-muted-foreground'}`}>
+                        <Home className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className={`font-cairo font-bold text-sm block ${orderDeliveryType === 'home' ? 'text-orange-600' : 'text-foreground'}`}>{t('sp.homeDelivery')}</span>
+                        <span className="font-cairo text-[11px] text-muted-foreground block mt-0.5">Livraison chez vous</span>
+                      </div>
+                      <span className={`font-roboto font-bold text-sm ${orderDeliveryType === 'home' ? 'text-orange-600' : 'text-foreground'}`}>
+                        {Number(selectedWilaya.shipping_price_home) === 0 ? (
+                          <span className="text-emerald-600 font-cairo">🎉 Gratuite</span>
+                        ) : formatPrice(Number(selectedWilaya.shipping_price_home))}
+                      </span>
                     </button>
                     <button type="button" onClick={() => { setOrderDeliveryType('office'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                      className={`flex items-center justify-center gap-2 py-3 text-sm font-cairo transition-all ${orderDeliveryType === 'office' ? 'bg-emerald-500 text-white font-bold' : 'bg-card hover:bg-muted/50 text-foreground'}`}>
-                      <Building2 className="w-4 h-4" />
-                      <span>{t('sp.office')}</span>
-                      <span className="font-roboto text-xs opacity-90">- {formatPrice(Number(selectedWilaya.shipping_price))}</span>
+                      className={`relative flex flex-col items-start gap-2 p-4 rounded-2xl border-2 transition-all text-left ${orderDeliveryType === 'office' ? 'border-orange-500 bg-orange-50/80 dark:bg-orange-500/10 shadow-md' : 'border-border hover:border-muted-foreground/30 bg-card'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${orderDeliveryType === 'office' ? 'bg-orange-500/15 text-orange-600' : 'bg-muted text-muted-foreground'}`}>
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className={`font-cairo font-bold text-sm block ${orderDeliveryType === 'office' ? 'text-orange-600' : 'text-foreground'}`}>{t('sp.office')}</span>
+                        <span className="font-cairo text-[11px] text-muted-foreground block mt-0.5">
+                          {language === 'ar'
+                            ? `في مكتب ${activeCompany || 'الشحن'} الأقرب إليك`
+                            : `Au bureau ${activeCompany || ''} le plus proche`
+                          }
+                        </span>
+                      </div>
+                      <span className={`font-roboto font-bold text-sm ${orderDeliveryType === 'office' ? 'text-orange-600' : 'text-foreground'}`}>
+                        {Number(selectedWilaya.shipping_price) === 0 ? (
+                          <span className="text-emerald-600 font-cairo">🎉 Gratuite</span>
+                        ) : formatPrice(Number(selectedWilaya.shipping_price))}
+                      </span>
                     </button>
                   </div>
                   {errors.orderDeliveryType && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderDeliveryType}</p>}
+
+                  {/* Estimated delivery */}
+                  {orderDeliveryType && (
+                    <div className="mt-3 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-xl px-4 py-2.5">
+                      <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span className="font-cairo text-xs text-emerald-700 dark:text-emerald-400">Livraison estimée : 1 à 2 jours ouvrables</span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1234,68 +1278,88 @@ export default function SingleProductPage() {
               )}
 
               {/* Order Summary */}
-              <div className="rounded-2xl border border-border/60 p-3.5 space-y-2 text-sm font-cairo bg-muted/30">
-                <div className="font-cairo font-bold text-xs text-muted-foreground mb-1">{t('sp.summaryTitle')}</div>
+              <div className="rounded-2xl border border-border/60 p-4 space-y-2.5 text-sm font-cairo bg-card shadow-sm">
                 <div className="flex justify-between items-center">
-                  <span className="text-foreground truncate">{product.name} <span className="text-muted-foreground text-xs">×{qty}</span></span>
+                  <span className="text-muted-foreground">{t('sp.summaryTitle')}</span>
                   <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
                 </div>
-                <div className="flex justify-between items-center text-muted-foreground text-xs">
-                  <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
-                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? formatPrice(shippingCost) : '-'}</span>
-                </div>
                 {couponDiscount > 0 && (
-                  <div className="flex justify-between items-center text-emerald-600 text-xs">
+                  <div className="flex justify-between items-center text-orange-600 font-bold">
                     <span>{t('sp.discountLine')}</span>
-                    <span className="font-roboto font-bold">-{formatPrice(couponDiscount)}</span>
+                    <span className="font-roboto">-{formatPrice(couponDiscount)}</span>
                   </div>
                 )}
-                <div className="border-t border-border/60 pt-2 flex justify-between items-center">
-                  <span className="font-cairo font-bold text-foreground">{t('sp.total')}</span>
+                <div className="flex justify-between items-center text-muted-foreground text-xs">
+                  <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
+                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? (shippingCost === 0 ? <span className="text-emerald-600 font-cairo font-bold">Gratuite</span> : formatPrice(shippingCost)) : '-'}</span>
+                </div>
+                <div className="border-t border-border/60 pt-2.5 flex justify-between items-center">
+                  <span className="font-cairo font-bold text-foreground text-base">{t('sp.total')}</span>
                   {orderWilayaId && orderDeliveryType ? (
-                    <span className="font-roboto font-extrabold text-foreground text-base">{formatPrice(orderTotal)}</span>
+                    <span className="font-roboto font-extrabold text-orange-600 text-xl">{formatPrice(orderTotal)}</span>
                   ) : (
                     <span className="font-cairo text-xs text-amber-600">{t('sp.chooseAllOptions')}</span>
                   )}
                 </div>
               </div>
 
-              {/* Actions: Confirm + WhatsApp (top row), Add to Cart (full width below) */}
-              <div className="space-y-2">
-                <div className="flex items-stretch gap-2">
-                  <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                    className="font-cairo font-bold text-sm sm:text-base gap-1.5 rounded-xl h-12 flex-1 min-w-0 px-2 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 animate-order-pulse">
-                    {submittingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
-                    <span className="truncate">{submittingOrder ? t('sp.sending') : t('sp.confirmOrder')}</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    aria-label={t('sp.whatsapp')}
-                    onClick={async () => {
-                      const res = await openWhatsAppOrder({
-                        customer_name: orderName,
-                        customer_phone: orderPhone,
-                        wilaya_name: selectedWilaya?.name,
-                        baladiya: orderBaladiya,
-                        address: orderAddress,
-                        delivery_type: orderDeliveryType,
-                        payment_method: paymentMethod,
-                        items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(selectedNewOptions || {}).join(' / ') : undefined }],
-                        subtotal: itemSubtotal,
-                        shipping_cost: shippingCost,
-                        discount: couponDiscount,
-                        coupon_code: couponApplied ? couponCode : undefined,
-                        total: orderTotal,
-                      });
-                      if (!res.ok) toast({ title: t('sp.whatsappNotEnabled'), description: t('sp.whatsappSettings'), variant: 'destructive' });
-                    }}
-                    className="font-cairo font-bold rounded-xl h-12 w-12 sm:w-auto sm:px-4 sm:gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-md shadow-[#25D366]/30 shrink-0 flex items-center justify-center"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t('sp.whatsapp')}</span>
-                  </Button>
-                </div>
-                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-xl h-12 w-full border-border hover:bg-muted">
+              {/* Trust Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {[
+                  { emoji: '🛡️', text: 'Garantie 6 mois' },
+                  { emoji: '💰', text: 'Paiement à la réception' },
+                  { emoji: '🔄', text: 'Échange si défaut' },
+                ].map((badge, i) => (
+                  <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-cairo font-semibold text-foreground shadow-sm">
+                    <span>{badge.emoji}</span> {badge.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* Privacy notice */}
+              <p className="font-cairo text-[11px] text-muted-foreground text-center">
+                Vos informations sont utilisées uniquement pour la livraison.
+              </p>
+
+              {/* Actions: Confirm (orange) + WhatsApp + Add to Cart */}
+              <div className="space-y-3">
+                {/* Main Confirm Button — Orange gradient with lock icon */}
+                <Button onClick={handleDirectOrder} disabled={submittingOrder}
+                  className="font-cairo font-bold text-base gap-2 rounded-2xl h-14 w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-xl shadow-orange-500/30 transition-all hover:shadow-2xl hover:shadow-orange-500/40 hover:scale-[1.01] active:scale-[0.99]">
+                  {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 shrink-0" />}
+                  <span>🔒</span>
+                  <span>{submittingOrder ? t('sp.sending') : 'Confirmer ma commande'}</span>
+                </Button>
+
+                {/* WhatsApp Button — always visible with full text */}
+                <Button
+                  type="button"
+                  aria-label={t('sp.whatsapp')}
+                  onClick={async () => {
+                    const res = await openWhatsAppOrder({
+                      customer_name: orderName,
+                      customer_phone: orderPhone,
+                      wilaya_name: selectedWilaya?.name,
+                      baladiya: orderBaladiya,
+                      address: orderAddress,
+                      delivery_type: orderDeliveryType,
+                      payment_method: paymentMethod,
+                      items: [{ name: product.name, quantity: qty, unit_price: effectivePrice, variation_label: matchedVariant ? Object.values(selectedNewOptions || {}).join(' / ') : undefined }],
+                      subtotal: itemSubtotal,
+                      shipping_cost: shippingCost,
+                      discount: couponDiscount,
+                      coupon_code: couponApplied ? couponCode : undefined,
+                      total: orderTotal,
+                    });
+                    if (!res.ok) toast({ title: t('sp.whatsappNotEnabled'), description: t('sp.whatsappSettings'), variant: 'destructive' });
+                  }}
+                  className="font-cairo font-bold rounded-2xl h-12 w-full gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center transition-all"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Commander par WhatsApp</span>
+                </Button>
+
+                <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-2xl h-12 w-full border-border hover:bg-muted">
                   <ShoppingCart className="w-4 h-4" />
                   <span>{t('sp.addToCart')}</span>
                 </Button>

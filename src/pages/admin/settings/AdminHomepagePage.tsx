@@ -36,6 +36,7 @@ const ALL_KEYS = [
   'hp_limited_cta',
   'hp_limited_end_date',
   'hero_slides',
+  'hp_promo_videos',
 ];
 
 type HeroSlide = { url: string; link?: string; alt?: string };
@@ -45,7 +46,7 @@ export default function AdminHomepagePage() {
   const { toast } = useToast();
   const [form, setForm] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState(false);
-  const [openSection, setOpenSection] = useState<HpSection | null>('hero');
+  const [openSection, setOpenSection] = useState<HpSection | 'promo_videos' | null>('hero');
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['admin-hp-settings'],
@@ -243,6 +244,30 @@ export default function AdminHomepagePage() {
               </div>
             );
           })}
+
+          {/* Promo Videos Accordion Section */}
+          <div className="border rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between gap-3 p-4 bg-muted/30">
+              <button
+                type="button"
+                onClick={() => setOpenSection(openSection === 'promo_videos' ? null : 'promo_videos')}
+                className="flex items-center gap-2 flex-1 text-right"
+              >
+                {openSection === 'promo_videos' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                <Eye className="w-4 h-4 text-primary" />
+                <span className="font-cairo font-semibold">فيديوهات ترويجية بين المنتجات</span>
+              </button>
+            </div>
+
+            {openSection === 'promo_videos' && (
+              <div className="p-4 space-y-4">
+                <PromoVideosFields
+                  value={merged.hp_promo_videos || ''}
+                  onChange={v => setField('hp_promo_videos', v)}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -362,18 +387,52 @@ function HeroSlidesFields({ value, onChange }: { value: string; onChange: (v: st
 
   const update = (next: HeroSlide[]) => onChange(JSON.stringify(next));
 
+  const isVideo = (url: string) => /\.(mp4|webm|mov)$/i.test(url);
+
+  const validateVideoDuration = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(video.src);
+        if (video.duration > 9) {
+          toast({ title: 'الفيديو يجب أن لا يتجاوز 9 ثوانٍ', variant: 'destructive' });
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      };
+      video.onerror = () => {
+        URL.revokeObjectURL(video.src);
+        resolve(true); // fallback: allow if metadata can't be read
+      };
+      video.src = URL.createObjectURL(file);
+    });
+  };
+
   const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      toast({ title: 'الحد الأقصى 2MB', variant: 'destructive' });
+
+    const isVideoFile = file.type.startsWith('video/');
+    const maxSize = isVideoFile ? 10 * 1024 * 1024 : 2 * 1024 * 1024; // 10MB for video, 2MB for image
+
+    if (file.size > maxSize) {
+      toast({ title: isVideoFile ? 'الحد الأقصى 10MB للفيديو' : 'الحد الأقصى 2MB', variant: 'destructive' });
       return;
     }
     if (slides.length >= 5) {
-      toast({ title: 'الحد الأقصى 5 صور', variant: 'destructive' });
+      toast({ title: 'الحد الأقصى 5 عناصر', variant: 'destructive' });
       return;
     }
+
+    // Validate video duration (9s max)
+    if (isVideoFile) {
+      const valid = await validateVideoDuration(file);
+      if (!valid) return;
+    }
+
     setUploading(true);
     try {
       const ext = file.name.split('.').pop();
@@ -383,7 +442,7 @@ function HeroSlidesFields({ value, onChange }: { value: string; onChange: (v: st
       const { data } = supabase.storage.from('store').getPublicUrl(path);
       update([...slides, { url: data.publicUrl }]);
     } catch {
-      toast({ title: 'فشل رفع الصورة', variant: 'destructive' });
+      toast({ title: 'فشل الرفع', variant: 'destructive' });
     } finally {
       setUploading(false);
     }
@@ -401,15 +460,25 @@ function HeroSlidesFields({ value, onChange }: { value: string; onChange: (v: st
       <div className="flex items-start gap-2">
         <Sparkles className="w-4 h-4 text-primary mt-0.5" />
         <p className="font-cairo text-sm text-muted-foreground">
-          صور القسم الرئيسي (السلايدر). يمكنك إضافة حتى 5 صور — الحد الأقصى 2MB لكل صورة. لا تنسَ الضغط على «حفظ» في الأعلى بعد التعديل.
+          صور وفيديوهات القسم الرئيسي (السلايدر). يمكنك إضافة حتى 5 عناصر — الحد الأقصى 2MB للصور و10MB للفيديو (9 ثوانٍ كحد أقصى). لا تنسَ الضغط على «حفظ» بعد التعديل.
         </p>
       </div>
 
       <div className="space-y-3">
         {slides.map((slide, i) => (
           <div key={i} className="flex items-center gap-3 p-3 border rounded-xl bg-muted/20">
-            <div className="w-20 h-20 rounded-lg overflow-hidden bg-background shrink-0 border">
-              <img src={slide.url} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+            <div className="w-20 h-20 rounded-lg overflow-hidden bg-background shrink-0 border relative">
+              {isVideo(slide.url) ? (
+                <>
+                  <video src={slide.url} className="w-full h-full object-cover" muted preload="metadata" />
+                  <div className="absolute top-1 left-1 bg-purple-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">🎬 VIDEO</div>
+                </>
+              ) : (
+                <>
+                  <img src={slide.url} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+                  <div className="absolute top-1 left-1 bg-blue-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">📷 IMAGE</div>
+                </>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <Label className="font-cairo text-[11px] text-muted-foreground">رابط اختياري عند الضغط</Label>
@@ -428,22 +497,133 @@ function HeroSlidesFields({ value, onChange }: { value: string; onChange: (v: st
         ))}
         {slides.length === 0 && (
           <p className="font-cairo text-xs text-muted-foreground text-center py-6 border border-dashed rounded-xl">
-            لا توجد صور بعد — سيتم استخدام الصور الافتراضية.
+            لا توجد عناصر بعد — سيتم استخدام الصور الافتراضية.
           </p>
         )}
       </div>
 
       {slides.length < 5 && (
         <label className="inline-block cursor-pointer">
-          <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={onUpload} />
+          <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,video/mp4,video/webm" className="hidden" onChange={onUpload} />
           <Button asChild variant="outline" className="font-cairo gap-2" disabled={uploading}>
             <span>
               <Upload className="w-4 h-4" />
-              {uploading ? 'جاري الرفع...' : `إضافة صورة (${slides.length}/5)`}
+              {uploading ? 'جاري الرفع...' : `إضافة صورة أو فيديو (${slides.length}/5)`}
             </span>
           </Button>
         </label>
       )}
+    </div>
+  );
+}
+
+function PromoVideosFields({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { toast } = useToast();
+  const [uploading, setUploading] = useState(false);
+  const videos: string[] = useMemo(() => {
+    try { return JSON.parse(value || '[]'); } catch { return []; }
+  }, [value]);
+
+  const update = (next: string[]) => onChange(JSON.stringify(next));
+
+  const validateVideoDuration = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(video.src);
+        if (video.duration > 9) {
+          toast({ title: 'الفيديو يجب أن لا يتجاوز 9 ثوانٍ', variant: 'destructive' });
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      };
+      video.onerror = () => {
+        URL.revokeObjectURL(video.src);
+        resolve(true);
+      };
+      video.src = URL.createObjectURL(file);
+    });
+  };
+
+  const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    if (!file.type.startsWith('video/')) {
+      toast({ title: 'يرجى رفع ملف فيديو فقط', variant: 'destructive' });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: 'الحد الأقصى 10MB للفيديو', variant: 'destructive' });
+      return;
+    }
+
+    const valid = await validateVideoDuration(file);
+    if (!valid) return;
+
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `promo-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('store').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from('store').getPublicUrl(path);
+      update([...videos, data.publicUrl]);
+    } catch {
+      toast({ title: 'فشل الرفع', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const remove = (i: number) => update(videos.filter((_, idx) => idx !== i));
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start gap-2">
+        <Sparkles className="w-4 h-4 text-primary mt-0.5" />
+        <p className="font-cairo text-sm text-muted-foreground">
+          فيديوهات ترويجية تظهر بين أقسام المنتجات في الصفحة الرئيسية (بحد أقصى 9 ثوانٍ وحجم 10MB لكل فيديو). لا تنسَ الضغط على «حفظ» بعد التعديل.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {videos.map((url, i) => (
+          <div key={i} className="relative group rounded-xl overflow-hidden aspect-[9/16] bg-slate-900 border">
+            <video src={url} className="w-full h-full object-cover" muted controls />
+            <button
+              type="button"
+              onClick={() => remove(i)}
+              className="absolute top-2 left-2 bg-destructive text-destructive-foreground p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+            <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-md font-roboto">
+              Video #{i + 1}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {videos.length === 0 && (
+        <p className="font-cairo text-xs text-muted-foreground text-center py-8 border border-dashed rounded-xl">
+          لا توجد فيديوهات ترويجية مضافة حالياً.
+        </p>
+      )}
+
+      <label className="inline-block cursor-pointer">
+        <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={onUpload} />
+        <Button asChild variant="outline" className="font-cairo gap-2" disabled={uploading}>
+          <span>
+            <Upload className="w-4 h-4" />
+            {uploading ? 'جاري الرفع...' : 'إضافة فيديو ترويجي'}
+          </span>
+        </Button>
+      </label>
     </div>
   );
 }

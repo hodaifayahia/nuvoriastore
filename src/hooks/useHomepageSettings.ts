@@ -95,6 +95,7 @@ export interface HomepageSettings {
     price: number | null;
     old_price: number | null;
   };
+  promoVideos: string[];
 }
 
 const HP_ALL_KEYS = [
@@ -108,6 +109,7 @@ const HP_ALL_KEYS = [
   'hp_limited_end_date',
   'hp_limited_price',
   'hp_limited_old_price',
+  'hp_promo_videos',
 ];
 
 export function useHomepageSettings() {
@@ -133,6 +135,10 @@ export function useHomepageSettings() {
         if (v) text[f.key] = v;
       });
 
+      const promoVideos: string[] = (() => {
+        try { return JSON.parse(map.hp_promo_videos || '[]'); } catch { return []; }
+      })();
+
       return {
         show,
         text,
@@ -146,6 +152,7 @@ export function useHomepageSettings() {
           price: map.hp_limited_price ? Number(map.hp_limited_price) : null,
           old_price: map.hp_limited_old_price ? Number(map.hp_limited_old_price) : null,
         },
+        promoVideos,
       };
     },
     staleTime: 60 * 1000,
