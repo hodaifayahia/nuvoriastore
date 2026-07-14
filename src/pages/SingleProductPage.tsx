@@ -1485,25 +1485,34 @@ export default function SingleProductPage() {
       {/* Recently Viewed */}
       <RecentlyViewedSection />
 
-      {/* Sticky Bottom Buy Bar */}
+      {/* Sticky Bottom Buy Bar (Compact Floating Capsule Pill) */}
       {!outOfStock && showStickyBar && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-border/50 shadow-2xl shadow-foreground/10 animate-in slide-in-from-bottom-4 duration-300">
-          <div className="container flex items-center justify-between gap-4 py-3">
-            <div className="flex items-center gap-3 min-w-0">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[420px] animate-in slide-in-from-bottom-6 duration-300">
+          <button 
+            onClick={scrollToOrderForm}
+            className="w-full flex items-center justify-between gap-3 p-2.5 pl-3 pr-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/35 hover:scale-[1.01] active:scale-[0.99] transition-all border border-white/10 select-none"
+          >
+            {/* Left: Product Thumbnail and Info */}
+            <div className="flex items-center gap-2.5 min-w-0">
               {images[0] && (
-                <img src={images[0]} alt={product.name} loading="lazy" decoding="async" className="w-11 h-11 rounded-xl object-cover shrink-0 border border-border/30 shadow-sm" />
+                <img 
+                  src={images[0]} 
+                  alt={product.name} 
+                  className="w-9 h-9 rounded-full object-cover border border-white/20 shrink-0 bg-white" 
+                />
               )}
-              <div className="min-w-0">
-                <p className="font-cairo font-bold text-sm truncate">{product.name}</p>
-                <p className="font-roboto font-extrabold text-primary text-lg">{formatPrice(effectivePrice)}</p>
+              <div className="text-left leading-tight min-w-0">
+                <span className="block text-[10px] opacity-75 font-semibold font-cairo truncate max-w-[120px]">{product.name}</span>
+                <span className="block font-roboto font-black text-xs sm:text-sm">{formatPrice(effectivePrice)}</span>
               </div>
             </div>
-            <Button onClick={scrollToOrderForm}
-              className="font-cairo font-bold gap-2 rounded-2xl px-7 h-12 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 shrink-0 hover:shadow-xl hover:shadow-emerald-500/40 transition-all animate-order-pulse">
-              <ShoppingCart className="w-4 h-4" />
-              {t('product.orderNow')}
-            </Button>
-          </div>
+
+            {/* Right: CTA Highlighted Badge */}
+            <div className="flex items-center gap-1.5 font-cairo font-black text-xs tracking-wider bg-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-sm shrink-0 border border-white/5 shadow-inner">
+              <ShoppingCart className="w-3.5 h-3.5 animate-order-pulse" />
+              <span>{t('product.orderNow')}</span>
+            </div>
+          </button>
         </div>
       )}
     </div>
