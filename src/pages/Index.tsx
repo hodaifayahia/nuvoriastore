@@ -686,15 +686,16 @@ export default function IndexPage() {
           {(() => {
             const list = (brandsData && brandsData.length > 0
               ? brandsData
-              : [{name:'Samsung'},{name:'LG'},{name:'Bosch'},{name:'Condor'},{name:'Brandt'}]
+              : [{name:'Samsung'},{name:'LG'},{name:'Bosch'},{name:'Condor'},{name:'Brandt'},{name:'Beko'},{name:'Midea'},{name:'Teka'}]
             );
-             const renderCard = (brand: any, i: number) => {
+            
+            const renderBrand = (brand: any, i: number, darkText: boolean) => {
               const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
               return (
                 <Link
                   key={`${brand.name}-${i}`}
                   to={`/products?brand=${encodeURIComponent(brand.name)}`}
-                  className="shrink-0 h-16 sm:h-20 px-8 sm:px-12 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-border/80 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] flex items-center justify-center hover:border-orange-500 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="shrink-0 h-10 sm:h-12 px-6 sm:px-8 rounded-full flex items-center justify-center bg-white/90 dark:bg-slate-900 border border-border/40 hover:border-orange-500 shadow-sm hover:scale-105 transition-all duration-300 mx-3"
                   aria-label={brand.name}
                 >
                   {img ? (
@@ -702,30 +703,52 @@ export default function IndexPage() {
                       src={img}
                       alt={brand.name}
                       loading="lazy"
-                      className="max-h-8 sm:max-h-10 w-auto object-contain grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-500"
+                      className="max-h-6 sm:max-h-8 w-auto object-contain"
                     />
                   ) : (
-                    <span className="font-display font-extrabold text-sm sm:text-base uppercase tracking-tight text-foreground/80">{brand.name}</span>
+                    <span className="font-display font-extrabold text-xs sm:text-sm uppercase tracking-wide text-foreground">{brand.name}</span>
                   )}
                 </Link>
               );
             };
-            // Repeat the list inside each track so the track is always wider than the viewport,
-            // guaranteeing a seamless loop with no visible gap when the animation wraps.
+
             const trackItems = [...list, ...list, ...list];
+            
             return (
-              <div
-                dir="ltr"
-                className="relative overflow-hidden group"
-                style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
-              >
-                <div className="flex w-max animate-brand-marquee group-hover:[animation-play-state:paused]" style={{ animationTimingFunction: 'linear' }}>
-                  {/* Two identical tracks side-by-side. Translating the parent -50% lands on the exact start of the duplicate → zero-gap loop. */}
-                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0">
-                    {trackItems.map((b, i) => renderCard(b, i))}
+              <div className="relative overflow-hidden py-12 flex flex-col gap-8 w-full">
+                {/* Track 1: Yellow slanted ribbon, moving left */}
+                <div 
+                  className="w-[110%] -left-[5%] relative overflow-hidden bg-[#FCD34D] py-5 shadow-lg -rotate-2 transform scale-102"
+                  style={{ 
+                    maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', 
+                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' 
+                  }}
+                >
+                  <div className="flex w-max animate-brand-marquee" style={{ animationTimingFunction: 'linear' }}>
+                    <div className="flex shrink-0">
+                      {trackItems.map((b, i) => renderBrand(b, i, true))}
+                    </div>
+                    <div className="flex shrink-0" aria-hidden="true">
+                      {trackItems.map((b, i) => renderBrand(b, i + trackItems.length, true))}
+                    </div>
                   </div>
-                  <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0" aria-hidden="true">
-                    {trackItems.map((b, i) => renderCard(b, i + trackItems.length))}
+                </div>
+
+                {/* Track 2: White slanted ribbon, moving right (opposite direction) */}
+                <div 
+                  className="w-[110%] -left-[5%] relative overflow-hidden bg-card border-y border-border/80 py-5 shadow-md rotate-2 transform scale-102"
+                  style={{ 
+                    maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', 
+                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' 
+                  }}
+                >
+                  <div className="flex w-max animate-brand-marquee" style={{ animationTimingFunction: 'linear', animationDirection: 'reverse' }}>
+                    <div className="flex shrink-0">
+                      {trackItems.map((b, i) => renderBrand(b, i, false))}
+                    </div>
+                    <div className="flex shrink-0" aria-hidden="true">
+                      {trackItems.map((b, i) => renderBrand(b, i + trackItems.length, false))}
+                    </div>
                   </div>
                 </div>
               </div>
