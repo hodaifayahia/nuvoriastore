@@ -767,7 +767,7 @@ export default function IndexPage() {
                     WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' 
                   }}
                 >
-                  <div className="flex w-max animate-brand-marquee" style={{ animationTimingFunction: 'linear', animationDirection: 'reverse' }}>
+                  <div className="flex w-max animate-brand-marquee-reverse">
                     <div className="flex shrink-0">
                       {trackItems.map((b, i) => renderBrand(b, i, false))}
                     </div>

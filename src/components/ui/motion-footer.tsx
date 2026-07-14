@@ -281,13 +281,11 @@ export function CinematicFooter() {
   );
 
   const socials = [
-    { url: settings?.instagram_url, Icon: Instagram, label: 'Instagram' },
-    { url: settings?.facebook_url, Icon: Facebook, label: 'Facebook' },
-    { url: settings?.tiktok_url, Icon: TikTokIcon, label: 'TikTok' },
-    { url: whatsappHref, Icon: MessageCircle, label: 'WhatsApp' },
-    { url: settings?.twitter_url, Icon: Twitter, label: 'Twitter' },
-    { url: settings?.telegram_url, Icon: Send, label: 'Telegram' },
-  ].filter(s => s.url);
+    { url: settings?.instagram_url || 'https://instagram.com', Icon: Instagram, label: 'Instagram' },
+    { url: settings?.facebook_url || 'https://facebook.com', Icon: Facebook, label: 'Facebook' },
+    { url: settings?.tiktok_url || 'https://tiktok.com', Icon: TikTokIcon, label: 'TikTok' },
+    { url: whatsappHref || '#', Icon: MessageCircle, label: 'WhatsApp' },
+  ];
 
   const columns = isAr
     ? [
@@ -455,24 +453,42 @@ export function CinematicFooter() {
                 </p>
 
                 {/* Premium Contact Details Card */}
-                {settings?.whatsapp_number && (
-                  <div className="footer-glass-pill p-4 sm:p-5 rounded-2xl border border-white/10 shadow-sm flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
-                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
-                      <Phone className="w-5 h-5" />
+                <div className="footer-glass-pill p-4 sm:p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
+                  {/* Phone */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+                      <Phone className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
+                      <span className="block text-[9px] uppercase tracking-wider text-muted-foreground font-bold">
                         {isAr ? 'الدعم الهاتفي' : 'Support Client'}
                       </span>
                       <a 
-                        href={`tel:${settings.whatsapp_number.replace(/\D/g, '')}`} 
-                        className="block font-cairo font-black text-sm sm:text-base text-black dark:text-white hover:text-orange-500 transition-colors"
+                        href={`tel:${(settings?.whatsapp_number || '0770 20 69 47').replace(/\D/g, '')}`} 
+                        className="block font-cairo font-black text-xs sm:text-sm text-black dark:text-white hover:text-orange-500 transition-colors"
                       >
-                        {settings.whatsapp_number}
+                        {settings?.whatsapp_number || '0770 20 69 47'}
                       </a>
                     </div>
                   </div>
-                )}
+                  {/* Address */}
+                  <div className="flex items-center gap-4 border-t border-black/5 dark:border-white/5 pt-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="block text-[9px] uppercase tracking-wider text-muted-foreground font-bold">
+                        {isAr ? 'المقر' : 'Adresse'}
+                      </span>
+                      <span className="block font-cairo font-semibold text-xs text-black dark:text-white">
+                        {isAr ? 'الجزائر العاصمة، الجزائر' : 'Alger, Algérie'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Premium Social Media Icons Grid */}
                 {socials.length > 0 && (
