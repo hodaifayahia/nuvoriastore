@@ -15,7 +15,7 @@ export default function FloatingCallButton() {
       const map: Record<string, string> = {};
       data?.forEach((s: any) => { map[s.key] = s.value || ''; });
       setEnabled(map.whatsapp_enabled === 'true');
-      setNumber((map.whatsapp_number || '').replace(/[^0-9+]/g, ''));
+      setNumber(map.whatsapp_number || '');
     })();
   }, []);
 
@@ -23,11 +23,16 @@ export default function FloatingCallButton() {
 
   return (
     <a
-      href={`tel:+${number}`}
+      href={`tel:${number.replace(/[^0-9+]/g, '')}`}
       aria-label="Appeler"
-      className="fixed bottom-24 left-6 z-50 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center transition-all hover:scale-110 ring-4 ring-white/20 animate-in fade-in slide-in-from-bottom-2 duration-500"
+      className="fixed bottom-24 left-6 z-50 h-14 w-14 hover:w-52 group rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 flex items-center justify-start overflow-hidden transition-all duration-500 ease-out border border-white/20 select-none cursor-pointer"
     >
-      <Phone className="w-6 h-6" fill="currentColor" />
+      <div className="w-14 h-14 shrink-0 flex items-center justify-center">
+        <Phone className="w-6 h-6 animate-pulse" />
+      </div>
+      <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap overflow-hidden transition-opacity duration-300 font-bold font-cairo text-sm tracking-wide pl-1 pr-4">
+        {number}
+      </span>
     </a>
   );
 }

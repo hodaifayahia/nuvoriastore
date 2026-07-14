@@ -10,7 +10,7 @@ import { useTranslation } from "@/i18n";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
-import { ShoppingBag, MessageCircle, Phone, ArrowUp, Shield, Facebook, Instagram } from "lucide-react";
+import { ShoppingBag, MessageCircle, Phone, ArrowUp, Facebook, Instagram, Send, Twitter } from "lucide-react";
 
 // Register ScrollTrigger safely for React
 if (typeof window !== "undefined") {
@@ -27,7 +27,6 @@ const STYLES = `
   font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   
-  /* Dynamic Variables using standard shadcn/tailwind v4 tokens */
   --pill-bg-1: color-mix(in oklch, var(--foreground) 3%, transparent);
   --pill-bg-2: color-mix(in oklch, var(--foreground) 1%, transparent);
   --pill-shadow: color-mix(in oklch, var(--background) 50%, transparent);
@@ -123,15 +122,6 @@ const STYLES = `
   background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0%, transparent 60%);
   -webkit-background-clip: text;
   background-clip: text;
-}
-
-/* Metallic Text Glow */
-.footer-text-glow {
-  background: linear-gradient(180deg, var(--foreground) 0%, color-mix(in oklch, var(--foreground) 40%, transparent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0px 0px 20px color-mix(in oklch, var(--foreground) 15%, transparent));
 }
 `;
 
@@ -250,8 +240,7 @@ const MarqueeItem = ({ brands, fallback }: { brands: any[] | undefined, fallback
 export function CinematicFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const linksRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const { t, language } = useTranslation();
   const isAr = language === 'ar';
@@ -265,7 +254,8 @@ export function CinematicFooter() {
     queryKey: ['footer-settings'],
     queryFn: async () => {
       const { data } = await supabase.from('settings').select('*').in('key', [
-        'store_name', 'facebook_url', 'instagram_url', 'tiktok_url', 'whatsapp_number', 'copyright_text'
+        'store_name', 'facebook_url', 'instagram_url', 'tiktok_url', 'whatsapp_number', 'copyright_text',
+        'telegram_url', 'twitter_url', 'footer_description'
       ]);
       const map: Record<string, string> = {};
       data?.forEach(s => { map[s.key] = s.value || ''; });
@@ -273,9 +263,89 @@ export function CinematicFooter() {
     },
   });
 
+  const storeName = 'NuvoriaStore';
+  const description =
+    settings?.footer_description ||
+    (isAr
+      ? 'متجر متخصص في الأجهزة الكهرومنزلية والإلكترونيات بأفضل الأسعار في الجزائر.'
+      : 'Boutique spécialisée en électroménager et électronique aux meilleurs prix en Algérie.');
+
   const whatsappHref = settings?.whatsapp_number
     ? `https://wa.me/${settings.whatsapp_number.replace(/\D/g, '')}`
     : '';
+
+  const TikTokIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
+    </svg>
+  );
+
+  const socials = [
+    { url: settings?.instagram_url, Icon: Instagram, label: 'Instagram' },
+    { url: settings?.facebook_url, Icon: Facebook, label: 'Facebook' },
+    { url: settings?.tiktok_url, Icon: TikTokIcon, label: 'TikTok' },
+    { url: whatsappHref, Icon: MessageCircle, label: 'WhatsApp' },
+    { url: settings?.twitter_url, Icon: Twitter, label: 'Twitter' },
+    { url: settings?.telegram_url, Icon: Send, label: 'Telegram' },
+  ].filter(s => s.url);
+
+  const columns = isAr
+    ? [
+        {
+          title: 'المتجر',
+          links: [
+            { to: '/', label: 'الرئيسية' },
+            { to: '/products', label: 'المنتجات' },
+            { to: '/cart', label: 'السلة' },
+          ],
+        },
+        {
+          title: 'الشركة',
+          links: [
+            { to: '/about', label: 'من نحن' },
+            { to: '/track', label: 'تتبع الطلب' },
+            { to: '/contact', label: 'اتصل بنا' },
+            { to: '/faq', label: 'الأسئلة الشائعة' },
+          ],
+        },
+        {
+          title: 'موارد',
+          links: [
+            { to: '/auth', label: 'حسابي' },
+            { to: '/returns', label: 'الإرجاع والاستبدال' },
+            { to: '/warranty', label: 'الضمان' },
+            { to: '/privacy', label: 'الخصوصية' },
+          ],
+        },
+      ]
+    : [
+        {
+          title: 'Boutique',
+          links: [
+            { to: '/', label: 'Accueil' },
+            { to: '/products', label: 'Produits' },
+            { to: '/cart', label: 'Panier' },
+          ],
+        },
+        {
+          title: 'Entreprise',
+          links: [
+            { to: '/about', label: 'À propos' },
+            { to: '/track', label: 'Suivi de commande' },
+            { to: '/contact', label: 'Contact' },
+            { to: '/faq', label: 'FAQ' },
+          ],
+        },
+        {
+          title: 'Ressources',
+          links: [
+            { to: '/auth', label: 'Mon compte' },
+            { to: '/returns', label: 'Retours et échanges' },
+            { to: '/warranty', label: 'Garantie' },
+            { to: '/privacy', label: 'Confidentialité' },
+          ],
+        },
+      ];
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -302,12 +372,11 @@ export function CinematicFooter() {
 
       // Staggered Content Reveal
       gsap.fromTo(
-        [headingRef.current, linksRef.current],
-        { y: 50, opacity: 0 },
+        contentRef.current,
+        { y: 60, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.15,
           ease: "power3.out",
           scrollTrigger: {
             trigger: wrapperRef.current,
@@ -332,10 +401,10 @@ export function CinematicFooter() {
       
       <div
         ref={wrapperRef}
-        className="relative h-screen w-full"
+        className="relative h-[120vh] md:h-screen w-full"
         style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
-        <footer className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-background text-foreground cinematic-footer-wrapper">
+        <footer className="fixed bottom-0 left-0 flex h-[120vh] md:h-screen w-full flex-col justify-between overflow-y-auto md:overflow-hidden bg-background text-foreground cinematic-footer-wrapper py-6 md:py-10 z-0">
           
           {/* Ambient Light & Grid Background */}
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
@@ -344,7 +413,7 @@ export function CinematicFooter() {
           {/* Giant background text */}
           <div
             ref={giantTextRef}
-            className="footer-giant-bg-text absolute -bottom-[5vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
+            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
           >
             NUVORIA
           </div>
@@ -357,70 +426,116 @@ export function CinematicFooter() {
             </div>
           </div>
 
-          {/* 2. Main Center Content */}
-          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 mt-20 w-full max-w-5xl mx-auto">
-            <h2
-              ref={headingRef}
-              className="text-5xl md:text-8xl font-black footer-text-glow tracking-tighter mb-12 text-center"
-            >
+          {/* 2. Main Center Content - Redesigned columns */}
+          <div 
+            ref={contentRef}
+            className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 md:px-8 mt-24 md:mt-20 w-full max-w-6xl mx-auto space-y-8 md:space-y-10"
+          >
+            {/* Title / Heading set to pure black */}
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black dark:text-white tracking-tighter text-center uppercase">
               {isAr ? 'جاهز للتسوق؟' : 'Prêt à commander ?'}
             </h2>
 
-            {/* Interactive Magnetic Pills Layout */}
-            <div ref={linksRef} className="flex flex-col items-center gap-6 w-full">
-              {/* App Store Links (Primary) */}
-              <div className="flex flex-wrap justify-center gap-4 w-full">
-                <MagneticButton as={Link} to="/products" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
-                  <ShoppingBag className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                  {isAr ? 'تصفح منتجاتنا' : 'Nos Produits'}
-                </MagneticButton>
-                
-                {whatsappHref && (
-                  <MagneticButton as="a" href={whatsappHref} target="_blank" rel="noopener noreferrer" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
-                    <MessageCircle className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                    {isAr ? 'تواصل عبر واتساب' : 'Contacter sur WhatsApp'}
-                  </MagneticButton>
+            {/* Premium Grid layout for socials and links */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 text-left" dir={isAr ? 'rtl' : 'ltr'}>
+              
+              {/* Brand description & dynamic contacts (5 cols) */}
+              <div className="md:col-span-5 space-y-5">
+                <h3 className="font-display font-extrabold text-2xl tracking-tight text-black dark:text-white">
+                  NuvoriaStore
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground/80 leading-relaxed max-w-sm">
+                  {description}
+                </p>
+
+                {/* Premium Contact Details Card */}
+                {settings?.whatsapp_number && (
+                  <div className="footer-glass-pill p-4 sm:p-5 rounded-2xl border border-white/10 shadow-sm flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
+                        {isAr ? 'الدعم الهاتفي' : 'Support Client'}
+                      </span>
+                      <a 
+                        href={`tel:${settings.whatsapp_number.replace(/\D/g, '')}`} 
+                        className="block font-cairo font-black text-sm sm:text-base text-black dark:text-white hover:text-orange-500 transition-colors"
+                      >
+                        {settings.whatsapp_number}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* Premium Social Media Icons Grid */}
+                {socials.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-3">
+                    {socials.map(({ url, Icon, label }) => (
+                      <MagneticButton
+                        key={label}
+                        as="a"
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="footer-glass-pill p-3 rounded-full text-muted-foreground hover:text-orange-500 hover:border-orange-500/30 flex items-center justify-center transition-all bg-white/40 dark:bg-slate-900/40"
+                        title={label}
+                      >
+                        <Icon className="w-4.5 h-4.5" />
+                      </MagneticButton>
+                    ))}
+                  </div>
                 )}
               </div>
 
-              {/* Secondary Text Links */}
-              <div className="flex flex-wrap justify-center gap-3 md:gap-6 w-full mt-2">
-                <MagneticButton as={Link} to="/" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
-                  {isAr ? 'الرئيسية' : 'Accueil'}
-                </MagneticButton>
-                <MagneticButton as={Link} to="/track" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
-                  {isAr ? 'تتبع طلبك' : 'Suivi de commande'}
-                </MagneticButton>
-                <MagneticButton as={Link} to="/faq" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
-                  {isAr ? 'الأسئلة الشائعة' : 'Support / FAQ'}
-                </MagneticButton>
+              {/* Link Columns (7 cols) */}
+              <div className="md:col-span-7 grid grid-cols-3 gap-4 sm:gap-6">
+                {columns.map(col => (
+                  <div key={col.title} className="space-y-4">
+                    <h4 className="font-display font-bold text-[10px] sm:text-xs uppercase tracking-widest text-black dark:text-white border-b pb-2 border-black/10 dark:border-white/10">
+                      {col.title}
+                    </h4>
+                    <ul className="space-y-3">
+                      {col.links.map(link => (
+                        <li key={link.to}>
+                          <Link
+                            to={link.to}
+                            className="text-[11px] sm:text-xs text-muted-foreground hover:text-orange-500 transition-all block py-0.5 hover:translate-x-1 duration-200 transform"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
           {/* 3. Bottom Bar / Credits */}
-          <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="relative z-20 w-full pb-4 px-4 sm:px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-border/40 pt-4">
             
             {/* Copyright */}
-            <div className="text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
+            <div className="text-muted-foreground text-[10px] sm:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
               {settings?.copyright_text || `© 2026 NuvoriaStore. ${t('footer.rightsReserved') || 'Tous droits réservés.'}`}
             </div>
 
             {/* "Made with Love" Badge */}
-            <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default border-border/50">
-              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">Crafted with</span>
-              <span className="animate-footer-heartbeat text-sm md:text-base text-destructive">❤</span>
-              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
-              <span className="text-foreground font-black text-xs md:text-sm tracking-normal ml-1">NuvoriaStore</span>
+            <div className="footer-glass-pill px-5 py-2 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default border-border/50 bg-white/40 dark:bg-slate-900/40">
+              <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Crafted with</span>
+              <span className="animate-footer-heartbeat text-xs text-destructive">❤</span>
+              <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">by</span>
+              <span className="text-foreground font-black text-xs tracking-normal ml-1">NuvoriaStore</span>
             </div>
 
             {/* Back to top */}
             <MagneticButton
               as="button"
               onClick={scrollToTop}
-              className="w-12 h-12 rounded-full footer-glass-pill flex items-center justify-center text-muted-foreground hover:text-foreground group order-3"
+              className="w-10 h-10 rounded-full footer-glass-pill flex items-center justify-center text-muted-foreground hover:text-foreground group order-3"
             >
-              <ArrowUp className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" />
+              <ArrowUp className="w-4.5 h-4.5 transform group-hover:-translate-y-1.5 transition-transform duration-300" />
             </MagneticButton>
 
           </div>

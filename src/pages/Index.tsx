@@ -309,7 +309,7 @@ export default function IndexPage() {
               </div>
 
               {/* Active slide — full-bleed */}
-              <div className="relative w-full aspect-[16/7] sm:aspect-[16/6] lg:aspect-[16/5] overflow-hidden bg-slate-900">
+              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/7] xl:aspect-[21/9] overflow-hidden bg-slate-900">
                 {slides.map((slide: any, i: number) => (
                   <div key={i} className={`absolute inset-0 transition-opacity duration-700 ${i === selectedSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
                     {isVideo(slide.url) ? (
@@ -720,7 +720,7 @@ export default function IndexPage() {
                 <Link
                   key={`${brand.name}-${i}`}
                   to={`/products?brand=${encodeURIComponent(brand.name)}`}
-                  className="shrink-0 h-10 sm:h-12 px-6 sm:px-8 rounded-full flex items-center justify-center bg-white/90 dark:bg-slate-900 border border-border/40 hover:border-orange-500 shadow-sm hover:scale-105 transition-all duration-300 mx-3"
+                  className="shrink-0 h-16 sm:h-20 px-8 sm:px-12 rounded-[2rem] flex items-center justify-center bg-white/95 dark:bg-slate-900 border border-border/40 hover:border-orange-500 shadow-sm hover:scale-105 transition-all duration-300 mx-4"
                   aria-label={brand.name}
                 >
                   {img ? (
@@ -728,10 +728,10 @@ export default function IndexPage() {
                       src={img}
                       alt={brand.name}
                       loading="lazy"
-                      className="max-h-6 sm:max-h-8 w-auto object-contain"
+                      className="max-h-10 sm:max-h-12 w-auto object-contain"
                     />
                   ) : (
-                    <span className="font-display font-extrabold text-xs sm:text-sm uppercase tracking-wide text-foreground">{brand.name}</span>
+                    <span className="font-display font-extrabold text-sm sm:text-base uppercase tracking-wide text-foreground">{brand.name}</span>
                   )}
                 </Link>
               );
