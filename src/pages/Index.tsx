@@ -742,7 +742,7 @@ export default function IndexPage() {
             const trackItemsWhite = [...shiftedList, ...shiftedList, ...shiftedList];
             
             return (
-              <div className="relative overflow-hidden py-12 flex flex-col gap-8 w-full">
+              <div className="relative overflow-hidden py-12 flex flex-col gap-8 w-full" dir="ltr">
                 {/* Track 1: Yellow slanted ribbon, moving left */}
                 <div 
                   className="w-[110%] -left-[5%] relative overflow-hidden bg-[#FCD34D] py-5 shadow-lg -rotate-2 transform scale-102"
