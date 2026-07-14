@@ -161,8 +161,8 @@ export function useHomepageSettings() {
         },
         promoVideos,
         comparison: {
-          before: map.hp_comparison_before || '',
-          after: map.hp_comparison_after || '',
+          before: map.hp_comparison_before || '/comparison-before.jpg',
+          after: map.hp_comparison_after || '/comparison-after.jpg',
         },
       };
     },
