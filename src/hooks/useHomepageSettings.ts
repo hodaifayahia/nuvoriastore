@@ -11,6 +11,7 @@ export const HP_SECTIONS = [
   'limited',
   'brands',
   'trust_strip',
+  'comparison',
 ] as const;
 
 export type HpSection = (typeof HP_SECTIONS)[number];
@@ -96,6 +97,10 @@ export interface HomepageSettings {
     old_price: number | null;
   };
   promoVideos: string[];
+  comparison: {
+    before: string;
+    after: string;
+  };
 }
 
 const HP_ALL_KEYS = [
@@ -110,6 +115,8 @@ const HP_ALL_KEYS = [
   'hp_limited_price',
   'hp_limited_old_price',
   'hp_promo_videos',
+  'hp_comparison_before',
+  'hp_comparison_after',
 ];
 
 export function useHomepageSettings() {
@@ -153,6 +160,10 @@ export function useHomepageSettings() {
           old_price: map.hp_limited_old_price ? Number(map.hp_limited_old_price) : null,
         },
         promoVideos,
+        comparison: {
+          before: map.hp_comparison_before || '',
+          after: map.hp_comparison_after || '',
+        },
       };
     },
     staleTime: 60 * 1000,

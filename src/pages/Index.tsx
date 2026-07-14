@@ -20,7 +20,8 @@ import { ProductGridSkeleton } from '@/components/LoadingSkeleton';
 import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
-import { useHomepageSettings } from '@/hooks/useHomepageSettings';
+import { useHomepageSettings, type HpSection } from '@/hooks/useHomepageSettings';
+import { ImageComparison } from '@/components/ui/image-comparison-slider';
 // Lazy-load storefront templates so visitors only download the one that's active.
 const MinimalTemplate = lazy(() => import('@/components/templates/MinimalTemplate'));
 const BoldTemplate = lazy(() => import('@/components/templates/BoldTemplate'));
@@ -141,7 +142,7 @@ export default function IndexPage() {
   });
 
   const { data: hp } = useHomepageSettings();
-  const showSection = (s: 'hero'|'categories'|'featured'|'newest'|'best_prices'|'limited'|'brands'|'trust_strip') =>
+  const showSection = (s: HpSection) =>
     hp?.show?.[s] ?? (s !== 'limited');
   const txt = (key: string, fallback: string, arFallback?: string) => hp?.text?.[key] || (isAr && arFallback ? arFallback : fallback);
 
@@ -557,6 +558,30 @@ export default function IndexPage() {
         </section>
       )}
 
+
+      {/* ─────────── COMPARISON SLIDER ─────────── */}
+      {showSection('comparison') && hp?.comparison?.before && hp?.comparison?.after && (
+        <section className="px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2">
+                {isAr ? 'قارن بنفسك' : 'Comparez vous-même'}
+              </p>
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight">
+                {isAr ? 'قبل وبعد استخدام منتجاتنا' : 'Avant & Après utilisation'}
+              </h2>
+            </div>
+            <div className="w-full">
+              <ImageComparison
+                beforeImage={hp.comparison.before}
+                afterImage={hp.comparison.after}
+                altBefore="Avant"
+                altAfter="Après"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ─────────── NEWEST ─────────── */}
       {showSection('newest') && (

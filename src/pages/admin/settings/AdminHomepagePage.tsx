@@ -24,6 +24,7 @@ const SECTION_LABEL_AR: Record<HpSection, string> = {
   limited: 'إصدار محدود (Limited Edition)',
   brands: 'العلامات التجارية',
   trust_strip: 'سياسة الضمان',
+  comparison: 'مقارنة الصور (قبل وبعد)',
 };
 
 const ALL_KEYS = [
@@ -37,6 +38,8 @@ const ALL_KEYS = [
   'hp_limited_end_date',
   'hero_slides',
   'hp_promo_videos',
+  'hp_comparison_before',
+  'hp_comparison_after',
 ];
 
 type HeroSlide = { url: string; link?: string; alt?: string };
@@ -190,6 +193,13 @@ export default function AdminHomepagePage() {
                         setField={setField}
                         uploading={uploading}
                         onUpload={handleImageUpload}
+                      />
+                    )}
+
+                    {s === 'comparison' && (
+                      <ComparisonSliderFields
+                        merged={merged}
+                        setField={setField}
                       />
                     )}
 
@@ -624,6 +634,124 @@ function PromoVideosFields({ value, onChange }: { value: string; onChange: (v: s
           </span>
         </Button>
       </label>
+    </div>
+  );
+}
+
+function ComparisonSliderFields({
+  merged,
+  setField,
+}: {
+  merged: Record<string, string>;
+  setField: (k: string, v: string) => void;
+}) {
+  const { toast } = useToast();
+  const [uploadingBefore, setUploadingBefore] = useState(false);
+  const [uploadingAfter, setUploadingAfter] = useState(false);
+
+  const uploadImage = async (file: File, key: 'hp_comparison_before' | 'hp_comparison_after', setUploading: (v: boolean) => void) => {
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'الحد الأقصى للملف 2MB', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `comparison-${key === 'hp_comparison_before' ? 'before' : 'after'}-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('store').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from('store').getPublicUrl(path);
+      setField(key, data.publicUrl);
+      toast({ title: 'تم رفع الصورة بنجاح ✅' });
+    } catch {
+      toast({ title: 'فشل الرفع', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-primary" />
+        <p className="font-cairo text-sm text-muted-foreground">
+          اختر صورة "قبل" وصورة "بعد" ليتم عرض سلايدر مقارنة تفاعلي على الصفحة الرئيسية.
+        </p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-6">
+        {/* Before Image */}
+        <div className="p-4 border rounded-xl space-y-3 bg-muted/10">
+          <Label className="font-cairo text-xs font-bold block mb-1">صورة "قبل" (Avant)</Label>
+          {merged.hp_comparison_before ? (
+            <div className="relative aspect-[16/10] rounded-lg overflow-hidden border bg-background group">
+              <img src={merged.hp_comparison_before} className="w-full h-full object-cover" alt="Before" />
+              <button
+                type="button"
+                onClick={() => setField('hp_comparison_before', '')}
+                className="absolute top-2 left-2 bg-destructive text-destructive-foreground p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="aspect-[16/10] rounded-lg border-2 border-dashed flex flex-col items-center justify-center text-muted-foreground p-4">
+              <Upload className="w-8 h-8 mb-2 opacity-50" />
+              <span className="font-cairo text-[11px]">لا توجد صورة بعد</span>
+            </div>
+          )}
+          <label className="block cursor-pointer mt-2">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) uploadImage(file, 'hp_comparison_before', setUploadingBefore);
+              }}
+            />
+            <Button asChild variant="outline" size="sm" className="w-full font-cairo" disabled={uploadingBefore}>
+              <span>{uploadingBefore ? 'جاري الرفع...' : 'رفع صورة قبل'}</span>
+            </Button>
+          </label>
+        </div>
+
+        {/* After Image */}
+        <div className="p-4 border rounded-xl space-y-3 bg-muted/10">
+          <Label className="font-cairo text-xs font-bold block mb-1">صورة "بعد" (Après)</Label>
+          {merged.hp_comparison_after ? (
+            <div className="relative aspect-[16/10] rounded-lg overflow-hidden border bg-background group">
+              <img src={merged.hp_comparison_after} className="w-full h-full object-cover" alt="After" />
+              <button
+                type="button"
+                onClick={() => setField('hp_comparison_after', '')}
+                className="absolute top-2 left-2 bg-destructive text-destructive-foreground p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="aspect-[16/10] rounded-lg border-2 border-dashed flex flex-col items-center justify-center text-muted-foreground p-4">
+              <Upload className="w-8 h-8 mb-2 opacity-50" />
+              <span className="font-cairo text-[11px]">لا توجد صورة بعد</span>
+            </div>
+          )}
+          <label className="block cursor-pointer mt-2">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) uploadImage(file, 'hp_comparison_after', setUploadingAfter);
+              }}
+            />
+            <Button asChild variant="outline" size="sm" className="w-full font-cairo" disabled={uploadingAfter}>
+              <span>{uploadingAfter ? 'جاري الرفع...' : 'رفع صورة بعد'}</span>
+            </Button>
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
