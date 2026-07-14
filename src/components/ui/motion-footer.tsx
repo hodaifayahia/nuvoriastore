@@ -275,7 +275,7 @@ export function CinematicFooter() {
     : '';
 
   const TikTokIcon = ({ className }: { className?: string }) => (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className={className} width="20" height="20" fill="currentColor" aria-hidden="true">
       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V9.11a8.16 8.16 0 0 0 4.77 1.52V7.19a4.85 4.85 0 0 1-1.84-.5z"/>
     </svg>
   );
@@ -503,7 +503,7 @@ export function CinematicFooter() {
                         className="footer-glass-pill p-3 rounded-full text-muted-foreground hover:text-orange-500 hover:border-orange-500/30 flex items-center justify-center transition-all bg-white/40 dark:bg-slate-900/40"
                         title={label}
                       >
-                        <Icon className="w-4.5 h-4.5" />
+                        <Icon className="w-5 h-5" />
                       </MagneticButton>
                     ))}
                   </div>
@@ -557,7 +557,7 @@ export function CinematicFooter() {
               onClick={scrollToTop}
               className="w-10 h-10 rounded-full footer-glass-pill flex items-center justify-center text-muted-foreground hover:text-foreground group order-3"
             >
-              <ArrowUp className="w-4.5 h-4.5 transform group-hover:-translate-y-1.5 transition-transform duration-300" />
+              <ArrowUp className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" />
             </MagneticButton>
 
           </div>

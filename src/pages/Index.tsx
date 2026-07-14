@@ -562,7 +562,7 @@ export default function IndexPage() {
       {/* ─────────── COMPARISON SLIDER ─────────── */}
       {showSection('comparison') && hp?.comparison?.before && hp?.comparison?.after && (
         <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-[1400px] mx-auto w-full">
             <div className="text-center mb-8">
               <p className="text-[11px] uppercase tracking-[0.3em] text-amber-500 font-semibold mb-2">
                 {isAr ? 'قارن بنفسك' : 'Comparez vous-même'}
@@ -718,7 +718,7 @@ export default function IndexPage() {
               const img = ('image' in brand && brand.image) ? (brand.image as string) : null;
               return (
                 <Link
-                  key={`${brand.name}-${i}`}
+                  key={`${darkText ? 'yellow' : 'white'}-${brand.name}-${i}`}
                   to={`/products?brand=${encodeURIComponent(brand.name)}`}
                   className="shrink-0 h-16 sm:h-20 px-8 sm:px-12 rounded-[2rem] flex items-center justify-center bg-white/95 dark:bg-slate-900 border border-border/40 hover:border-orange-500 shadow-sm hover:scale-105 transition-all duration-300 mx-4"
                   aria-label={brand.name}
