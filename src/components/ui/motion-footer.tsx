@@ -351,11 +351,18 @@ export function CinematicFooter() {
     if (typeof window === "undefined") return;
     if (!wrapperRef.current) return;
 
+    // Set initial states so text is visible by default (fallback)
+    gsap.set(contentRef.current, { opacity: 1, y: 0 });
+    gsap.set(giantTextRef.current, { opacity: 1, y: 0 });
+
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
-      // Background Parallax
+      // Background Parallax (triggered once)
       gsap.fromTo(
         giantTextRef.current,
-        { y: "10vh", scale: 0.8, opacity: 0 },
+        { y: "5vh", scale: 0.9, opacity: 0 },
         {
           y: "0vh",
           scale: 1,
@@ -363,26 +370,25 @@ export function CinematicFooter() {
           ease: "power1.out",
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: "top 80%",
-            end: "bottom bottom",
-            scrub: 1,
+            start: "top 95%",
+            toggleActions: "play none none none",
           },
         }
       );
 
-      // Staggered Content Reveal
+      // Staggered Content Reveal (triggered once)
       gsap.fromTo(
         contentRef.current,
-        { y: 60, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
+          duration: 0.8,
           ease: "power3.out",
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: "top 40%",
-            end: "bottom bottom",
-            scrub: 1,
+            start: "top 95%",
+            toggleActions: "play none none none",
           },
         }
       );
