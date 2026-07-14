@@ -1130,39 +1130,50 @@ export default function SingleProductPage() {
                   <label className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground font-semibold mb-2 block">{t('sp.deliveryType')}</label>
                   <div className={`grid grid-cols-2 gap-3 ${errors.orderDeliveryType ? '' : ''}`}>
                     <button type="button" onClick={() => { setOrderDeliveryType('home'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                      className={`relative flex flex-col items-start gap-2 p-4 rounded-2xl border-2 transition-all text-left ${orderDeliveryType === 'home' ? 'border-orange-500 bg-orange-50/80 dark:bg-orange-500/10 shadow-md' : 'border-border hover:border-muted-foreground/30 bg-card'}`}>
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${orderDeliveryType === 'home' ? 'bg-orange-500/15 text-orange-600' : 'bg-muted text-muted-foreground'}`}>
-                        <Home className="w-5 h-5" />
+                      className={`relative flex items-center justify-between gap-2 p-2.5 rounded-xl border transition-all text-left ${orderDeliveryType === 'home' ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-500/5 ring-1 ring-emerald-500' : 'border-border hover:border-muted-foreground/20 bg-card'}`}
+                      style={{ textAlign: language === 'ar' ? 'right' : 'left' }}>
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${orderDeliveryType === 'home' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-muted text-muted-foreground'}`}>
+                          <Home className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className={`font-cairo font-bold text-xs block ${orderDeliveryType === 'home' ? 'text-emerald-600' : 'text-foreground'}`}>{t('sp.homeDelivery')}</span>
+                          <span className="font-cairo text-[9px] text-muted-foreground block truncate">{language === 'ar' ? 'إلى باب المنزل' : 'À domicile'}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className={`font-cairo font-bold text-sm block ${orderDeliveryType === 'home' ? 'text-orange-600' : 'text-foreground'}`}>{t('sp.homeDelivery')}</span>
-                        <span className="font-cairo text-[11px] text-muted-foreground block mt-0.5">Livraison chez vous</span>
-                      </div>
-                      <span className={`font-roboto font-bold text-sm ${orderDeliveryType === 'home' ? 'text-orange-600' : 'text-foreground'}`}>
+                      <div className="shrink-0 text-right">
                         {Number(selectedWilaya.shipping_price_home) === 0 ? (
-                          <span className="text-emerald-600 font-cairo">🎉 Gratuite</span>
-                        ) : formatPrice(Number(selectedWilaya.shipping_price_home))}
-                      </span>
+                          <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
+                        ) : (
+                          <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'home' ? 'text-emerald-600' : 'text-foreground'}`}>
+                            {formatPrice(Number(selectedWilaya.shipping_price_home))}
+                          </span>
+                        )}
+                      </div>
                     </button>
                     <button type="button" onClick={() => { setOrderDeliveryType('office'); setErrors(e => ({ ...e, orderDeliveryType: '' })); }}
-                      className={`relative flex flex-col items-start gap-2 p-4 rounded-2xl border-2 transition-all text-left ${orderDeliveryType === 'office' ? 'border-orange-500 bg-orange-50/80 dark:bg-orange-500/10 shadow-md' : 'border-border hover:border-muted-foreground/30 bg-card'}`}>
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${orderDeliveryType === 'office' ? 'bg-orange-500/15 text-orange-600' : 'bg-muted text-muted-foreground'}`}>
-                        <Building2 className="w-5 h-5" />
+                      className={`relative flex items-center justify-between gap-2 p-2.5 rounded-xl border transition-all text-left ${orderDeliveryType === 'office' ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-500/5 ring-1 ring-emerald-500' : 'border-border hover:border-muted-foreground/20 bg-card'}`}
+                      style={{ textAlign: language === 'ar' ? 'right' : 'left' }}>
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${orderDeliveryType === 'office' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-muted text-muted-foreground'}`}>
+                          <Building2 className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className={`font-cairo font-bold text-xs block ${orderDeliveryType === 'office' ? 'text-emerald-600' : 'text-foreground'}`}>{t('sp.office')}</span>
+                          <span className="font-cairo text-[9px] text-muted-foreground block truncate">
+                            {language === 'ar' ? `مكتب ${activeCompany || 'الشحن'}` : `Bureau ${activeCompany || ''}`}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <span className={`font-cairo font-bold text-sm block ${orderDeliveryType === 'office' ? 'text-orange-600' : 'text-foreground'}`}>{t('sp.office')}</span>
-                        <span className="font-cairo text-[11px] text-muted-foreground block mt-0.5">
-                          {language === 'ar'
-                            ? `في مكتب ${activeCompany || 'الشحن'} الأقرب إليك`
-                            : `Au bureau ${activeCompany || ''} le plus proche`
-                          }
-                        </span>
-                      </div>
-                      <span className={`font-roboto font-bold text-sm ${orderDeliveryType === 'office' ? 'text-orange-600' : 'text-foreground'}`}>
+                      <div className="shrink-0 text-right">
                         {Number(selectedWilaya.shipping_price) === 0 ? (
-                          <span className="text-emerald-600 font-cairo">🎉 Gratuite</span>
-                        ) : formatPrice(Number(selectedWilaya.shipping_price))}
-                      </span>
+                          <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
+                        ) : (
+                          <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'office' ? 'text-emerald-600' : 'text-foreground'}`}>
+                            {formatPrice(Number(selectedWilaya.shipping_price))}
+                          </span>
+                        )}
+                      </div>
                     </button>
                   </div>
                   {errors.orderDeliveryType && <p className="text-red-500 text-[11px] font-cairo mt-1 px-1">{errors.orderDeliveryType}</p>}
