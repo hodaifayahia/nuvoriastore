@@ -462,7 +462,7 @@ export default function SingleProductPage() {
   }
 
   const productImages = product.images || [];
-  const images = productImages;
+  const images = galleryImages.length > 0 ? galleryImages : productImages;
   const outOfStock = hasNewVariants
     ? (matchedVariant ? matchedVariant.quantity <= 0 : (productVariants || []).every((v: any) => v.quantity <= 0))
     : (product.stock ?? 0) <= 0;
