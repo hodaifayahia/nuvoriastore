@@ -343,12 +343,24 @@ export default function SingleProductPage() {
   const matchedVariant = useMemo(() => {
     if (!hasNewVariants || !productVariants) return null;
     const groupCount = (optionGroups || []).length;
-    if (Object.keys(selectedNewOptions).length < groupCount) return null;
+    if (Object.keys(selectedNewOptions).filter(k => selectedNewOptions[k]).length < groupCount) return null;
     return productVariants.find((v: any) => {
       const ov = v.option_values || {};
       return Object.entries(selectedNewOptions).every(([key, val]) => ov[key] === val);
     }) || null;
   }, [selectedNewOptions, productVariants, optionGroups, hasNewVariants]);
+
+  // Partial match — matches on any subset of selected options; used so the
+  // price/image can update before every option group is chosen.
+  const partialMatchedVariant = useMemo(() => {
+    if (!hasNewVariants || !productVariants) return null;
+    const entries = Object.entries(selectedNewOptions).filter(([, val]) => val);
+    if (entries.length === 0) return null;
+    return productVariants.find((v: any) => {
+      const ov = v.option_values || {};
+      return entries.every(([key, val]) => ov[key] === val);
+    }) || null;
+  }, [selectedNewOptions, productVariants, hasNewVariants]);
 
   const isOptionValueAvailable = (groupName: string, valueLabel: string) => {
     if (!productVariants) return true;
