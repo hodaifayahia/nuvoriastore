@@ -449,11 +449,11 @@ export default function SingleProductPage() {
   // When a variant with an image is selected (fully or partially), switch
   // the main image to it.
   useEffect(() => {
-    const url = matchedVariant?.image_url;
+    const url = (matchedVariant || partialMatchedVariant)?.image_url;
     if (!url) return;
     const idx = galleryImages.indexOf(url);
     if (idx >= 0) setSelectedImage(idx);
-  }, [matchedVariant, galleryImages]);
+  }, [matchedVariant, partialMatchedVariant, galleryImages]);
 
   if (isLoading) {
     return (
