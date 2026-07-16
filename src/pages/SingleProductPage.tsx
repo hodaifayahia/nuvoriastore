@@ -434,6 +434,8 @@ export default function SingleProductPage() {
   }, [product, productVariants, variations]);
 
   // When a variant with an image is selected, switch the main image to it.
+  // When a variant with an image is selected (fully or partially), switch
+  // the main image to it.
   useEffect(() => {
     const url = matchedVariant?.image_url;
     if (!url) return;
