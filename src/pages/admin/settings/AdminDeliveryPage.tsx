@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from '@/i18n';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -38,9 +38,30 @@ export default function AdminDeliveryPage() {
         .order('is_builtin', { ascending: false })
         .order('name');
       if (error) throw error;
-      return (data || []) as unknown as DeliveryCompany[];
+      const rows = (data || []) as any[];
+      const ids = rows.map(r => r.id);
+      let credMap: Record<string, string | null> = {};
+      if (ids.length) {
+        const { data: creds } = await supabase
+          .from('delivery_company_credentials' as any)
+          .select('delivery_company_id, api_key')
+          .in('delivery_company_id', ids);
+        (creds || []).forEach((c: any) => { credMap[c.delivery_company_id] = c.api_key; });
+      }
+      return rows.map(r => ({ ...r, api_key: credMap[r.id] ?? null })) as DeliveryCompany[];
     },
   });
+
+  const saveCredential = async (companyId: string, apiKey: string) => {
+    if (apiKey && apiKey.trim().length > 0) {
+      const { error } = await (supabase.from('delivery_company_credentials' as any) as any)
+        .upsert({ delivery_company_id: companyId, api_key: apiKey.trim() }, { onConflict: 'delivery_company_id' });
+      if (error) throw error;
+    } else {
+      await (supabase.from('delivery_company_credentials' as any) as any)
+        .delete().eq('delivery_company_id', companyId);
+    }
+  };
 
   const toggleActive = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
@@ -51,17 +72,18 @@ export default function AdminDeliveryPage() {
       qc.invalidateQueries({ queryKey: ['delivery-companies'] });
       toast.success(t('common.savedSuccess'));
     },
+    onError: (e: any) => toast.error(e.message),
   });
 
   const addCompany = useMutation({
     mutationFn: async (data: { name: string; api_key: string; api_url: string }) => {
-      const { error } = await (supabase.from('delivery_companies' as any) as any).insert({
+      const { data: inserted, error } = await (supabase.from('delivery_companies' as any) as any).insert({
         name: data.name,
-        api_key: data.api_key || null,
         api_url: data.api_url || null,
         is_builtin: false,
-      });
+      }).select('id').single();
       if (error) throw error;
+      if (data.api_key) await saveCredential(inserted.id, data.api_key);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['delivery-companies'] });
@@ -69,20 +91,23 @@ export default function AdminDeliveryPage() {
       setForm({ name: '', api_key: '', api_url: '' });
       toast.success(t('delivery.companyAdded'));
     },
+    onError: (e: any) => toast.error(e.message),
   });
 
   const updateCompany = useMutation({
     mutationFn: async (data: { id: string; name: string; api_key: string; api_url: string }) => {
       const { error } = await (supabase.from('delivery_companies' as any) as any)
-        .update({ name: data.name, api_key: data.api_key || null, api_url: data.api_url || null })
+        .update({ name: data.name, api_url: data.api_url || null })
         .eq('id', data.id);
       if (error) throw error;
+      await saveCredential(data.id, data.api_key);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['delivery-companies'] });
       setEditCompany(null);
       toast.success(t('common.savedSuccess'));
     },
+    onError: (e: any) => toast.error(e.message),
   });
 
   const deleteCompany = useMutation({
@@ -94,6 +119,7 @@ export default function AdminDeliveryPage() {
       qc.invalidateQueries({ queryKey: ['delivery-companies'] });
       toast.success(t('common.deletedSuccess'));
     },
+    onError: (e: any) => toast.error(e.message),
   });
 
   const handleAdd = () => {

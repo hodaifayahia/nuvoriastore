@@ -378,7 +378,7 @@ export default function SingleProductPage() {
         .eq('is_active', true)
         .order('is_builtin', { ascending: false })
         .limit(1);
-      return (data?.[0]?.name as string) || null;
+      return ((data as any)?.[0]?.name as string) || null;
     },
   });
 
