@@ -343,12 +343,24 @@ export default function SingleProductPage() {
   const matchedVariant = useMemo(() => {
     if (!hasNewVariants || !productVariants) return null;
     const groupCount = (optionGroups || []).length;
-    if (Object.keys(selectedNewOptions).length < groupCount) return null;
+    if (Object.keys(selectedNewOptions).filter(k => selectedNewOptions[k]).length < groupCount) return null;
     return productVariants.find((v: any) => {
       const ov = v.option_values || {};
       return Object.entries(selectedNewOptions).every(([key, val]) => ov[key] === val);
     }) || null;
   }, [selectedNewOptions, productVariants, optionGroups, hasNewVariants]);
+
+  // Partial match — matches on any subset of selected options; used so the
+  // price/image can update before every option group is chosen.
+  const partialMatchedVariant = useMemo(() => {
+    if (!hasNewVariants || !productVariants) return null;
+    const entries = Object.entries(selectedNewOptions).filter(([, val]) => val);
+    if (entries.length === 0) return null;
+    return productVariants.find((v: any) => {
+      const ov = v.option_values || {};
+      return entries.every(([key, val]) => ov[key] === val);
+    }) || null;
+  }, [selectedNewOptions, productVariants, hasNewVariants]);
 
   const isOptionValueAvailable = (groupName: string, valueLabel: string) => {
     if (!productVariants) return true;
@@ -433,13 +445,14 @@ export default function SingleProductPage() {
     return merged;
   }, [product, productVariants, variations]);
 
-  // When a variant with an image is selected, switch the main image to it.
+  // When a variant with an image is selected (fully or partially), switch
+  // the main image to it.
   useEffect(() => {
-    const url = matchedVariant?.image_url;
+    const url = (matchedVariant || partialMatchedVariant)?.image_url;
     if (!url) return;
     const idx = galleryImages.indexOf(url);
     if (idx >= 0) setSelectedImage(idx);
-  }, [matchedVariant, galleryImages]);
+  }, [matchedVariant, partialMatchedVariant, galleryImages]);
 
   if (isLoading) {
     return (
@@ -483,8 +496,15 @@ export default function SingleProductPage() {
     return undefined;
   })();
 
-  const effectivePrice = hasNewVariants && matchedVariant
-    ? Number(matchedVariant.price)
+  const variantPrices = hasNewVariants
+    ? (productVariants || []).map((v: any) => Number(v.price)).filter(n => !isNaN(n))
+    : [];
+  const minVariantPrice = variantPrices.length ? Math.min(...variantPrices) : Number(product.price);
+  const maxVariantPrice = variantPrices.length ? Math.max(...variantPrices) : Number(product.price);
+  const hasPriceRange = hasNewVariants && minVariantPrice !== maxVariantPrice;
+
+  const effectivePrice = hasNewVariants
+    ? Number((matchedVariant || partialMatchedVariant)?.price ?? minVariantPrice)
     : Number(product.price) + (selectedVariationForCart?.priceAdjustment || 0);
 
   const effectiveStock = hasNewVariants && matchedVariant
@@ -817,6 +837,11 @@ export default function SingleProductPage() {
                   </>
                 )}
               </div>
+              {hasPriceRange && !matchedVariant && !partialMatchedVariant && (
+                <p className="font-cairo text-xs text-muted-foreground">
+                  {formatPrice(minVariantPrice)} — {formatPrice(maxVariantPrice)}
+                </p>
+              )}
               {(product as any).price_text && (
                 <p className="font-cairo text-sm text-muted-foreground font-medium">
                   {(product as any).price_text}
@@ -903,10 +928,19 @@ export default function SingleProductPage() {
                             if (!available) return;
                             setSelectedNewOptions(prev => ({ ...prev, [group.name]: isSelected ? '' : val.label }));
                           };
+                          // Look up a variant that matches this option value (with other current selections)
+                          const testSel = { ...selectedNewOptions, [group.name]: val.label };
+                          const testEntries = Object.entries(testSel).filter(([, v]) => v);
+                          const matchedForVal = (productVariants || []).find((v: any) => {
+                            const ov = v.option_values || {};
+                            return testEntries.every(([k, vv]) => ov[k] === vv);
+                          });
+                          const valPrice = matchedForVal ? Number(matchedForVal.price) : null;
+                          const showPrice = hasPriceRange && valPrice !== null && valPrice !== effectivePrice;
                           if (group.display_type === 'color_swatch' && val.color_hex) {
                             return (
                               <button key={val.id} onClick={handleClick} disabled={!available}
-                                title={val.label}
+                                title={`${val.label}${valPrice !== null ? ` — ${formatPrice(valPrice)}` : ''}`}
                                 className={`relative w-9 h-9 rounded-full border-2 transition-all ring-2 ring-offset-2 ${isSelected ? 'ring-primary border-primary' : 'ring-transparent border-muted-foreground/30 hover:border-muted-foreground/50'} ${!available ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
                                 style={{ backgroundColor: val.color_hex }}>
                                 {!available && <div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-0.5 bg-destructive rotate-45 rounded-full" /></div>}
@@ -918,13 +952,17 @@ export default function SingleProductPage() {
                               <label key={val.id} className={`flex items-center gap-2 px-3 py-2 border rounded-lg cursor-pointer transition-all ${isSelected ? 'border-primary bg-primary/10' : 'border-border'} ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}>
                                 <input type="radio" name={group.name} checked={isSelected} onChange={handleClick} disabled={!available} />
                                 <span className="font-cairo text-sm">{val.label}</span>
+                                {showPrice && <span className="font-roboto text-xs text-muted-foreground">{formatPrice(valPrice!)}</span>}
                               </label>
                             );
                           }
                           return (
                             <button key={val.id} onClick={handleClick} disabled={!available}
                               className={`relative px-4 py-2 rounded-lg border-2 text-sm font-cairo font-medium transition-all ${isSelected ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/30 text-foreground'} ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                              {val.label}
+                              <span className="flex items-center gap-1.5">
+                                {val.label}
+                                {showPrice && <span className="font-roboto text-xs opacity-70">· {formatPrice(valPrice!)}</span>}
+                              </span>
                               {!available && <div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-0.5 bg-destructive/50 rotate-45 rounded-full" /></div>}
                             </button>
                           );
