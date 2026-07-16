@@ -837,6 +837,11 @@ export default function SingleProductPage() {
                   </>
                 )}
               </div>
+              {hasPriceRange && !matchedVariant && !partialMatchedVariant && (
+                <p className="font-cairo text-xs text-muted-foreground">
+                  {formatPrice(minVariantPrice)} — {formatPrice(maxVariantPrice)}
+                </p>
+              )}
               {(product as any).price_text && (
                 <p className="font-cairo text-sm text-muted-foreground font-medium">
                   {(product as any).price_text}
