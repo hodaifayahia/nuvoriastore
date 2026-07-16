@@ -483,8 +483,26 @@ export default function SingleProductPage() {
     return undefined;
   })();
 
-  const effectivePrice = hasNewVariants && matchedVariant
-    ? Number(matchedVariant.price)
+  // Partial match: first variant matching all currently selected options — so
+  // the price/image update as soon as the user picks any option, without
+  // waiting for every group to be chosen.
+  const partialVariant = hasNewVariants
+    ? (productVariants || []).find((v: any) => {
+        const ov = v.option_values || {};
+        const entries = Object.entries(selectedNewOptions).filter(([, val]) => val);
+        if (entries.length === 0) return false;
+        return entries.every(([key, val]) => ov[key] === val);
+      })
+    : null;
+
+  const variantPrices = hasNewVariants
+    ? (productVariants || []).map((v: any) => Number(v.price)).filter(n => !isNaN(n))
+    : [];
+  const minVariantPrice = variantPrices.length ? Math.min(...variantPrices) : 0;
+  const maxVariantPrice = variantPrices.length ? Math.max(...variantPrices) : 0;
+
+  const effectivePrice = hasNewVariants
+    ? Number((matchedVariant || partialVariant)?.price ?? minVariantPrice ?? product.price)
     : Number(product.price) + (selectedVariationForCart?.priceAdjustment || 0);
 
   const effectiveStock = hasNewVariants && matchedVariant
