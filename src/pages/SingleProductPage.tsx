@@ -419,6 +419,28 @@ export default function SingleProductPage() {
     }
   }, [product, trackEvent, addRecentlyViewed]);
 
+  // Merge variant images into the gallery so selecting an option can jump to
+  // the variant's assigned image.
+  const galleryImages = useMemo(() => {
+    const base: string[] = (product?.images as string[] | undefined) || [];
+    const merged = [...base];
+    (productVariants || []).forEach((v: any) => {
+      if (v?.image_url && !merged.includes(v.image_url)) merged.push(v.image_url);
+    });
+    (variations || []).forEach((v: any) => {
+      if (v?.image_url && !merged.includes(v.image_url)) merged.push(v.image_url);
+    });
+    return merged;
+  }, [product, productVariants, variations]);
+
+  // When a variant with an image is selected, switch the main image to it.
+  useEffect(() => {
+    const url = matchedVariant?.image_url;
+    if (!url) return;
+    const idx = galleryImages.indexOf(url);
+    if (idx >= 0) setSelectedImage(idx);
+  }, [matchedVariant, galleryImages]);
+
   if (isLoading) {
     return (
       <div className="container py-8">
