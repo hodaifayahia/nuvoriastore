@@ -59,6 +59,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Load API key from the credentials table (never stored on delivery_companies).
+    const { data: cred } = await supabase
+      .from('delivery_company_credentials')
+      .select('api_key, api_secret')
+      .eq('delivery_company_id', company_id)
+      .maybeSingle();
+    const apiKey = cred?.api_key || null;
+    const apiSecret = cred?.api_secret || null;
+
     const { data: orders, error: ordErr } = await supabase
       .from('orders')
       .select('*, wilayas(name)')
@@ -85,26 +94,45 @@ Deno.serve(async (req) => {
 
     const csv = csvRows.join('\n');
 
+    // Known provider endpoints (fall back to company.api_url when unknown).
+    const providerName = String(company.name || '').trim().toLowerCase();
+    const providerDefaults: Record<string, { url: string }> = {
+      dhd: { url: 'https://dhd-dz.com/api/v1' },
+    };
+    const baseUrl: string | null =
+      (company.api_url && String(company.api_url).trim()) ||
+      providerDefaults[providerName]?.url ||
+      null;
+
     let apiResult = null;
-    if (company.api_key && company.api_url) {
+    if (apiKey && baseUrl) {
       try {
         const parcels = (orders || []).map((order: any) => ({
           order_id: order.order_number,
+          reference: order.order_number,
           customer_name: order.customer_name,
+          client: order.customer_name,
           customer_phone: order.customer_phone,
+          phone: order.customer_phone,
           wilaya: order.wilayas?.name || '',
+          commune: order.baladiya || '',
           address: order.address || '',
           amount: Number(order.total_amount),
+          montant: Number(order.total_amount),
           delivery_type: order.delivery_type || 'office',
+          type_livraison: order.delivery_type === 'home' ? 'domicile' : 'stopdesk',
           is_cod: order.payment_method === 'cod',
         }));
 
-        const apiRes = await fetch(`${company.api_url}/parcels`, {
+        const endpoint = `${baseUrl.replace(/\/$/, '')}/parcels`;
+        const apiRes = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${company.api_key}`,
-            'X-API-KEY': company.api_key,
+            'Authorization': `Bearer ${apiKey}`,
+            'X-API-KEY': apiKey,
+            'token': apiKey,
+            ...(apiSecret ? { 'X-API-SECRET': apiSecret, 'key': apiSecret } : {}),
           },
           body: JSON.stringify({ parcels }),
         });
@@ -113,11 +141,18 @@ Deno.serve(async (req) => {
         apiResult = {
           status: apiRes.status,
           success: apiRes.ok,
-          message: apiRes.ok ? 'Orders pushed to API' : `API error ${apiRes.status}: ${apiBody.slice(0, 200)}`,
+          endpoint,
+          message: apiRes.ok
+            ? 'Orders pushed to API'
+            : `API error ${apiRes.status}: ${apiBody.slice(0, 300)}`,
         };
       } catch (e: any) {
         apiResult = { status: 0, success: false, message: `API call failed: ${e.message}` };
       }
+    } else if (!apiKey) {
+      apiResult = { status: 0, success: false, message: 'Missing API key — add it in Settings → Delivery.' };
+    } else if (!baseUrl) {
+      apiResult = { status: 0, success: false, message: 'Missing API URL — add the provider API base URL in Settings → Delivery.' };
     }
 
     return new Response(JSON.stringify({
