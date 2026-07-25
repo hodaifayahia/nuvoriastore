@@ -154,7 +154,7 @@ export default function LimitedOfferSection({
                 <Link to={link || '/products'}>
                   <Button
                     size="lg"
-                    className="rounded-full min-h-[52px] px-8 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary) / 0.9)] text-white font-bold border-0 shadow-lg shadow-[hsl(var(--primary))]/25"
+                    className="rounded-full min-h-[52px] px-8 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] text-white font-bold border-0 shadow-lg shadow-[hsl(var(--primary))]/25"
                   >
                     {L.cta}
                   </Button>
