@@ -960,11 +960,8 @@ export default function SingleProductPage() {
                           }
                           return (
                             <button key={val.id} onClick={handleClick} disabled={!available}
-                              className={`relative px-4 py-2 rounded-lg border-2 text-sm font-cairo font-medium transition-all ${isSelected ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/30 text-foreground'} ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                              <span className="flex items-center gap-1.5">
-                                {val.label}
-                                {showPrice && <span className="font-roboto text-xs opacity-70">· {formatPrice(valPrice!)}</span>}
-                              </span>
+                              className={`relative min-w-[110px] px-6 py-3.5 rounded-full border text-sm font-cairo font-semibold transition-all ${isSelected ? 'bg-foreground text-background border-foreground shadow-md' : 'bg-background text-foreground border-border hover:border-foreground/60'} ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                              {val.label}
                               {!available && <div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-0.5 bg-destructive/50 rotate-45 rounded-full" /></div>}
                             </button>
                           );
@@ -1013,9 +1010,8 @@ export default function SingleProductPage() {
                           }
                           return (
                             <button key={v.id} onClick={handleClick} disabled={isOutOfStock}
-                              className={`relative px-4 py-2 rounded-lg border-2 text-sm font-cairo font-medium transition-all ${isSelected ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/30 text-foreground'} ${isOutOfStock ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                              className={`relative min-w-[110px] px-6 py-3.5 rounded-full border text-sm font-cairo font-semibold transition-all ${isSelected ? 'bg-foreground text-background border-foreground shadow-md' : 'bg-background text-foreground border-border hover:border-foreground/60'} ${isOutOfStock ? 'opacity-30 cursor-not-allowed' : ''}`}>
                               {v.variation_value}
-                              {Number(v.price_adjustment) > 0 && <span className="font-roboto text-xs text-muted-foreground mr-1">(+{formatPrice(Number(v.price_adjustment))})</span>}
                               {isOutOfStock && <div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-0.5 bg-destructive/50 rotate-45 rounded-full" /></div>}
                             </button>
                           );
@@ -1027,9 +1023,6 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {product.description && (
-              <p className="font-cairo text-muted-foreground leading-relaxed">{product.description}</p>
-            )}
 
           </div>
 
