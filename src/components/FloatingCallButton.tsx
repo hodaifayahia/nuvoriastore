@@ -25,7 +25,7 @@ export default function FloatingCallButton() {
     <a
       href={`tel:${number.replace(/[^0-9+]/g, '')}`}
       aria-label="Appeler"
-      className="fixed bottom-24 left-6 z-50 h-14 w-14 hover:w-52 group rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 flex items-center justify-start overflow-hidden transition-all duration-500 ease-out border border-white/20 select-none cursor-pointer"
+      className="fixed bottom-24 left-6 z-50 h-14 w-14 hover:w-52 group rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/25 flex items-center justify-start overflow-hidden transition-all duration-500 ease-out border border-white/20 select-none cursor-pointer"
     >
       <div className="w-14 h-14 shrink-0 flex items-center justify-center">
         <Phone className="w-6 h-6 animate-pulse" />
