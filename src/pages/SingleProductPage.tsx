@@ -838,8 +838,10 @@ export default function SingleProductPage() {
                 )}
               </div>
               {hasPriceRange && !matchedVariant && !partialMatchedVariant && (
-                <p className="font-cairo text-xs text-muted-foreground">
-                  {formatPrice(minVariantPrice)} — {formatPrice(maxVariantPrice)}
+                <p className="font-cairo text-xs text-muted-foreground text-start" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                  <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+                    {formatPrice(minVariantPrice)} — {formatPrice(maxVariantPrice)}
+                  </span>
                 </p>
               )}
               {(product as any).price_text && (
