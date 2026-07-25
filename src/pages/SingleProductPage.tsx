@@ -1357,7 +1357,7 @@ export default function SingleProductPage() {
                   <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
                 </div>
                 {couponDiscount > 0 && (
-                  <div className="flex justify-between items-center text-orange-600 font-bold">
+                  <div className="flex justify-between items-center text-primary font-bold">
                     <span>{t('sp.discountLine')}</span>
                     <span className="font-roboto">-{formatPrice(couponDiscount)}</span>
                   </div>
@@ -1369,9 +1369,9 @@ export default function SingleProductPage() {
                 <div className="border-t border-border/60 pt-2.5 flex justify-between items-center">
                   <span className="font-cairo font-bold text-foreground text-base">{t('sp.total')}</span>
                   {orderWilayaId && orderDeliveryType ? (
-                    <span className="font-roboto font-extrabold text-orange-600 text-xl">{formatPrice(orderTotal)}</span>
+                    <span className="font-roboto font-extrabold text-primary text-xl">{formatPrice(orderTotal)}</span>
                   ) : (
-                    <span className="font-cairo text-xs text-amber-600">{t('sp.chooseAllOptions')}</span>
+                    <span className="font-cairo text-xs text-muted-foreground">{t('sp.chooseAllOptions')}</span>
                   )}
                 </div>
               </div>
