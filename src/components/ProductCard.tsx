@@ -99,132 +99,110 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
     setCurrentIndex(index);
   };
 
-  const discount = oldPrice && oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : 0;
+  const brand = Array.isArray(category) ? category[0] : category;
+  const savings = oldPrice && oldPrice > price ? oldPrice - price : 0;
 
   return (
     <>
     <Link to={`/product/${id}`} className="group block animate-fade-in h-full">
-      <div className="bg-card rounded-3xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300 h-full flex flex-col">
-        {/* Image */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="h-full flex flex-col">
+        {/* Image tile */}
+        <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted/40">
           <ProductImage
             src={allImages[currentIndex]}
             alt={name}
-            width={400}
-            intrinsicWidth={400}
-            intrinsicHeight={300}
-            className="group-hover:scale-105 transition-transform duration-700 ease-out"
+            width={500}
+            intrinsicWidth={500}
+            intrinsicHeight={500}
+            className="w-full h-full object-contain p-4 group-hover:scale-[1.03] transition-transform duration-500 ease-out"
           />
-
 
           {allImages.length > 1 && (
             <>
-              <button onClick={handlePrev} className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
+              <button onClick={handlePrev} className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
                 <ChevronLeft className="w-4 h-4 text-foreground" />
               </button>
-              <button onClick={handleNext} className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
+              <button onClick={handleNext} className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
                 <ChevronRight className="w-4 h-4 text-foreground" />
               </button>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-                {allImages.map((_, i) => (
-                  <button key={i} onClick={(e) => handleDotClick(e, i)} className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIndex ? 'bg-background w-3' : 'bg-background/60'}`} />
-                ))}
-              </div>
             </>
           )}
 
-          {outOfStock && (
-            <div className="absolute inset-0 bg-foreground/50 backdrop-blur-[3px] flex items-center justify-center">
-              <Badge variant="destructive" className="font-cairo text-sm px-5 py-2 rounded-full shadow-lg">{t('pc.outOfStock')}</Badge>
+          {/* Top-left status pill */}
+          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5" dir="ltr">
+            {outOfStock ? (
+              <span className="font-cairo text-[11px] font-medium bg-muted text-muted-foreground rounded-full px-3 py-1 shadow-sm">
+                {t('pc.outOfStock')}
+              </span>
+            ) : savings > 0 ? (
+              <span className="font-cairo text-[11px] font-semibold bg-destructive text-destructive-foreground rounded-full px-3 py-1 shadow-sm">
+                {t('pc.save') || 'Épargnez'} {formatPrice(savings)}
+              </span>
+            ) : null}
+          </div>
+
+          {/* Top-right rating */}
+          {reviewStats && (
+            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 shadow-sm" dir="ltr">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span className="font-cairo text-[11px] font-semibold text-foreground">{reviewStats.avg.toFixed(1)}</span>
             </div>
           )}
 
-          {/* Top-left badges */}
-          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
-            {discount > 0 && (
-              <Badge className="font-cairo text-[11px] bg-gradient-to-l from-red-500 to-red-600 text-white border-0 rounded-full px-3 py-1 shadow-md shadow-red-500/20">
-                {t('pc.discount').replace('{n}', String(discount))}
-              </Badge>
-            )}
-            <Badge className="font-cairo text-[11px] bg-foreground/60 backdrop-blur-md text-background border-0 rounded-full px-3 py-1">
-              {Array.isArray(category) ? category[0] : category}
-            </Badge>
-          </div>
-
-
-
-          {/* Hover add-to-cart overlay (desktop only) */}
-          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/70 via-foreground/40 to-transparent p-3.5 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <Button size="sm" onClick={handleAdd} disabled={outOfStock} className="w-full font-cairo font-bold text-xs gap-1.5 rounded-xl h-9 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30">
-              <ShoppingCart className="w-3.5 h-3.5" />
-              {t('pc.addToCart')}
-            </Button>
-          </div>
+          {/* Floating cart FAB */}
+          <button
+            onClick={handleAdd}
+            disabled={outOfStock}
+            aria-label={t('pc.addToCart')}
+            className="absolute bottom-3 end-3 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ShoppingCart className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 pt-3.5 space-y-2.5 flex-1 flex flex-col">
-          <h3 className="font-cairo font-bold text-foreground text-sm leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors duration-300">
+        <div className="px-1 pt-3 pb-1 flex-1 flex flex-col gap-1.5">
+          {brand && (
+            <span className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground/80 font-medium truncate">
+              {brand}
+            </span>
+          )}
+
+          <h3 className="font-cairo font-bold text-foreground text-sm sm:text-[15px] leading-snug line-clamp-2 group-hover:text-primary transition-colors">
             {name}
           </h3>
 
-          {/* Star rating */}
-          {reviewStats && (
-            <div className="flex items-center gap-1.5">
-              <div className="flex gap-0.5" dir="ltr">
-                {[1, 2, 3, 4, 5].map(s => (
-                  <Star key={s} className={`w-3.5 h-3.5 transition-colors ${s <= Math.round(reviewStats.avg) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/20'}`} />
-                ))}
-              </div>
-              <span className="font-cairo text-[10px] text-muted-foreground font-medium">({reviewStats.count})</span>
-            </div>
-          )}
-
-          {/* Variation badges */}
           {variationTypes && Object.keys(variationTypes).length > 0 && (
             <div className="flex flex-wrap gap-1">
               {Object.entries(variationTypes).map(([type, count]) => (
-                <span key={type} className="font-cairo text-[10px] bg-primary/5 text-primary/70 px-2.5 py-0.5 rounded-full border border-primary/10">
+                <span key={type} className="font-cairo text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
                   {count} {type}
                 </span>
               ))}
             </div>
           )}
 
-          <div className="space-y-2.5 pt-0.5 mt-auto">
-            <div className="flex flex-col gap-0.5 min-h-[2.75rem]">
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-                <span className="font-roboto font-extrabold text-primary text-base sm:text-lg tracking-tight whitespace-nowrap">
-                  {formatPrice(price)}
-                </span>
-                {oldPrice && oldPrice > price && (
-                  <span className="font-roboto text-[11px] text-muted-foreground/60 line-through decoration-destructive/40 whitespace-nowrap">
-                    {formatPrice(oldPrice)}
-                  </span>
-                )}
-              </div>
-              {priceText && (
-                <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight truncate">
-                  {priceText}
-                </span>
-              )}
-              {(shippingPrice ?? 0) > 0 && (
-                <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-0.5 mt-0.5">
-                  <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
-                </p>
-              )}
-            </div>
-
-            <div className="flex items-center gap-1.5 w-full">
-              <Button size="sm" variant="outline" disabled={outOfStock} onClick={handleAdd} aria-label={t('pc.addToCart')} className="hidden sm:flex font-cairo text-[11px] rounded-lg h-8 w-8 p-0 shrink-0 border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 items-center justify-center">
-                <ShoppingCart className="w-3.5 h-3.5 text-foreground" />
-              </Button>
-              <Button size="sm" disabled={outOfStock} onClick={handleDirectOrder} className="font-cairo font-bold text-[11px] gap-1 rounded-lg h-8 flex-1 shadow-sm hover:shadow-md hover:shadow-emerald-500/30 transition-all duration-300 bg-emerald-500 hover:bg-emerald-600 text-white animate-order-pulse">
-                <Zap className="w-3 h-3" />
-                {t('pc.orderNow')}
-              </Button>
-            </div>
+          <div className="flex items-baseline gap-2 mt-auto pt-1" dir="ltr">
+            <span className={`font-roboto font-bold tracking-tight whitespace-nowrap ${savings > 0 ? 'text-destructive text-[15px] sm:text-base' : 'text-foreground text-[15px] sm:text-base'}`}>
+              {formatPrice(price)}
+            </span>
+            {oldPrice && oldPrice > price && (
+              <span className="font-roboto text-xs text-muted-foreground/70 line-through whitespace-nowrap">
+                {formatPrice(oldPrice)}
+              </span>
+            )}
           </div>
+
+          {priceText && (
+            <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight truncate">
+              {priceText}
+            </span>
+          )}
+          {(shippingPrice ?? 0) > 0 && (
+            <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-1">
+              <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
+            </p>
+          )}
         </div>
       </div>
     </Link>
