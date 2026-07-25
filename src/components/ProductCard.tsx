@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Zap, ChevronLeft, ChevronRight, Truck, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { ShoppingCart, ChevronLeft, ChevronRight, Truck, Star } from 'lucide-react';
+
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
 import ProductImage from '@/components/ProductImage';
