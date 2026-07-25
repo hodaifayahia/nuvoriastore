@@ -870,13 +870,14 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
   });
 
   // Sync existing data into state
-  useMemo(() => {
+  useEffect(() => {
     if (existingOptionGroups && existingOptionGroups.length > 0 && optionGroups.length === 0) {
       setOptionGroups(existingOptionGroups);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingOptionGroups]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (existingVariants && existingVariants.length > 0 && variantRows.length === 0 && optionGroups.length > 0) {
       setVariantRows(existingVariants.map((v: any) => ({
         id: v.id,
@@ -889,6 +890,7 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         isActive: v.is_active ?? true,
       })));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingVariants, optionGroups]);
 
   // Regenerate variant matrix when option groups change
