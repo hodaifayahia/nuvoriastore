@@ -1357,7 +1357,7 @@ export default function SingleProductPage() {
                   <span className="font-roboto font-bold text-foreground">{formatPrice(itemSubtotal)}</span>
                 </div>
                 {couponDiscount > 0 && (
-                  <div className="flex justify-between items-center text-orange-600 font-bold">
+                  <div className="flex justify-between items-center text-primary font-bold">
                     <span>{t('sp.discountLine')}</span>
                     <span className="font-roboto">-{formatPrice(couponDiscount)}</span>
                   </div>
@@ -1369,9 +1369,9 @@ export default function SingleProductPage() {
                 <div className="border-t border-border/60 pt-2.5 flex justify-between items-center">
                   <span className="font-cairo font-bold text-foreground text-base">{t('sp.total')}</span>
                   {orderWilayaId && orderDeliveryType ? (
-                    <span className="font-roboto font-extrabold text-orange-600 text-xl">{formatPrice(orderTotal)}</span>
+                    <span className="font-roboto font-extrabold text-primary text-xl">{formatPrice(orderTotal)}</span>
                   ) : (
-                    <span className="font-cairo text-xs text-amber-600">{t('sp.chooseAllOptions')}</span>
+                    <span className="font-cairo text-xs text-muted-foreground">{t('sp.chooseAllOptions')}</span>
                   )}
                 </div>
               </div>
@@ -1394,11 +1394,11 @@ export default function SingleProductPage() {
                 Vos informations sont utilisées uniquement pour la livraison.
               </p>
 
-              {/* Actions: Confirm (orange) + WhatsApp + Add to Cart */}
+              {/* Actions: Confirm + WhatsApp + Add to Cart */}
               <div className="space-y-3">
-                {/* Main Confirm Button — Orange gradient with lock icon */}
+                {/* Main Confirm Button — unified primary */}
                 <Button onClick={handleDirectOrder} disabled={submittingOrder}
-                  className="font-cairo font-bold text-base gap-2 rounded-2xl h-14 w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-xl shadow-orange-500/30 transition-all hover:shadow-2xl hover:shadow-orange-500/40 hover:scale-[1.01] active:scale-[0.99]">
+                  className="font-cairo font-bold text-base gap-2 rounded-2xl h-14 w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/35 hover:scale-[1.01] active:scale-[0.99]">
                   {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 shrink-0" />}
                   <span>🔒</span>
                   <span>{submittingOrder ? t('sp.sending') : 'Confirmer ma commande'}</span>
