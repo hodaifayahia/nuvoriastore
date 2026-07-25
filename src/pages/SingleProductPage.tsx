@@ -907,21 +907,7 @@ export default function SingleProductPage() {
                         <span className="font-normal text-muted-foreground mr-2">: {selectedNewOptions[group.name]}</span>
                       )}
                     </Label>
-                    {group.display_type === 'dropdown' ? (
-                      <Select value={selectedNewOptions[group.name] || ''} onValueChange={v => setSelectedNewOptions(prev => ({ ...prev, [group.name]: v }))}>
-                        <SelectTrigger className="font-cairo"><SelectValue placeholder={t('sp.chooseGroup').replace('{name}', group.name)} /></SelectTrigger>
-                        <SelectContent>
-                          {group.values.map((val: any) => {
-                            const available = isOptionValueAvailable(group.name, val.label);
-                            return (
-                              <SelectItem key={val.id} value={val.label} className="font-cairo" disabled={!available}>
-                                {val.label} {!available && t('sp.notAvailable')}
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectContent>
-                      </Select>
-                    ) : (
+                    {(
                       <div className="flex flex-wrap gap-2">
                         {group.values.map((val: any) => {
                           const isSelected = selectedNewOptions[group.name] === val.label;
