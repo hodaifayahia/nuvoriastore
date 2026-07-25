@@ -57,6 +57,7 @@ img { content-visibility: auto; }
     /* Brand gradient tokens — navy family */
     --grad-teal: 222 78% 42%;
     --grad-violet: 222 54% 22%;
+    --grad-amber: 222 78% 55%;
   }
 
   .light,
