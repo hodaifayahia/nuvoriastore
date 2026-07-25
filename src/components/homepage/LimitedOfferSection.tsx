@@ -82,7 +82,7 @@ export default function LimitedOfferSection({
 
   const Cell = ({ n, label }: { n: number; label: string }) => (
     <div className="flex-1 min-w-[64px] rounded-2xl bg-muted/50 border border-border/60 py-3 sm:py-3.5 px-2 flex flex-col items-center">
-      <span className="text-2xl sm:text-3xl font-black tabular-nums text-[hsl(217,91%,60%)] leading-none">
+      <span className="text-2xl sm:text-3xl font-black tabular-nums text-[hsl(var(--primary))] leading-none">
         {pad(n)}
       </span>
       <span className="mt-1.5 text-[10px] sm:text-[11px] text-muted-foreground font-medium">{label}</span>
@@ -97,10 +97,10 @@ export default function LimitedOfferSection({
             {/* Left — content */}
             <div className="relative p-6 sm:p-10 flex flex-col">
               {/* Soft brand tint */}
-              <div className="absolute top-0 start-0 w-40 h-40 rounded-full bg-[hsl(258,90%,66%)]/8 blur-3xl pointer-events-none" aria-hidden />
+              <div className="absolute top-0 start-0 w-40 h-40 rounded-full bg-[hsl(var(--primary))]/8 blur-3xl pointer-events-none" aria-hidden />
 
               <div className="flex justify-end">
-                <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[hsl(258,90%,66%)] to-[hsl(217,91%,60%)] shadow-lg shadow-[hsl(258,90%,66%)]/25">
+                <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--primary))] shadow-lg shadow-[hsl(var(--primary))]/25">
                   <Flame className="w-4 h-4" />
                   {L.badge}
                 </span>
@@ -154,7 +154,7 @@ export default function LimitedOfferSection({
                 <Link to={link || '/products'}>
                   <Button
                     size="lg"
-                    className="rounded-full min-h-[52px] px-8 bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,52%)] text-white font-bold border-0 shadow-lg shadow-[hsl(217,91%,60%)]/25"
+                    className="rounded-full min-h-[52px] px-8 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary) / 0.9)] text-white font-bold border-0 shadow-lg shadow-[hsl(var(--primary))]/25"
                   >
                     {L.cta}
                   </Button>
@@ -164,15 +164,15 @@ export default function LimitedOfferSection({
               {/* Trust chips */}
               <div className="mt-5 flex flex-wrap gap-2 justify-center md:justify-end">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/60 text-xs font-semibold text-foreground">
-                  <Truck className="w-3.5 h-3.5 text-[hsl(217,91%,60%)]" />
+                  <Truck className="w-3.5 h-3.5 text-[hsl(var(--primary))]" />
                   {L.shipping}
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/60 text-xs font-semibold text-foreground">
-                  <Wallet className="w-3.5 h-3.5 text-[hsl(217,91%,60%)]" />
+                  <Wallet className="w-3.5 h-3.5 text-[hsl(var(--primary))]" />
                   {L.cod}
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/60 text-xs font-semibold text-foreground">
-                  <RotateCcw className="w-3.5 h-3.5 text-[hsl(217,91%,60%)]" />
+                  <RotateCcw className="w-3.5 h-3.5 text-[hsl(var(--primary))]" />
                   {L.returns}
                 </span>
               </div>
@@ -181,7 +181,7 @@ export default function LimitedOfferSection({
             {/* Right — product */}
             <div className="relative min-h-[280px] md:min-h-full bg-white flex items-center justify-center p-6 sm:p-8">
               {pct !== null && pct > 0 && (
-                <div className="absolute top-4 start-4 w-14 h-14 rounded-full bg-[hsl(217,91%,60%)] text-white flex items-center justify-center font-black text-sm shadow-lg z-10">
+                <div className="absolute top-4 start-4 w-14 h-14 rounded-full bg-[hsl(var(--primary))] text-white flex items-center justify-center font-black text-sm shadow-lg z-10">
                   -{pct}%
                 </div>
               )}
