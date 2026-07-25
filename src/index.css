@@ -107,6 +107,12 @@ img { content-visibility: auto; }
       radial-gradient(900px 600px at 95% 10%, hsl(222 54% 22% / 0.06), transparent 60%);
     background-attachment: fixed;
     min-height: 100vh;
+    /* Let Arabic runs render RTL and French runs LTR automatically. */
+    unicode-bidi: plaintext;
+  }
+
+  p, h1, h2, h3, h4, h5, h6, li, span, a, button, label, td, th {
+    unicode-bidi: plaintext;
   }
 
 
