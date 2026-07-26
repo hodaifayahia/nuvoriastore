@@ -1358,9 +1358,9 @@ export default function SingleProductPage() {
               {/* Trust Badges */}
               <div className="flex flex-wrap items-center justify-center gap-2">
                 {[
-                  { emoji: '🛡️', text: 'Garantie 6 mois' },
-                  { emoji: '💰', text: 'Paiement à la réception' },
-                  { emoji: '🔄', text: 'Échange si défaut' },
+                  { emoji: '🛡️', text: t('sp.badgeWarranty') },
+                  { emoji: '💰', text: t('sp.badgeCod') },
+                  { emoji: '🔄', text: t('sp.badgeExchange') },
                 ].map((badge, i) => (
                   <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-cairo font-semibold text-foreground shadow-sm">
                     <span>{badge.emoji}</span> {badge.text}
@@ -1370,7 +1370,7 @@ export default function SingleProductPage() {
 
               {/* Privacy notice */}
               <p className="font-cairo text-[11px] text-muted-foreground text-center">
-                Vos informations sont utilisées uniquement pour la livraison.
+                {t('sp.privacyNotice')}
               </p>
 
               {/* Actions: Confirm + WhatsApp + Add to Cart */}
@@ -1380,7 +1380,7 @@ export default function SingleProductPage() {
                   className="font-cairo font-bold text-base gap-2 rounded-2xl h-14 w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/35 hover:scale-[1.01] active:scale-[0.99]">
                   {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 shrink-0" />}
                   <span>🔒</span>
-                  <span>{submittingOrder ? t('sp.sending') : 'Confirmer ma commande'}</span>
+                  <span>{submittingOrder ? t('sp.sending') : t('sp.confirmMyOrder')}</span>
                 </Button>
 
                 {/* WhatsApp Button — always visible with full text */}
