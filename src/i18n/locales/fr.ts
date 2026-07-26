@@ -1633,4 +1633,11 @@ Object.assign(fr, {
   'brands.empty': 'Aucune marque pour le moment',
   'products.brand': 'Marque',
   'products.noBrand': 'Aucune marque',
+  'sp.confirmMyOrder': 'Confirmer ma commande',
+  'sp.orderWhatsapp': 'Commander par WhatsApp',
+  'sp.badgeWarranty': 'Garantie 6 mois',
+  'sp.badgeCod': 'Paiement à la réception',
+  'sp.badgeExchange': 'Échange si défaut',
+  'sp.privacyNotice': 'Vos informations sont utilisées uniquement pour la livraison.',
+  'sp.freeShipping': 'Gratuite',
 });

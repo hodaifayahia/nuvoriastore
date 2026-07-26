@@ -1645,4 +1645,11 @@ Object.assign(ar, {
   'brands.empty': 'لا توجد علامات بعد',
   'products.brand': 'العلامة التجارية',
   'products.noBrand': 'بدون علامة',
+  'sp.confirmMyOrder': 'تأكيد طلبي',
+  'sp.orderWhatsapp': 'اطلب عبر واتساب',
+  'sp.badgeWarranty': 'ضمان 6 أشهر',
+  'sp.badgeCod': 'الدفع عند الاستلام',
+  'sp.badgeExchange': 'استبدال في حال العيب',
+  'sp.privacyNotice': 'معلوماتك تُستخدم فقط لأغراض التوصيل.',
+  'sp.freeShipping': 'مجاني',
 });

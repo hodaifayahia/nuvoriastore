@@ -1343,7 +1343,7 @@ export default function SingleProductPage() {
                 )}
                 <div className="flex justify-between items-center text-muted-foreground text-xs">
                   <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
-                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? (shippingCost === 0 ? <span className="text-emerald-600 font-cairo font-bold">Gratuite</span> : formatPrice(shippingCost)) : '-'}</span>
+                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? (shippingCost === 0 ? <span className="text-emerald-600 font-cairo font-bold">{t('sp.freeShipping')}</span> : formatPrice(shippingCost)) : '-'}</span>
                 </div>
                 <div className="border-t border-border/60 pt-2.5 flex justify-between items-center">
                   <span className="font-cairo font-bold text-foreground text-base">{t('sp.total')}</span>
@@ -1358,9 +1358,9 @@ export default function SingleProductPage() {
               {/* Trust Badges */}
               <div className="flex flex-wrap items-center justify-center gap-2">
                 {[
-                  { emoji: '🛡️', text: 'Garantie 6 mois' },
-                  { emoji: '💰', text: 'Paiement à la réception' },
-                  { emoji: '🔄', text: 'Échange si défaut' },
+                  { emoji: '🛡️', text: t('sp.badgeWarranty') },
+                  { emoji: '💰', text: t('sp.badgeCod') },
+                  { emoji: '🔄', text: t('sp.badgeExchange') },
                 ].map((badge, i) => (
                   <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-cairo font-semibold text-foreground shadow-sm">
                     <span>{badge.emoji}</span> {badge.text}
@@ -1370,7 +1370,7 @@ export default function SingleProductPage() {
 
               {/* Privacy notice */}
               <p className="font-cairo text-[11px] text-muted-foreground text-center">
-                Vos informations sont utilisées uniquement pour la livraison.
+                {t('sp.privacyNotice')}
               </p>
 
               {/* Actions: Confirm + WhatsApp + Add to Cart */}
@@ -1380,7 +1380,7 @@ export default function SingleProductPage() {
                   className="font-cairo font-bold text-base gap-2 rounded-2xl h-14 w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all hover:shadow-2xl hover:shadow-primary/35 hover:scale-[1.01] active:scale-[0.99]">
                   {submittingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 shrink-0" />}
                   <span>🔒</span>
-                  <span>{submittingOrder ? t('sp.sending') : 'Confirmer ma commande'}</span>
+                  <span>{submittingOrder ? t('sp.sending') : t('sp.confirmMyOrder')}</span>
                 </Button>
 
                 {/* WhatsApp Button — always visible with full text */}
@@ -1408,7 +1408,7 @@ export default function SingleProductPage() {
                   className="font-cairo font-bold rounded-2xl h-12 w-full gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center transition-all"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Commander par WhatsApp</span>
+                  <span>{t('sp.orderWhatsapp')}</span>
                 </Button>
 
                 <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-2xl h-12 w-full border-border hover:bg-muted">
