@@ -1408,7 +1408,7 @@ export default function SingleProductPage() {
                   className="font-cairo font-bold rounded-2xl h-12 w-full gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center transition-all"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Commander par WhatsApp</span>
+                  <span>{t('sp.orderWhatsapp')}</span>
                 </Button>
 
                 <Button onClick={handleAdd} variant="outline" className="font-cairo font-semibold gap-1.5 rounded-2xl h-12 w-full border-border hover:bg-muted">
