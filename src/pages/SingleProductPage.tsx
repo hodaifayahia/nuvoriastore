@@ -1343,7 +1343,7 @@ export default function SingleProductPage() {
                 )}
                 <div className="flex justify-between items-center text-muted-foreground text-xs">
                   <span>{t('sp.deliveryLine').replace('{type}', orderDeliveryType === 'home' ? t('sp.homeDelivery') : (orderDeliveryType === 'office' ? t('sp.office') : ''))}</span>
-                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? (shippingCost === 0 ? <span className="text-emerald-600 font-cairo font-bold">Gratuite</span> : formatPrice(shippingCost)) : '-'}</span>
+                  <span className="font-roboto">{orderWilayaId && orderDeliveryType ? (shippingCost === 0 ? <span className="text-emerald-600 font-cairo font-bold">{t('sp.freeShipping')}</span> : formatPrice(shippingCost)) : '-'}</span>
                 </div>
                 <div className="border-t border-border/60 pt-2.5 flex justify-between items-center">
                   <span className="font-cairo font-bold text-foreground text-base">{t('sp.total')}</span>
