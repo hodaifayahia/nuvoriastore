@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, ChevronLeft, ChevronRight, Truck, Star } from 'lucide-react';
+import { Zap, Star } from 'lucide-react';
 
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
@@ -23,199 +23,137 @@ interface ProductCardProps {
   category: string | string[];
   stock: number;
   shippingPrice?: number;
+  featured?: boolean;
 }
 
-export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, shippingPrice }: ProductCardProps) {
+export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
+  const isAr = language === 'ar';
 
   const { data: variationTypes } = useQuery({
     queryKey: ['product-variation-types', id],
     queryFn: async () => {
       const { data } = await supabase
         .from('product_variations')
-        .select('variation_type, variation_value')
+        .select('variation_type')
         .eq('product_id', id)
         .eq('is_active', true);
       if (!data || data.length === 0) return null;
-      const grouped: Record<string, number> = {};
-      data.forEach(v => { grouped[v.variation_type] = (grouped[v.variation_type] || 0) + 1; });
-      return grouped;
+      return Array.from(new Set(data.map(v => v.variation_type)));
     },
-  });
-
-  const { data: reviewStats } = useQuery({
-    queryKey: ['product-review-stats', id],
-    queryFn: async () => {
-      const { data } = await supabase.from('reviews').select('rating').eq('product_id', id);
-      if (!data || data.length === 0) return null;
-      const avg = data.reduce((s, r) => s + r.rating, 0) / data.length;
-      return { avg: Math.round(avg * 10) / 10, count: data.length };
-    },
-    staleTime: 5 * 60 * 1000,
   });
 
   const allImages = images && images.length > 0 ? images : (image ? [image] : []);
   const initialIndex = mainImageIndex != null && mainImageIndex < allImages.length ? mainImageIndex : 0;
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [currentIndex] = useState(initialIndex);
 
-  const handleAdd = (e: React.MouseEvent) => {
+  const handleOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (variationTypes && Object.keys(variationTypes).length > 0) {
+    if (outOfStock) return;
+    if (variationTypes && variationTypes.length > 0) {
       navigate(`/product/${id}`);
       return;
     }
-    addItem({ id, name, price, image: allImages[0] || '', stock, shippingPrice });
-    toast({ title: t('pc.addedToCart'), description: t('pc.addedToCartDesc').replace('{name}', name) });
-  };
-
-  const handleDirectOrder = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
     navigate(`/product/${id}`);
   };
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentIndex(i => (i === 0 ? allImages.length - 1 : i - 1));
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentIndex(i => (i === allImages.length - 1 ? 0 : i + 1));
-  };
-
-  const handleDotClick = (e: React.MouseEvent, index: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentIndex(index);
-  };
-
   const brand = Array.isArray(category) ? category[0] : category;
-  const savings = oldPrice && oldPrice > price ? oldPrice - price : 0;
+  const discountPct = oldPrice && oldPrice > price
+    ? Math.round(((oldPrice - price) / oldPrice) * 100)
+    : 0;
+
+  const orderNowLabel = isAr ? 'اطلب الآن' : (t('pc.orderNow') || 'Commander');
+  const featuredLabel = isAr ? 'مميز' : 'Populaire';
+  const centimesLabel = isAr ? 'سنتيم' : 'centimes';
+  const centimes = Math.round(price * 100).toLocaleString(isAr ? 'ar-DZ' : 'fr-DZ');
 
   return (
-    <>
-    <Link to={`/product/${id}`} className="group block animate-fade-in h-full">
-      <div className="h-full flex flex-col">
-        {/* Image tile */}
-        <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted/40">
+    <Link to={`/product/${id}`} className="group block h-full">
+      <article className="relative h-full flex flex-col rounded-2xl border border-border/60 bg-card shadow-[0_2px_8px_rgba(15,27,61,0.04)] overflow-hidden transition-all hover:shadow-[0_8px_24px_rgba(15,27,61,0.08)] hover:-translate-y-0.5">
+        {/* Image */}
+        <div className="relative aspect-square bg-muted/30">
           <ProductImage
             src={allImages[currentIndex]}
             alt={name}
             width={500}
             intrinsicWidth={500}
             intrinsicHeight={500}
-            className="w-full h-full object-contain p-4 group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+            className="w-full h-full object-contain p-3 group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
 
-          {allImages.length > 1 && (
-            <>
-              <button onClick={handlePrev} className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
-                <ChevronLeft className="w-4 h-4 text-foreground" />
-              </button>
-              <button onClick={handleNext} className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background shadow-sm">
-                <ChevronRight className="w-4 h-4 text-foreground" />
-              </button>
-            </>
-          )}
-
-          {/* Top-left status pill */}
-          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5" dir="ltr">
-            {outOfStock ? (
-              <span className="font-cairo text-[11px] font-medium bg-muted text-muted-foreground rounded-full px-3 py-1 shadow-sm">
-                {t('pc.outOfStock')}
+          {/* Top-left: featured */}
+          {featured && (
+            <div className="absolute top-2.5 start-2.5">
+              <span className="inline-flex items-center gap-1 bg-amber-400 text-black rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
+                <Star className="w-3 h-3 fill-black" />
+                {featuredLabel}
               </span>
-            ) : savings > 0 ? (
-              <span className="font-cairo text-[11px] font-semibold bg-destructive text-destructive-foreground rounded-full px-3 py-1 shadow-sm">
-                {t('pc.save') || 'Épargnez'} {formatPrice(savings)}
-              </span>
-            ) : null}
-          </div>
-
-          {/* Top-right rating */}
-          {reviewStats && (
-            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 shadow-sm" dir="ltr">
-              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-              <span className="font-cairo text-[11px] font-semibold text-foreground">{reviewStats.avg.toFixed(1)}</span>
             </div>
           )}
 
-          {/* Floating cart FAB */}
-          <button
-            onClick={handleAdd}
-            disabled={outOfStock}
-            aria-label={t('pc.addToCart')}
-            className="absolute bottom-3 end-3 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ShoppingCart className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="px-1 pt-3 pb-1 flex-1 flex flex-col gap-1.5">
-          {brand && (
-            <span className="font-cairo text-[11px] uppercase tracking-wider text-muted-foreground/80 font-medium truncate">
-              {brand}
-            </span>
-          )}
-
-          <h3 className="font-cairo font-bold text-foreground text-sm sm:text-[15px] leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-            {name}
-          </h3>
-
-          {variationTypes && Object.keys(variationTypes).length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {Object.entries(variationTypes).map(([type, count]) => (
-                <span key={type} className="font-cairo text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-                  {count} {type}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="flex items-baseline gap-2 mt-auto pt-1" dir="ltr">
-            <span className={`font-roboto font-bold tracking-tight whitespace-nowrap ${savings > 0 ? 'text-destructive text-[15px] sm:text-base' : 'text-foreground text-[15px] sm:text-base'}`}>
-              {formatPrice(price)}
-            </span>
-            {oldPrice && oldPrice > price && (
-              <span className="font-roboto text-xs text-muted-foreground/70 line-through whitespace-nowrap">
-                {formatPrice(oldPrice)}
+          {/* Top-right: discount OR category */}
+          <div className="absolute top-2.5 end-2.5 flex flex-col items-end gap-1.5">
+            {discountPct > 0 && (
+              <span className="bg-destructive text-destructive-foreground rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
+                {isAr ? `خصم ${discountPct}%` : `-${discountPct}%`}
+              </span>
+            )}
+            {brand && (
+              <span className="bg-foreground/85 text-background rounded-full px-2.5 py-1 text-[11px] font-cairo font-medium shadow-sm max-w-[7rem] truncate">
+                {brand}
               </span>
             )}
           </div>
 
-          {priceText && (
-            <span className="font-cairo text-[10px] text-muted-foreground/80 leading-tight truncate">
-              {priceText}
-            </span>
+          {outOfStock && (
+            <div className="absolute inset-0 bg-background/70 backdrop-blur-[1px] flex items-center justify-center">
+              <span className="bg-foreground text-background text-xs font-cairo font-semibold rounded-full px-3 py-1">
+                {t('pc.outOfStock')}
+              </span>
+            </div>
           )}
-          {(shippingPrice ?? 0) > 0 && (
-            <p className="font-cairo text-[10px] text-muted-foreground flex items-center gap-1">
-              <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col p-3 sm:p-4 gap-2">
+          <h3 className="font-cairo font-bold text-foreground text-sm sm:text-[15px] leading-snug line-clamp-2 text-center min-h-[2.6rem]">
+            {name}
+          </h3>
+
+          <div className="mt-auto space-y-1 text-center">
+            <div className="flex items-baseline justify-center gap-2 flex-wrap" dir="ltr">
+              {oldPrice && oldPrice > price && (
+                <span className="font-roboto text-xs text-muted-foreground/70 line-through">
+                  {formatPrice(oldPrice)}
+                </span>
+              )}
+              <span className="font-roboto font-extrabold text-primary text-base sm:text-lg tracking-tight">
+                {formatPrice(price)}
+              </span>
+            </div>
+            <p className="font-cairo text-[11px] text-muted-foreground/70" dir="ltr">
+              {centimes} {centimesLabel}
             </p>
-          )}
+            {priceText && (
+              <p className="font-cairo text-[10px] text-muted-foreground/70 truncate">{priceText}</p>
+            )}
+          </div>
 
           <button
-            onClick={handleDirectOrder}
+            onClick={handleOrder}
             disabled={outOfStock}
-            className="mt-2 w-full h-10 rounded-full bg-foreground text-background font-cairo font-semibold text-sm hover:bg-foreground/90 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="mt-2 w-full h-10 rounded-xl bg-primary text-primary-foreground font-cairo font-bold text-sm hover:bg-primary/90 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shadow-sm"
           >
-            <ShoppingCart className="w-4 h-4" />
-            {t('pc.orderNow') || (t('lp.orderNow') as string) || 'Commander maintenant'}
+            <Zap className="w-4 h-4 fill-current" />
+            {orderNowLabel}
           </button>
         </div>
-      </div>
+      </article>
     </Link>
-
-    </>
   );
 }
-
