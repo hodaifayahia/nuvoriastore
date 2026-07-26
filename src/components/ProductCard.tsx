@@ -202,6 +202,15 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
               <Truck className="w-3 h-3" /> {formatPrice(shippingPrice!)}
             </p>
           )}
+
+          <button
+            onClick={handleDirectOrder}
+            disabled={outOfStock}
+            className="mt-2 w-full h-10 rounded-full bg-foreground text-background font-cairo font-semibold text-sm hover:bg-foreground/90 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {t('pc.orderNow') || (t('lp.orderNow') as string) || 'Commander maintenant'}
+          </button>
         </div>
       </div>
     </Link>
@@ -209,3 +218,4 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
     </>
   );
 }
+
