@@ -86,29 +86,29 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             className="w-full h-full object-contain p-3 group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
 
-          {/* Top-left: featured */}
-          {featured && (
-            <div className="absolute top-2.5 start-2.5">
+          {/* Top-start: featured + category stacked */}
+          <div className="absolute top-2.5 start-2.5 flex flex-col items-start gap-1.5 max-w-[60%]">
+            {featured && (
               <span className="inline-flex items-center gap-1 bg-amber-400 text-black rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
                 <Star className="w-3 h-3 fill-black" />
                 {featuredLabel}
               </span>
-            </div>
-          )}
-
-          {/* Top-right: discount OR category */}
-          <div className="absolute top-2.5 end-2.5 flex flex-col items-end gap-1.5">
-            {discountPct > 0 && (
-              <span className="bg-destructive text-destructive-foreground rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
-                {isAr ? `خصم ${discountPct}%` : `-${discountPct}%`}
-              </span>
             )}
             {brand && (
-              <span className="bg-foreground/85 text-background rounded-full px-2.5 py-1 text-[11px] font-cairo font-medium shadow-sm max-w-[7rem] truncate">
+              <span className="bg-foreground/85 text-background rounded-full px-2.5 py-1 text-[11px] font-cairo font-medium shadow-sm max-w-full truncate">
                 {brand}
               </span>
             )}
           </div>
+
+          {/* Top-end: discount only */}
+          {discountPct > 0 && (
+            <div className="absolute top-2.5 end-2.5">
+              <span className="bg-destructive text-destructive-foreground rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
+                {isAr ? `${discountPct}% خصم` : `-${discountPct}%`}
+              </span>
+            </div>
+          )}
 
           {outOfStock && (
             <div className="absolute inset-0 bg-background/70 backdrop-blur-[1px] flex items-center justify-center">
@@ -136,12 +136,9 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
                 {formatPrice(price)}
               </span>
             </div>
-            <p className="font-cairo text-[11px] text-muted-foreground/70" dir="ltr">
-              {centimes} {centimesLabel}
+            <p className="font-cairo text-[11px] text-muted-foreground/70" dir={isAr ? 'rtl' : 'ltr'}>
+              {isAr ? `${centimes} ${centimesLabel}` : `${centimes} ${centimesLabel}`}
             </p>
-            {priceText && (
-              <p className="font-cairo text-[10px] text-muted-foreground/70 truncate">{priceText}</p>
-            )}
           </div>
 
           <button
