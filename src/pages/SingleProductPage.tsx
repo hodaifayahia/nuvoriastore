@@ -839,6 +839,15 @@ export default function SingleProductPage() {
                   </>
                 )}
               </div>
+              {isProductFreeShipping && (
+                <div className={`flex ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
+                  <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white rounded-full px-3 py-1 text-xs font-cairo font-bold shadow-sm">
+                    <Truck className="w-3.5 h-3.5" />
+                    {t('products.freeShipping')}
+                  </span>
+                </div>
+              )}
+
               {hasPriceRange && !matchedVariant && !partialMatchedVariant && (
                 <p className={`font-cairo text-xs text-muted-foreground ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   <span dir="ltr" style={{ unicodeBidi: 'isolate', display: 'inline-block' }}>
