@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Zap, Star } from 'lucide-react';
+import { Zap, Star, Truck } from 'lucide-react';
 
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
