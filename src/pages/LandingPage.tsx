@@ -321,7 +321,7 @@ export default function LandingPage() {
         num_items: 1,
       });
 
-      // Telegram notification is handled server-side by a database trigger.
+      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
 
       setOrderNumber(order.order_number || order.id.slice(0, 8).toUpperCase());
       setOrderSuccess(true);

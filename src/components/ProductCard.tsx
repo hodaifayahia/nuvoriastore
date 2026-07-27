@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Zap, Star } from 'lucide-react';
+import { Zap, Star, Truck } from 'lucide-react';
 
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
@@ -24,15 +24,17 @@ interface ProductCardProps {
   stock: number;
   shippingPrice?: number;
   featured?: boolean;
+  isFreeShipping?: boolean;
 }
 
-export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured }: ProductCardProps) {
+export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured, isFreeShipping }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const { t, language } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
   const isAr = language === 'ar';
+
 
   const { data: variationTypes } = useQuery({
     queryKey: ['product-variation-types', id],
@@ -109,6 +111,16 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
               </span>
             </div>
           )}
+
+          {isFreeShipping && !outOfStock && (
+            <div className="absolute bottom-2.5 start-2.5">
+              <span className="inline-flex items-center gap-1 bg-emerald-600 text-white rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
+                <Truck className="w-3 h-3" />
+                {t('products.freeShipping')}
+              </span>
+            </div>
+          )}
+
 
           {outOfStock && (
             <div className="absolute inset-0 bg-background/70 backdrop-blur-[1px] flex items-center justify-center">

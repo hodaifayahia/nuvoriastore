@@ -450,6 +450,7 @@ export default function ProductsPage() {
                       category={p.category || []}
                       stock={p.stock ?? 0}
                       shippingPrice={Number(p.shipping_price) || 0}
+                      isFreeShipping={!!(p as any).is_free_shipping}
                     />
                   </div>
                 ))}

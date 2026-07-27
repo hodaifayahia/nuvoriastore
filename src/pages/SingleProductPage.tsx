@@ -570,9 +570,11 @@ export default function SingleProductPage() {
   const wilayaBaseRate = selectedWilaya ? Number(selectedWilaya.shipping_price) : 0;
   const wilayaHomeRate = selectedWilaya ? Number(selectedWilaya.shipping_price_home) : 0;
   const productShippingRate = Number(product.shipping_price) || 0;
+  const isProductFreeShipping = !!(product as any).is_free_shipping;
   const baseRate = orderDeliveryType === 'home' ? wilayaHomeRate : wilayaBaseRate;
-  const shippingRate = productShippingRate > 0 ? productShippingRate : baseRate;
+  const shippingRate = isProductFreeShipping ? 0 : (productShippingRate > 0 ? productShippingRate : baseRate);
   const shippingCost = shippingRate * qty;
+
   const itemSubtotal = effectivePrice * qty;
   const orderTotal = itemSubtotal + shippingCost - couponDiscount;
 
@@ -837,6 +839,15 @@ export default function SingleProductPage() {
                   </>
                 )}
               </div>
+              {isProductFreeShipping && (
+                <div className={`flex ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
+                  <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white rounded-full px-3 py-1 text-xs font-cairo font-bold shadow-sm">
+                    <Truck className="w-3.5 h-3.5" />
+                    {t('products.freeShipping')}
+                  </span>
+                </div>
+              )}
+
               {hasPriceRange && !matchedVariant && !partialMatchedVariant && (
                 <p className={`font-cairo text-xs text-muted-foreground ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   <span dir="ltr" style={{ unicodeBidi: 'isolate', display: 'inline-block' }}>
