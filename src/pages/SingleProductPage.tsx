@@ -570,9 +570,11 @@ export default function SingleProductPage() {
   const wilayaBaseRate = selectedWilaya ? Number(selectedWilaya.shipping_price) : 0;
   const wilayaHomeRate = selectedWilaya ? Number(selectedWilaya.shipping_price_home) : 0;
   const productShippingRate = Number(product.shipping_price) || 0;
+  const isProductFreeShipping = !!(product as any).is_free_shipping;
   const baseRate = orderDeliveryType === 'home' ? wilayaHomeRate : wilayaBaseRate;
-  const shippingRate = productShippingRate > 0 ? productShippingRate : baseRate;
+  const shippingRate = isProductFreeShipping ? 0 : (productShippingRate > 0 ? productShippingRate : baseRate);
   const shippingCost = shippingRate * qty;
+
   const itemSubtotal = effectivePrice * qty;
   const orderTotal = itemSubtotal + shippingCost - couponDiscount;
 
