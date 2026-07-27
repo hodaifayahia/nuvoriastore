@@ -217,10 +217,11 @@ export default function CheckoutPage() {
       if (items.length === 0) return new Map<string, number>();
       const { data } = await supabase
         .from('products')
-        .select('id, shipping_price')
+        .select('id, shipping_price, is_free_shipping')
         .in('id', items.map(i => i.id));
       const map = new Map<string, number>();
-      data?.forEach(p => map.set(p.id, Number(p.shipping_price) || 0));
+      // -1 marks a product with free delivery enabled
+      data?.forEach(p => map.set(p.id, (p as any).is_free_shipping ? -1 : (Number(p.shipping_price) || 0)));
       return map;
     },
     enabled: items.length > 0,

@@ -21,6 +21,7 @@ export function calculateShippingForOrder(
   const baseRate = deliveryType === 'home' && wilayaHomeRate != null ? wilayaHomeRate : wilayaBaseRate;
   return cartItems.reduce((total, item) => {
     const productShipping = productShippingMap.get(item.id);
+    if (productShipping === -1) return total; // free delivery product
     const rate = (productShipping && productShipping > 0) ? productShipping : baseRate;
     return total + rate * item.quantity;
   }, 0);
@@ -39,7 +40,7 @@ export function getShippingBreakdown(
   const baseRate = deliveryType === 'home' && wilayaHomeRate != null ? wilayaHomeRate : wilayaBaseRate;
   return cartItems.map(item => {
     const productShipping = productShippingMap.get(item.id);
-    const rate = (productShipping && productShipping > 0) ? productShipping : baseRate;
+    const rate = productShipping === -1 ? 0 : ((productShipping && productShipping > 0) ? productShipping : baseRate);
     return {
       itemId: item.id,
       name: item.name,
