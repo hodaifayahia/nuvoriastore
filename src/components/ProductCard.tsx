@@ -112,6 +112,16 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
             </div>
           )}
 
+          {isFreeShipping && !outOfStock && (
+            <div className="absolute bottom-2.5 start-2.5">
+              <span className="inline-flex items-center gap-1 bg-emerald-600 text-white rounded-full px-2.5 py-1 text-[11px] font-cairo font-bold shadow-sm">
+                <Truck className="w-3 h-3" />
+                {t('products.freeShipping')}
+              </span>
+            </div>
+          )}
+
+
           {outOfStock && (
             <div className="absolute inset-0 bg-background/70 backdrop-blur-[1px] flex items-center justify-center">
               <span className="bg-foreground text-background text-xs font-cairo font-semibold rounded-full px-3 py-1">
