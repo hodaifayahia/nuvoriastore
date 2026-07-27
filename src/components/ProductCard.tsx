@@ -24,15 +24,17 @@ interface ProductCardProps {
   stock: number;
   shippingPrice?: number;
   featured?: boolean;
+  isFreeShipping?: boolean;
 }
 
-export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured }: ProductCardProps) {
+export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured, isFreeShipping }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const { t, language } = useTranslation();
   const navigate = useNavigate();
   const outOfStock = stock <= 0;
   const isAr = language === 'ar';
+
 
   const { data: variationTypes } = useQuery({
     queryKey: ['product-variation-types', id],
