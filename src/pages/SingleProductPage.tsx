@@ -231,14 +231,16 @@ export default function SingleProductPage() {
     enabled: !!id,
   });
 
+  const pid = (product as any)?.id as string | undefined;
+
   const { data: reviews } = useQuery({
-    queryKey: ['reviews', id],
+    queryKey: ['reviews', pid],
     queryFn: async () => {
-      const { data, error } = await supabase.from('reviews').select('*').eq('product_id', id!).order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('reviews').select('*').eq('product_id', pid!).order('created_at', { ascending: false });
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: wilayas } = useQuery({
@@ -259,12 +261,12 @@ export default function SingleProductPage() {
   });
 
   const { data: optionGroups } = useQuery({
-    queryKey: ['product-option-groups', id],
+    queryKey: ['product-option-groups', pid],
     queryFn: async () => {
       const { data: groups } = await supabase
         .from('product_option_groups')
         .select('*')
-        .eq('product_id', id!)
+        .eq('product_id', pid!)
         .order('position');
       if (!groups || groups.length === 0) return [];
       const { data: values } = await supabase
@@ -277,30 +279,30 @@ export default function SingleProductPage() {
         values: (values || []).filter((v: any) => v.option_group_id === g.id),
       }));
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: productVariants } = useQuery({
-    queryKey: ['product-variants', id],
+    queryKey: ['product-variants', pid],
     queryFn: async () => {
       const { data } = await supabase
         .from('product_variants')
         .select('*')
-        .eq('product_id', id!)
+        .eq('product_id', pid!)
         .eq('is_active', true);
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: variations } = useQuery({
-    queryKey: ['product-variations', id],
+    queryKey: ['product-variations', pid],
     queryFn: async () => {
-      const { data, error } = await supabase.from('product_variations').select('*').eq('product_id', id!).eq('is_active', true).order('variation_type');
+      const { data, error } = await supabase.from('product_variations').select('*').eq('product_id', pid!).eq('is_active', true).order('variation_type');
       if (error) throw error;
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: variationOptions } = useQuery({
@@ -312,12 +314,12 @@ export default function SingleProductPage() {
   });
 
   const { data: bundleOffers } = useQuery({
-    queryKey: ['product-offers', id],
+    queryKey: ['product-offers', pid],
     queryFn: async () => {
-      const { data } = await supabase.from('product_offers').select('*').eq('product_id', id!).order('position');
+      const { data } = await supabase.from('product_offers').select('*').eq('product_id', pid!).order('position');
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const getColorCode = (type: string, value: string) => {
@@ -411,7 +413,7 @@ export default function SingleProductPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['reviews', id] });
+      qc.invalidateQueries({ queryKey: ['reviews', pid] });
       setReviewName(''); setReviewRating(5); setReviewComment('');
       toast({ title: t('sp.thanksForReview') });
     },
