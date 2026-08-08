@@ -405,7 +405,7 @@ export default function SingleProductPage() {
   const submitReview = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from('reviews').insert({
-        product_id: id!,
+        product_id: pid!,
         reviewer_name: reviewName,
         rating: reviewRating,
         comment: reviewComment || null,
