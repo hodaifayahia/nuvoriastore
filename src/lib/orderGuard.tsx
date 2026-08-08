@@ -60,24 +60,31 @@ export function useOrderGuard() {
         message: 'يرجى مراجعة تفاصيل الطلب قبل الإرسال.',
       };
     }
-    // 3. Guest order limit
+    // 3. Guest order limit (per phone number AND per network address)
     if (!opts.userId) {
       const phone = (opts.phone || '').trim();
-      if (phone) {
-        let limit = GUEST_ORDER_LIMIT;
-        const { data: setting } = await supabase
-          .from('settings').select('value').eq('key', 'guest_order_limit').maybeSingle();
-        const parsed = parseInt((setting as any)?.value ?? '', 10);
-        if (!isNaN(parsed) && parsed > 0) limit = parsed;
+      let limit = GUEST_ORDER_LIMIT;
+      const { data: setting } = await supabase
+        .from('settings').select('value').eq('key', 'guest_order_limit').maybeSingle();
+      const parsed = parseInt((setting as any)?.value ?? '', 10);
+      if (!isNaN(parsed) && parsed > 0) limit = parsed;
 
+      let usedByPhone = 0;
+      if (phone) {
         const { data, error } = await supabase.rpc('count_guest_orders_for_phone', { p_phone: phone });
-        if (!error && typeof data === 'number' && data >= limit) {
-          return {
-            ok: false,
-            reason: 'guest_limit',
-            message: `لقد وصلت للحد الأقصى (${limit}) من الطلبات كزائر. الرجاء إنشاء حساب بالبريد الإلكتروني للمتابعة.`,
-          };
-        }
+        if (!error && typeof data === 'number') usedByPhone = data;
+      }
+
+      let usedByIp = 0;
+      const { data: ipData, error: ipError } = await supabase.rpc('count_guest_orders_for_ip' as any);
+      if (!ipError && typeof ipData === 'number') usedByIp = ipData;
+
+      if (Math.max(usedByPhone, usedByIp) >= limit) {
+        return {
+          ok: false,
+          reason: 'guest_limit',
+          message: `لقد وصلت للحد الأقصى (${limit}) من الطلبات كزائر. الرجاء إنشاء حساب أو تسجيل الدخول للمتابعة.`,
+        };
       }
     }
 

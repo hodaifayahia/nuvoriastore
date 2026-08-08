@@ -671,6 +671,7 @@ export type Database = {
         Row: {
           address: string | null
           baladiya: string | null
+          client_ip: string | null
           coupon_code: string | null
           created_at: string | null
           customer_name: string
@@ -692,6 +693,7 @@ export type Database = {
         Insert: {
           address?: string | null
           baladiya?: string | null
+          client_ip?: string | null
           coupon_code?: string | null
           created_at?: string | null
           customer_name: string
@@ -713,6 +715,7 @@ export type Database = {
         Update: {
           address?: string | null
           baladiya?: string | null
+          client_ip?: string | null
           coupon_code?: string | null
           created_at?: string | null
           customer_name?: string
@@ -1812,6 +1815,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      count_guest_orders_for_ip: { Args: never; Returns: number }
       count_guest_orders_for_phone: {
         Args: { p_phone: string }
         Returns: number
@@ -1823,6 +1827,7 @@ export type Database = {
           order_number: string
         }[]
       }
+      current_client_ip: { Args: never; Returns: string }
       get_active_facebook_pixels: {
         Args: never
         Returns: {

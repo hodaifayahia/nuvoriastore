@@ -1048,7 +1048,13 @@ function ProductForm({ product, categoryNames, brandNames, onClose }: { product:
         price_text: priceText.trim() || null,
         short_description: shortDescription.trim() || null,
         is_free_shipping: productType === 'digital' ? true : isFreeShipping,
-        slug: slug.trim() || null,
+        slug: (slug.trim() || name.trim()
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\u0600-\u06FF]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .slice(0, 80)) || null,
         has_variants: hasVariants,
         product_type: productType,
         offer_title: offerTitle.trim() || null,

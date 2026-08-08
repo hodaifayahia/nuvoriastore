@@ -218,21 +218,29 @@ export default function SingleProductPage() {
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', id],
     queryFn: async () => {
-      const { data, error } = await supabase.from('products').select('*').eq('id', id!).maybeSingle();
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id!);
+      if (isUuid) {
+        const { data, error } = await supabase.from('products').select('*').eq('id', id!).maybeSingle();
+        if (error) throw error;
+        return data;
+      }
+      const { data, error } = await supabase.from('products').select('*').eq('slug', id!).limit(1).maybeSingle();
       if (error) throw error;
       return data;
     },
     enabled: !!id,
   });
 
+  const pid = (product as any)?.id as string | undefined;
+
   const { data: reviews } = useQuery({
-    queryKey: ['reviews', id],
+    queryKey: ['reviews', pid],
     queryFn: async () => {
-      const { data, error } = await supabase.from('reviews').select('*').eq('product_id', id!).order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('reviews').select('*').eq('product_id', pid!).order('created_at', { ascending: false });
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: wilayas } = useQuery({
@@ -253,12 +261,12 @@ export default function SingleProductPage() {
   });
 
   const { data: optionGroups } = useQuery({
-    queryKey: ['product-option-groups', id],
+    queryKey: ['product-option-groups', pid],
     queryFn: async () => {
       const { data: groups } = await supabase
         .from('product_option_groups')
         .select('*')
-        .eq('product_id', id!)
+        .eq('product_id', pid!)
         .order('position');
       if (!groups || groups.length === 0) return [];
       const { data: values } = await supabase
@@ -271,30 +279,30 @@ export default function SingleProductPage() {
         values: (values || []).filter((v: any) => v.option_group_id === g.id),
       }));
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: productVariants } = useQuery({
-    queryKey: ['product-variants', id],
+    queryKey: ['product-variants', pid],
     queryFn: async () => {
       const { data } = await supabase
         .from('product_variants')
         .select('*')
-        .eq('product_id', id!)
+        .eq('product_id', pid!)
         .eq('is_active', true);
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: variations } = useQuery({
-    queryKey: ['product-variations', id],
+    queryKey: ['product-variations', pid],
     queryFn: async () => {
-      const { data, error } = await supabase.from('product_variations').select('*').eq('product_id', id!).eq('is_active', true).order('variation_type');
+      const { data, error } = await supabase.from('product_variations').select('*').eq('product_id', pid!).eq('is_active', true).order('variation_type');
       if (error) throw error;
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const { data: variationOptions } = useQuery({
@@ -306,12 +314,12 @@ export default function SingleProductPage() {
   });
 
   const { data: bundleOffers } = useQuery({
-    queryKey: ['product-offers', id],
+    queryKey: ['product-offers', pid],
     queryFn: async () => {
-      const { data } = await supabase.from('product_offers').select('*').eq('product_id', id!).order('position');
+      const { data } = await supabase.from('product_offers').select('*').eq('product_id', pid!).order('position');
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!pid,
   });
 
   const getColorCode = (type: string, value: string) => {
@@ -397,7 +405,7 @@ export default function SingleProductPage() {
   const submitReview = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from('reviews').insert({
-        product_id: id!,
+        product_id: pid!,
         reviewer_name: reviewName,
         rating: reviewRating,
         comment: reviewComment || null,
@@ -405,7 +413,7 @@ export default function SingleProductPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['reviews', id] });
+      qc.invalidateQueries({ queryKey: ['reviews', pid] });
       setReviewName(''); setReviewRating(5); setReviewComment('');
       toast({ title: t('sp.thanksForReview') });
     },
@@ -711,7 +719,6 @@ export default function SingleProductPage() {
       });
       if (error) throw error;
       const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
-      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err: any) {
       const message = String(err?.message || '');
@@ -777,7 +784,7 @@ export default function SingleProductPage() {
               {images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)}
                   className={`w-16 h-16 md:w-full md:h-20 rounded-xl overflow-hidden border-2 shrink-0 transition-all duration-300 ${i === selectedImage ? 'border-primary ring-2 ring-primary/20 shadow-md shadow-primary/10' : 'border-border/50 hover:border-primary/40 opacity-70 hover:opacity-100'}`}>
-                  <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                  <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain bg-white" />
                 </button>
               ))}
             </div>
@@ -787,7 +794,7 @@ export default function SingleProductPage() {
             onTouchEnd={handleTouchEnd}>
             <div className="aspect-square rounded-3xl overflow-hidden bg-muted/50 cursor-zoom-in shadow-lg shadow-foreground/5 border border-border/30" onMouseEnter={() => setIsZoomed(true)} onMouseLeave={() => setIsZoomed(false)}>
               {images[selectedImage] ? (
-                <img src={images[selectedImage]} alt={product.name} loading="eager" fetchPriority="high" decoding="async" className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
+                <img src={images[selectedImage]} alt={product.name} loading="eager" fetchPriority="high" decoding="async" className={`w-full h-full object-contain bg-white transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground/30"><ShoppingCart className="w-20 h-20" /></div>
               )}
@@ -1194,7 +1201,7 @@ export default function SingleProductPage() {
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
-                        {Number(selectedWilaya.shipping_price_home) === 0 ? (
+                        {isProductFreeShipping || Number(selectedWilaya.shipping_price_home) === 0 ? (
                           <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
                         ) : (
                           <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'home' ? 'text-emerald-600' : 'text-foreground'}`}>
@@ -1218,7 +1225,7 @@ export default function SingleProductPage() {
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
-                        {Number(selectedWilaya.shipping_price) === 0 ? (
+                        {isProductFreeShipping || Number(selectedWilaya.shipping_price) === 0 ? (
                           <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
                         ) : (
                           <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'office' ? 'text-emerald-600' : 'text-foreground'}`}>
@@ -1446,7 +1453,7 @@ export default function SingleProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {images.map((img, i) => (
                 <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
-                  <img src={img} alt={`${product.name} - ${i + 1}`} loading="lazy" decoding="async" className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                  <img src={img} alt={`${product.name} - ${i + 1}`} loading="lazy" decoding="async" className="w-full aspect-[4/3] object-contain bg-white group-hover:scale-105 transition-transform duration-700 ease-out" />
                 </div>
               ))}
             </div>
