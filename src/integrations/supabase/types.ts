@@ -1869,6 +1869,7 @@ export type Database = {
         Args: { p_order_id: string; p_phone: string }
         Returns: undefined
       }
+      telegram_order_keyboard: { Args: { p_order_id: string }; Returns: Json }
       upsert_abandoned_order: {
         Args: {
           p_cart_items: Json
