@@ -405,7 +405,9 @@ async function buildOrderDetail(supabase: ReturnType<typeof createClient>, order
   msg += `\n━━━━━━━━━━━━━━━━\n`;
   if (order.subtotal) msg += `المجموع الفرعي: ${display(order.subtotal)} دج\n`;
   if (order.discount_amount) msg += `🏷️ الخصم: -${display(order.discount_amount)} دج\n`;
-  if (order.shipping_cost) msg += `🚚 التوصيل: ${display(order.shipping_cost)} دج\n`;
+  msg += Number(order.shipping_cost || 0) > 0
+    ? `🚚 التوصيل: ${display(order.shipping_cost)} دج\n`
+    : `🚚 التوصيل: <b>مجاني 🎁</b>\n`;
   msg += `💵 <b>الإجمالي: ${display(order.total_amount)} دج</b>`;
 
   const receiptUrl = safeHref(order.payment_receipt_url);
