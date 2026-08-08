@@ -199,6 +199,7 @@ const App = () => (
             <Route path="/admin/settings/delivery" element={<LanguageProvider><AdminLayout><AdminDeliveryPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/homepage" element={<LanguageProvider><AdminLayout><AdminHomepagePage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/faq" element={<LanguageProvider><AdminLayout><AdminFAQPage /></AdminLayout></LanguageProvider>} />
+            <Route path="/admin/settings/backup" element={<LanguageProvider><AdminLayout><AdminBackupPage /></AdminLayout></LanguageProvider>} />
 
             {/* Confirmer */}
             <Route path="/confirmer" element={<LanguageProvider><ConfirmerLayout><ConfirmerDashboardPage /></ConfirmerLayout></LanguageProvider>} />
