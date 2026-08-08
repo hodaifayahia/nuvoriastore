@@ -406,7 +406,6 @@ function OrderFormSection({ accent, onAccent, bg, surface, ink, price, ctaText, 
       if (error) throw error;
       const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
       if (order?.id) {
-        supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
       }
 
       setDone(true);

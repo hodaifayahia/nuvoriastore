@@ -360,7 +360,6 @@ export default function CheckoutPage() {
       await supabase.rpc('mark_abandoned_recovered', { p_phone: phone.trim(), p_order_id: order.id });
 
       // Fire-and-forget Telegram notification for the new order.
-      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
 
 
       setOrderSubmitted(true);

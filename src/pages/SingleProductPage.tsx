@@ -711,7 +711,6 @@ export default function SingleProductPage() {
       });
       if (error) throw error;
       const order = Array.isArray(rpcData) ? rpcData[0] : rpcData;
-      supabase.functions.invoke('telegram-notify', { body: { type: 'new_order', order_id: order.id } }).catch(() => {});
       navigate(`/order-confirmation/${order.order_number}`);
     } catch (err: any) {
       const message = String(err?.message || '');
