@@ -45,6 +45,7 @@ const AdminFormSettingsPage = lazy(() => import("./pages/admin/settings/AdminFor
 const AdminHomepagePage = lazy(() => import("./pages/admin/settings/AdminHomepagePage"));
 const AdminFAQPage = lazy(() => import("./pages/admin/settings/AdminFAQPage"));
 const AdminSecurityPage = lazy(() => import("./pages/admin/settings/AdminSecurityPage"));
+const AdminBackupPage = lazy(() => import("./pages/admin/settings/AdminBackupPage"));
 const AdminLeadsPage = lazy(() => import("./pages/admin/AdminLeadsPage"));
 const AdminVariationsPage = lazy(() => import("./pages/admin/AdminVariationsPage"));
 const AdminAbandonedPage = lazy(() => import("./pages/admin/AdminAbandonedPage"));
