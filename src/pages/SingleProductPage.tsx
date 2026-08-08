@@ -218,7 +218,13 @@ export default function SingleProductPage() {
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', id],
     queryFn: async () => {
-      const { data, error } = await supabase.from('products').select('*').eq('id', id!).maybeSingle();
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id!);
+      if (isUuid) {
+        const { data, error } = await supabase.from('products').select('*').eq('id', id!).maybeSingle();
+        if (error) throw error;
+        return data;
+      }
+      const { data, error } = await supabase.from('products').select('*').eq('slug', id!).maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -1445,7 +1451,7 @@ export default function SingleProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {images.map((img, i) => (
                 <div key={i} className={`rounded-3xl overflow-hidden shadow-md shadow-foreground/5 border border-border/30 group ${i === 0 ? 'md:col-span-2' : ''}`}>
-                  <img src={img} alt={`${product.name} - ${i + 1}`} loading="lazy" decoding="async" className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                  <img src={img} alt={`${product.name} - ${i + 1}`} loading="lazy" decoding="async" className="w-full aspect-[4/3] object-contain bg-white group-hover:scale-105 transition-transform duration-700 ease-out" />
                 </div>
               ))}
             </div>
