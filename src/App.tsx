@@ -106,7 +106,7 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
       <TopMarquee />
       <AnnouncementBar />
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-24 lg:pb-0">{children}</main>
       <Footer />
       <ScrollToTop />
       <div className="hidden lg:block">
