@@ -14,6 +14,7 @@ const SETTINGS_CARDS = [
   { href: '/admin/settings/faq', labelOverride: 'الأسئلة الشائعة', descOverride: 'أضف، عدّل أو احذف الأسئلة التي تظهر في صفحة FAQ للعملاء', icon: HelpCircle },
   { href: '/admin/settings/security', key: 'settings.security', descKey: 'settings.securityDesc', icon: Shield },
   { href: '/admin/settings/pixels', key: 'pixels.title', descKey: 'pixels.description', icon: Facebook },
+  { href: '/admin/settings/backup', labelOverride: 'النسخ الاحتياطي', descOverride: 'تحميل نسخة كاملة من البيانات والصور، أو استعادتها من ملف ZIP', icon: DatabaseBackup },
 ];
 
 export default function AdminSettingsPage() {
