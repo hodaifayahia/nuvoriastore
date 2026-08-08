@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Store, CreditCard, Bot, RotateCcw, FormInput, Paintbrush, Shield, Facebook, LayoutTemplate, HelpCircle } from 'lucide-react';
+import { Store, CreditCard, Bot, RotateCcw, FormInput, Paintbrush, Shield, Facebook, LayoutTemplate, HelpCircle, DatabaseBackup } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useTranslation } from '@/i18n';
 
