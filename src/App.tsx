@@ -14,6 +14,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopOnRouteChange from "@/components/ScrollToTopOnRouteChange";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import FloatingCallButton from "@/components/FloatingCallButton";
+import MobileContactBar from "@/components/MobileContactBar";
 
 import AdminLayout from "@/components/AdminLayout";
 // Keep the homepage eager for fast LCP; lazy-load everything else.
@@ -108,8 +109,11 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <ScrollToTop />
-      <WhatsAppFloat />
-      <FloatingCallButton />
+      <div className="hidden lg:block">
+        <WhatsAppFloat />
+        <FloatingCallButton />
+      </div>
+      <MobileContactBar />
     </div>
 
   );
