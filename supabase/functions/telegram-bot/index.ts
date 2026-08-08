@@ -348,6 +348,20 @@ async function buildOrderDetail(supabase: ReturnType<typeof createClient>, order
   }
   if (!order) return null;
 
+  let wilayaName = "—";
+  if (order.wilaya_id) {
+    const { data: wilaya, error: wilayaError } = await supabase
+      .from("wilayas")
+      .select("name")
+      .eq("id", order.wilaya_id)
+      .maybeSingle();
+    if (wilayaError) {
+      console.error("buildOrderDetail wilaya query failed:", wilayaError.message);
+    } else if (wilaya?.name) {
+      wilayaName = wilaya.name;
+    }
+  }
+
   const { data: items, error: itemsError } = await supabase.from("order_items").select("quantity, unit_price, product_id").eq("order_id", orderId);
   if (itemsError) {
     console.error("buildOrderDetail items query failed:", itemsError.message);
@@ -365,12 +379,16 @@ async function buildOrderDetail(supabase: ReturnType<typeof createClient>, order
   }
 
   const paymentLabel: Record<string, string> = { cod: "عند التسليم", cash_on_delivery: "عند التسليم", baridimob: "بريدي موب", flexy: "فليكسي" };
+  const deliveryLabel: Record<string, string> = { home: "توصيل للمنزل", office: "مكتب التوصيل", pickup: "نقطة استلام", digital: "منتج رقمي" };
 
   let msg = `🧾 <b>طلب #${display(order.order_number)}</b>\n`
     + `━━━━━━━━━━━━━━━━\n\n`
     + `👤 <b>${display(order.customer_name)}</b>\n`
     + `📱 ${display(order.customer_phone)}\n`
-    + `📍 ${display(order.baladiya || order.address)}\n`
+    + `📍 الولاية: <b>${display(wilayaName)}</b>\n`
+    + `🏘️ البلدية: <b>${display(order.baladiya)}</b>\n`
+    + `🏠 العنوان: ${display(order.address, "لم يُدخل")}\n`
+    + `🚚 نوع التوصيل: ${display(deliveryLabel[order.delivery_type || ""] || order.delivery_type)}\n`
     + `💳 ${display(paymentLabel[order.payment_method || ""] || order.payment_method)}\n`
     + `📦 الحالة: <b>${display(order.status)}</b>\n\n`
     + `<b>🛒 المنتجات:</b>\n`;
