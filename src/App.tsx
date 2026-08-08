@@ -45,6 +45,7 @@ const AdminFormSettingsPage = lazy(() => import("./pages/admin/settings/AdminFor
 const AdminHomepagePage = lazy(() => import("./pages/admin/settings/AdminHomepagePage"));
 const AdminFAQPage = lazy(() => import("./pages/admin/settings/AdminFAQPage"));
 const AdminSecurityPage = lazy(() => import("./pages/admin/settings/AdminSecurityPage"));
+const AdminBackupPage = lazy(() => import("./pages/admin/settings/AdminBackupPage"));
 const AdminLeadsPage = lazy(() => import("./pages/admin/AdminLeadsPage"));
 const AdminVariationsPage = lazy(() => import("./pages/admin/AdminVariationsPage"));
 const AdminAbandonedPage = lazy(() => import("./pages/admin/AdminAbandonedPage"));
@@ -198,6 +199,7 @@ const App = () => (
             <Route path="/admin/settings/delivery" element={<LanguageProvider><AdminLayout><AdminDeliveryPage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/homepage" element={<LanguageProvider><AdminLayout><AdminHomepagePage /></AdminLayout></LanguageProvider>} />
             <Route path="/admin/settings/faq" element={<LanguageProvider><AdminLayout><AdminFAQPage /></AdminLayout></LanguageProvider>} />
+            <Route path="/admin/settings/backup" element={<LanguageProvider><AdminLayout><AdminBackupPage /></AdminLayout></LanguageProvider>} />
 
             {/* Confirmer */}
             <Route path="/confirmer" element={<LanguageProvider><ConfirmerLayout><ConfirmerDashboardPage /></ConfirmerLayout></LanguageProvider>} />
