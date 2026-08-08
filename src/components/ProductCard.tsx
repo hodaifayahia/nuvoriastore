@@ -13,6 +13,7 @@ import { useTranslation } from '@/i18n';
 
 interface ProductCardProps {
   id: string;
+  slug?: string | null;
   name: string;
   price: number;
   oldPrice?: number;
@@ -27,11 +28,12 @@ interface ProductCardProps {
   isFreeShipping?: boolean;
 }
 
-export default function ProductCard({ id, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured, isFreeShipping }: ProductCardProps) {
+export default function ProductCard({ id, slug, name, price, oldPrice, priceText, image, images, mainImageIndex, category, stock, featured, isFreeShipping }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const { t, language } = useTranslation();
   const navigate = useNavigate();
+  const productPath = `/product/${slug || id}`;
   const outOfStock = stock <= 0;
   const isAr = language === 'ar';
 
@@ -58,10 +60,10 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
     e.stopPropagation();
     if (outOfStock) return;
     if (variationTypes && variationTypes.length > 0) {
-      navigate(`/product/${id}`);
+      navigate(productPath);
       return;
     }
-    navigate(`/product/${id}`);
+    navigate(productPath);
   };
 
   const brand = Array.isArray(category) ? category[0] : category;
@@ -75,7 +77,7 @@ export default function ProductCard({ id, name, price, oldPrice, priceText, imag
   const centimes = Math.round(price * 100).toLocaleString(isAr ? 'ar-DZ' : 'fr-DZ');
 
   return (
-    <Link to={`/product/${id}`} className="group block h-full">
+    <Link to={productPath} className="group block h-full">
       <article className="relative h-full flex flex-col rounded-2xl border border-border/60 bg-card shadow-[0_2px_8px_rgba(15,27,61,0.04)] overflow-hidden transition-all hover:shadow-[0_8px_24px_rgba(15,27,61,0.08)] hover:-translate-y-0.5">
         {/* Image */}
         <div className="relative aspect-square bg-muted/30">

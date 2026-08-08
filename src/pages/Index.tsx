@@ -112,7 +112,7 @@ export default function IndexPage() {
       // payload — the full catalogue lives on /products with its own pager.
       const { data, error } = await supabase
         .from('products')
-        .select('id,name,price,old_price,price_text,short_description,images,main_image_index,category,stock,shipping_price,is_free_shipping,is_featured,created_at')
+        .select('id,name,price,old_price,price_text,short_description,images,main_image_index,category,stock,shipping_price,is_free_shipping,slug,is_featured,created_at')
         .eq('is_active', true)
         .order('created_at', { ascending: false })
         .limit(60);
@@ -534,6 +534,7 @@ export default function IndexPage() {
                     stock={p.stock ?? 0}
                     shippingPrice={Number(p.shipping_price) || 0}
                     isFreeShipping={!!(p as any).is_free_shipping}
+                      slug={(p as any).slug}
                   />
                 </div>
               ))}
@@ -620,6 +621,7 @@ export default function IndexPage() {
                         stock={p.stock ?? 0}
                         shippingPrice={Number(p.shipping_price) || 0}
                     isFreeShipping={!!(p as any).is_free_shipping}
+                      slug={(p as any).slug}
                       />
                     </div>
                   ))}
