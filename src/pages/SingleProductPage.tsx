@@ -776,7 +776,7 @@ export default function SingleProductPage() {
               {images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)}
                   className={`w-16 h-16 md:w-full md:h-20 rounded-xl overflow-hidden border-2 shrink-0 transition-all duration-300 ${i === selectedImage ? 'border-primary ring-2 ring-primary/20 shadow-md shadow-primary/10' : 'border-border/50 hover:border-primary/40 opacity-70 hover:opacity-100'}`}>
-                  <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                  <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain bg-white" />
                 </button>
               ))}
             </div>
@@ -786,7 +786,7 @@ export default function SingleProductPage() {
             onTouchEnd={handleTouchEnd}>
             <div className="aspect-square rounded-3xl overflow-hidden bg-muted/50 cursor-zoom-in shadow-lg shadow-foreground/5 border border-border/30" onMouseEnter={() => setIsZoomed(true)} onMouseLeave={() => setIsZoomed(false)}>
               {images[selectedImage] ? (
-                <img src={images[selectedImage]} alt={product.name} loading="eager" fetchPriority="high" decoding="async" className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
+                <img src={images[selectedImage]} alt={product.name} loading="eager" fetchPriority="high" decoding="async" className={`w-full h-full object-contain bg-white transition-transform duration-700 ease-out ${isZoomed ? 'scale-150' : 'scale-100'}`} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground/30"><ShoppingCart className="w-20 h-20" /></div>
               )}
@@ -1193,7 +1193,7 @@ export default function SingleProductPage() {
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
-                        {Number(selectedWilaya.shipping_price_home) === 0 ? (
+                        {isProductFreeShipping || Number(selectedWilaya.shipping_price_home) === 0 ? (
                           <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
                         ) : (
                           <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'home' ? 'text-emerald-600' : 'text-foreground'}`}>
@@ -1217,7 +1217,7 @@ export default function SingleProductPage() {
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
-                        {Number(selectedWilaya.shipping_price) === 0 ? (
+                        {isProductFreeShipping || Number(selectedWilaya.shipping_price) === 0 ? (
                           <span className="text-emerald-600 font-cairo font-bold text-xs">Gratuit</span>
                         ) : (
                           <span className={`font-roboto font-bold text-xs ${orderDeliveryType === 'office' ? 'text-emerald-600' : 'text-foreground'}`}>
