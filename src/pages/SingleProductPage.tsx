@@ -224,7 +224,7 @@ export default function SingleProductPage() {
         if (error) throw error;
         return data;
       }
-      const { data, error } = await supabase.from('products').select('*').eq('slug', id!).maybeSingle();
+      const { data, error } = await supabase.from('products').select('*').eq('slug', id!).limit(1).maybeSingle();
       if (error) throw error;
       return data;
     },
