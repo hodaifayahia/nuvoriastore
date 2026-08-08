@@ -1448,7 +1448,11 @@ export default function SingleProductPage() {
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-primary to-primary/30" />
             <h2 className="font-cairo font-extrabold text-2xl text-foreground">{t('sp.productDetails')}</h2>
           </div>
-          <p className="font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap">{product.description}</p>
+          <p
+            dir={language === 'ar' ? 'rtl' : 'ltr'}
+            style={{ unicodeBidi: 'isolate' }}
+            className={`font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap ${language === 'ar' ? 'text-right' : 'text-left'}`}
+          >{product.description}</p>
           {images.length > 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {images.map((img, i) => (
