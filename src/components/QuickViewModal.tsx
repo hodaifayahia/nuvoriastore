@@ -1,3 +1,4 @@
+import { textDir, textAlignClass } from '@/lib/textDir';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, X, Star, ChevronRight, ChevronLeft, Zap, Share2, ExternalLink } from 'lucide-react';
@@ -164,7 +165,7 @@ export default function QuickViewModal({ product, reviewStats, onClose }: QuickV
 
               {/* Description */}
               {(product.short_description || product.description) && (
-                <p className="font-cairo text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                <p dir={textDir(product.short_description || product.description)} className={`font-cairo text-sm text-muted-foreground leading-relaxed line-clamp-3 ${textAlignClass(product.short_description || product.description)}`}>
                   {product.short_description || product.description}
                 </p>
               )}

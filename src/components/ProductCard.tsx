@@ -66,7 +66,12 @@ export default function ProductCard({ id, slug, name, price, oldPrice, priceText
     navigate(productPath);
   };
 
-  const brand = Array.isArray(category) ? category[0] : category;
+  const brand = (() => {
+    const c: any = category;
+    if (Array.isArray(c)) return c[0];
+    if (typeof c === 'string' && c.trim().startsWith('[')) { try { const a = JSON.parse(c); return Array.isArray(a) ? a[0] : c; } catch { return c.replace(/[\[\]"']/g, ''); } }
+    return c;
+  })();
   const discountPct = oldPrice && oldPrice > price
     ? Math.round(((oldPrice - price) / oldPrice) * 100)
     : 0;

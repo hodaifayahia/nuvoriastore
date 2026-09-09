@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import nuvoriaLogo from '@/assets/nuvoria-logo.png.asset.json';
-
-export const NUVORIA_LOGO_URL = nuvoriaLogo.url;
+export const NUVORIA_LOGO_URL = '/nuvoria-logo.png';
 
 export function useStoreLogo() {
   return useQuery({

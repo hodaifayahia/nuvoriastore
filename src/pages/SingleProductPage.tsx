@@ -1,3 +1,4 @@
+import { textDir, textAlignClass } from '@/lib/textDir';
 import SEO from '@/components/SEO';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -817,10 +818,10 @@ export default function SingleProductPage() {
           )}
 
           <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 space-y-5 shadow-sm">
-            <h1 className="font-cairo font-extrabold text-2xl md:text-3xl text-foreground leading-tight">{product.name}</h1>
+            <h1 dir={textDir(product.name)} className={`font-cairo font-extrabold text-2xl md:text-3xl text-foreground leading-tight ${textAlignClass(product.name)}`}>{product.name}</h1>
 
             {product.short_description && (
-              <p className="font-cairo text-sm text-muted-foreground leading-relaxed">{product.short_description}</p>
+              <p dir={textDir(product.short_description)} className={`font-cairo text-sm text-muted-foreground leading-relaxed ${textAlignClass(product.short_description)}`}>{product.short_description}</p>
             )}
 
             {/* Reviews + Rating prominently near price */}
@@ -1449,9 +1450,9 @@ export default function SingleProductPage() {
             <h2 className="font-cairo font-extrabold text-2xl text-foreground">{t('sp.productDetails')}</h2>
           </div>
           <p
-            dir={language === 'ar' ? 'rtl' : 'ltr'}
+            dir={textDir(product.description)}
             style={{ unicodeBidi: 'isolate' }}
-            className={`font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap ${language === 'ar' ? 'text-right' : 'text-left'}`}
+            className={`font-cairo text-muted-foreground leading-relaxed mb-8 max-w-2xl text-base whitespace-pre-wrap ${textAlignClass(product.description)}`}
           >{product.description}</p>
           {images.length > 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

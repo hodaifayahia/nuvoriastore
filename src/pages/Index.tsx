@@ -33,7 +33,8 @@ import LimitedOfferSection from '@/components/homepage/LimitedOfferSection';
 import heroBanner1 from '@/assets/hero-banner-1.jpg';
 import heroBanner2 from '@/assets/hero-banner-2.jpg';
 import heroBanner3 from '@/assets/hero-banner-3.jpg';
-import bestPricesBanner from '@/assets/best-prices-banner.jpg.asset.json';
+import bestPricesBannerUrl from '@/assets/hero-banner-new.jpg';
+const bestPricesBanner = { url: bestPricesBannerUrl };
 
 const DEFAULT_HERO_SLIDES = [
   { url: heroBanner1, alt: 'Froid et lavage' },

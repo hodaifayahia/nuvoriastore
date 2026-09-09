@@ -14,6 +14,9 @@ export function optimizeImage(
 ): string {
   if (!url) return '';
   if (url.startsWith('data:') || url.startsWith('blob:')) return url;
+  // Image transformations (/render/image) require a paid Supabase plan — serve originals.
+  return url;
+  // eslint-disable-next-line no-unreachable
   if (!url.includes('/storage/v1/object/public/')) return url;
 
   const transformed = url.replace(
@@ -42,8 +45,8 @@ export function optimizedSrcSet(
 }
 
 /** Tiny (blurred) placeholder URL, ~24px wide, low quality. */
-export function placeholderImage(url: string | undefined | null): string {
-  return optimizeImage(url, 24, { quality: 20 });
+export function placeholderImage(_url: string | undefined | null): string {
+  return '';
 }
 
 /**
