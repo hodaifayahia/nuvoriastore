@@ -5,14 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import {
-  Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera,
-  BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker,
-  Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag,
-  ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap,
-  ChevronRight, ChevronLeft, Star, Flame, Clock, Quote, RefreshCw, Wrench, Grid3X3,
-  type LucideIcon,
-} from 'lucide-react';
+import { Smartphone, Laptop, Headphones, Mouse, Keyboard, Cable, Watch, Camera, BatteryCharging, Cpu, Gamepad2, HardDrive, Monitor, Speaker, Refrigerator, ChefHat, WashingMachine, Microwave, AirVent, Tag, ArrowRight, Search, Sparkles, Shield, Truck, BadgeCheck, Zap, ChevronRight, ChevronLeft, Star, Flame, Clock, Quote, RefreshCw, Wrench, Grid3X3, type LucideIcon, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ProductCard from '@/components/ProductCard';
@@ -286,6 +279,10 @@ export default function IndexPage() {
               url: img,
               alt: p.name,
               title: p.name,
+              subtitle: p.short_description || '',
+              price: p.price,
+              oldPrice: p.old_price,
+              category: Array.isArray(p.category) ? p.category[0] : p.category,
               link: `/product/${p.id}`,
               cta: isAr ? 'اكتشف المزيد' : 'Découvrir',
             };
@@ -309,83 +306,115 @@ export default function IndexPage() {
                 </div>
               </div>
 
-              {/* Active slide — full-bleed */}
-              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/7] xl:aspect-[21/9] overflow-hidden bg-slate-900">
-                {slides.map((slide: any, i: number) => (
-                  <div key={i} className={`absolute inset-0 transition-opacity duration-700 ${i === selectedSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
-                    {isVideo(slide.url) ? (
-                      <video
-                        src={slide.url}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={slide.url}
-                        alt={slide.alt || slide.title || ''}
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                        fetchPriority={i === 0 ? 'high' : undefined}
-                        decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    )}
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  </div>
-                ))}
+              {/* ─── Hero: split layout — copy left, product showcase right ─── */}
+              <div className="relative overflow-hidden bg-[radial-gradient(120%_120%_at_10%_0%,#16336f_0%,#0b1f4d_45%,#070f26_100%)] text-white">
+                {/* decorative glows */}
+                <div aria-hidden className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#c8a24a]/15 blur-3xl" />
+                <div aria-hidden className="pointer-events-none absolute -bottom-40 right-1/3 w-[28rem] h-[28rem] rounded-full bg-sky-400/10 blur-3xl" />
+                <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:48px_48px]" />
 
-                {/* Bottom content overlay */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-6 sm:p-10 lg:p-14 flex items-end justify-between gap-4">
-                  {/* Title */}
-                  <div>
-                    <h1 key={`title-${selectedSlide}`} className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)] animate-fade-in">
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[520px] lg:min-h-[560px]">
+                  {/* Copy */}
+                  <div className={`lg:col-span-6 order-2 lg:order-1 ${isAr ? 'text-right' : 'text-left'}`} dir={isAr ? 'rtl' : 'ltr'}>
+                    <p className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#e2c477] mb-4">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      {txt('hero_kicker', 'Électroménager premium en Algérie', 'أجهزة كهرومنزلية فاخرة في الجزائر')}
+                    </p>
+                    <h1 key={`title-${selectedSlide}`} className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight animate-fade-in line-clamp-3">
                       {active.title || active.alt || (isAr ? 'اكتشف المجموعة' : 'Découvrez la collection')}
                     </h1>
+                    {(active.subtitle || !active.price) && (
+                      <p className="mt-4 text-sm sm:text-base lg:text-lg text-white/75 leading-relaxed max-w-xl line-clamp-3">
+                        {active.subtitle || txt('hero_subtitle', 'Les meilleures marques, livrées dans les 58 wilayas avec garantie et paiement à la livraison.', 'أفضل الماركات، توصيل لكل الولايات مع ضمان ودفع عند الاستلام.')}
+                      </p>
+                    )}
+                    {active.price && (
+                      <div className="mt-5 flex items-baseline gap-3">
+                        <span className="font-display text-3xl sm:text-4xl font-extrabold text-[#e2c477]">{Number(active.price).toLocaleString('fr-DZ')} DZD</span>
+                        {active.oldPrice && active.oldPrice > active.price && (
+                          <span className="text-white/50 line-through text-base sm:text-lg">{Number(active.oldPrice).toLocaleString('fr-DZ')} DZD</span>
+                        )}
+                      </div>
+                    )}
+                    <div className="mt-7 flex flex-wrap items-center gap-3">
+                      <Link
+                        to={active.link || '/products'}
+                        className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#e2c477] text-[#0b1f4d] font-bold text-sm sm:text-base shadow-[0_10px_30px_rgba(226,196,119,0.35)] hover:bg-[#f0d48a] hover:-translate-y-0.5 transition-all duration-300"
+                      >
+                        <span>{active.cta || (isAr ? 'اكتشف' : 'Découvrir')}</span>
+                        <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+                      </Link>
+                      <Link
+                        to="/products"
+                        className="inline-flex items-center gap-2 px-6 py-3 sm:py-3.5 rounded-full border border-white/25 bg-white/5 backdrop-blur text-white font-semibold text-sm sm:text-base hover:bg-white/10 transition-all duration-300"
+                      >
+                        {txt('hero_cta_all', 'Voir tous les produits', 'كل المنتجات')}
+                      </Link>
+                    </div>
+                    <ul className="mt-8 grid grid-cols-3 gap-3 max-w-lg text-[11px] sm:text-xs text-white/80">
+                      <li className="flex items-center gap-2"><span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><Truck className="w-4 h-4 text-[#e2c477]" /></span><span>{txt('hero_trust_1', 'Livraison 58 wilayas', 'توصيل 58 ولاية')}</span></li>
+                      <li className="flex items-center gap-2"><span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><ShieldCheck className="w-4 h-4 text-[#e2c477]" /></span><span>{txt('hero_trust_2', 'Garantie 1 an', 'ضمان سنة')}</span></li>
+                      <li className="flex items-center gap-2"><span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><BadgeCheck className="w-4 h-4 text-[#e2c477]" /></span><span>{txt('hero_trust_3', 'Produits 100% originaux', 'منتجات أصلية 100%')}</span></li>
+                    </ul>
                   </div>
-                  {/* CTA Button */}
-                  <Link
-                    to={active.link || '/products'}
-                    className="shrink-0 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-white/95 backdrop-blur-sm text-slate-900 font-bold text-sm sm:text-base shadow-xl hover:bg-white hover:scale-105 transition-all duration-300"
-                  >
-                    <span>{active.cta || (isAr ? 'اكتشف' : 'Découvrir')}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+
+                  {/* Showcase */}
+                  <div className="lg:col-span-6 order-1 lg:order-2 relative">
+                    <div className="relative mx-auto w-full max-w-md lg:max-w-none aspect-square sm:aspect-[5/4] lg:aspect-[4/3]">
+                      <div aria-hidden className="absolute inset-6 rounded-[2.5rem] bg-gradient-to-br from-[#e2c477]/30 via-transparent to-sky-300/20 blur-2xl" />
+                      <div className="absolute inset-0 rounded-[2rem] bg-white shadow-[0_30px_80px_rgba(0,0,0,0.45)] ring-1 ring-white/20 overflow-hidden">
+                        {slides.map((slide: any, i: number) => (
+                          <div key={i} className={`absolute inset-0 transition-all duration-700 ${i === selectedSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-[1.03] z-0'}`}>
+                            {isVideo(slide.url) ? (
+                              <video src={slide.url} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+                            ) : (
+                              <img
+                                src={slide.url}
+                                alt={slide.alt || slide.title || ''}
+                                loading={i === 0 ? 'eager' : 'lazy'}
+                                fetchPriority={i === 0 ? 'high' : undefined}
+                                decoding="async"
+                                className={`absolute inset-0 w-full h-full ${slide.price ? 'object-contain p-6 sm:p-10' : 'object-cover'}`}
+                              />
+                            )}
+                          </div>
+                        ))}
+                        {active.category && (
+                          <span className="absolute top-4 start-4 z-20 rounded-full bg-[#0b1f4d] text-white text-[11px] font-semibold px-3 py-1.5 shadow">{active.category}</span>
+                        )}
+                        {active.oldPrice && active.price && active.oldPrice > active.price && (
+                          <span className="absolute top-4 end-4 z-20 rounded-full bg-red-500 text-white text-xs font-bold px-3 py-1.5 shadow">-{Math.round(((active.oldPrice - active.price) / active.oldPrice) * 100)}%</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Prev / Next arrows */}
+                    {count > 1 && (
+                      <>
+                        <button type="button" onClick={scrollPrev} aria-label="Précédent" className="absolute top-1/2 -translate-y-1/2 -left-2 sm:-left-4 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#0b1f4d] shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button type="button" onClick={scrollNext} aria-label="Suivant" className="absolute top-1/2 -translate-y-1/2 -right-2 sm:-right-4 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#0b1f4d] shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
 
                 {/* Navigation dots */}
                 {count > 1 && (
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+                  <div className="relative z-20 flex items-center justify-center gap-2 pb-6 -mt-2">
                     {slides.map((_: any, i: number) => (
                       <button
                         key={i}
                         onClick={() => scrollTo(i)}
-                        className={`rounded-full transition-all duration-300 ${i === selectedSlide ? 'w-8 h-3 bg-white' : 'w-3 h-3 bg-white/50 hover:bg-white/70'}`}
+                        className={`rounded-full transition-all duration-300 ${i === selectedSlide ? 'w-8 h-2.5 bg-[#e2c477]' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'}`}
                         aria-label={`Slide ${i + 1}`}
                       />
                     ))}
                   </div>
                 )}
-
-                {/* Prev / Next arrows */}
-                <button
-                  type="button"
-                  onClick={scrollPrev}
-                  aria-label="Précédent"
-                  className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-8 z-20 w-12 h-12 rounded-full border-2 border-white/60 bg-transparent text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:text-slate-900 transition-all duration-300"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  type="button"
-                  onClick={scrollNext}
-                  aria-label="Suivant"
-                  className="absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 z-20 w-12 h-12 rounded-full border-2 border-white/60 bg-white/95 text-slate-900 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:scale-110 transition-all duration-300 shadow-lg"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
               </div>
             </div>
 
