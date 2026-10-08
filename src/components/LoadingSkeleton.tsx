@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 
 export function ProductCardSkeleton() {
   return (
-    <div className="bg-card rounded-2xl border border-secondary/10 overflow-hidden animate-pulse">
+    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden" aria-hidden="true">
       <Skeleton className="aspect-[4/3] w-full" />
       <div className="p-4 space-y-3">
         <Skeleton className="h-4 w-4/5 rounded-full" />

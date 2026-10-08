@@ -82,7 +82,7 @@ export default function ProductImage({
             />
           )}
           {/* Skeleton shimmer over the blur */}
-          <div className="absolute inset-0 bg-muted/40 animate-pulse" aria-hidden="true" />
+          <div className="absolute inset-0 skeleton-shimmer" aria-hidden="true" />
         </>
       )}
       <img

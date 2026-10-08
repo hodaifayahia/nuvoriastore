@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ProductCard from '@/components/ProductCard';
 import { ProductGridSkeleton } from '@/components/LoadingSkeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useCategories } from '@/hooks/useCategories';
 import { useBrands } from '@/hooks/useBrands';
 import { useTranslation } from '@/i18n';
@@ -91,7 +92,7 @@ const FALLBACK_CATS = [
 const STORE_TEMPLATE_CACHE_KEY = 'nuvoria:store-template';
 
 export default function IndexPage() {
-  const { data: categoriesData } = useCategories();
+  const { data: categoriesData, isLoading: categoriesLoading } = useCategories();
   const { data: brandsData } = useBrands();
   const { t, language } = useTranslation();
   const isAr = language === 'ar';
@@ -424,9 +425,20 @@ export default function IndexPage() {
 
 
       {/* ─────────── CATEGORY BENTO (building layout) ─────────── */}
-      {showSection('categories') && bentoCats.length === 0 && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24" aria-hidden="true">
-          <div className="max-w-7xl mx-auto min-h-[560px] sm:min-h-[720px] md:min-h-[760px] lg:min-h-[900px]" />
+      {showSection('categories') && categoriesLoading && (
+        <section className="pb-16 sm:pb-24" aria-busy="true">
+          <div className="flex flex-col items-center gap-3 mb-8 sm:mb-10 px-4">
+            <Skeleton className="h-3 w-32 rounded-full" />
+            <Skeleton className="h-8 w-64 max-w-full rounded-full" />
+          </div>
+          <div className="flex justify-center gap-4 sm:gap-6 px-4 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-3 shrink-0">
+                <Skeleton className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full" />
+                <Skeleton className="h-3 w-16 rounded-full" />
+              </div>
+            ))}
+          </div>
         </section>
       )}
       {showSection('categories') && bentoCats.length > 0 && (
@@ -519,8 +531,14 @@ export default function IndexPage() {
 
       {/* ─────────── FEATURED PRODUCTS (admin picks) ─────────── */}
       {showSection('featured') && isLoading && (
-        <section className="px-4 sm:px-6 lg:px-8 pb-16" aria-hidden="true">
-          <div className="max-w-6xl mx-auto min-h-[520px]" />
+        <section className="px-4 sm:px-6 lg:px-8 pb-16" aria-busy="true">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-8 space-y-3">
+              <Skeleton className="h-3 w-32 rounded-full" />
+              <Skeleton className="h-7 w-56 rounded-full" />
+            </div>
+            <ProductGridSkeleton count={4} />
+          </div>
         </section>
       )}
       {showSection('featured') && !isLoading && featuredProducts.length > 0 && (

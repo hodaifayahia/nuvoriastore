@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ProductGridSkeleton } from "@/components/LoadingSkeleton";
 
 import Navbar from "@/components/Navbar";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -103,13 +105,23 @@ function StoreThemeProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function PageSkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6" aria-busy="true">
+      <Skeleton className="h-8 w-48 rounded-full" />
+      <ProductGridSkeleton count={4} />
+    </div>
+  );
+}
+
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
       <TopMarquee />
       <AnnouncementBar />
       <Navbar />
-      <main className="flex-1 pb-24 lg:pb-0">{children}</main>
+      {/* Lazy pages load inside the layout, so the navbar stays on screen. */}
+      <main className="flex-1 pb-24 lg:pb-0"><Suspense fallback={<PageSkeleton />}>{children}</Suspense></main>
       <Suspense fallback={null}><Footer /></Suspense>
       <ScrollToTop />
       <div className="hidden lg:block">
