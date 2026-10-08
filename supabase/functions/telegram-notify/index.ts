@@ -5,6 +5,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Customer-supplied text must be escaped, otherwise a name or address with
+// "<" or "&" makes Telegram reject the whole HTML message.
+function esc(value: unknown): string {
+  return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -106,7 +112,7 @@ Deno.serve(async (req) => {
 
       const itemLines = orderItems?.map((i: { product_id: string; quantity: number; unit_price: number }) => {
         const name = productMap[i.product_id] || "منتج";
-        return `  • ${name} × ${i.quantity} = ${i.unit_price * i.quantity} دج`;
+        return `  • ${esc(name)} × ${i.quantity} = ${i.unit_price * i.quantity} دج`;
       }).join("\n") || "";
 
       const paymentLabel: Record<string, string> = {
@@ -115,13 +121,13 @@ Deno.serve(async (req) => {
         flexy: "فليكسي",
       };
 
-      message = `🛒 <b>طلب جديد #${order.order_number}</b>\n\n`
-        + `👤 ${order.customer_name}\n`
-        + `📱 ${order.customer_phone}\n`
-        + `💰 ${order.total_amount} دج\n`
-        + `💳 ${paymentLabel[order.payment_method || ""] || order.payment_method}\n\n`
+      message = `🛒 <b>طلب جديد #${esc(order.order_number)}</b>\n\n`
+        + `👤 ${esc(order.customer_name)}\n`
+        + `📱 ${esc(order.customer_phone)}\n`
+        + `💰 ${esc(order.total_amount)} دج\n`
+        + `💳 ${esc(paymentLabel[order.payment_method || ""] || order.payment_method)}\n\n`
         + `<b>المنتجات:</b>\n${itemLines}\n\n`
-        + `📦 الحالة: ${order.status}`;
+        + `📦 الحالة: ${esc(order.status)}`;
     } else {
       return new Response(JSON.stringify({ ok: false, reason: "unknown_type" }), { headers: corsHeaders });
     }

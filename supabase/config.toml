@@ -1,4 +1,8 @@
-project_id = "utrfqqgkfplbjmyrtjrv"
+project_id = "gppdjfjvceciejnyzxem"
 
 [functions.telegram-notify]
+verify_jwt = false
+
+# Telegram calls the webhook without a Supabase JWT, so the bot must be public.
+[functions.telegram-bot]
 verify_jwt = false

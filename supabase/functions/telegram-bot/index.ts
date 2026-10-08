@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
           .limit(1)
           .maybeSingle();
         if (!found) {
-          await sendMessage(botToken, chatId, `❌ لم يتم العثور على طلب بالرقم <b>${raw}</b>.`, {
+          await sendMessage(botToken, chatId, `❌ لم يتم العثور على طلب بالرقم <b>${escapeHtml(raw)}</b>.`, {
             inline_keyboard: [
               [{ text: "🔍 بحث آخر", callback_data: "orders_search" }],
               [{ text: "🔙 عودة للطلبات", callback_data: "menu:orders" }],
@@ -280,6 +280,13 @@ function display(value: unknown, fallback = "—"): string {
   return escapeHtml(text || fallback);
 }
 
+function formatDate(value: unknown): string {
+  if (!value) return "—";
+  const d = new Date(String(value));
+  if (isNaN(d.getTime())) return "—";
+  return escapeHtml(d.toLocaleString("fr-DZ", { timeZone: "Africa/Algiers", dateStyle: "short", timeStyle: "short" }));
+}
+
 function safeHref(value: unknown): string | null {
   const url = String(value ?? "").trim();
   if (!/^https?:\/\//i.test(url)) return null;
@@ -301,7 +308,7 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
 
   const { data: orders, count } = await supabase
     .from("orders")
-    .select("id, order_number, customer_name, total_amount, status, created_at", { count: "exact" })
+    .select("id, order_number, customer_name, customer_phone, total_amount, status, created_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -321,8 +328,10 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
 
   const statusEmoji: Record<string, string> = { "جديد": "🆕", "مؤكد": "✅", "قيد التحضير": "📦", "تم الشحن": "🚚", "تم التسليم": "✔️", "ملغي": "❌" };
   orders.forEach((o) => {
-    msg += `${statusEmoji[o.status] || "📄"} <b>#${o.order_number}</b> — ${o.customer_name}\n`
-      + `   💰 ${o.total_amount} دج  •  ${o.status}\n\n`;
+    msg += `${statusEmoji[o.status] || "📄"} <b>#${display(o.order_number)}</b> — ${display(o.customer_name)}\n`
+      + `   📱 ${display(o.customer_phone)}\n`
+      + `   💰 ${display(o.total_amount)} دج  •  ${display(o.status)}\n`
+      + `   📅 ${formatDate(o.created_at)}\n\n`;
   });
 
   const buttons: Array<Array<{ text: string; callback_data: string }>> = [];
@@ -455,7 +464,7 @@ async function sendOrderDetail(supabase: ReturnType<typeof createClient>, token:
 async function handleOrderStatusUpdate(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string, status: string, messageId: number) {
   await supabase.from("orders").update({ status }).eq("id", orderId);
   await handleOrderDetail(supabase, token, chatId, orderId, messageId);
-  await sendMessage(token, chatId, `✅ تم تحديث الحالة إلى: <b>${status}</b>`);
+  await sendMessage(token, chatId, `✅ تم تحديث الحالة إلى: <b>${escapeHtml(status)}</b>`);
 }
 
 // ==================== PRODUCTS ====================
@@ -480,11 +489,11 @@ async function handleProducts(supabase: ReturnType<typeof createClient>, token: 
 
   products.forEach((p) => {
     const status = p.is_active ? "🟢" : "🔴";
-    msg += `${status} <b>${p.name}</b>\n   💰 ${p.price} دج  •  📊 ${p.stock ?? 0}\n\n`;
+    msg += `${status} <b>${display(p.name)}</b>\n   💰 ${display(p.price)} دج  •  📊 ${display(p.stock ?? 0)}\n\n`;
   });
 
   const buttons: Array<Array<{ text: string; callback_data: string }>> = [];
-  const detailRow = products.map((p) => ({ text: `📦 ${p.name.substring(0, 18)}`, callback_data: `product_detail:${p.id}` }));
+  const detailRow = products.map((p) => ({ text: `📦 ${String(p.name ?? "").substring(0, 18)}`, callback_data: `product_detail:${p.id}` }));
   for (let i = 0; i < detailRow.length; i += 2) buttons.push(detailRow.slice(i, i + 2));
 
   const navRow: Array<{ text: string; callback_data: string }> = [];
@@ -505,14 +514,14 @@ async function handleProductDetail(supabase: ReturnType<typeof createClient>, to
   }
 
   const status = product.is_active ? "🟢 مفعّل" : "🔴 معطّل";
-  let msg = `📦 <b>${product.name}</b>\n`
+  let msg = `📦 <b>${display(product.name)}</b>\n`
     + `━━━━━━━━━━━━━━━━\n\n`
     + `💰 السعر: <b>${product.price} دج</b>\n`
     + `📊 المخزون: <b>${product.stock ?? 0}</b>\n`
-    + `📂 الفئة: ${product.category?.join("، ") || "—"}\n`
+    + `📂 الفئة: ${display(product.category?.join("، "))}\n`
     + `الحالة: ${status}\n`;
 
-  if (product.description) msg += `\n📝 ${product.description.substring(0, 300)}`;
+  if (product.description) msg += `\n📝 ${escapeHtml(String(product.description).substring(0, 300))}`;
 
   const toggleText = product.is_active ? "🔴 تعطيل" : "🟢 تفعيل";
   const keyboard = [
@@ -554,7 +563,7 @@ async function handleCategories(supabase: ReturnType<typeof createClient>, token
   }
 
   let msg = "📂 <b>الفئات</b>\n━━━━━━━━━━━━━━━━\n\n";
-  catSet.forEach((c) => { msg += `  🏷️  ${c}\n`; });
+  catSet.forEach((c) => { msg += `  🏷️  ${escapeHtml(c)}\n`; });
 
   await editMessage(token, chatId, messageId, msg, backToMainKeyboard());
 }
@@ -583,7 +592,7 @@ async function handleStats(supabase: ReturnType<typeof createClient>, token: str
     + "<b>توزيع الحالات:</b>\n";
 
   Object.entries(statusCounts).forEach(([status, count]) => {
-    msg += `  ${statusEmoji[status] || "•"} ${status}: <b>${count}</b>\n`;
+    msg += `  ${statusEmoji[status] || "•"} ${escapeHtml(status)}: <b>${count}</b>\n`;
   });
 
   await editMessage(token, chatId, messageId, msg, backToMainKeyboard());
