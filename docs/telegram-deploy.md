@@ -77,3 +77,11 @@ jobs:
         if: ${{ env.SUPABASE_ACCESS_TOKEN == '' || env.SUPABASE_DB_URL == '' }}
         run: echo "::warning::Add SUPABASE_ACCESS_TOKEN and SUPABASE_DB_URL repository secrets to deploy the Telegram bot automatically."
 ```
+
+## Vercel deploys
+
+Vercel builds the site from `main`. Do not connect Vercel Storage
+integrations (Supabase/Neon) to the `nuvoriastore` project: the site reads
+its Supabase project from `.env`, and if a connected integration's database
+gets paused, Vercel refuses every deployment before the build even starts
+("One or more integration resources failed to provision").
