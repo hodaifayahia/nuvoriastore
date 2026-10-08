@@ -67,6 +67,10 @@ const STYLES = `
   animation: footer-heartbeat 2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
 }
 
+/* Off-screen: stop animations; the fixed desktop layer is not painted at all. */
+.footer-offscreen, .footer-offscreen * { animation-play-state: paused !important; }
+.footer-offscreen.fixed { visibility: hidden; }
+
 /* Theme-adaptive Grid Background */
 .footer-bg-grid {
   background-size: 60px 60px;
@@ -241,6 +245,17 @@ export function CinematicFooter() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [isMobile, setIsMobile] = React.useState(false);
+  // The footer's infinite animations (and, on desktop, its fixed full-screen
+  // layer behind the page) are only painted while the footer is near the
+  // viewport, so they don't cost anything while the visitor scrolls the page.
+  const [inView, setInView] = React.useState(false);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { rootMargin: "300px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   useEffect(() => {
     if (typeof window === 'undefined') return;
     setIsMobile(window.innerWidth < 768);
@@ -415,10 +430,10 @@ export function CinematicFooter() {
         className={isMobile ? "relative w-full h-auto bg-background" : "relative h-screen w-full"}
         style={isMobile ? {} : { clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
-        <footer className={isMobile 
+        <footer className={cn(!inView && "footer-offscreen", isMobile
           ? "relative w-full flex flex-col gap-8 bg-[#FAF9F6] dark:bg-slate-950 py-10 px-4 text-foreground z-10 overflow-hidden"
           : "fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-background text-foreground cinematic-footer-wrapper py-10 z-0"
-        }>
+        )}>
           
           {/* Ambient Light & Grid Background */}
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />

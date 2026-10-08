@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef, ReactNode, FormEvent } from 'react';
+import { useEffect, useState, useCallback, useRef, ReactNode, FormEvent, Suspense } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { LayoutDashboard, Package, MapPin, ShoppingCart, Tag, Settings, LogOut, Menu, X, Layers, Users, UserCheck, Bell, AlertTriangle, Clock, Palette, Search, ExternalLink, User, ChevronDown, PackageX, RotateCcw, DollarSign, Globe, Store, CreditCard, Bot, FormInput, Paintbrush, Shield, Rocket, Truck, ChevronRight, BarChart3, Award, Sun, Moon, Sparkles, LayoutTemplate } from 'lucide-react';
@@ -608,7 +608,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             </PopoverContent>
           </Popover>
         </header>
-        <main className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0 pb-24 lg:pb-6">{children}</main>
+        <main className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0 pb-24 lg:pb-6">
+          {/* Page chunks load inside the layout, so the sidebar stays put while switching pages. */}
+          <Suspense fallback={<div className="space-y-3"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>}>
+            {children}
+          </Suspense>
+        </main>
       </div>
 
       {/* Overlay */}

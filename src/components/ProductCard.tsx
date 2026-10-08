@@ -6,8 +6,6 @@ import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/format';
 import ProductImage from '@/components/ProductImage';
 import { useToast } from '@/hooks/use-toast';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 
 import { useTranslation } from '@/i18n';
 
@@ -38,18 +36,6 @@ export default function ProductCard({ id, slug, name, price, oldPrice, priceText
   const isAr = language === 'ar';
 
 
-  const { data: variationTypes } = useQuery({
-    queryKey: ['product-variation-types', id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('product_variations')
-        .select('variation_type')
-        .eq('product_id', id)
-        .eq('is_active', true);
-      if (!data || data.length === 0) return null;
-      return Array.from(new Set(data.map(v => v.variation_type)));
-    },
-  });
 
   const allImages = images && images.length > 0 ? images : (image ? [image] : []);
   const initialIndex = mainImageIndex != null && mainImageIndex < allImages.length ? mainImageIndex : 0;
@@ -59,10 +45,6 @@ export default function ProductCard({ id, slug, name, price, oldPrice, priceText
     e.preventDefault();
     e.stopPropagation();
     if (outOfStock) return;
-    if (variationTypes && variationTypes.length > 0) {
-      navigate(productPath);
-      return;
-    }
     navigate(productPath);
   };
 

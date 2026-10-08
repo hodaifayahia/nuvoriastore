@@ -39,6 +39,7 @@ DECLARE
   v_wilaya_name text;
   v_item record;
   v_reply_markup jsonb;
+  v_site_url text;
 BEGIN
   SELECT value INTO v_enabled FROM public.settings WHERE key = 'telegram_enabled';
   IF v_enabled IS DISTINCT FROM 'true' THEN RETURN NEW; END IF;
@@ -65,6 +66,7 @@ BEGIN
 
   v_payment_label := CASE NEW.payment_method
     WHEN 'cod' THEN '💵 الدفع عند التسليم'
+    WHEN 'cash_on_delivery' THEN '💵 الدفع عند التسليم'
     WHEN 'baridimob' THEN '🏦 بريدي موب'
     WHEN 'flexy' THEN '📱 فليكسي'
     ELSE public.tg_escape(COALESCE(NEW.payment_method, '—'))
@@ -109,6 +111,12 @@ BEGIN
 
   IF NEW.payment_receipt_url IS NOT NULL AND length(trim(NEW.payment_receipt_url)) > 0 THEN
     v_message := v_message || E'\n\n' || '🧾 <a href="' || public.tg_escape(NEW.payment_receipt_url) || '">عرض إيصال الدفع</a>';
+  END IF;
+
+  -- Optional link to the order in the dashboard (settings key "site_url").
+  SELECT value INTO v_site_url FROM public.settings WHERE key = 'site_url';
+  IF v_site_url ~ '^https?://' THEN
+    v_message := v_message || E'\n' || '🔗 <a href="' || public.tg_escape(rtrim(v_site_url, '/')) || '/admin/orders">فتح الطلب في لوحة التحكم</a>';
   END IF;
 
   v_reply_markup := public.telegram_order_keyboard(NEW.id);

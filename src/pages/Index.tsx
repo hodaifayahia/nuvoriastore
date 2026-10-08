@@ -88,6 +88,8 @@ const FALLBACK_CATS = [
 ];
 
 
+const STORE_TEMPLATE_CACHE_KEY = 'nuvoria:store-template';
+
 export default function IndexPage() {
   const { data: categoriesData } = useCategories();
   const { data: brandsData } = useBrands();
@@ -130,7 +132,14 @@ export default function IndexPage() {
     queryKey: ['store-template'],
     queryFn: async () => {
       const { data } = await supabase.from('settings').select('value').eq('key', 'store_template').maybeSingle();
-      return data?.value || 'classic';
+      const value = data?.value || 'classic';
+      try { localStorage.setItem(STORE_TEMPLATE_CACHE_KEY, value); } catch { /* storage unavailable */ }
+      return value;
+    },
+    // Render the last known template immediately instead of flashing the
+    // classic layout (or a blank screen) while the setting loads.
+    placeholderData: () => {
+      try { return localStorage.getItem(STORE_TEMPLATE_CACHE_KEY) || undefined; } catch { return undefined; }
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -158,23 +167,6 @@ export default function IndexPage() {
   );
   const hasMore = (allProducts?.length || 0) > newestProducts.length;
 
-  const [countdown, setCountdown] = useState({ h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const end = new Date(now);
-      end.setHours(23, 59, 59, 999);
-      const diff = Math.max(0, end.getTime() - now.getTime());
-      setCountdown({
-        h: Math.floor(diff / 3_600_000),
-        m: Math.floor((diff % 3_600_000) / 60_000),
-        s: Math.floor((diff % 60_000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ direction: 'ltr', loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: false })]);
   const [selectedSlide, setSelectedSlide] = useState(0);
@@ -208,6 +200,23 @@ export default function IndexPage() {
     if (searchQuery.trim()) navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
   };
 
+  const bentoCats = useMemo(() => {
+    return (categoriesData || [])
+      .filter((c: any) => c?.name)
+      .map((c: any) => ({
+        name: c.name as string,
+        image: c.image as string | undefined,
+        icon: (c.icon && ICON_MAP[c.icon]) || Tag,
+      }));
+  }, [categoriesData]);
+
+  const extraCats = useMemo(() => {
+    const fromDb = (categoriesData || [])
+      .filter((c: any) => c?.name)
+      .map((c: any) => ({ name: c.name as string, icon: (c.icon && ICON_MAP[c.icon]) || Cpu }));
+    return (fromDb.length > 0 ? fromDb : FALLBACK_CATS).slice(0, 8);
+  }, [categoriesData]);
+
   if (storeTemplate && storeTemplate !== 'classic') {
     if (storeTemplate === 'minimal') {
       return (
@@ -229,22 +238,6 @@ export default function IndexPage() {
     }
   }
 
-  const bentoCats = useMemo(() => {
-    return (categoriesData || [])
-      .filter((c: any) => c?.name)
-      .map((c: any) => ({
-        name: c.name as string,
-        image: c.image as string | undefined,
-        icon: (c.icon && ICON_MAP[c.icon]) || Tag,
-      }));
-  }, [categoriesData]);
-
-  const extraCats = useMemo(() => {
-    const fromDb = (categoriesData || [])
-      .filter((c: any) => c?.name)
-      .map((c: any) => ({ name: c.name as string, icon: (c.icon && ICON_MAP[c.icon]) || Cpu }));
-    return (fromDb.length > 0 ? fromDb : FALLBACK_CATS).slice(0, 8);
-  }, [categoriesData]);
 
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden">

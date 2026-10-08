@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import TopMarquee from "@/components/TopMarquee";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -16,10 +15,13 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import FloatingCallButton from "@/components/FloatingCallButton";
 import MobileContactBar from "@/components/MobileContactBar";
 
-import AdminLayout from "@/components/AdminLayout";
-// Keep the homepage eager for fast LCP; lazy-load everything else.
+// Keep the homepage eager for fast LCP; lazy-load everything else
+// (including the admin shell, so shoppers never download dashboard code).
 import Index from "./pages/Index";
 
+// Below the fold and pulls in GSAP: load it after the page content.
+const Footer = lazy(() => import("@/components/Footer"));
+const AdminLayout = lazy(() => import("@/components/AdminLayout"));
 const ProductsPage = lazy(() => import("./pages/ProductsPage"));
 const SingleProductPage = lazy(() => import("./pages/SingleProductPage"));
 const CartPage = lazy(() => import("./pages/CartPage"));
@@ -108,7 +110,7 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
       <AnnouncementBar />
       <Navbar />
       <main className="flex-1 pb-24 lg:pb-0">{children}</main>
-      <Footer />
+      <Suspense fallback={null}><Footer /></Suspense>
       <ScrollToTop />
       <div className="hidden lg:block">
         <WhatsAppFloat />

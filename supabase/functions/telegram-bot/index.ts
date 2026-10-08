@@ -49,8 +49,13 @@ Deno.serve(async (req) => {
       const data = callbackQuery.data || "";
       await answerCallback(botToken, callbackQuery.id);
 
+      // Any button press abandons a pending text prompt.
+      if (!data.startsWith("product_edit_price:") && data !== "orders_search") {
+        await clearState(supabase, chatId);
+      }
+
       if (data === "menu:main") {
-        await editMessage(botToken, chatId, messageId, mainMenuText(), mainMenuKeyboard());
+        await editMessage(botToken, chatId, messageId, await mainMenuText(supabase), mainMenuKeyboard());
       } else if (data === "menu:orders" || data.startsWith("orders_page:")) {
         const page = data.startsWith("orders_page:") ? parseInt(data.split(":")[1]) : 0;
         await handleOrders(supabase, botToken, chatId, page, messageId);
@@ -102,6 +107,38 @@ Deno.serve(async (req) => {
       return new Response("OK");
     }
 
+    // ==================== COMMANDS ====================
+    // Commands always run first and clear any pending action, so a forgotten
+    // "edit price" / "find order" prompt can never swallow /start or /orders.
+    const cmd = text.trim().split(/\s+/)[0].split("@")[0].toLowerCase();
+    if (cmd.startsWith("/")) {
+      await clearState(supabase, chatId);
+      switch (cmd) {
+        case "/start":
+        case "/menu":
+          await sendMainMenu(supabase, botToken, chatId);
+          break;
+        case "/orders":
+          await handleOrders(supabase, botToken, chatId, 0);
+          break;
+        case "/products":
+          await handleProducts(supabase, botToken, chatId, 0);
+          break;
+        case "/stats":
+          await handleStats(supabase, botToken, chatId);
+          break;
+        case "/help":
+          await sendMessage(botToken, chatId, helpText(), backToMainKeyboard());
+          break;
+        case "/cancel":
+          await sendMessage(botToken, chatId, "❌ تم الإلغاء.", backToMainKeyboard());
+          break;
+        default:
+          await sendMainMenu(supabase, botToken, chatId);
+      }
+      return new Response("OK");
+    }
+
     // ==================== STATEFUL FLOW ====================
     const { data: stateRow } = await supabase
       .from("telegram_bot_state")
@@ -111,11 +148,6 @@ Deno.serve(async (req) => {
 
     if (stateRow?.state && (stateRow.state as Record<string, unknown>).action) {
       const state = stateRow.state as Record<string, string>;
-      if (text === "/cancel") {
-        await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
-        await sendMessage(botToken, chatId, "❌ تم الإلغاء.", { inline_keyboard: [[{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }]] });
-        return new Response("OK");
-      }
       if (state.action === "edit_price") {
         const newPrice = parseFloat(text);
         if (isNaN(newPrice) || newPrice <= 0) {
@@ -172,26 +204,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ==================== COMMANDS ====================
-    const cmd = text.split(" ")[0].toLowerCase();
-    switch (cmd) {
-      case "/start":
-      case "/menu":
-        await sendMessage(botToken, chatId, mainMenuText(), mainMenuKeyboard());
-        break;
-      case "/orders":
-        await sendMessage(botToken, chatId, "⏳ ...", mainMenuKeyboard());
-        break;
-      case "/help":
-        await sendMessage(botToken, chatId, helpText(), backToMainKeyboard());
-        break;
-      case "/cancel":
-        await sendMessage(botToken, chatId, "لا يوجد إجراء نشط.", backToMainKeyboard());
-        break;
-      default:
-        await sendMessage(botToken, chatId, "👋 اضغط على زر لبدء التصفح:", mainMenuKeyboard());
-    }
-
+    // Plain text with no pending action: show the menu.
+    await sendMainMenu(supabase, botToken, chatId);
     return new Response("OK");
   } catch (err) {
     console.error("telegram-bot error:", err);
@@ -201,9 +215,40 @@ Deno.serve(async (req) => {
 
 const PAGE_SIZE = 5;
 
+const ORDER_NOT_FOUND = "❌ الطلب غير موجود.\n\n"
+  + "إذا كان الطلب ظاهراً في الموقع، فالبوت مربوط بقاعدة بيانات أخرى: "
+  + "افتح لوحة التحكم ← الإعدادات ← تلغرام واضغط <b>ربط الويب هوك</b>.";
+
 // ==================== UI HELPERS ====================
-function mainMenuText() {
-  return "🏠 <b>لوحة الإدارة</b>\n\nاختر قسماً من الأزرار أدناه:";
+async function mainMenuText(supabase: ReturnType<typeof createClient>) {
+  // Show live numbers so it is obvious the bot reads the same orders as the site.
+  const { data: latest, count, error } = await supabase
+    .from("orders")
+    .select("order_number, created_at", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .limit(1);
+  let summary = "";
+  if (error) {
+    console.error("mainMenuText orders query failed:", error.message);
+  } else {
+    summary = `\n\n📦 عدد الطلبات: <b>${count ?? 0}</b>`;
+    if (latest && latest[0]) summary += `\n🆕 آخر طلب: <b>#${display(latest[0].order_number)}</b> — ${formatDate(latest[0].created_at)}`;
+  }
+  return `🏠 <b>لوحة الإدارة</b>${summary}\n\nاختر قسماً من الأزرار أدناه:`;
+}
+
+async function sendMainMenu(supabase: ReturnType<typeof createClient>, token: string, chatId: string) {
+  await sendMessage(token, chatId, await mainMenuText(supabase), mainMenuKeyboard());
+}
+
+async function clearState(supabase: ReturnType<typeof createClient>, chatId: string) {
+  await supabase.from("telegram_bot_state").upsert({ chat_id: chatId, state: {}, updated_at: new Date().toISOString() });
+}
+
+// Edit the message behind a button press, or send a new one for typed commands.
+async function show(token: string, chatId: string, messageId: number | undefined, text: string, reply_markup?: unknown) {
+  if (messageId) await editMessage(token, chatId, messageId, text, reply_markup);
+  else await sendMessage(token, chatId, text, reply_markup);
 }
 
 function mainMenuKeyboard() {
@@ -232,7 +277,7 @@ function helpText() {
     + "📦 <b>المنتجات</b> — تصفح المنتجات، تفعيل/تعطيل، وتعديل الأسعار.\n\n"
     + "📂 <b>الفئات</b> — عرض جميع فئات المتجر.\n\n"
     + "📊 <b>الإحصائيات</b> — نظرة عامة على الأداء.\n\n"
-    + "💡 استخدم /menu لفتح القائمة في أي وقت.";
+    + "💡 الأوامر: /start • /orders • /products • /stats • /cancel";
 }
 
 // ==================== TELEGRAM API ====================
@@ -302,18 +347,24 @@ async function answerCallback(token: string, callbackId: string) {
 }
 
 // ==================== ORDERS ====================
-async function handleOrders(supabase: ReturnType<typeof createClient>, token: string, chatId: string, page: number, messageId: number) {
+async function handleOrders(supabase: ReturnType<typeof createClient>, token: string, chatId: string, page: number, messageId?: number) {
   const from = page * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  const { data: orders, count } = await supabase
+  const { data: orders, count, error } = await supabase
     .from("orders")
     .select("id, order_number, customer_name, customer_phone, total_amount, status, created_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
 
+  if (error) {
+    console.error("handleOrders query failed:", error.message);
+    await show(token, chatId, messageId, `❌ تعذر تحميل الطلبات: ${escapeHtml(error.message)}`, backToMainKeyboard());
+    return;
+  }
+
   if (!orders || orders.length === 0) {
-    await editMessage(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", {
+    await show(token, chatId, messageId, "📭 لا توجد طلبات حالياً.", {
       inline_keyboard: [
         [{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }],
         [{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }],
@@ -346,7 +397,7 @@ async function handleOrders(supabase: ReturnType<typeof createClient>, token: st
   buttons.push([{ text: "🔍 بحث برقم الطلب", callback_data: "orders_search" }]);
   buttons.push([{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }]);
 
-  await editMessage(token, chatId, messageId, msg, { inline_keyboard: buttons });
+  await show(token, chatId, messageId, msg, { inline_keyboard: buttons });
 }
 
 async function buildOrderDetail(supabase: ReturnType<typeof createClient>, orderId: string) {
@@ -446,7 +497,7 @@ async function buildOrderDetail(supabase: ReturnType<typeof createClient>, order
 async function handleOrderDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string, messageId: number) {
   const built = await buildOrderDetail(supabase, orderId);
   if (!built) {
-    await editMessage(token, chatId, messageId, "❌ الطلب غير موجود.", backToMainKeyboard());
+    await editMessage(token, chatId, messageId, ORDER_NOT_FOUND, backToMainKeyboard());
     return;
   }
   await editMessage(token, chatId, messageId, built.msg, { inline_keyboard: built.keyboard });
@@ -455,7 +506,7 @@ async function handleOrderDetail(supabase: ReturnType<typeof createClient>, toke
 async function sendOrderDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, orderId: string) {
   const built = await buildOrderDetail(supabase, orderId);
   if (!built) {
-    await sendMessage(token, chatId, "❌ الطلب غير موجود.", backToMainKeyboard());
+    await sendMessage(token, chatId, ORDER_NOT_FOUND, backToMainKeyboard());
     return;
   }
   await sendMessage(token, chatId, built.msg, { inline_keyboard: built.keyboard });
@@ -468,7 +519,7 @@ async function handleOrderStatusUpdate(supabase: ReturnType<typeof createClient>
 }
 
 // ==================== PRODUCTS ====================
-async function handleProducts(supabase: ReturnType<typeof createClient>, token: string, chatId: string, page: number, messageId: number) {
+async function handleProducts(supabase: ReturnType<typeof createClient>, token: string, chatId: string, page: number, messageId?: number) {
   const from = page * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
@@ -479,7 +530,7 @@ async function handleProducts(supabase: ReturnType<typeof createClient>, token: 
     .range(from, to);
 
   if (!products || products.length === 0) {
-    await editMessage(token, chatId, messageId, "📭 لا توجد منتجات.", backToMainKeyboard());
+    await show(token, chatId, messageId, "📭 لا توجد منتجات.", backToMainKeyboard());
     return;
   }
 
@@ -503,7 +554,7 @@ async function handleProducts(supabase: ReturnType<typeof createClient>, token: 
 
   buttons.push([{ text: "🏠 القائمة الرئيسية", callback_data: "menu:main" }]);
 
-  await editMessage(token, chatId, messageId, msg, { inline_keyboard: buttons });
+  await show(token, chatId, messageId, msg, { inline_keyboard: buttons });
 }
 
 async function handleProductDetail(supabase: ReturnType<typeof createClient>, token: string, chatId: string, productId: string, messageId: number) {
@@ -569,7 +620,7 @@ async function handleCategories(supabase: ReturnType<typeof createClient>, token
 }
 
 // ==================== STATS ====================
-async function handleStats(supabase: ReturnType<typeof createClient>, token: string, chatId: string, messageId: number) {
+async function handleStats(supabase: ReturnType<typeof createClient>, token: string, chatId: string, messageId?: number) {
   const { data: orders } = await supabase.from("orders").select("total_amount, status");
   const { count: productCount } = await supabase.from("products").select("id", { count: "exact", head: true });
 
@@ -595,5 +646,5 @@ async function handleStats(supabase: ReturnType<typeof createClient>, token: str
     msg += `  ${statusEmoji[status] || "•"} ${escapeHtml(status)}: <b>${count}</b>\n`;
   });
 
-  await editMessage(token, chatId, messageId, msg, backToMainKeyboard());
+  await show(token, chatId, messageId, msg, backToMainKeyboard());
 }
