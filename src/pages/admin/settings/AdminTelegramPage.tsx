@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -7,8 +7,22 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Save, Bot, Plus, Send, Webhook, X } from 'lucide-react';
+import { Save, Bot, Plus, Send, Webhook, X, RefreshCw } from 'lucide-react';
 import { useAdminSettings } from '@/hooks/useAdminSettings';
+
+// Supabase project the website reads (e.g. "gppdjfjvceciejnyzxem").
+const SITE_PROJECT_REF = (() => {
+  try {
+    return new URL(import.meta.env.VITE_SUPABASE_URL).hostname.split('.')[0];
+  } catch {
+    return '';
+  }
+})();
+
+type WebhookCheck =
+  | { status: 'idle' | 'checking' | 'no_token' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; url: string; botRef: string; lastError?: string; pending: number };
 
 export default function AdminTelegramPage() {
   const qc = useQueryClient();
@@ -16,6 +30,44 @@ export default function AdminTelegramPage() {
   const [newChatId, setNewChatId] = useState('');
   const [testingSend, setTestingSend] = useState(false);
   const [settingWebhook, setSettingWebhook] = useState(false);
+
+  const [webhookCheck, setWebhookCheck] = useState<WebhookCheck>({ status: 'idle' });
+  const botToken = (mergedSettings.telegram_bot_token || '').trim();
+
+  // Ask Telegram where it delivers this bot's messages. If that URL belongs to
+  // another Supabase project, the bot reads a different database than the site.
+  const checkWebhook = useCallback(async () => {
+    if (!botToken) { setWebhookCheck({ status: 'no_token' }); return; }
+    setWebhookCheck({ status: 'checking' });
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${botToken}/getWebhookInfo`);
+      const data: {
+        ok: boolean;
+        description?: string;
+        result?: { url?: string; last_error_message?: string; pending_update_count?: number };
+      } = await res.json();
+      if (!data?.ok) {
+        setWebhookCheck({ status: 'error', message: data?.description || 'Telegram رفض التوكن' });
+        return;
+      }
+      const url: string = data.result?.url || '';
+      let botRef = '';
+      try { botRef = url ? new URL(url).hostname.split('.')[0] : ''; } catch { botRef = ''; }
+      setWebhookCheck({
+        status: 'done',
+        url,
+        botRef,
+        lastError: data.result?.last_error_message,
+        pending: data.result?.pending_update_count || 0,
+      });
+    } catch (e) {
+      setWebhookCheck({ status: 'error', message: e instanceof Error ? e.message : 'تعذر الاتصال بتلغرام' });
+    }
+  }, [botToken]);
+
+  useEffect(() => {
+    if (!isLoading) checkWebhook();
+  }, [isLoading, checkWebhook]);
 
   const chatIds = (mergedSettings.telegram_chat_id || '').split(',').map(id => id.trim()).filter(Boolean);
 
@@ -94,6 +146,7 @@ export default function AdminTelegramPage() {
         toast({ title: 'فشل ربط الويب هوك', description: res.error.message || 'تحقق من التوكن', variant: 'destructive' });
       } else if (data?.ok) {
         toast({ title: 'تم ربط الويب هوك بنجاح ✅' });
+        checkWebhook();
       } else {
         toast({ title: 'فشل ربط الويب هوك', description: data?.description || reasonLabel(data?.reason || data?.error), variant: 'destructive' });
       }
@@ -159,12 +212,64 @@ export default function AdminTelegramPage() {
             {settingWebhook ? 'جاري الربط...' : 'ربط الويب هوك'}
           </Button>
         </div>
+        <WebhookStatus check={webhookCheck} onRefresh={checkWebhook} />
       </div>
 
       <Button onClick={handleSave} disabled={updateSetting.isPending || Object.keys(form).length === 0} className="font-cairo font-semibold gap-2">
         <Save className="w-4 h-4" />
         {updateSetting.isPending ? 'جاري الحفظ...' : 'حفظ الإعدادات'}
       </Button>
+    </div>
+  );
+}
+
+function WebhookStatus({ check, onRefresh }: { check: WebhookCheck; onRefresh: () => void }) {
+  let tone = 'border-muted bg-muted/40';
+  let body: ReactNode = null;
+
+  if (check.status === 'checking' || check.status === 'idle') {
+    body = <p>جاري التحقق من قاعدة بيانات البوت...</p>;
+  } else if (check.status === 'no_token') {
+    body = <p>أضف Bot Token واحفظ الإعدادات للتحقق من قاعدة بيانات البوت.</p>;
+  } else if (check.status === 'error') {
+    tone = 'border-destructive/50 bg-destructive/10';
+    body = <p>تعذر التحقق: <span dir="ltr">{check.message}</span></p>;
+  } else if (check.status === 'done' && !check.url) {
+    tone = 'border-destructive/50 bg-destructive/10';
+    body = <p>❌ البوت غير مربوط بأي خادم. اضغط <b>ربط الويب هوك</b>.</p>;
+  } else if (check.status === 'done' && check.botRef !== SITE_PROJECT_REF) {
+    tone = 'border-destructive/50 bg-destructive/10';
+    body = (
+      <>
+        <p>❌ البوت يقرأ قاعدة بيانات مختلفة عن الموقع، لذلك الطلبات غير متطابقة.</p>
+        <p>قاعدة بيانات الموقع: <b dir="ltr">{SITE_PROJECT_REF}</b></p>
+        <p>قاعدة بيانات البوت: <b dir="ltr">{check.botRef || check.url}</b></p>
+        <p>الحل: اضغط <b>ربط الويب هوك</b> أعلاه.</p>
+      </>
+    );
+  } else if (check.status === 'done' && check.lastError) {
+    tone = 'border-amber-500/50 bg-amber-500/10';
+    body = (
+      <>
+        <p>⚠️ البوت مربوط بنفس قاعدة بيانات الموقع (<b dir="ltr">{SITE_PROJECT_REF}</b>) لكن تلغرام أبلغ عن خطأ:</p>
+        <p dir="ltr" className="font-roboto">{check.lastError}</p>
+        <p>إذا كان الخطأ 401 أو 404 فيجب نشر دالة telegram-bot في Supabase (راجع docs/telegram-deploy.md).</p>
+      </>
+    );
+  } else {
+    tone = 'border-green-600/40 bg-green-600/10';
+    body = <p>✅ البوت والموقع يستخدمان نفس قاعدة البيانات (<b dir="ltr">{SITE_PROJECT_REF}</b>).</p>;
+  }
+
+  return (
+    <div className={`border rounded-md p-3 font-cairo text-sm space-y-1 ${tone}`}>
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-semibold">قاعدة بيانات البوت</span>
+        <Button variant="ghost" size="sm" onClick={onRefresh} disabled={check.status === 'checking'} className="h-7 gap-1 font-cairo">
+          <RefreshCw className="w-3 h-3" /> تحقق
+        </Button>
+      </div>
+      {body}
     </div>
   );
 }
