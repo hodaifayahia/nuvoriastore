@@ -136,24 +136,33 @@ export default function AdminTelegramPage() {
     }
   };
 
+  // Point Telegram straight at this site's telegram-bot function, so the bot
+  // always reads the same Supabase project as the website.
   const handleSetWebhook = async () => {
+    if (!botToken) {
+      toast({ title: 'فشل ربط الويب هوك', description: 'أضف Bot Token أولاً', variant: 'destructive' });
+      return;
+    }
     setSettingWebhook(true);
     try {
       await saveFormFirst();
-      const res = await supabase.functions.invoke('telegram-set-webhook', { body: {} });
-      const data: any = res.data;
-      if (res.error) {
-        toast({ title: 'فشل ربط الويب هوك', description: res.error.message || 'تحقق من التوكن', variant: 'destructive' });
-      } else if (data?.ok) {
+      const webhookUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/telegram-bot`;
+      const res = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: webhookUrl }),
+      });
+      const data: { ok: boolean; description?: string } = await res.json();
+      if (data?.ok) {
         toast({ title: 'تم ربط الويب هوك بنجاح ✅' });
-        checkWebhook();
       } else {
-        toast({ title: 'فشل ربط الويب هوك', description: data?.description || reasonLabel(data?.reason || data?.error), variant: 'destructive' });
+        toast({ title: 'فشل ربط الويب هوك', description: data?.description || 'تحقق من التوكن', variant: 'destructive' });
       }
-    } catch (e: any) {
-      toast({ title: 'خطأ في ربط الويب هوك', description: e?.message || 'حاول مجددًا', variant: 'destructive' });
+    } catch (e) {
+      toast({ title: 'خطأ في ربط الويب هوك', description: e instanceof Error ? e.message : 'حاول مجددًا', variant: 'destructive' });
     } finally {
       setSettingWebhook(false);
+      checkWebhook();
     }
   };
 
